@@ -99,370 +99,370 @@
   "entries": {
     "setup_option_identifiers": {
       "type": {
-        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
-        "source_kind": "integrated-28",
-        "proof_state": "SOURCE_REFERENCE_ONLY"
+        "proof_state": "SOURCE_REFERENCE_ONLY",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "candidate_suite": "integrated-28"
       },
       "document-language": {
-        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
-        "source_kind": "integrated-28",
-        "proof_state": "SOURCE_REFERENCE_ONLY"
+        "proof_state": "SOURCE_REFERENCE_ONLY",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "candidate_suite": "integrated-28"
       },
       "labels-language": {
-        "source": "tests/integration/frontmatter/primary-document-locale-matrix.sh",
-        "source_kind": "profile-28",
-        "proof_state": "SOURCE_REFERENCE_ONLY"
+        "proof_state": "SOURCE_REFERENCE_ONLY",
+        "candidate_test_file": "tests/integration/frontmatter/primary-document-locale-matrix.sh",
+        "candidate_suite": "profile-28"
       },
       "print-mode": {
-        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
-        "source_kind": "integrated-28",
-        "proof_state": "SOURCE_REFERENCE_ONLY"
+        "proof_state": "SOURCE_REFERENCE_ONLY",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "candidate_suite": "integrated-28"
       },
       "cover": {
-        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
-        "source_kind": "integrated-28",
-        "proof_state": "SOURCE_REFERENCE_ONLY"
+        "proof_state": "SOURCE_REFERENCE_ONLY",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "candidate_suite": "integrated-28"
       },
       "catalog-card": {
-        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
-        "source_kind": "integrated-28",
-        "proof_state": "SOURCE_REFERENCE_ONLY"
+        "proof_state": "SOURCE_REFERENCE_ONLY",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "candidate_suite": "integrated-28"
       },
       "coat-of-arms": {
-        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
-        "source_kind": "integrated-28",
-        "proof_state": "SOURCE_REFERENCE_ONLY"
+        "proof_state": "SOURCE_REFERENCE_ONLY",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "candidate_suite": "integrated-28"
       },
       "advisor-feminine-label": {
-        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
-        "source_kind": "integrated-28",
-        "proof_state": "SOURCE_REFERENCE_ONLY"
+        "proof_state": "SOURCE_REFERENCE_ONLY",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "candidate_suite": "integrated-28"
       },
       "coadvisor-feminine-label": {
-        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
-        "source_kind": "integrated-28",
-        "proof_state": "SOURCE_REFERENCE_ONLY"
+        "proof_state": "SOURCE_REFERENCE_ONLY",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "candidate_suite": "integrated-28"
       },
       "font": {
-        "source": "tests/integration/frontmatter/frontmatter-summary-languages.sh",
-        "source_kind": "summary-language-pdf",
-        "proof_state": "SOURCE_REFERENCE_ONLY"
+        "proof_state": "SOURCE_REFERENCE_ONLY",
+        "candidate_test_file": "tests/integration/frontmatter/frontmatter-summary-languages.sh",
+        "candidate_suite": "summary-language-pdf"
       },
       "strict-font": {
-        "source": null,
-        "source_kind": "none",
-        "proof_state": "UNMAPPED"
+        "proof_state": "UNMAPPED",
+        "candidate_test_file": null,
+        "candidate_suite": "none"
       },
       "tables": {
-        "source": "tests/integration/objects/optional-locale-evidence.py",
-        "source_kind": "optional-12",
-        "proof_state": "SOURCE_REFERENCE_ONLY"
+        "proof_state": "SOURCE_REFERENCE_ONLY",
+        "candidate_test_file": "tests/integration/objects/optional-locale-evidence.py",
+        "candidate_suite": "optional-12"
       },
       "code": {
-        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
-        "source_kind": "integrated-28",
-        "proof_state": "SOURCE_REFERENCE_ONLY"
+        "proof_state": "SOURCE_REFERENCE_ONLY",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "candidate_suite": "integrated-28"
       },
       "algorithms": {
-        "source": "tests/integration/objects/optional-locale-evidence.py",
-        "source_kind": "optional-12",
-        "proof_state": "SOURCE_REFERENCE_ONLY"
+        "proof_state": "SOURCE_REFERENCE_ONLY",
+        "candidate_test_file": "tests/integration/objects/optional-locale-evidence.py",
+        "candidate_suite": "optional-12"
       },
       "glossary": {
-        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
-        "source_kind": "integrated-28",
-        "proof_state": "SOURCE_REFERENCE_ONLY"
+        "proof_state": "SOURCE_REFERENCE_ONLY",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "candidate_suite": "integrated-28"
       },
       "index": {
-        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
-        "source_kind": "integrated-28",
-        "proof_state": "SOURCE_REFERENCE_ONLY"
+        "proof_state": "SOURCE_REFERENCE_ONLY",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "candidate_suite": "integrated-28"
       },
       "initial-page": {
-        "source": "tests/integration/profiles/multivolume.sh",
-        "source_kind": "multivolume-pdf",
-        "proof_state": "SOURCE_REFERENCE_ONLY"
+        "proof_state": "SOURCE_REFERENCE_ONLY",
+        "candidate_test_file": "tests/integration/profiles/multivolume.sh",
+        "candidate_suite": "multivolume-pdf"
       }
     },
     "public_commands": {
       "\\ufcsetup": {
-        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
-        "source_kind": "integrated-28",
-        "proof_state": "SOURCE_REFERENCE_ONLY"
+        "proof_state": "SOURCE_REFERENCE_ONLY",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "candidate_suite": "integrated-28"
       },
       "\\ufcDocumentType": {
-        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
-        "source_kind": "integrated-28",
-        "proof_state": "SOURCE_REFERENCE_ONLY"
+        "proof_state": "SOURCE_REFERENCE_ONLY",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "candidate_suite": "integrated-28"
       },
       "\\ufcPrintMode": {
-        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
-        "source_kind": "integrated-28",
-        "proof_state": "SOURCE_REFERENCE_ONLY"
+        "proof_state": "SOURCE_REFERENCE_ONLY",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "candidate_suite": "integrated-28"
       },
       "\\ufcMeta": {
-        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
-        "source_kind": "integrated-28",
-        "proof_state": "SOURCE_REFERENCE_ONLY"
+        "proof_state": "SOURCE_REFERENCE_ONLY",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "candidate_suite": "integrated-28"
       },
       "\\ufcIfProjectTF": {
-        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
-        "source_kind": "integrated-28",
-        "proof_state": "SOURCE_REFERENCE_ONLY"
+        "proof_state": "SOURCE_REFERENCE_ONLY",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "candidate_suite": "integrated-28"
       },
       "\\ufcIfAnonymizedProjectTF": {
-        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
-        "source_kind": "integrated-28",
-        "proof_state": "SOURCE_REFERENCE_ONLY"
+        "proof_state": "SOURCE_REFERENCE_ONLY",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "candidate_suite": "integrated-28"
       },
       "\\ufcMathFontPolicy": {
-        "source": "tests/documents/mathematics.tex",
-        "source_kind": "fixture",
-        "proof_state": "SOURCE_REFERENCE_ONLY"
+        "proof_state": "SOURCE_REFERENCE_ONLY",
+        "candidate_test_file": "tests/documents/mathematics.tex",
+        "candidate_suite": "fixture"
       },
       "\\ufcPrintCover": {
-        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
-        "source_kind": "integrated-28",
-        "proof_state": "SOURCE_REFERENCE_ONLY"
+        "proof_state": "SOURCE_REFERENCE_ONLY",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "candidate_suite": "integrated-28"
       },
       "\\ufcPrintTitlePage": {
-        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
-        "source_kind": "integrated-28",
-        "proof_state": "SOURCE_REFERENCE_ONLY"
+        "proof_state": "SOURCE_REFERENCE_ONLY",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "candidate_suite": "integrated-28"
       },
       "\\ufcPrintApprovalPage": {
-        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
-        "source_kind": "integrated-28",
-        "proof_state": "SOURCE_REFERENCE_ONLY"
+        "proof_state": "SOURCE_REFERENCE_ONLY",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "candidate_suite": "integrated-28"
       },
       "\\ufcPrintCatalogCard": {
-        "source": "tests/documents/catalog-card.tex",
-        "source_kind": "fixture",
-        "proof_state": "SOURCE_REFERENCE_ONLY"
+        "proof_state": "SOURCE_REFERENCE_ONLY",
+        "candidate_test_file": "tests/documents/catalog-card.tex",
+        "candidate_suite": "fixture"
       },
       "\\ufcPrintDedication": {
-        "source": "tests/documents/frontmatter-academic-work.tex",
-        "source_kind": "fixture",
-        "proof_state": "SOURCE_REFERENCE_ONLY"
+        "proof_state": "SOURCE_REFERENCE_ONLY",
+        "candidate_test_file": "tests/documents/frontmatter-academic-work.tex",
+        "candidate_suite": "fixture"
       },
       "\\ufcPrintAcknowledgments": {
-        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
-        "source_kind": "integrated-28",
-        "proof_state": "SOURCE_REFERENCE_ONLY"
+        "proof_state": "SOURCE_REFERENCE_ONLY",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "candidate_suite": "integrated-28"
       },
       "\\ufcPrintEpigraph": {
-        "source": "tests/documents/frontmatter-academic-work.tex",
-        "source_kind": "fixture",
-        "proof_state": "SOURCE_REFERENCE_ONLY"
+        "proof_state": "SOURCE_REFERENCE_ONLY",
+        "candidate_test_file": "tests/documents/frontmatter-academic-work.tex",
+        "candidate_suite": "fixture"
       },
       "\\ufcPrintErrata": {
-        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
-        "source_kind": "integrated-28",
-        "proof_state": "SOURCE_REFERENCE_ONLY"
+        "proof_state": "SOURCE_REFERENCE_ONLY",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "candidate_suite": "integrated-28"
       },
       "\\ufcDocumentLanguage": {
-        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
-        "source_kind": "integrated-28",
-        "proof_state": "SOURCE_REFERENCE_ONLY"
+        "proof_state": "SOURCE_REFERENCE_ONLY",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "candidate_suite": "integrated-28"
       },
       "\\ufcSummaryKeywordsInLanguage": {
-        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
-        "source_kind": "integrated-28",
-        "proof_state": "SOURCE_REFERENCE_ONLY"
+        "proof_state": "SOURCE_REFERENCE_ONLY",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "candidate_suite": "integrated-28"
       },
       "\\ufcPrintSummaryInLanguage": {
-        "source": "tests/integration/frontmatter/summary-legacy-context.sh",
-        "source_kind": "legacy-summary-pdf",
-        "proof_state": "SOURCE_REFERENCE_ONLY"
+        "proof_state": "SOURCE_REFERENCE_ONLY",
+        "candidate_test_file": "tests/integration/frontmatter/summary-legacy-context.sh",
+        "candidate_suite": "legacy-summary-pdf"
       },
       "\\ufcPrintRequiredSummaries": {
-        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
-        "source_kind": "integrated-28",
-        "proof_state": "SOURCE_REFERENCE_ONLY"
+        "proof_state": "SOURCE_REFERENCE_ONLY",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "candidate_suite": "integrated-28"
       },
       "\\ufcPrintOptionalEnglishSummary": {
-        "source": "tests/integration/frontmatter/frontmatter-summary-languages.sh",
-        "source_kind": "summary-language-pdf",
-        "proof_state": "SOURCE_REFERENCE_ONLY"
+        "proof_state": "SOURCE_REFERENCE_ONLY",
+        "candidate_test_file": "tests/integration/frontmatter/frontmatter-summary-languages.sh",
+        "candidate_suite": "summary-language-pdf"
       },
       "\\ufcPrintArticleTranslatedSummary": {
-        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
-        "source_kind": "integrated-28",
-        "proof_state": "SOURCE_REFERENCE_ONLY"
+        "proof_state": "SOURCE_REFERENCE_ONLY",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "candidate_suite": "integrated-28"
       },
       "\\ufcSummaryKeywords": {
-        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
-        "source_kind": "integrated-28",
-        "proof_state": "SOURCE_REFERENCE_ONLY"
+        "proof_state": "SOURCE_REFERENCE_ONLY",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "candidate_suite": "integrated-28"
       },
       "\\ufcPrintSummary": {
-        "source": "tests/integration/frontmatter/summary-legacy-context.sh",
-        "source_kind": "legacy-summary-pdf",
-        "proof_state": "SOURCE_REFERENCE_ONLY"
+        "proof_state": "SOURCE_REFERENCE_ONLY",
+        "candidate_test_file": "tests/integration/frontmatter/summary-legacy-context.sh",
+        "candidate_suite": "legacy-summary-pdf"
       },
       "\\ufcPrintAbstract": {
-        "source": "tests/integration/frontmatter/summary-legacy-context.sh",
-        "source_kind": "legacy-summary-pdf",
-        "proof_state": "SOURCE_REFERENCE_ONLY"
+        "proof_state": "SOURCE_REFERENCE_ONLY",
+        "candidate_test_file": "tests/integration/frontmatter/summary-legacy-context.sh",
+        "candidate_suite": "legacy-summary-pdf"
       },
       "\\ufcPrintListOfIllustrations": {
-        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
-        "source_kind": "integrated-28",
-        "proof_state": "SOURCE_REFERENCE_ONLY"
+        "proof_state": "SOURCE_REFERENCE_ONLY",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "candidate_suite": "integrated-28"
       },
       "\\ufcPrintListOfFigures": {
-        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
-        "source_kind": "integrated-28",
-        "proof_state": "SOURCE_REFERENCE_ONLY"
+        "proof_state": "SOURCE_REFERENCE_ONLY",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "candidate_suite": "integrated-28"
       },
       "\\ufcPrintListOfTables": {
-        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
-        "source_kind": "integrated-28",
-        "proof_state": "SOURCE_REFERENCE_ONLY"
+        "proof_state": "SOURCE_REFERENCE_ONLY",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "candidate_suite": "integrated-28"
       },
       "\\ufcPrintListOfTextTables": {
-        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
-        "source_kind": "integrated-28",
-        "proof_state": "SOURCE_REFERENCE_ONLY"
+        "proof_state": "SOURCE_REFERENCE_ONLY",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "candidate_suite": "integrated-28"
       },
       "\\ufcPrintListOfCharts": {
-        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
-        "source_kind": "integrated-28",
-        "proof_state": "SOURCE_REFERENCE_ONLY"
+        "proof_state": "SOURCE_REFERENCE_ONLY",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "candidate_suite": "integrated-28"
       },
       "\\ufcPrintListOfCodeListings": {
-        "source": "tests/integration/objects/optional-locale-evidence.py",
-        "source_kind": "optional-12",
-        "proof_state": "SOURCE_REFERENCE_ONLY"
+        "proof_state": "SOURCE_REFERENCE_ONLY",
+        "candidate_test_file": "tests/integration/objects/optional-locale-evidence.py",
+        "candidate_suite": "optional-12"
       },
       "\\ufcPrintListOfAlgorithms": {
-        "source": "tests/integration/objects/optional-locale-evidence.py",
-        "source_kind": "optional-12",
-        "proof_state": "SOURCE_REFERENCE_ONLY"
+        "proof_state": "SOURCE_REFERENCE_ONLY",
+        "candidate_test_file": "tests/integration/objects/optional-locale-evidence.py",
+        "candidate_suite": "optional-12"
       },
       "\\ufcPrintListOfAbbreviationsAndAcronyms": {
-        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
-        "source_kind": "integrated-28",
-        "proof_state": "SOURCE_REFERENCE_ONLY"
+        "proof_state": "SOURCE_REFERENCE_ONLY",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "candidate_suite": "integrated-28"
       },
       "\\ufcPrintListOfSymbols": {
-        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
-        "source_kind": "integrated-28",
-        "proof_state": "SOURCE_REFERENCE_ONLY"
+        "proof_state": "SOURCE_REFERENCE_ONLY",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "candidate_suite": "integrated-28"
       },
       "\\ufcListEntry": {
-        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
-        "source_kind": "integrated-28",
-        "proof_state": "SOURCE_REFERENCE_ONLY"
+        "proof_state": "SOURCE_REFERENCE_ONLY",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "candidate_suite": "integrated-28"
       },
       "\\ufcPrintTableOfContents": {
-        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
-        "source_kind": "integrated-28",
-        "proof_state": "SOURCE_REFERENCE_ONLY"
+        "proof_state": "SOURCE_REFERENCE_ONLY",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "candidate_suite": "integrated-28"
       },
       "\\ufcSource": {
-        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
-        "source_kind": "integrated-28",
-        "proof_state": "SOURCE_REFERENCE_ONLY"
+        "proof_state": "SOURCE_REFERENCE_ONLY",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "candidate_suite": "integrated-28"
       },
       "\\ufcNote": {
-        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
-        "source_kind": "integrated-28",
-        "proof_state": "SOURCE_REFERENCE_ONLY"
+        "proof_state": "SOURCE_REFERENCE_ONLY",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "candidate_suite": "integrated-28"
       },
       "\\ufcAddBibliographyResource": {
-        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
-        "source_kind": "integrated-28",
-        "proof_state": "SOURCE_REFERENCE_ONLY"
+        "proof_state": "SOURCE_REFERENCE_ONLY",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "candidate_suite": "integrated-28"
       },
       "\\ufcPrintReferences": {
-        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
-        "source_kind": "integrated-28",
-        "proof_state": "SOURCE_REFERENCE_ONLY"
+        "proof_state": "SOURCE_REFERENCE_ONLY",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "candidate_suite": "integrated-28"
       },
       "\\ufcPrintGlossary": {
-        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
-        "source_kind": "integrated-28",
-        "proof_state": "SOURCE_REFERENCE_ONLY"
+        "proof_state": "SOURCE_REFERENCE_ONLY",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "candidate_suite": "integrated-28"
       },
       "\\ufcPrintIndex": {
-        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
-        "source_kind": "integrated-28",
-        "proof_state": "SOURCE_REFERENCE_ONLY"
+        "proof_state": "SOURCE_REFERENCE_ONLY",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "candidate_suite": "integrated-28"
       },
       "\\ufcInputListing": {
-        "source": "tests/documents/advanced-objects.tex",
-        "source_kind": "fixture",
-        "proof_state": "SOURCE_REFERENCE_ONLY"
+        "proof_state": "SOURCE_REFERENCE_ONLY",
+        "candidate_test_file": "tests/documents/advanced-objects.tex",
+        "candidate_suite": "fixture"
       },
       "\\ufcInputMinted": {
-        "source": "tests/integration/objects/optional-locale-evidence.py",
-        "source_kind": "optional-12",
-        "proof_state": "SOURCE_REFERENCE_ONLY"
+        "proof_state": "SOURCE_REFERENCE_ONLY",
+        "candidate_test_file": "tests/integration/objects/optional-locale-evidence.py",
+        "candidate_suite": "optional-12"
       }
     },
     "public_environments": {
       "ufclettereditems": {
-        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
-        "source_kind": "integrated-28",
-        "proof_state": "SOURCE_REFERENCE_ONLY"
+        "proof_state": "SOURCE_REFERENCE_ONLY",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "candidate_suite": "integrated-28"
       },
       "ufcdashedsubitems": {
-        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
-        "source_kind": "integrated-28",
-        "proof_state": "SOURCE_REFERENCE_ONLY"
+        "proof_state": "SOURCE_REFERENCE_ONLY",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "candidate_suite": "integrated-28"
       },
       "ufcdefinitionlist": {
-        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
-        "source_kind": "integrated-28",
-        "proof_state": "SOURCE_REFERENCE_ONLY"
+        "proof_state": "SOURCE_REFERENCE_ONLY",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "candidate_suite": "integrated-28"
       },
       "ufcobject": {
-        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
-        "source_kind": "integrated-28",
-        "proof_state": "SOURCE_REFERENCE_ONLY"
+        "proof_state": "SOURCE_REFERENCE_ONLY",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "candidate_suite": "integrated-28"
       },
       "ufclisting": {
-        "source": "tests/integration/objects/optional-locale-evidence.py",
-        "source_kind": "optional-12",
-        "proof_state": "SOURCE_REFERENCE_ONLY"
+        "proof_state": "SOURCE_REFERENCE_ONLY",
+        "candidate_test_file": "tests/integration/objects/optional-locale-evidence.py",
+        "candidate_suite": "optional-12"
       },
       "ufcalgorithm": {
-        "source": "tests/integration/objects/optional-locale-evidence.py",
-        "source_kind": "optional-12",
-        "proof_state": "SOURCE_REFERENCE_ONLY"
+        "proof_state": "SOURCE_REFERENCE_ONLY",
+        "candidate_test_file": "tests/integration/objects/optional-locale-evidence.py",
+        "candidate_suite": "optional-12"
       }
     },
     "retained_upstream_identifiers": {
       "\\legend": {
-        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
-        "source_kind": "integrated-28",
-        "proof_state": "SOURCE_REFERENCE_ONLY"
+        "proof_state": "SOURCE_REFERENCE_ONLY",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "candidate_suite": "integrated-28"
       },
       "\\keywords": {
-        "source": "tests/integration/frontmatter/summary-legacy-context.sh",
-        "source_kind": "legacy-summary-pdf",
-        "proof_state": "SOURCE_REFERENCE_ONLY"
+        "proof_state": "SOURCE_REFERENCE_ONLY",
+        "candidate_test_file": "tests/integration/frontmatter/summary-legacy-context.sh",
+        "candidate_suite": "legacy-summary-pdf"
       },
       "\\appendix": {
-        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
-        "source_kind": "integrated-28",
-        "proof_state": "SOURCE_REFERENCE_ONLY"
+        "proof_state": "SOURCE_REFERENCE_ONLY",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "candidate_suite": "integrated-28"
       },
       "\\annex": {
-        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
-        "source_kind": "integrated-28",
-        "proof_state": "SOURCE_REFERENCE_ONLY"
+        "proof_state": "SOURCE_REFERENCE_ONLY",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "candidate_suite": "integrated-28"
       },
       "\\pretextual": {
-        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
-        "source_kind": "integrated-28",
-        "proof_state": "SOURCE_REFERENCE_ONLY"
+        "proof_state": "SOURCE_REFERENCE_ONLY",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "candidate_suite": "integrated-28"
       },
       "\\textual": {
-        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
-        "source_kind": "integrated-28",
-        "proof_state": "SOURCE_REFERENCE_ONLY"
+        "proof_state": "SOURCE_REFERENCE_ONLY",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "candidate_suite": "integrated-28"
       }
     }
   }
