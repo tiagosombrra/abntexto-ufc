@@ -6,6 +6,8 @@ on:
     paths:
       - abntexto-ufc.cls
       - tests/integration/objects/optional-locale-evidence.py
+      - tests/integration/objects/i18n-optional-api-output-evidence.py
+      - tests/static.py
       - tests/integration/frontmatter/run-integrated-locale.py
       - standards/evidence/test-surface-policy.json
       - .github/workflows/i18n-optional-modules-matrix.yml
@@ -14,6 +16,8 @@ on:
     paths:
       - abntexto-ufc.cls
       - tests/integration/objects/optional-locale-evidence.py
+      - tests/integration/objects/i18n-optional-api-output-evidence.py
+      - tests/static.py
       - tests/integration/frontmatter/run-integrated-locale.py
       - .github/workflows/i18n-optional-modules-matrix.yml
 permissions:
@@ -36,6 +40,7 @@ jobs:
           for locale in pt en es fr; do
             python3 tests/integration/objects/optional-locale-evidence.py --locale "$locale" --preflight
           done
+          python3 tests/integration/objects/i18n-optional-api-output-evidence.py --self-test
   optional-locales:
     name: Code + minted + algorithm comments + long tables / ${{ matrix.locale }}
     needs: preflight
