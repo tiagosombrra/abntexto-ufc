@@ -92,9 +92,9 @@ def required_pdf_markers(api: str, scenario: str, locale: str) -> tuple[str, ...
         return (f"optional-algorithm-{locale}", "optional-alg-step-1",
                 "optional-alg-step-2", algorithm_title)
     if api == r"\ufcPrintListOfCodeListings":
-        code_marker = "int sum" if scenario == "optional-objects" else "saudacao"
+        code_marker = ("sum", "return") if scenario == "optional-objects" else ("saudacao",)
         return (lang[4], f"optional-{'listing' if scenario == 'optional-objects' else 'minted'}-{locale}",
-                code_marker)
+                *code_marker)
     if api == r"\ufcPrintListOfAlgorithms":
         return (lang[5], f"optional-algorithm-{locale}")
     if api == r"\ufcInputMinted":
@@ -102,7 +102,7 @@ def required_pdf_markers(api: str, scenario: str, locale: str) -> tuple[str, ...
                 "saudacao")
     if api == "ufclisting":
         return (f"optional-listing-{locale}", "synthetic-code-source", lang[4],
-                "int sum")
+                "sum", "return")
     raise ValueError("unrecognized API")
 
 
@@ -136,7 +136,13 @@ def validate_case(locale: str, scenario: str, source: str, log: str,
             raise ValueError(f"fixture API applicability drift: {api}/{scenario}")
         if applied:
             checks = required_pdf_markers(api, scenario, locale)
-            absent = [marker for marker in checks if fold(marker) not in visible]
+            # PDF extraction may split C++ tokens with unpredictable spaces.
+            # Match code identifiers as whole lexical words, not line layout.
+            absent = [marker for marker in checks
+                      if (not re.search(r"(?<![a-z0-9_])" + re.escape(fold(marker))
+                                       + r"(?![a-z0-9_])", visible)
+                          if marker in ("sum", "return")
+                          else fold(marker) not in visible)]
             if absent:
                 raise ValueError(f"actual PDF missing output for {api}/{scenario}/{locale}: {absent}")
             results.append({
@@ -207,7 +213,7 @@ def negative_controls() -> int:
                     raise ValueError(f"unrejected missing source/PDF mutant: {api}")
         # Removing only the rendered code (and retaining titles, captions,
         # source attributions and lists) must invalidate the PDF evidence.
-        code_marker = ("int sum" if scenario == "optional-objects" else
+        code_marker = ("sum" if scenario == "optional-objects" else
                        "saudacao" if scenario == "optional-minted" else None)
         if code_marker:
             stripped_pdf = re.sub(re.escape(code_marker), "CODE_REMOVED", body,
