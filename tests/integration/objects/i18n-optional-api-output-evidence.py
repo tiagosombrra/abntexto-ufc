@@ -106,6 +106,36 @@ def required_pdf_markers(api: str, scenario: str, locale: str) -> tuple[str, ...
     raise ValueError("unrecognized API")
 
 
+def check_dedicated_list_pages(pdf_text: str, scenario: str, locale: str) -> None:
+    """Require actual list entries on pretextual list pages, not object captions.
+
+    The fixture's list pages precede the body. Their captions also appear
+    later in the body, which cannot substitute for a missing list entry.
+    """
+    if scenario == "optional-algorithm-comment":
+        return
+    pages = [fold(page) for page in pdf_text.split("\f") if page.strip()]
+    expected = [
+        (LOCALES[locale][4],
+         f"optional-{'listing' if scenario == 'optional-objects' else 'minted'}-{locale}"),
+    ]
+    if scenario == "optional-objects":
+        expected.append((LOCALES[locale][5], f"optional-algorithm-{locale}"))
+    if len(pages) <= len(expected):
+        raise ValueError("optional pretextual list/body pages missing")
+    body = f"optional-module-body-{locale}"
+    for index, (heading, entry) in enumerate(expected):
+        current = pages[index]
+        if fold(heading) not in current:
+            raise ValueError(f"missing localized list heading on dedicated page {index+1}")
+        if fold(entry) not in current:
+            raise ValueError(f"missing actual entry in list section {heading}/{scenario}/{locale}")
+        if body in current:
+            raise ValueError("document body cannot substitute for list entry page")
+    if not any(body in page for page in pages[len(expected):]):
+        raise ValueError("PDF lacks body after the dedicated list pages")
+
+
 def validate_case(locale: str, scenario: str, source: str, log: str,
                   pdf_text: str, actual_catalog: str) -> list[dict]:
     if locale not in LOCALES or scenario not in SCENARIOS:
@@ -120,6 +150,7 @@ def validate_case(locale: str, scenario: str, source: str, log: str,
                      else f"optional-module-body-{locale}")
     if expected_body not in visible:
         raise ValueError("real optional PDF body marker missing")
+    check_dedicated_list_pages(pdf_text, scenario, locale)
     # The source must contain the listing code itself, not only the caption.
     # The minted fixture must point to a known file with a stable code token.
     if scenario == "optional-objects" and "int sum(int a, int b)" not in source:
@@ -192,7 +223,13 @@ def negative_controls() -> int:
             markers.update(required_pdf_markers(api, scenario, locale))
         markers.add("OPTIONAL-ALGORITHM-ONLY-EN" if scenario == "optional-algorithm-comment"
                     else "OPTIONAL-MODULE-BODY-EN")
-        body = "\n".join(markers)
+        list_pages = []
+        if scenario != "optional-algorithm-comment":
+            entry = f"optional-{'listing' if scenario == 'optional-objects' else 'minted'}-{locale}"
+            list_pages.append(f"{lang[4]}\nCode 1 — {entry}")
+            if scenario == "optional-objects":
+                list_pages.append(f"{lang[5]}\nAlgorithm 1 — optional-algorithm-{locale}")
+        body = "\f".join([*list_pages, "\n".join(markers)])
         log = "OPTIONAL-I18N-BABEL=english"
         valid = validate_case(locale, scenario, source, log, body, "en-US")
         if sum(v["status"] == "BOUNDED_FUNCTIONAL_OUTPUT_PASS" for v in valid) != len(APPLICABLE[scenario]):
@@ -211,6 +248,24 @@ def negative_controls() -> int:
                     failures += 1
                 else:
                     raise ValueError(f"unrejected missing source/PDF mutant: {api}")
+        # A list heading alone must not count as a populated list. Remove
+        # the list entry on its own page but retain its body caption and code.
+        for index, entry in enumerate(
+            [f"optional-{'listing' if scenario == 'optional-objects' else 'minted'}-{locale}"]
+            + ([f"optional-algorithm-{locale}"] if scenario == "optional-objects" else [])
+        ):
+            pages = body.split("\f")
+            changed_page = re.sub(re.escape(entry), "ENTRY_REMOVED", pages[index],
+                                  flags=re.IGNORECASE)
+            if changed_page == pages[index]:
+                raise ValueError("list-only negative mutation did not change list")
+            pages[index] = changed_page
+            try:
+                validate_case(locale, scenario, source, log, "\f".join(pages), "en-US")
+            except ValueError:
+                failures += 1
+            else:
+                raise ValueError("missing list entry accepted despite body caption")
         # Removing only the rendered code (and retaining titles, captions,
         # source attributions and lists) must invalidate the PDF evidence.
         code_marker = ("sum" if scenario == "optional-objects" else
@@ -258,7 +313,7 @@ def negative_controls() -> int:
         failures += 1
     else:
         raise ValueError("missing PDF catalog language accepted")
-    expected = 2 * sum(map(len, APPLICABLE.values())) + 3 * len(SCENARIOS) + 4
+    expected = 2 * sum(map(len, APPLICABLE.values())) + 3 * len(SCENARIOS) + 7
     if failures != expected:
         raise ValueError(f"wrong negative control count: {failures}/{expected}")
     return failures
