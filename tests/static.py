@@ -165,6 +165,9 @@ def execute_checks() -> tuple[int, int, int, int]:
         "72 public API evidence-source links (source-only; no PDF claim)")
     run([sys.executable, "tests/integration/frontmatter/i18n-executable-driver-evidence.py"],
         "six executable driver/fixture links (registered and bounded; no PDF claim)")
+    run([sys.executable, "tests/integration/frontmatter/i18n-six-api-output-evidence.py",
+         "--self-test"],
+        "six public API actual-PDF/log predicates (17 effective negative controls)")
 
     for filename in SOURCE_CHECK_NAMES:
         try:

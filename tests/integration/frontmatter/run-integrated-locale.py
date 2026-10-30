@@ -506,6 +506,10 @@ def main() -> None:
               "entries": entries}
     (path / "manifest.json").write_text(
         json.dumps(output, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    # Inspect original real PDFs, PDF-extracted text and TeX stdout once more
+    # for six public-command behavioral receipts, without recompiling TeX.
+    command([sys.executable, str(ROOT / "tests/integration/frontmatter/i18n-six-api-output-evidence.py"),
+             "--locale", locale], path / "six-api-output-evidence.log")
     print(f"INTEGRATED-I18N status=PASS locale={locale} profiles=7 "
           "real_pdfs=7 biber=PASS sha256=PASS babel=PASS pdf_lang=PASS")
 
