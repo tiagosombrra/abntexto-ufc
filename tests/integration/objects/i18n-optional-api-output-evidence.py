@@ -45,7 +45,7 @@ SOURCE_TOKEN = {
     "algorithms": "algorithms=algpseudocodex",
     r"\ufcPrintListOfCodeListings": r"\ufcPrintListOfCodeListings",
     r"\ufcPrintListOfAlgorithms": r"\ufcPrintListOfAlgorithms",
-    r"\ufcInputMinted": r"\ufcInputMinted[here]",
+    r"\ufcInputMinted": r"\ufcInputMinted[here]{python}{tests/fixtures/example.py}",
     "ufclisting": r"\begin{ufclisting}[here]",
     "ufcalgorithm": r"\begin{ufcalgorithm}[here][1]",
 }
@@ -92,13 +92,17 @@ def required_pdf_markers(api: str, scenario: str, locale: str) -> tuple[str, ...
         return (f"optional-algorithm-{locale}", "optional-alg-step-1",
                 "optional-alg-step-2", algorithm_title)
     if api == r"\ufcPrintListOfCodeListings":
-        return (lang[4], f"optional-{'listing' if scenario == 'optional-objects' else 'minted'}-{locale}")
+        code_marker = "int sum" if scenario == "optional-objects" else "saudacao"
+        return (lang[4], f"optional-{'listing' if scenario == 'optional-objects' else 'minted'}-{locale}",
+                code_marker)
     if api == r"\ufcPrintListOfAlgorithms":
         return (lang[5], f"optional-algorithm-{locale}")
     if api == r"\ufcInputMinted":
-        return (f"optional-minted-{locale}", "synthetic-minted-source", lang[4])
+        return (f"optional-minted-{locale}", "synthetic-minted-source", lang[4],
+                "saudacao")
     if api == "ufclisting":
-        return (f"optional-listing-{locale}", "synthetic-code-source", lang[4])
+        return (f"optional-listing-{locale}", "synthetic-code-source", lang[4],
+                "int sum")
     raise ValueError("unrecognized API")
 
 
@@ -116,6 +120,14 @@ def validate_case(locale: str, scenario: str, source: str, log: str,
                      else f"optional-module-body-{locale}")
     if expected_body not in visible:
         raise ValueError("real optional PDF body marker missing")
+    # The source must contain the listing code itself, not only the caption.
+    # The minted fixture must point to a known file with a stable code token.
+    if scenario == "optional-objects" and "int sum(int a, int b)" not in source:
+        raise ValueError("actual listing source code is missing")
+    if scenario == "optional-minted":
+        fixture = ROOT / "tests/fixtures/example.py"
+        if not fixture.is_file() or "saudacao" not in fixture.read_text(encoding="utf-8"):
+            raise ValueError("minted Python code fixture is missing or changed")
     results = []
     for api in ALL_APIS:
         applied = api in APPLICABLE[scenario]
@@ -191,6 +203,21 @@ def negative_controls() -> int:
                     failures += 1
                 else:
                     raise ValueError(f"unrejected missing source/PDF mutant: {api}")
+        # Removing only the rendered code (and retaining titles, captions,
+        # source attributions and lists) must invalidate the PDF evidence.
+        code_marker = ("int sum" if scenario == "optional-objects" else
+                       "saudacao" if scenario == "optional-minted" else None)
+        if code_marker:
+            stripped_pdf = re.sub(re.escape(code_marker), "CODE_REMOVED", body,
+                                  flags=re.IGNORECASE)
+            if stripped_pdf == body:
+                raise ValueError("code-only negative mutation did not change PDF")
+            try:
+                validate_case(locale, scenario, source, log, stripped_pdf, "en-US")
+            except ValueError:
+                failures += 1
+            else:
+                raise ValueError("rendered code missing but test reported PASS")
         for args in ((locale, scenario, source, log, body, "pt-BR"),
                      (locale, scenario, source, "OPTIONAL-I18N-BABEL=french", body, "en-US"),
                      (locale, scenario, source, log, re.sub(
@@ -223,7 +250,7 @@ def negative_controls() -> int:
         failures += 1
     else:
         raise ValueError("missing PDF catalog language accepted")
-    expected = 2 * sum(map(len, APPLICABLE.values())) + 3 * len(SCENARIOS) + 2
+    expected = 2 * sum(map(len, APPLICABLE.values())) + 3 * len(SCENARIOS) + 4
     if failures != expected:
         raise ValueError(f"wrong negative control count: {failures}/{expected}")
     return failures
