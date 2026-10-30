@@ -163,6 +163,8 @@ def execute_checks() -> tuple[int, int, int, int]:
     # The integrated PDF workflow is path-scoped, so it is not sufficient here.
     run([sys.executable, "tests/integration/frontmatter/i18n-evidence-crosswalk.py"],
         "72 public API evidence-source links (source-only; no PDF claim)")
+    run([sys.executable, "tests/integration/frontmatter/i18n-executable-driver-evidence.py"],
+        "six executable driver/fixture links (registered and bounded; no PDF claim)")
 
     for filename in SOURCE_CHECK_NAMES:
         try:

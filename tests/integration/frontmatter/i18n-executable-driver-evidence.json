@@ -1,0 +1,92 @@
+{
+  "schema_version": 1,
+  "contract": "bounded executable-test-driver to public identifier fixture proof",
+  "global_acceptance": "PENDING_ITEM_PDF_ASSERTIONS_AND_HUMAN_REVIEW",
+  "interpretation": "Driver registration and test-source predicates show the CI path, not that this identifier is functionally translated for each locale/profile. Runtime pass requires exact source_sha/full Linux scope receipt.",
+  "entries": [
+    {
+      "identifier": "\\ufcMathFontPolicy",
+      "group": "public_commands",
+      "fixture": "tests/documents/mathematics.tex",
+      "driver": "tests/integration/layout/math.sh",
+      "check": "math",
+      "markers": [
+        "UFC-MATH-POLICY=NEW-TX-MATH",
+        "pdffonts",
+        "font-embedding.sh"
+      ],
+      "scope": "two TeX engines; math-policy log, PDF font identity/embedding and equation geometry; locale/profile cross-product pending",
+      "receipt_state": "EXECUTABLE_DRIVER_LINK_NOT_PER_IDENTIFIER_CERTIFIED"
+    },
+    {
+      "identifier": "\\ufcPrintCatalogCard",
+      "group": "public_commands",
+      "fixture": "tests/documents/catalog-card.tex",
+      "driver": "tests/integration/profiles/catalog-card.sh",
+      "check": "catalog-card",
+      "markers": [
+        "UFC-BEFORE-CARD=2",
+        "pdftotext -layout",
+        "VALIDATION-EVIDENCE rule=deposit.catalog-card"
+      ],
+      "scope": "two TeX engines, enabled/disabled and print-mode branches; external catalog typography manual",
+      "receipt_state": "EXECUTABLE_DRIVER_LINK_NOT_PER_IDENTIFIER_CERTIFIED"
+    },
+    {
+      "identifier": "\\ufcPrintDedication",
+      "group": "public_commands",
+      "fixture": "tests/documents/frontmatter-academic-work.tex",
+      "driver": "tests/integration/frontmatter/frontmatter.sh",
+      "check": "frontmatter",
+      "markers": [
+        "frontmatter_definition_alignment.py",
+        "pdftotext frontmatter-academic-work.pdf",
+        "dedication received a heading"
+      ],
+      "scope": "frontmatter fixture on two TeX engines; dedication heading absence/position; four-locale item proof pending",
+      "receipt_state": "EXECUTABLE_DRIVER_LINK_NOT_PER_IDENTIFIER_CERTIFIED"
+    },
+    {
+      "identifier": "\\ufcPrintEpigraph",
+      "group": "public_commands",
+      "fixture": "tests/documents/frontmatter-academic-work.tex",
+      "driver": "tests/integration/frontmatter/frontmatter.sh",
+      "check": "frontmatter",
+      "markers": [
+        "frontmatter_definition_alignment.py",
+        "pdftotext frontmatter-academic-work.pdf",
+        "frontmatter-academic-work.tex"
+      ],
+      "scope": "frontmatter fixture on two TeX engines; epigraph-specific output/assertion and four-locale branches pending",
+      "receipt_state": "EXECUTABLE_DRIVER_LINK_NOT_PER_IDENTIFIER_CERTIFIED"
+    },
+    {
+      "identifier": "\\ufcInputListing",
+      "group": "public_commands",
+      "fixture": "tests/documents/advanced-objects.tex",
+      "driver": "tests/integration/objects/object.sh",
+      "check": "objects",
+      "markers": [
+        "Trecho C++ embutido",
+        "Arquivo C++ externo",
+        "pdftotext -layout"
+      ],
+      "scope": "two TeX engines and source code object/list PDF checks; locale/profile matrix pending",
+      "receipt_state": "EXECUTABLE_DRIVER_LINK_NOT_PER_IDENTIFIER_CERTIFIED"
+    },
+    {
+      "identifier": "strict-font",
+      "group": "setup_option_identifiers",
+      "fixture": "tests/documents/font-configuration.tex",
+      "driver": "tests/integration/layout/font-config.sh",
+      "check": "font-config",
+      "markers": [
+        "strict mode accepted an unavailable literal font",
+        "font-embedding.sh",
+        "literal_available"
+      ],
+      "scope": "two TeX engines, times/arial and strict rejection or literal-font success; Windows host font proof separate",
+      "receipt_state": "EXECUTABLE_DRIVER_LINK_NOT_PER_IDENTIFIER_CERTIFIED"
+    }
+  ]
+}

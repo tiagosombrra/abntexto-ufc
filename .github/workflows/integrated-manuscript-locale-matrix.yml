@@ -12,6 +12,10 @@ on:
       - tests/integration/layout/font-config.sh
       - tests/integration/frontmatter/i18n-api-inventory.py
       - tests/integration/frontmatter/i18n-evidence-crosswalk.py
+      - tests/integration/frontmatter/i18n-executable-driver-evidence.py
+      - tests/integration/frontmatter/i18n-executable-driver-evidence.json
+      - tests/static.py
+      - tests/run.py
       - standards/api/i18n-functional-evidence-crosswalk.json
       - standards/api/i18n-coverage-inventory.json
       - standards/api/public-api.json
@@ -32,6 +36,10 @@ on:
       - tests/integration/layout/font-config.sh
       - tests/integration/frontmatter/i18n-api-inventory.py
       - tests/integration/frontmatter/i18n-evidence-crosswalk.py
+      - tests/integration/frontmatter/i18n-executable-driver-evidence.py
+      - tests/integration/frontmatter/i18n-executable-driver-evidence.json
+      - tests/static.py
+      - tests/run.py
       - standards/api/i18n-functional-evidence-crosswalk.json
       - standards/api/i18n-coverage-inventory.json
       - standards/api/public-api.json
@@ -61,12 +69,18 @@ jobs:
         env:
           SOURCE_COMMIT_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
         run: python3 tests/integration/frontmatter/i18n-evidence-crosswalk.py --report
+      - name: Verify six executable test relationships against actual runner registration
+        env:
+          SOURCE_COMMIT_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: python3 tests/integration/frontmatter/i18n-executable-driver-evidence.py --report
       - name: Upload public API source-bound evidence inventory
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: i18n-api-crosswalk-${{ github.run_id }}
-          path: artifacts/validation/i18n-public-evidence-crosswalk.json
+          path: |
+            artifacts/validation/i18n-public-evidence-crosswalk.json
+            artifacts/validation/i18n-executable-driver-evidence.json
           retention-days: 21
           if-no-files-found: warn
       - name: Generate and statically inspect 28 real TeX inputs
