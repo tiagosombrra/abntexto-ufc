@@ -179,7 +179,10 @@ def negative_controls() -> int:
             raise ValueError("negative test baseline has wrong applicability")
         for api in APPLICABLE[scenario]:
             bad_source = source.replace(SOURCE_TOKEN[api], "", 1)
-            bad_body = body.replace(required_pdf_markers(api, scenario, locale)[0], "REMOVED", 1)
+            # Remove every casing of this semantic marker; generated fixture
+            # markers may also occur in the uppercase document-body sentinel.
+            marker = required_pdf_markers(api, scenario, locale)[0]
+            bad_body = re.sub(re.escape(marker), "REMOVED", body, flags=re.IGNORECASE)
             for args in ((locale, scenario, bad_source, log, body, "en-US"),
                          (locale, scenario, source, log, bad_body, "en-US")):
                 try:
