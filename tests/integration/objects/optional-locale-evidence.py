@@ -383,6 +383,11 @@ def main() -> None:
                     "automatically_translated_author_data": False,
                     "visual_language_review": "PENDING"}
         (folder / "manifest.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n")
+        # Recheck public optional APIs against real source, log, and PDF output.
+        # Do not rebuild TeX: the checker consumes the three existing PDFs.
+        subprocess.run([sys.executable,
+                        "tests/integration/objects/i18n-optional-api-output-evidence.py",
+                        "--locale", args.locale], cwd=ROOT, check=True)
         print(f"OPTIONAL-I18N status=PASS locale={args.locale} real_pdfs=3 lang=PASS "
               "babel=PASS text=PASS negatives=PASS", flush=True)
 
