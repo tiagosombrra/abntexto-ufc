@@ -179,6 +179,8 @@ def negative_controls() -> int:
         locale = "en"
         lang = LOCALES[locale]
         source = " ".join(SOURCE_TOKEN[a] for a in APPLICABLE[scenario])
+        if scenario == "optional-objects":
+            source += "\nint sum(int a, int b) { return a + b; }"
         markers = set()
         for api in APPLICABLE[scenario]:
             markers.update(required_pdf_markers(api, scenario, locale))
