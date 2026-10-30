@@ -168,6 +168,9 @@ def execute_checks() -> tuple[int, int, int, int]:
     run([sys.executable, "tests/integration/frontmatter/i18n-six-api-output-evidence.py",
          "--self-test"],
         "six public API actual-PDF/log predicates (17 effective negative controls)")
+    run([sys.executable, "tests/integration/objects/i18n-optional-api-output-evidence.py",
+         "--self-test"],
+        "seven optional APIs with real-PDF predicates and scoped negative mutants")
 
     for filename in SOURCE_CHECK_NAMES:
         try:
