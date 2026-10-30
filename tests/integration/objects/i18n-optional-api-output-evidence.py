@@ -193,9 +193,10 @@ def negative_controls() -> int:
                     raise ValueError(f"unrejected missing source/PDF mutant: {api}")
         for args in ((locale, scenario, source, log, body, "pt-BR"),
                      (locale, scenario, source, "OPTIONAL-I18N-BABEL=french", body, "en-US"),
-                     (locale, scenario, source, log, body.replace(
+                     (locale, scenario, source, log, re.sub(
                          "OPTIONAL-ALGORITHM-ONLY-EN" if scenario == "optional-algorithm-comment"
-                         else "OPTIONAL-MODULE-BODY-EN", "LOST"), "en-US")):
+                         else "OPTIONAL-MODULE-BODY-EN", "LOST", body,
+                         flags=re.IGNORECASE), "en-US")):
             try:
                 validate_case(*args)
             except ValueError:
