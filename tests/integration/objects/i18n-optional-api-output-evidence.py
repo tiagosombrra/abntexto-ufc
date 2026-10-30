@@ -250,10 +250,12 @@ def negative_controls() -> int:
                     raise ValueError(f"unrejected missing source/PDF mutant: {api}")
         # A list heading alone must not count as a populated list. Remove
         # the list entry on its own page but retain its body caption and code.
-        for index, entry in enumerate(
+        list_entries = (
             [f"optional-{'listing' if scenario == 'optional-objects' else 'minted'}-{locale}"]
             + ([f"optional-algorithm-{locale}"] if scenario == "optional-objects" else [])
-        ):
+            if scenario != "optional-algorithm-comment" else []
+        )
+        for index, entry in enumerate(list_entries):
             pages = body.split("\f")
             changed_page = re.sub(re.escape(entry), "ENTRY_REMOVED", pages[index],
                                   flags=re.IGNORECASE)
