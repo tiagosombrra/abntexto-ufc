@@ -1,0 +1,71 @@
+name: Pretextual public APIs four-language PDF certification
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths:
+      - abntexto-ufc.cls
+      - tests/integration/frontmatter/i18n-pretextual-api-evidence.py
+      - tests/static.py
+      - .github/workflows/i18n-pretextual-api-matrix.yml
+  push:
+    branches: [main]
+    paths:
+      - abntexto-ufc.cls
+      - tests/integration/frontmatter/i18n-pretextual-api-evidence.py
+      - tests/static.py
+      - .github/workflows/i18n-pretextual-api-matrix.yml
+permissions:
+  contents: read
+concurrency:
+  group: pretextual-api-i18n-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  preflight:
+    name: Static predicates and negative controls
+    runs-on: ubuntu-24.04
+    timeout-minutes: 4
+    steps:
+      - name: Checkout exact candidate source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - name: Reject wrong locale, source call, page geometry and omission mutants
+        run: python3 tests/integration/frontmatter/i18n-pretextual-api-evidence.py --self-test
+  locale:
+    name: Front matter functional PDF / ${{ matrix.locale }} (4 real PDFs)
+    runs-on: ubuntu-24.04
+    needs: preflight
+    timeout-minutes: 24
+    strategy:
+      fail-fast: false
+      matrix:
+        locale: [pt, en, es, fr]
+    steps:
+      - name: Checkout source SHA
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - name: Compile and inspect catalog, dedication and two epigraph variants
+        uses: xu-cheng/texlive-action@22c04326a5d855880f9d39bb955138bf11c6df80 # v3
+        env:
+          SOURCE_COMMIT_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        with:
+          texlive_version: 2026
+          os: debian
+          run: |
+            export DEBIAN_FRONTEND=noninteractive
+            apt-get update -y
+            apt-get install -y --no-install-recommends poppler-utils qpdf
+            git config --global --add safe.directory "$PWD"
+            python3 tests/integration/frontmatter/i18n-pretextual-api-evidence.py --locale ${{ matrix.locale }}
+      - name: Retain source-bound real PDFs and receipt hashes
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: i18n-pretextual-${{ matrix.locale }}-${{ github.run_id }}
+          path: artifacts/i18n-pretextual/${{ matrix.locale }}/**
+          retention-days: 21
+          if-no-files-found: warn
