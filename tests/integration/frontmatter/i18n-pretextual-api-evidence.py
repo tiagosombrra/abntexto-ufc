@@ -313,7 +313,7 @@ def main() -> None:
         job = "pretextual-" + case + "-" + locale
         tex = folder / (job + ".tex")
         tex.write_text(manuscript(locale, case, folder), encoding="utf-8")
-        log = folder / (job + ".log")
+        log = folder / (job + "-stdout.log")
         for _ in range(2):
             execute(["pdflatex", "-interaction=nonstopmode", "-halt-on-error",
                      "-file-line-error", "-jobname", job,
@@ -329,7 +329,9 @@ def main() -> None:
         receipt.update({
             "source_sha": source_sha, "pdf": pdf.relative_to(ROOT).as_posix(),
             "pdf_sha256": digest(pdf), "source_sha256": digest(tex),
-            "log_sha256": digest(log), "external_card_sha256": digest(card),
+            "log_sha256": digest(log),
+            "tex_engine_log_sha256": digest(folder / (job + ".log")),
+            "external_card_sha256": digest(card),
             "external_card_source_sha256": digest(folder / "external-card.tex"),
             "bbox_a4": True, "pdf_catalog_lang": lang,
             "babel": LOCALES[locale][1],
