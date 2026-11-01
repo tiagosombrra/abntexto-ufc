@@ -6,14 +6,12 @@ on:
     paths:
       - abntexto-ufc.cls
       - tests/integration/frontmatter/i18n-pretextual-api-evidence.py
-      - tests/static.py
       - .github/workflows/i18n-pretextual-api-matrix.yml
   push:
     branches: [main]
     paths:
       - abntexto-ufc.cls
       - tests/integration/frontmatter/i18n-pretextual-api-evidence.py
-      - tests/static.py
       - .github/workflows/i18n-pretextual-api-matrix.yml
 permissions:
   contents: read
