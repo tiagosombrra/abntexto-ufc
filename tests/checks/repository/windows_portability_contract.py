@@ -28,7 +28,7 @@ def main() -> None:
     text = WORKFLOW.read_text(encoding="utf-8")
     required = {
         "explicit Windows Server 2025 runner": "runs-on: windows-2025",
-        "pinned TeX Live setup action": "zauguin/install-texlive@6671d0c62046c7e349fe154d5208fe746b07e037",
+        "pinned TeX Live setup action": "zauguin/install-texlive@c9f3ea3d51b2e04d092c4f9d208a19542d5dabcf",
         "pinned TeX Live version": "texlive_version: '2026'",
         "newtx font axes dependency": "\n            fontaxes\n",
         "virtual-font utilities package": "\n            fontware\n",
@@ -42,7 +42,7 @@ def main() -> None:
         "existing font POC": "tests/integration/layout/font-poc.sh",
         "strict PDF artifact upload": "windows-font-pdfs-${{ github.run_id }}",
         "dependent Linux certification job": "needs: windows-build",
-        "artifact download": "actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c",
+        "artifact download": "actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333",
         "existing Windows PDF certification gate": "tests/integration/layout/windows-font-pdfa.sh",
         "bounded evidence marker": "WINDOWS-PORTABILITY-EVIDENCE status=PASS",
         "TeX Live evidence identity": "texlive=2026",

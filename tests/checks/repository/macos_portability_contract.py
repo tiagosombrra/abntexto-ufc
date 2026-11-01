@@ -28,7 +28,7 @@ def main() -> None:
     text = WORKFLOW.read_text(encoding="utf-8")
     required = {
         "explicit macOS 26 ARM runner": "runs-on: macos-26",
-        "pinned TeX Live setup action": "zauguin/install-texlive@6671d0c62046c7e349fe154d5208fe746b07e037",
+        "pinned TeX Live setup action": "zauguin/install-texlive@c9f3ea3d51b2e04d092c4f9d208a19542d5dabcf",
         "pinned TeX Live version": "texlive_version: '2026'",
         "booktabs dependency": "\n            booktabs\n",
         "Latin Modern package": "\n            lm\n",
@@ -41,7 +41,7 @@ def main() -> None:
         "public tutorial LuaLaTeX compile": "make DOCUMENT=main ENGINE=lualatex compile",
         "two-PDF artifact upload": "macos-template-pdfs-${{ github.run_id }}",
         "dependent Linux certification job": "needs: macos-build",
-        "artifact download": "actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c",
+        "artifact download": "actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333",
         "existing font embedding gate": "tests/integration/layout/font-embedding.sh",
         "existing PDF/A gate": "tests/integration/layout/pdfa.sh",
         "bounded evidence marker": "MACOS-PORTABILITY-EVIDENCE status=PASS",
