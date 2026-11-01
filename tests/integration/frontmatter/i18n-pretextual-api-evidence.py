@@ -138,8 +138,12 @@ def verify_case(locale: str, case: str, tex: str, pages: list[str],
     for key in ("CARD", "DED", "EPS", "EPL", "BODY"):
         indices = [i for i, page in enumerate(pages) if t[key] in page]
         desired = [i for i, label in enumerate(expected) if label == key]
-        if indices != desired:
-            raise ValueError(f"{key} printed on wrong page, missing or duplicated: {indices} != {desired}")
+        occurrences = sum(page.count(t[key]) for page in pages)
+        if indices != desired or occurrences != len(desired):
+            raise ValueError(
+                f"{key} printed on wrong page, missing or duplicated: "
+                f"{indices} != {desired}, occurrences={occurrences}"
+            )
     if not pages[0].strip() or any(t[key] in pages[0] for key in t):
         raise ValueError("missing title page or pretextual content leaked there")
     if "BLANK" in expected and pages[expected.index("BLANK")].strip():
@@ -204,6 +208,7 @@ def self_test() -> None:
             lambda: test(source=src.replace("document-language=pt", "document-language=en")),
             lambda: test(shown=pages + ["EXTRA"]),
             lambda: test(shown=[p.replace(marker["BODY"], "") for p in pages]),
+            lambda: test(shown=[p + marker["BODY"] if marker["BODY"] in p else p for p in pages]),
             lambda: test(info=log.replace("PRETEXTUAL-BABEL=brazilian", "PRETEXTUAL-BABEL=english")),
             lambda: test(catalog="en-US"),
             lambda: test(shown=[p + "CARDENAA" for p in pages]),
@@ -213,6 +218,9 @@ def self_test() -> None:
         if extra:
             mutations += [
                 lambda: test(source=src.replace(r"\ufcPrintDedication{", r"\relax{")),
+                lambda: test(source=src.replace(r"\ufcPrintEpigraph[short]{", r"\relax{")),
+                lambda: test(source=src.replace(r"\ufcPrintEpigraph[long]{", r"\relax{")),
+                lambda: test(shown=[p + marker["DED"] if marker["DED"] in p else p for p in pages]),
                 lambda: test(shown=[p.replace(marker["DED"], "") for p in pages]),
                 lambda: test(boxes=[{k: {**v, "y": 100} if k == marker["EPS"] else v
                                      for k, v in d.items()} for d in bbox]),
