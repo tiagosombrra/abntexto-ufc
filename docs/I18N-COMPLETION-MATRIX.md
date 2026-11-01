@@ -183,9 +183,9 @@ A auditoria das 70 chaves públicas revelou que `examiner-3` até `examiner-6`, 
 
 **Gates obrigatórios:** Static, matriz integrada de 92 PDFs, matriz opcional de 12 PDFs, Linux 42/42, Codex exato CLEAN sem threads, squash merge protegido e regressão pós-merge Static/92/12/Linux42/Release38/CTAN `pkgcheck` no SHA efetivo.
 
-## P0.8D-6 — candidata: três APIs pré-textuais em PDFs reais (sem certificação ainda)
+## P0.8D-6 — três APIs pré-textuais com evidência funcional em PDFs reais (integrada)
 
-**Situação:** implementação em branch de desenvolvimento. A versão 3.1.0 permanece UNRELEASED; as 72 entradas de inventário não são automaticamente certificadas.
+**Situação:** a PR #544 foi integrada por squash merge em `main=1b82c7ecf71c3b6ce2b8c0ba85ac97a9fc51f809`; os seis workflows pós-merge dessa revisão terminaram com sucesso (Static, 16 + 92 + 12 PDFs, Linux 42/42 e Release 38/38 com CTAN `pkgcheck`). Essa evidência é específica aos cenários abaixo; a versão 3.1.0 permanece UNRELEASED e as 72 entradas do inventário não estão automaticamente certificadas.
 
 **Escopo:** `\ufcPrintCatalogCard`, `\ufcPrintDedication` e `\ufcPrintEpigraph[short|long]`. Quatro cenários por idioma (PT/EN/ES/FR): `single-enabled` exercita ficha, dedicatória e as duas epígrafes; `double-enabled` testa a ficha no verso; `single-disabled` e `double-disabled` verificam supressão e página física vazia. A matriz prevê 16 PDFs reais, independente dos 92+12 já existentes. O perfil abordado é apenas `undergraduate-capstone`; os demais são explicitamente não cobertos por esta prova.
 
@@ -193,4 +193,12 @@ A auditoria das 70 chaves públicas revelou que `examiner-3` até `examiner-6`, 
 
 **Controles negativos:** `--self-test` deve rejeitar ausência/duplicação de comando, conteúdo ausente, marcador na página errada, páginas extras, idioma de fonte/log/PDF divergente, conteúdo pré-textual acima da metade da folha e recuo incorreto. O Static Contract executa este self-test incondicionalmente; o workflow `i18n-pretextual-api-matrix.yml` produz PDFs e recibos específicos por localidade.
 
-**Gates pendentes:** primeiro, a certificação pós-merge de `main=2d19c98f18179fcd5c42970522d61df72b92edf1` (Linux 42/42 e Release 38/38 + `pkgcheck`). Depois, PR única com Static, matriz específica, matrizes 92+12 quando aplicáveis, Linux/Release, Codex CLEAN no HEAD e zero threads. Só após isso há squash merge protegido e revalidação exata na nova main. Nenhum aceite linguístico/visual ou lançamento é inferido de PDFs automatizados.
+**Gates concluídos:** revisão Codex sem achados no HEAD da PR #544, zero threads pendentes, merge protegido e certificação pós-merge no SHA `1b82c7ecf71c3b6ce2b8c0ba85ac97a9fc51f809`. As evidências não constituem aceite linguístico/visual humano ou aprovação institucional da ficha catalográfica.
+
+## P0.8D-7 — evidência delimitada para código externo e tipografia (em preparação)
+
+**APIs:** `\ufcInputListing`, `\ufcMathFontPolicy` e a opção `strict-font`. Quatro fontes TeX/PDF independentes, uma por localidade PT/EN/ES/FR, em `pdfLaTeX` e no perfil `undergraduate-capstone`, exercitam C++ externo de conteúdo sintético, a expansão pública da política `NEW-TX-MATH` no log e no PDF e `strict-font=false` com `font=times`. Para cada localidade, uma segunda compilação controlada com `font=arial,strict-font=true` confirma falha quando as fontes Windows requeridas não foram preparadas; se estiverem disponíveis, exige compilação bem-sucedida e registra essa condição. Não se trata de certificação de fontes proprietárias, LuaLaTeX ou dos sete perfis.
+
+**Prova proposta:** auditor independente `tests/integration/objects/i18n-listing-font-evidence.py`, controles negativos para marcadores completos, C++ original, log e idioma, SHA-256 de PDF/TeX/C++ e logs no SHA exato, `qpdf` para idioma do catálogo e `pdftotext -bbox-layout` para palavras efetivamente renderizadas. Workflow específico `i18n-listing-font-matrix.yml` evita disparar as matrizes genéricas sem alteração da classe. Mantém-se o Static Contract e a suíte Linux `objects` proporcional ao impacto.
+
+**Estado:** implementação inicial isolada na branch de desenvolvimento; nenhuma afirmação de aprovação antes dos quatro PDFs, controles negativos e revisão Codex no HEAD da PR. Tradução humana, conformidade tipográfica institucional e a cobertura do inventário completo continuam pendentes.

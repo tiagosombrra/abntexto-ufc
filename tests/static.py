@@ -174,6 +174,9 @@ def execute_checks() -> tuple[int, int, int, int]:
     run([sys.executable, "tests/integration/frontmatter/i18n-pretextual-api-evidence.py",
          "--self-test"],
         "three pretextual APIs with source/real-PDF page and locale negative mutants")
+    run([sys.executable, "tests/integration/objects/i18n-listing-font-evidence.py",
+         "--self-test"],
+        "listing, math-font getter and strict-font with malformed PDF/log negative mutants")
 
     for filename in SOURCE_CHECK_NAMES:
         try:

@@ -337,6 +337,15 @@ def main() -> None:
         ["tests/run.py", "tests/integration/profiles/article/scientific-article-body.sh"]
     ) != ("article",):
         fail("nested article paths must retain article scope after taxonomy moves")
+    # Keep the newly isolated listing/font PDF verifier within the objects scope.
+    listing_auditor = "tests/integration/objects/i18n-listing-font-evidence.py"
+    listing_workflow = ".github/workflows/i18n-listing-font-matrix.yml"
+    if infer_suites([listing_auditor]) != ("objects",):
+        fail("standalone listing/font auditor must select objects, not full Linux")
+    if infer_suites([listing_workflow]) != ("smoke",):
+        fail("listing/font workflow-only changes must select smoke")
+    if infer_suites(["abntexto-ufc.cls", listing_auditor]) != ("complete",):
+        fail("class runtime changes must override the bounded objects scope")
     if infer_suites(["abntexto-ufc.cls"]) != ("complete",):
         fail("canonical runtime changes must force complete integration")
     # The standalone PDF auditor has its own real-PDF matrix; do not run 42 checks.
