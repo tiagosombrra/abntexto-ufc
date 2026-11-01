@@ -346,6 +346,18 @@ def main() -> None:
         fail("standalone pretextual auditor must select bounded frontmatter integration")
     if infer_suites([pretextual_workflow]) != ("smoke",):
         fail("isolated pretextual workflow-only changes must select smoke integration")
+    # Static-only changes must be exercised by Static, not all PDF matrices.
+    for matrix in (
+        "integrated-manuscript-locale-matrix.yml",
+        "i18n-optional-modules-matrix.yml",
+        "i18n-pretextual-api-matrix.yml",
+    ):
+        matrix_source = (ROOT / ".github" / "workflows" / matrix).read_text(encoding="utf-8")
+        if "      - tests/static.py" in matrix_source:
+            fail(f"shared static runner must not trigger expensive {matrix} PDF matrix")
+    release_pr_paths = release_workflow.split("  pull_request:", 1)[1].split("  workflow_dispatch:", 1)[0]
+    if "      - tests/integration/frontmatter/i18n-pretextual-api-evidence.py" in release_pr_paths:
+        fail("standalone PDF auditor changes must not trigger full release packaging PR gate")
     if infer_suites(["abntexto-ufc.cls", pretextual_auditor]) != ("complete",):
         fail("runtime changes must dominate bounded pretextual audit changes")
     if infer_suites(["tools/ci/select-integration-scope.py"]) != ("smoke",):
