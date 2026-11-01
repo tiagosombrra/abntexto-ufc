@@ -26,7 +26,6 @@ on:
       - tools/ci/validate-release-assets.py
       - tools/ci/validate-review-pairs.py
       - tests/integration/release/release-review-pairs.sh
-      - tests/integration/frontmatter/i18n-pretextual-api-evidence.py
       - tools/ci/validate-pkgcheck-download.py
       - tools/ci/certify-ctan-package.sh
       - tools/ci/render-release-summary.sh
