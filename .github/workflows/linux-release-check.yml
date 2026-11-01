@@ -112,7 +112,7 @@ jobs:
         run: sh tools/ci/render-release-summary.sh >> "$GITHUB_STEP_SUMMARY"
       - name: Upload validation evidence
         if: always() && hashFiles('artifacts/validation/**') != ''
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: linux-release-validation-${{ github.run_id }}
           path: artifacts/validation/**
@@ -121,7 +121,7 @@ jobs:
 
       - name: Upload canonical reference PDF
         if: success()
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: abntexto-ufc-v${{ steps.release-version.outputs.version }}-canonical-reference-${{ github.run_id }}
           path: |
@@ -132,7 +132,7 @@ jobs:
 
       - name: Upload seven-profile review pairs
         if: success()
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: abntexto-ufc-v${{ steps.release-version.outputs.version }}-review-pairs-${{ github.run_id }}
           path: artifacts/release-review-pairs/**
@@ -141,7 +141,7 @@ jobs:
 
       - name: Upload certified distribution assets
         if: success()
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: abntexto-ufc-v${{ steps.release-version.outputs.version }}-distribution-${{ github.run_id }}
           path: |

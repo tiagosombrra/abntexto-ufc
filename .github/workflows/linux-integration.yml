@@ -111,7 +111,7 @@ jobs:
 
       - name: Upload Web/Lite browser evidence
         if: always() && steps.web_lite_e2e.outcome != 'skipped' && steps.web_lite_e2e.outcome != ''
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: web-lite-e2e-${{ github.run_id }}
           path: |
@@ -124,7 +124,7 @@ jobs:
 
       - name: Upload rendered document-type PDF evidence
         if: always() && steps.web_lite_e2e.outcome == 'success'
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: document-type-pdfs-${{ github.run_id }}
           path: |
@@ -135,7 +135,7 @@ jobs:
 
       - name: Upload duplex margin PDF evidence
         if: always() && steps.web_lite_e2e.outcome == 'success'
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: duplex-margin-pdfs-${{ github.run_id }}
           path: |
@@ -146,7 +146,7 @@ jobs:
 
       - name: Upload IBGE multipage PDF evidence
         if: steps.scope.outputs.run_integration == 'true' && success() && (steps.scope.outputs.scope == 'complete' || contains(steps.scope.outputs.scope, 'objects') || contains(steps.scope.outputs.scope, 'reference-pdf'))
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: ibge-multipage-pdfs-${{ github.run_id }}
           path: |
