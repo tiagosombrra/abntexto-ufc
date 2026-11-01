@@ -188,6 +188,8 @@ def self_test() -> None:
         mutations = [
             lambda: check(src=source.replace(r"\ufcInputListing[language=C++]",
                                             r"\relax[language=C++]")),
+            lambda: check(src=source + r"\ufcInputListing[language=C++]"),
+            lambda: check(pdf_text=visible + f" {listing}"),
             lambda: check(src=source.replace("strict-font=false", "strict-font=true")),
             lambda: check(src=source.replace(r"\ufcMathFontPolicy", "INVALID")),
             lambda: check(code=cpp.replace("return 173;", "return 99;")),
