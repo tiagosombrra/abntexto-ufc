@@ -88,6 +88,14 @@ def pdf_bbox_tokens(pdf: Path) -> tuple[set[str], int]:
     return words, pages
 
 
+def strict_arial_rejection(output: str) -> bool:
+    # TeX wraps long class-error lines in the middle of 'pdfLaTeX'.
+    return re.search(
+        r"Class abntexto-ufc Error: Arial support is not prepared for pdfL\s*aTeX",
+        output,
+    ) is not None
+
+
 def source_tex(locale: str, cpp: Path) -> str:
     lang, _ = LOCALES[locale]
     rel = cpp.relative_to(ROOT).as_posix()
@@ -154,6 +162,10 @@ def verify_positive(locale: str, source: str, cpp: str,
             raise ValueError(f"expected exact visible PDF word is absent/duplicated: {value}")
     if whole(text, "return") != 1 or "return" not in words:
         raise ValueError("actual C++ return statement is missing from PDF")
+    if whole(text, "173;") != 1 or "173;" not in words:
+        raise ValueError("actual C++ return literal is missing or modified in PDF")
+    if not re.search(r"(?<!\w)return[ \t]+173;(?!\w)", text):
+        raise ValueError("actual PDF must preserve the return 173; code expression")
     for other in LOCALES:
         if other != locale and any(
             whole(text, token(other, kind)) for kind in ("LIST", "BODY")
@@ -196,6 +208,9 @@ def self_test() -> None:
             lambda: check(pdf_text=visible.replace(listing, f"X{listing}X")),
             lambda: check(pdf_text=visible.replace(body, f"{body}INVALID")),
             lambda: check(pdf_text=visible.replace("return", "returns")),
+            lambda: check(pdf_text=visible.replace("173;", "99;")),
+            lambda: check(pdf_text=visible.replace("return 173;", "return 173; return 173;")),
+            lambda: check(pdf_words=words - {"173;"}),
             lambda: check(pdf_words=words - {listing}),
             lambda: check(pdf_words=words - {MATH}),
             lambda: check(tex_log=log + f"LISTFONT-LANG={locale}\n"),
@@ -212,7 +227,23 @@ def self_test() -> None:
                 rejected += 1
             else:
                 raise ValueError(f"negative mutant accepted for {locale}")
-    print(f"I18N-LISTFONT-SELFTEST status=PASS mutants_rejected={rejected}")
+    if not strict_arial_rejection(
+        "Class abntexto-ufc Error: Arial support is not prepared for pdfLaTeX."
+    ):
+        raise ValueError("contiguous expected Arial diagnostic rejected")
+    if not strict_arial_rejection(
+        "Class abntexto-ufc Error: Arial support is not prepared for pdfL\naTeX."
+    ):
+        raise ValueError("line-wrapped expected Arial diagnostic rejected")
+    for unrelated in (
+        "Class abntexto-ufc Error: Times support is not prepared for pdfLaTeX.",
+        "Class abntexto-ufc Error: Arial support is prepared for pdfLaTeX.",
+        "Arial support is not prepared for pdfLaTeX.",
+    ):
+        if strict_arial_rejection(unrelated):
+            raise ValueError("unrelated Arial diagnostic wrongly accepted")
+    print(f"I18N-LISTFONT-SELFTEST status=PASS mutants_rejected={rejected + 3} "
+          "strict_error_formats=2 strict_wrong_rejected=3")
 
 
 def build(tex: Path, folder: Path, job: str, runs: int = 1) -> tuple[int, Path]:
@@ -295,7 +326,7 @@ def main() -> None:
     else:
         if strict_code == 0:
             raise ValueError("strict-font=true accepted absent Arial support")
-        if "Arial support is not prepared for pdfLaTeX" not in strict_output:
+        if not strict_arial_rejection(strict_output):
             raise ValueError("strict-font rejected for a reason other than missing Arial support")
         strict_outcome = "UNPREPARED_LITERAL_REJECTED"
     receipt.update({
