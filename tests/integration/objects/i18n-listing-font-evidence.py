@@ -139,7 +139,7 @@ def verify_positive(locale: str, source: str, cpp: str,
         raise ValueError("math policy getter must be logged and printed exactly once")
     listing = token(locale, "LIST")
     body = token(locale, "BODY")
-    if f"int {listing}()" not in cpp or "return 173;" not in cpp:
+    if f"int {listing} (" not in cpp or "return 173;" not in cpp:
         raise ValueError("C++ fixture does not contain the required compiled source")
     if pdf_lang != lang or pages < 1:
         raise ValueError("real PDF language or page count mismatch")
@@ -173,7 +173,7 @@ def self_test() -> None:
     for locale, (_, babel) in LOCALES.items():
         listing, body = token(locale, "LIST"), token(locale, "BODY")
         source = source_tex(locale, OUTPUT / locale / "sample.cpp")
-        cpp = f"int {listing}() {{ return 173; }}\n"
+        cpp = f"int {listing} ( ) {{ return 173; }}\n"
         visible = f"{body} {MATH} int {listing}() return 173;"
         words = {body, MATH, "int", listing, "return", "173;"}
         log = (f"LISTFONT-BABEL={babel}\nLISTFONT-LANG={locale}\n"
@@ -248,7 +248,7 @@ def main() -> None:
     folder = OUTPUT / locale
     folder.mkdir(parents=True, exist_ok=True)
     cpp = folder / "sample.cpp"
-    cpp.write_text(f"int {token(locale, 'LIST')}() {{\n    return 173;\n}}\n",
+    cpp.write_text(f"int {token(locale, 'LIST')} ( ) {{\n    return 173;\n}}\n",
                    encoding="utf-8")
     tex = folder / "list-font.tex"
     tex.write_text(source_tex(locale, cpp), encoding="utf-8")
