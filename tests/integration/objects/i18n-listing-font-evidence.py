@@ -95,7 +95,7 @@ def source_tex(locale: str, cpp: Path) -> str:
         rf"\DocumentMetadata{{lang={lang},pdfstandard=A-2b,pdfversion=1.7}}",
         r"\documentclass{abntexto-ufc}",
         rf"\ufcsetup{{type=undergraduate-capstone,document-language={locale},"
-        r"font=times,strict-font=false,code=listings,cover=false,coat-of-arms=false}}",
+        r"font=times,strict-font=false,code=listings,cover=false,coat-of-arms=false}",
         r"\begin{document}",
         r"\typeout{LISTFONT-BABEL=\languagename}",
         r"\typeout{LISTFONT-MATH=\ufcMathFontPolicy}",
