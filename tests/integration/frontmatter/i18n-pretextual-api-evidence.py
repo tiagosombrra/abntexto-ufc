@@ -130,22 +130,30 @@ def verify_case(locale: str, case: str, tex: str, pages: list[str],
             raise ValueError("unexpected pretextual command in reduced fixture")
     if lang != LOCALES[locale][0]:
         raise ValueError("PDF /Root/Lang does not match source locale")
-    if f"PRETEXTUAL-BABEL={LOCALES[locale][1]}" not in babel_log:
-        raise ValueError("active Babel language is not the requested locale")
-    if f"PRETEXTUAL-DOCUMENT-LANGUAGE={locale}" not in babel_log:
-        raise ValueError("public document language does not match source locale")
-    if "PRETEXTUAL-LOGICAL-BEFORE=2" not in babel_log or "PRETEXTUAL-LOGICAL-AFTER=2" not in babel_log:
-        raise ValueError("catalog inclusion changed logical page count")
+    # Reject ambiguous, prefixed, truncated or contradictory TeX log evidence.
+    for label, value in (
+        ("PRETEXTUAL-BABEL", LOCALES[locale][1]),
+        ("PRETEXTUAL-DOCUMENT-LANGUAGE", locale),
+        ("PRETEXTUAL-LOGICAL-BEFORE", "2"),
+        ("PRETEXTUAL-LOGICAL-AFTER", "2"),
+    ):
+        records = [line for line in babel_log.splitlines() if label in line]
+        if records != [f"{label}={value}"]:
+            raise ValueError(f"missing, malformed or duplicated {label} log record")
 
     for key in ("CARD", "DED", "EPS", "EPL", "BODY"):
-        indices = [i for i, page in enumerate(pages) if t[key] in page]
+        # Whole PDF words, not substrings of malformed identifiers.
+        marker = re.compile(r"(?<!\w)" + re.escape(t[key]) + r"(?!\w)")
+        indices = [i for i, page in enumerate(pages) if marker.search(page)]
         desired = [i for i, label in enumerate(expected) if label == key]
-        occurrences = sum(page.count(t[key]) for page in pages)
+        occurrences = sum(len(marker.findall(page)) for page in pages)
         if indices != desired or occurrences != len(desired):
             raise ValueError(
                 f"{key} printed on wrong page, missing or duplicated: "
                 f"{indices} != {desired}, occurrences={occurrences}"
             )
+        if any(t[key] not in bbox[i] for i in desired):
+            raise ValueError(f"{key} is missing from exact normalized PDF bbox tokens")
     if not pages[0].strip() or any(t[key] in pages[0] for key in t):
         raise ValueError("missing title page or pretextual content leaked there")
     if "BLANK" in expected and pages[expected.index("BLANK")].strip():
@@ -214,9 +222,29 @@ def self_test() -> None:
             lambda: test(info=log.replace("PRETEXTUAL-BABEL=brazilian", "PRETEXTUAL-BABEL=english")),
             lambda: test(catalog="en-US"),
             lambda: test(shown=[p + "CARDENAA" for p in pages]),
+            lambda: test(info=log.replace("PRETEXTUAL-LOGICAL-BEFORE=2",
+                                         "PRETEXTUAL-LOGICAL-BEFORE=20")),
+            lambda: test(info=log.replace("PRETEXTUAL-LOGICAL-AFTER=2",
+                                         "PRETEXTUAL-LOGICAL-AFTER=21")),
+            lambda: test(info=log + "\nPRETEXTUAL-BABEL=brazilian"),
+            lambda: test(info=log + "\nPRETEXTUAL-DOCUMENT-LANGUAGE=en"),
+            lambda: test(info=log + "\nPRETEXTUAL-LOGICAL-BEFORE=3"),
+            lambda: test(info=log + "\nPRETEXTUAL-LOGICAL-AFTER=3"),
+            lambda: test(info=log.replace("PRETEXTUAL-BABEL=brazilian",
+                                         "PRETEXTUAL-BABEL=brazilianINVALID")),
+            lambda: test(shown=[p.replace(marker["BODY"], "BROKEN" + marker["BODY"] + "BROKEN")
+                                for p in pages]),
+            lambda: test(shown=[p.replace(marker["BODY"], marker["BODY"] + "INVALID")
+                                for p in pages]),
         ]
         if enabled:
-            mutations.append(lambda: test(shown=[p.replace(marker["CARD"], "") for p in pages]))
+            mutations += [
+                lambda: test(shown=[p.replace(marker["CARD"], "") for p in pages]),
+                lambda: test(shown=[p.replace(marker["CARD"],
+                                            "BROKEN" + marker["CARD"] + "BROKEN") for p in pages]),
+                lambda: test(shown=[p.replace(marker["CARD"], marker["CARD"] + "INVALID")
+                                    for p in pages]),
+            ]
         if extra:
             mutations += [
                 lambda: test(source=src.replace(r"\ufcPrintDedication{", r"\relax{")),
