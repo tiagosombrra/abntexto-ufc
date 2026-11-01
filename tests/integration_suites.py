@@ -50,6 +50,9 @@ DOC_ONLY_PREFIXES = ("docs/", "release/history/v3/")
 ORCHESTRATION_EXACT = {
     ".github/workflows/linux-release-check.yml",
     ".github/workflows/i18n-pretextual-api-matrix.yml",
+    ".github/workflows/i18n-optional-modules-matrix.yml",
+    ".github/workflows/integrated-manuscript-locale-matrix.yml",
+    "tests/checks/linux_integration_suites.py",
     "tests/run.py",
     "tests/static.py",
     "tests/integration_suites.py",
