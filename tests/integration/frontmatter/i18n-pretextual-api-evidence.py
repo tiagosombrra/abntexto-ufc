@@ -204,11 +204,12 @@ def self_test() -> None:
             lambda: test(source=src.replace("document-language=pt", "document-language=en")),
             lambda: test(shown=pages + ["EXTRA"]),
             lambda: test(shown=[p.replace(marker["BODY"], "") for p in pages]),
-            lambda: test(shown=[p.replace(marker["CARD"], "") for p in pages]),
             lambda: test(info=log.replace("PRETEXTUAL-BABEL=brazilian", "PRETEXTUAL-BABEL=english")),
             lambda: test(catalog="en-US"),
             lambda: test(shown=[p + "CARDENAA" for p in pages]),
         ]
+        if enabled:
+            mutations.append(lambda: test(shown=[p.replace(marker["CARD"], "") for p in pages]))
         if extra:
             mutations += [
                 lambda: test(source=src.replace(r"\ufcPrintDedication{", r"\relax{")),
