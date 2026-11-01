@@ -52,7 +52,7 @@ ORCHESTRATION_EXACT = {
     ".github/workflows/i18n-pretextual-api-matrix.yml",
     ".github/workflows/i18n-optional-modules-matrix.yml",
     ".github/workflows/integrated-manuscript-locale-matrix.yml",
-    "tests/checks/linux_integration_suites.py",
+    "tests/checks/repository/linux_integration_suites.py",
     "tests/run.py",
     "tests/static.py",
     "tests/integration_suites.py",
@@ -95,6 +95,9 @@ def is_docs_only(path: str) -> bool:
 
 
 def normalized_movable_test_path(path: str) -> str:
+    # CI orchestration uses its canonical nested path, not a legacy flat alias.
+    if path in ORCHESTRATION_EXACT:
+        return path
     for prefix in ("tests/checks/", "tests/integration/", "tests/documents/"):
         if path.startswith(prefix):
             return prefix + PurePosixPath(path).name
