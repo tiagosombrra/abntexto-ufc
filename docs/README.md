@@ -10,6 +10,7 @@ The documentation describes the current supported project only. Historical imple
 - [COMMAND-REFERENCE.md](COMMAND-REFERENCE.md) — canonical public configuration keys, commands and environments.
 - [INTERNATIONALIZATION-COVERAGE.md](INTERNATIONALIZATION-COVERAGE.md) — four-locale class-owned text coverage and limits.
 - [I18N-AUDIT-2026-10-23.md](I18N-AUDIT-2026-10-23.md) — updated audit and pending evidence.
+- [I18N-COMPLETION-MATRIX.md](I18N-COMPLETION-MATRIX.md) — scoped real-PDF evidence per API and remaining four-language review gaps (not global certification).
 - [SUMMARY-LANGUAGE-POLICY.md](SUMMARY-LANGUAGE-POLICY.md) — multilingual summary commands.
 - [PROFILE-LOCALE-COVERAGE.md](PROFILE-LOCALE-COVERAGE.md) — display-only 7×4 regression matrix.
 - [WINDOWS-FONT-SUPPORT.md](WINDOWS-FONT-SUPPORT.md) — scoped support for literal Windows font validation.

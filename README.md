@@ -4,6 +4,8 @@ Classe LaTeX comunitária para trabalhos acadêmicos da Universidade Federal do 
 
 > **Status institucional:** este é um projeto comunitário. Ele não é um template oficial ou homologado pela UFC, salvo manifestação institucional explícita em sentido contrário.
 
+> **Versões:** a última versão publicada é a **v3.0.5**. A **v3.1.0 está em desenvolvimento**, sem tag, Release pública ou publicação CTAN. Os exemplos de internacionalização identificados como v3.1.0 abaixo se referem ao código de desenvolvimento (`main`), não aos ZIPs já publicados. Para uso acadêmico em produção, prefira o ZIP correspondente a uma [Release publicada](https://github.com/tiagosombrra/abntexto-ufc/releases).
+
 ## Acesso rápido
 
 - **Site do projeto:** https://tiagosombrra.github.io/abntexto-ufc/
@@ -31,7 +33,7 @@ O `abntexto-ufc` organiza em uma única classe LaTeX:
 - validadores Web/Lite e CLI/Deep;
 - distribuição separada para CTAN, uso local e Overleaf.
 
-O projeto usa uma única API pública canônica em inglês. A documentação atual descreve somente essa superfície suportada, enquanto o conteúdo acadêmico produzido continua naturalmente em português quando aplicável.
+O projeto usa uma única API pública canônica em inglês, sem traduzir nomes de comandos e opções. O português é o idioma padrão. Na linha **v3.1.0 em desenvolvimento**, o idioma principal e os rótulos gerados pela classe podem ser configurados para português, inglês, espanhol e francês. Isso **não traduz automaticamente** o texto do autor, dados bibliográficos nem nomes oficiais de instituições.
 
 ## Para quem é
 
@@ -111,6 +113,29 @@ Texto do trabalho.
 Para aprender pelo exemplo completo, use `template/main.tex`. Ele é um TCC tutorial: mostra o fluxo real de edição e usa os recursos principais no contexto em que aparecem. Nos bundles de Template e Overleaf, essa fonte mantém `coat-of-arms=true`, inclui `assets/institutional/ufc-coat-of-arms.png` e vem acompanhada de `abntexto-ufc-reference.pdf`, gerado a partir da mesma fonte distribuída.
 
 Para consulta sem inflar o TCC, use [docs/USER-GUIDE.md](docs/USER-GUIDE.md) e [docs/COMMAND-REFERENCE.md](docs/COMMAND-REFERENCE.md). Casos extremos e cobertura normativa permanecem em `tests/` e `standards/`, não no texto acadêmico do tutorial.
+
+## Idiomas e internacionalização — somente v3.1.0 em desenvolvimento
+
+A internacionalização é opt-in: `document-language=pt|en|es|fr` seleciona o idioma principal e os textos automáticos cobertos pela classe, enquanto `labels-language=pt|en|es|fr` permite escolher separadamente os nove títulos pré-textuais gerais. Se não informar um idioma, o comportamento legado permanece em português. Os **identificadores dos comandos LaTeX continuam em inglês**.
+
+Exemplo de configuração para inglês **no código de desenvolvimento v3.1.0** (substitua os metadados pelo conteúdo real):
+
+```tex
+\DocumentMetadata{lang=en-US,pdfstandard=A-2b,pdfversion=1.7}
+\documentclass{abntexto-ufc}
+\ufcsetup{
+  type = undergraduate-capstone,
+  document-language = en,
+  labels-language = en,
+  coat-of-arms = false,
+  author = {Example Author},
+  title = {Example Academic Work}
+}
+```
+
+O idioma do PDF declarado em `\DocumentMetadata` é **independente** do idioma Babel configurado por `document-language`; ambos devem ser coerentes. Para espanhol use `es`/`es-ES`; para francês `fr`/`fr-FR`; para português `pt`/`pt-BR`. Conteúdos de resumo, palavras-chave e nomes institucionais exigem edição e revisão humanas.
+
+A cobertura automatizada já inclui matrizes de documentos completos em quatro idiomas e testes funcionais delimitados de APIs públicas, mas **não certifica individualmente todos os 72 identificadores auditados** nem substitui a revisão linguística/visual. Consulte [configuração e resumos multilíngues](docs/USER-GUIDE.md), [referência da API](docs/COMMAND-REFERENCE.md), [matriz de evidências](docs/I18N-COMPLETION-MATRIX.md) e [roadmap da v3.1.0](https://github.com/tiagosombrra/abntexto-ufc/issues/489).
 
 ## Perfis de documento
 
