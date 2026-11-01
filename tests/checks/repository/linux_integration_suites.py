@@ -339,6 +339,15 @@ def main() -> None:
         fail("nested article paths must retain article scope after taxonomy moves")
     if infer_suites(["abntexto-ufc.cls"]) != ("complete",):
         fail("canonical runtime changes must force complete integration")
+    # The standalone PDF auditor has its own real-PDF matrix; do not run 42 checks.
+    pretextual_auditor = "tests/integration/frontmatter/i18n-pretextual-api-evidence.py"
+    pretextual_workflow = ".github/workflows/i18n-pretextual-api-matrix.yml"
+    if infer_suites([pretextual_auditor, "tests/static.py", pretextual_workflow]) != ("frontmatter",):
+        fail("standalone pretextual auditor must select bounded frontmatter integration")
+    if infer_suites([pretextual_workflow]) != ("smoke",):
+        fail("isolated pretextual workflow-only changes must select smoke integration")
+    if infer_suites(["abntexto-ufc.cls", pretextual_auditor]) != ("complete",):
+        fail("runtime changes must dominate bounded pretextual audit changes")
     if infer_suites(["tools/ci/select-integration-scope.py"]) != ("smoke",):
         fail("integration scope helper changes must select smoke")
     if infer_suites(["tools/ci/validate-release-reference.py"]) != ("smoke",):
