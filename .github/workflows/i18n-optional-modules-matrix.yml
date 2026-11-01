@@ -7,7 +7,6 @@ on:
       - abntexto-ufc.cls
       - tests/integration/objects/optional-locale-evidence.py
       - tests/integration/objects/i18n-optional-api-output-evidence.py
-      - tests/static.py
       - tests/integration/frontmatter/run-integrated-locale.py
       - standards/evidence/test-surface-policy.json
       - .github/workflows/i18n-optional-modules-matrix.yml
@@ -17,7 +16,6 @@ on:
       - abntexto-ufc.cls
       - tests/integration/objects/optional-locale-evidence.py
       - tests/integration/objects/i18n-optional-api-output-evidence.py
-      - tests/static.py
       - tests/integration/frontmatter/run-integrated-locale.py
       - .github/workflows/i18n-optional-modules-matrix.yml
 permissions:

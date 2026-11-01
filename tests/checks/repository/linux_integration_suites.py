@@ -339,6 +339,43 @@ def main() -> None:
         fail("nested article paths must retain article scope after taxonomy moves")
     if infer_suites(["abntexto-ufc.cls"]) != ("complete",):
         fail("canonical runtime changes must force complete integration")
+    # The standalone PDF auditor has its own real-PDF matrix; do not run 42 checks.
+    pretextual_auditor = "tests/integration/frontmatter/i18n-pretextual-api-evidence.py"
+    pretextual_workflow = ".github/workflows/i18n-pretextual-api-matrix.yml"
+    if infer_suites([pretextual_auditor, "tests/static.py", pretextual_workflow]) != ("frontmatter",):
+        fail("standalone pretextual auditor must select bounded frontmatter integration")
+    if infer_suites([pretextual_workflow]) != ("smoke",):
+        fail("isolated pretextual workflow-only changes must select smoke integration")
+    matrix_workflows = (
+        ".github/workflows/integrated-manuscript-locale-matrix.yml",
+        ".github/workflows/i18n-optional-modules-matrix.yml",
+        pretextual_workflow,
+    )
+    # Each matrix validates its own workflow edits without unrelated Linux builds.
+    for matrix_workflow in matrix_workflows:
+        if infer_suites([matrix_workflow]) != ("smoke",):
+            fail(f"independent matrix workflow must select smoke: {matrix_workflow}")
+    if infer_suites(["tests/checks/repository/linux_integration_suites.py"]) != ("smoke",):
+        fail("the scope contract must normalize its own path to orchestration-only")
+    if infer_suites([*matrix_workflows, "tests/integration_suites.py",
+                     "tests/checks/repository/linux_integration_suites.py"]) != ("smoke",):
+        fail("orchestration-only CI updates must not cause a complete Linux run")
+    if infer_suites(["abntexto-ufc.cls", *matrix_workflows]) != ("complete",):
+        fail("production runtime must dominate isolated matrix workflow changes")
+    # Static-only changes must be exercised by Static, not all PDF matrices.
+    for matrix in (
+        "integrated-manuscript-locale-matrix.yml",
+        "i18n-optional-modules-matrix.yml",
+        "i18n-pretextual-api-matrix.yml",
+    ):
+        matrix_source = (ROOT / ".github" / "workflows" / matrix).read_text(encoding="utf-8")
+        if "      - tests/static.py" in matrix_source:
+            fail(f"shared static runner must not trigger expensive {matrix} PDF matrix")
+    release_pr_paths = release_workflow.split("  pull_request:", 1)[1].split("  workflow_dispatch:", 1)[0]
+    if "      - tests/integration/frontmatter/i18n-pretextual-api-evidence.py" in release_pr_paths:
+        fail("standalone PDF auditor changes must not trigger full release packaging PR gate")
+    if infer_suites(["abntexto-ufc.cls", pretextual_auditor]) != ("complete",):
+        fail("runtime changes must dominate bounded pretextual audit changes")
     if infer_suites(["tools/ci/select-integration-scope.py"]) != ("smoke",):
         fail("integration scope helper changes must select smoke")
     if infer_suites(["tools/ci/validate-release-reference.py"]) != ("smoke",):

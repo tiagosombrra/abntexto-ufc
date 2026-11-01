@@ -49,6 +49,10 @@ DOC_ONLY_PREFIXES = ("docs/", "release/history/v3/")
 
 ORCHESTRATION_EXACT = {
     ".github/workflows/linux-release-check.yml",
+    ".github/workflows/i18n-pretextual-api-matrix.yml",
+    ".github/workflows/i18n-optional-modules-matrix.yml",
+    ".github/workflows/integrated-manuscript-locale-matrix.yml",
+    "tests/checks/repository/linux_integration_suites.py",
     "tests/run.py",
     "tests/static.py",
     "tests/integration_suites.py",
@@ -73,7 +77,7 @@ FORCE_COMPLETE_PREFIXES = (
 
 PATH_RULES: tuple[tuple[str, tuple[str, ...]], ...] = (
     ("article", ("tests/integration/scientific-article", "tests/documents/scientific-article", "tests/checks/scientific_article")),
-    ("frontmatter", ("template/frontmatter/", "tests/integration/frontmatter", "tests/integration/duplex-frontmatter")),
+    ("frontmatter", ("template/frontmatter/", "tests/integration/frontmatter", "tests/integration/duplex-frontmatter", "tests/integration/i18n-pretextual-api-evidence.py")),
     ("layout", ("tests/integration/layout", "tests/integration/pdf-geometry", "tests/integration/pdf-validation-core", "tests/integration/math", "tests/integration/normative-complement")),
     ("objects", ("tests/integration/object", "tests/integration/table-ibge", "tests/integration/minted", "tests/integration/algorithm-numbering", "tests/integration/documentary-source")),
     ("bibliography", ("template/backmatter/references.bib", "tests/integration/bibliography", "tests/integration/reference-spacing")),
@@ -91,6 +95,9 @@ def is_docs_only(path: str) -> bool:
 
 
 def normalized_movable_test_path(path: str) -> str:
+    # CI orchestration uses its canonical nested path, not a legacy flat alias.
+    if path in ORCHESTRATION_EXACT:
+        return path
     for prefix in ("tests/checks/", "tests/integration/", "tests/documents/"):
         if path.startswith(prefix):
             return prefix + PurePosixPath(path).name
