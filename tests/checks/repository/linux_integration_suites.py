@@ -346,6 +346,22 @@ def main() -> None:
         fail("standalone pretextual auditor must select bounded frontmatter integration")
     if infer_suites([pretextual_workflow]) != ("smoke",):
         fail("isolated pretextual workflow-only changes must select smoke integration")
+    matrix_workflows = (
+        ".github/workflows/integrated-manuscript-locale-matrix.yml",
+        ".github/workflows/i18n-optional-modules-matrix.yml",
+        pretextual_workflow,
+    )
+    # Each matrix validates its own workflow edits without unrelated Linux builds.
+    for matrix_workflow in matrix_workflows:
+        if infer_suites([matrix_workflow]) != ("smoke",):
+            fail(f"independent matrix workflow must select smoke: {matrix_workflow}")
+    if infer_suites(["tests/checks/repository/linux_integration_suites.py"]) != ("smoke",):
+        fail("the scope contract must normalize its own path to orchestration-only")
+    if infer_suites([*matrix_workflows, "tests/integration_suites.py",
+                     "tests/checks/repository/linux_integration_suites.py"]) != ("smoke",):
+        fail("orchestration-only CI updates must not cause a complete Linux run")
+    if infer_suites(["abntexto-ufc.cls", *matrix_workflows]) != ("complete",):
+        fail("production runtime must dominate isolated matrix workflow changes")
     # Static-only changes must be exercised by Static, not all PDF matrices.
     for matrix in (
         "integrated-manuscript-locale-matrix.yml",
