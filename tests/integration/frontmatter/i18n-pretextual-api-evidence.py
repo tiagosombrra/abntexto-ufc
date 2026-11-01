@@ -85,8 +85,10 @@ def pages_and_geometry(pdf: Path, page_text: str) -> tuple[list[str], list[dict]
             if node.tag.rsplit("}", 1)[-1] != "word":
                 continue
             word = "".join(node.itertext()).strip()
-            if word:
-                words[word] = {"x": float(node.attrib["xMin"]),
+            # Poppler may join an opening/closing quotation mark to epigraph text.
+            canonical = word.strip("“”„«»‘’ʼ")
+            if canonical:
+                words[canonical] = {"x": float(node.attrib["xMin"]),
                                "y": float(node.attrib["yMin"]),
                                "height": height}
         geometry.append(words)
