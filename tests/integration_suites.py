@@ -49,6 +49,7 @@ DOC_ONLY_PREFIXES = ("docs/", "release/history/v3/")
 
 ORCHESTRATION_EXACT = {
     ".github/workflows/linux-release-check.yml",
+    ".github/workflows/i18n-pretextual-api-matrix.yml",
     "tests/run.py",
     "tests/static.py",
     "tests/integration_suites.py",
@@ -73,7 +74,7 @@ FORCE_COMPLETE_PREFIXES = (
 
 PATH_RULES: tuple[tuple[str, tuple[str, ...]], ...] = (
     ("article", ("tests/integration/scientific-article", "tests/documents/scientific-article", "tests/checks/scientific_article")),
-    ("frontmatter", ("template/frontmatter/", "tests/integration/frontmatter", "tests/integration/duplex-frontmatter")),
+    ("frontmatter", ("template/frontmatter/", "tests/integration/frontmatter", "tests/integration/duplex-frontmatter", "tests/integration/i18n-pretextual-api-evidence.py")),
     ("layout", ("tests/integration/layout", "tests/integration/pdf-geometry", "tests/integration/pdf-validation-core", "tests/integration/math", "tests/integration/normative-complement")),
     ("objects", ("tests/integration/object", "tests/integration/table-ibge", "tests/integration/minted", "tests/integration/algorithm-numbering", "tests/integration/documentary-source")),
     ("bibliography", ("template/backmatter/references.bib", "tests/integration/bibliography", "tests/integration/reference-spacing")),
