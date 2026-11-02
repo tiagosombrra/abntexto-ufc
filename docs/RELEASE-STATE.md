@@ -16,7 +16,7 @@ This file is the durable human-readable release-state authority for the reposito
 | Maintainer visual acceptance | `ACCEPT` — 2026-10-10, seven-profile artifact `11670542808` |
 | Four GitHub assets | Uploaded, server SHA256 and sizes verified; immutable |
 | CTAN v3.0.5 | `PUBLISHED/ACCEPTED` — installed on CTAN main server 2026-10-13 and official catalogue lists 3.0.5, evidence issue #484 comment `6149595933` |
-| Last confirmed CTAN release | `v3.0.4`, accepted/published 2026-09-22, issue #356 |
+| Last confirmed CTAN release | `v3.0.5`, accepted/published 2026-10-13, issue #484; v3.0.4 remains the previous published release (#356) |
 | Active development line | `v3.1.0` — UNRELEASED; selected under issue #489, without transferring v3.0.5 release acceptance |
 
 The annotated Git tag resolves to exactly the certified release-source commit `30ff9b7bc777db28584fce7e96930e748ee1a661` (tree `4b2a64e5c318ef761d84364877000086d51f1664`), **not** to any later `main` control or documentation commit. Published v3.0.4 source, tag, assets and CTAN archive remain unchanged.
