@@ -20,6 +20,14 @@ external_http_requests = browser_utils["external_http_requests"]
 csp_log_violations = browser_utils["csp_log_violations"]
 
 READMES = {"pt-BR": "README completo", "en": "Full README", "es": "README completo", "fr": "README complet"}
+
+VERSION_LABELS = {
+    "pt-BR": ("Estado das versões", "Versão publicada:", "Em desenvolvimento:"),
+    "en": ("Release status", "Published version:", "In development:"),
+    "es": ("Estado de las versiones", "Versión publicada:", "En desarrollo:"),
+    "fr": ("Statut des versions", "Version publiée :", "En développement :"),
+}
+
 EXPECTED = {
     "pt-BR": ("Por onde começar", "Abrir validador Web/Lite", "Idioma do site"),
     "en": ("Getting started", "Open Web/Lite validator", "Website language"),
@@ -39,6 +47,13 @@ def snapshot(browser):
         disclaimer: document.querySelector('[data-i18n="communityText"]').textContent,
         footer: document.querySelector('[data-i18n="footerText"]').textContent,
         readmeLabel: document.querySelector('a[href="https://github.com/tiagosombrra/abntexto-ufc#readme"]').textContent,
+        releaseHeading: document.querySelector('[data-i18n="releaseStateHeading"]').textContent,
+        publishedLabel: document.querySelector('[data-i18n="publishedVersionLabel"]').textContent,
+        publishedText: document.querySelector('[data-i18n="publishedVersionText"]').textContent,
+        developmentLabel: document.querySelector('[data-i18n="developmentVersionLabel"]').textContent,
+        developmentText: document.querySelector('[data-i18n="developmentVersionText"]').textContent,
+        publishedVersion: document.querySelector('code[data-version="published"]').textContent,
+        developmentVersion: document.querySelector('code[data-version="development"]').textContent,
         originalLinks: Array.from(document.querySelectorAll("a")).map(x=>x.getAttribute("href")),
         fileNames: Array.from(document.querySelectorAll("code")).map(x=>x.textContent),
         contentReady: document.querySelectorAll("[data-i18n]").length
@@ -74,6 +89,12 @@ def main():
                 fail(f"locale={locale} observed={item!r}")
             if item["readmeLabel"] != READMES[locale]:
                 fail("untranslated_readme_link:"+locale)
+            if (item["releaseHeading"],item["publishedLabel"],item["developmentLabel"]) != VERSION_LABELS[locale]:
+                fail("untranslated_release_status:"+locale)
+            if (item["publishedVersion"],item["developmentVersion"]) != ("v3.0.5","v3.1.0"):
+                fail("untrusted_release_version:"+locale)
+            if "Releases" not in item["publishedText"] or "v3.0.5" not in item["developmentText"]:
+                fail("development_misrepresented_as_download:"+locale)
             if len(item["description"])<30 or not item["disclaimer"] or not item["footer"] or item["contentReady"]<30:
                 fail("incomplete_visible_translation:"+locale)
             if set(item["originalLinks"]) != {
@@ -86,7 +107,7 @@ def main():
                 fail("canonical_urls_changed:"+locale)
             if "abntexto-ufc-reference.pdf" not in item["fileNames"]:
                 fail("canonical_filename_changed:"+locale)
-            samples[locale]={"lang":item["lang"],"heading":item["heading"],"description":item["description"],"disclaimer":item["disclaimer"]}
+            samples[locale]={"lang":item["lang"],"heading":item["heading"],"description":item["description"],"disclaimer":item["disclaimer"],"published":item["publishedVersion"],"development":item["developmentVersion"]}
         # Exercise an actual user-visible selector change without reloading.
         changed=browser.execute("""const s=document.getElementById('home-locale');
             s.value='en';s.dispatchEvent(new Event('change',{bubbles:true}));

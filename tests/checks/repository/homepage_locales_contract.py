@@ -73,6 +73,21 @@ expected_hrefs = (
 )
 if set(parser.hrefs) != set(expected_hrefs) or len(parser.hrefs) != 7:
     raise SystemExit(f"HOMEPAGE-I18N-EVIDENCE status=FAIL canonical_hrefs={parser.hrefs}")
+# The published archive and development branch must be visually distinct, not
+# inferred from a translated heading or a dynamically mutated download URL.
+version_tags = re.findall(
+    r'<code\s+data-version="([^"]+)">([^<]+)</code>', HTML
+)
+if version_tags != [("published", "v3.0.5"), ("development", "v3.1.0")]:
+    raise SystemExit("HOMEPAGE-I18N-EVIDENCE status=FAIL release_version_literals")
+if '<section class="release-state" aria-labelledby="release-state-heading">' not in HTML:
+    raise SystemExit("HOMEPAGE-I18N-EVIDENCE status=FAIL status_section_accessibility")
+EXPECTED_STATUS_LABELS = {
+    "pt-BR": ("Estado das versões", "Versão publicada:", "Em desenvolvimento:"),
+    "en": ("Release status", "Published version:", "In development:"),
+    "es": ("Estado de las versiones", "Versión publicada:", "En desarrollo:"),
+    "fr": ("Statut des versions", "Version publiée :", "En développement :"),
+}
 if any(mark in JS for mark in ("fetch(", "XMLHttpRequest", "sendBeacon", "localStorage", "sessionStorage", "innerHTML")):
     raise SystemExit("HOMEPAGE-I18N-EVIDENCE status=FAIL unexpected_network_storage_or_markup")
 data = json.loads(subprocess.check_output(
@@ -96,6 +111,17 @@ for locale,words in data["copies"].items():
         raise SystemExit(f"HOMEPAGE-I18N-EVIDENCE status=FAIL missing_keys={locale}")
     if any(not isinstance(v,str) or not v.strip() or "<" in v for v in words.values()):
         raise SystemExit(f"HOMEPAGE-I18N-EVIDENCE status=FAIL invalid_text={locale}")
+    labels = (
+        words["releaseStateHeading"],
+        words["publishedVersionLabel"],
+        words["developmentVersionLabel"],
+    )
+    if labels != EXPECTED_STATUS_LABELS[locale]:
+        raise SystemExit(f"HOMEPAGE-I18N-EVIDENCE status=FAIL release_status_translation={locale}")
+    if "Releases" not in words["publishedVersionText"]:
+        raise SystemExit(f"HOMEPAGE-I18N-EVIDENCE status=FAIL release_destination={locale}")
+    if "v3.0.5" not in words["developmentVersionText"]:
+        raise SystemExit(f"HOMEPAGE-I18N-EVIDENCE status=FAIL development_not_separate={locale}")
     if words["metaDescription"] == baseline["metaDescription"] and locale != "pt-BR":
         raise SystemExit(f"HOMEPAGE-I18N-EVIDENCE status=FAIL untranslated_description={locale}")
 print(f"HOMEPAGE-I18N-EVIDENCE status=PASS locales=4 keys={len(baseline)} default_pt=IDENTICAL accessible_selector=true canonical_links=true script_same_origin=true")
