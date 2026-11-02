@@ -9,7 +9,9 @@ This is the implementation inventory for the requested PT / EN / ES / FR *comple
 - `\DocumentMetadata{lang=...}` is declared by the author before `\documentclass`, and is *not* inferred or silently mutated from `document-language`. English, Spanish and French names of UFC units, degrees, real programs, academic bodies and individual names must be checked against institutional official nomenclature, not guessed by the class.
 - The default project type ("Projeto de pesquisa") is translated only when no `project-type` is explicitly supplied. The entire Portuguese research-project nature sentence follows its original composition to preserve the tested baseline. Spanish `Fecha de aprobación` and French `Date d'approbation` are gender-neutral, so they remain grammatically valid for both masculine and feminine academic work types. User-authored and program-mandated titles or nature statements override the descriptive translations.
 
-## Inventory of class-owned text (34 document keys and 9 title keys)
+## Inventory of class-owned text (37 document keys and 9 title keys)
+
+The current fail-closed `tests/integration/frontmatter/document-locale-catalog.py` contract enumerates **37** document-string keys per locale, plus **nine** independent pretextual title keys and **two** summary/keyword catalogs. This is a source/catalog parity and routing assertion, **not** proof that all variants have been individually certified in actual PDFs or received a linguistic/institutional signoff.
 
 | Surface | Coverage | Binding |
 |---|---|---|
