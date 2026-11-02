@@ -14,6 +14,8 @@
     h1{margin:0 0 12px;font-size:clamp(2rem,6vw,3.6rem)}h2{margin-top:42px}
     p{line-height:1.65}.lead{font-size:1.15rem;color:#44506a;max-width:760px}
     .notice{margin:20px 0;padding:14px 16px;background:#fff7df;border-left:4px solid #9a6a00;border-radius:8px}
+    .release-state{margin:18px 0;padding:14px 16px;background:#eef3fb;border-left:4px solid #173f8a;border-radius:8px}
+    .release-state p{margin:4px 0;line-height:1.55}
     .actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}
     .locale-control{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end;margin-bottom:20px}
     .locale-control label{font-size:.95rem;font-weight:650}
@@ -43,6 +45,11 @@
     <h1>abntexto-ufc</h1>
     <p class="lead"><span data-i18n="leadBefore">Classe LaTeX comunitária para trabalhos acadêmicos da Universidade Federal do Ceará, construída sobre</span> <code>abntexto</code><span data-i18n="leadAfter">, com templates, referência completa e validação Web/Lite e CLI/Deep.</span></p>
     <div class="notice"><strong data-i18n="communityLabel">Projeto comunitário:</strong> <span data-i18n="communityText">não é um template oficial ou homologado pela UFC, salvo manifestação institucional explícita em sentido contrário.</span></div>
+    <section class="release-state" aria-labelledby="release-state-heading">
+      <h2 id="release-state-heading" data-i18n="releaseStateHeading">Estado das versões</h2>
+      <p><strong data-i18n="publishedVersionLabel">Versão publicada:</strong> <code data-version="published">v3.0.5</code> <span data-i18n="publishedVersionText">— disponível para download nas Releases.</span></p>
+      <p><strong data-i18n="developmentVersionLabel">Em desenvolvimento:</strong> <code data-version="development">v3.1.0</code> <span data-i18n="developmentVersionText">— ainda não publicada; recursos desta linha não estão nos ZIPs da v3.0.5.</span></p>
+    </section>
     <div class="actions">
       <a class="button" href="./validator/" data-i18n="openValidator">Abrir validador Web/Lite</a>
       <a class="button secondary" href="https://github.com/tiagosombrra/abntexto-ufc/releases" data-i18n="downloadRelease">Baixar uma Release</a>
