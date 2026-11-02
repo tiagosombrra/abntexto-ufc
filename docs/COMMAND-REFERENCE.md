@@ -148,6 +148,8 @@ Ao configurar `document-language` explicitamente, a classe traduz as naturezas a
 | `glossary` | `none` ou `glossaries` |
 | `index` | `none` ou `imakeidx` |
 
+`strict-font=true` exige a **família literal de texto** escolhida por `font`, e interrompe a compilação se essa família não estiver disponível ou preparada. Com `strict-font=false`, a classe permite fallbacks explícitos para compilar em ambientes portáveis; isso **não equivale à certificação tipográfica institucional**. A política da fonte matemática é independente da família de texto: consulte `\ufcMathFontPolicy`. Para instruções de fontes Microsoft em Windows, veja [WINDOWS-FONT-SUPPORT.md](WINDOWS-FONT-SUPPORT.md).
+
 ## Consultas de estado
 
 ### \ufcDocumentType
@@ -172,7 +174,15 @@ Testa especificamente `anonymized-research-project`.
 
 ### \ufcMathFontPolicy
 
-Expõe a política matemática selecionada pelo módulo de fontes.
+Expõe o identificador da política matemática selecionada pelo mecanismo TeX. Em `pdfLaTeX`, o contrato atual retorna `NEW-TX-MATH`; em `LuaLaTeX`, a política depende da disponibilidade das fontes matemáticas OpenType, não apenas do valor de `font`.
+
+Exemplo para inspeção do log do próprio documento:
+
+```tex
+\typeout{MATH-POLICY=\ufcMathFontPolicy}
+```
+
+Isso permite auditar qual política a classe selecionou; **não comprova, sozinho, incorporação de fonte, qualidade de símbolos, PDF/A ou conformidade institucional**. A etapa P0.8D-7 verifica o identificador em quatro PDFs reais `pdfLaTeX` no cenário delimitado descrito em [I18N-COMPLETION-MATRIX.md](I18N-COMPLETION-MATRIX.md).
 
 ## Elementos pré-textuais
 
@@ -328,7 +338,16 @@ Disponível quando `code=listings`:
 
 ### \ufcInputListing[opções]{arquivo}
 
-Inclui um arquivo externo com `listings`.
+Inclui o conteúdo **real de um arquivo externo** pelo módulo `listings`, que deve estar habilitado em `\ufcsetup`:
+
+```tex
+\ufcsetup{code=listings}
+\ufcInputListing[language=C++]{code/example.cpp}
+```
+
+O arquivo `code/example.cpp` deve existir no projeto de compilação. Traduções de títulos e legendas não alteram automaticamente a linguagem de programação nem o conteúdo do arquivo; configure suas opções de `listings` explicitamente.
+
+Na etapa P0.8D-7, a auditoria verifica no **PDF efetivo**, e não apenas no arquivo-fonte, um identificador C++ e a expressão `return 173;`, em quatro idiomas, no perfil `undergraduate-capstone` sob `pdfLaTeX`. Essa evidência **não comprova** todos os estilos de listagem, perfis, linguagens de programação ou mecanismos TeX. Consulte [a matriz de evidências](I18N-COMPLETION-MATRIX.md).
 
 ### \ufcInputMinted[posição][opções]{linguagem}{arquivo}
 

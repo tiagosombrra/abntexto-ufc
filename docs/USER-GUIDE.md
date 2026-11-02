@@ -50,6 +50,29 @@ Exemplo de configuração:
 
 Os comandos legados `\ufcPrintSummary` e `\ufcPrintAbstract` continuam produzindo títulos fixos em português e inglês; os novos comandos multilíngues devem ser usados para outros idiomas. Dentro de `\ufcPrintSummaryInLanguage{idioma}{arquivo}` (incluindo o par `\ufcPrintRequiredSummaries`), os auxiliares legados `\ufcSummaryKeywords` e `\keywords` agora geram o rótulo de palavras-chave do **idioma desse resumo**, mesmo quando diferente do idioma principal. Fora do fluxo multilíngue, os auxiliares legados permanecem PT/EN. A tradução das frases **automáticas** não traduz os nomes oficiais de instituições, programas ou titulações, nem conteúdo do autor, referências de dependências ou metadados PDF. Os textos institucionais estrangeiros são descritivos e exigem revisão pela autoridade competente. Veja [a cobertura](INTERNATIONALIZATION-COVERAGE.md) e [a auditoria](I18N-AUDIT-2026-10-23.md).
 
+### Revisão prática do idioma e do PDF (v3.1.0 em desenvolvimento)
+
+O idioma de composição, os títulos automáticos e a declaração de idioma do PDF são **três superfícies distintas**. Use este quadro para preparar o preâmbulo:
+
+| Texto principal | `document-language` | `labels-language` (se personalizado) | `\DocumentMetadata{lang=...}` |
+| --- | --- | --- | --- |
+| Português do Brasil | `pt` | `pt` | `pt-BR` |
+| Inglês | `en` | `en` | `en-US` |
+| Espanhol | `es` | `es` | `es-ES` |
+| Francês | `fr` | `fr` | `fr-FR` |
+
+`labels-language` pode intencionalmente diferir de `document-language`, mas isso **não altera Babel nem a língua do catálogo PDF**. A declaração em `\DocumentMetadata` deve ficar antes de `\documentclass`. Se o manuscrito possuir trechos em outra língua, selecione e marque esses trechos com os recursos apropriados do LaTeX; não interprete o idioma global como marcação semântica individual de todos os parágrafos.
+
+Após compilar a versão de desenvolvimento, verifique, nesta ordem:
+
+1. **Fonte:** confirme que o trabalho usa a configuração de idioma pretendida e que nenhum nome oficial de instituição, programa ou titulação foi traduzido sem autorização.
+2. **Saída:** examine fisicamente capa, folha de rosto, resumos, palavras-chave, lista de figuras/tabelas/códigos, referências e elementos próprios do perfil. A ausência de páginas ou elementos não aplicáveis a um perfil não é automaticamente uma falha.
+3. **Idioma PDF:** confira o `/Lang` do catálogo com uma ferramenta de PDF apropriada. Isso não prova que o texto realmente foi traduzido, nem que cada trecho possui a marcação de idioma correta.
+4. **Fontes e objetos:** confira as famílias realmente incorporadas e o conteúdo legível de código externo, equações e legendas no PDF. `strict-font=true` requer a família literal escolhida; se ela não estiver preparada, a compilação deve falhar, em vez de usar um substituto silencioso.
+5. **Aceite:** confronte o PDF com as regras vigentes de seu programa e com uma revisão humana visual/linguística; os testes de CI são evidência técnica de cenários delimitados, não homologação institucional.
+
+A matriz automatizada já exercita sete perfis em quatro idiomas em diferentes cenários; os testes funcionais de APIs públicas possuem abrangências menores e independentes. Em particular, os testes de `\ufcInputListing`, `\ufcMathFontPolicy` e `strict-font` da [etapa P0.8D-7](I18N-COMPLETION-MATRIX.md) cobrem **quatro PDFs no perfil `undergraduate-capstone` e `pdfLaTeX`**, não os sete perfis e todos os mecanismos de compilação. Para fontes proprietárias em Windows, consulte [a preparação específica](WINDOWS-FONT-SUPPORT.md). A revisão editorial e institucional permanece obrigatória.
+
 ### Política opcional de RESUMO, ABSTRACT, RESUMEN e RÉSUMÉ (v3.1.0)
 
 A configuração **document-language=pt|en|es|fr** é independente de **labels-language**. Quando informada explicitamente, a primeira seleciona o idioma principal do texto no Babel e a política de resumos; sem essa opção, a classe não adiciona uma substituição de idioma, mas o próprio Babel pode redefinir uma seleção `\selectlanguage{english}` feita diretamente no preâmbulo para português brasileiro. Para obter inglês de forma explícita e verificável, use `document-language=en`. PT continua sendo o padrão dos novos comandos de resumo. A segunda seleciona somente os nove títulos gerais pré-textuais. Se `document-language` for explícito e `labels-language` não, os nove títulos passam automaticamente para o idioma do documento; uma escolha explícita de `labels-language` tem precedência. O par de resumos é explicitamente gerado com **\ufcPrintRequiredSummaries{arquivo-principal}{arquivo-complementar}**:
