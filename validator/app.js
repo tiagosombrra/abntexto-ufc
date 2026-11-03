@@ -61,17 +61,24 @@ function render(r){
   $("#report-filter").disabled=false;$("#report-filter").value="all";filterReport();
 }
 
-export async function analyze(file,profile,documentType="undergraduate-capstone",printMode="single-sided"){
+export async function analyze(file,profile,documentType="undergraduate-capstone",printMode="single-sided",pageAccounting="pdf-first-page"){
  if(!["single-sided","double-sided"].includes(printMode))throw new Error("Unsupported print mode: "+printMode);
+ if(!["pdf-first-page","external-cover-first"].includes(pageAccounting))throw new Error("Unsupported page accounting: "+pageAccounting);
+ if(pageAccounting==="external-cover-first"&&printMode!=="double-sided")throw new Error("External cover accounting requires double-sided printing");
  const documentContract=documentApplicability.document_types[documentType];
  if(!documentContract)throw new Error("Unsupported document type: "+documentType);
  const data=new Uint8Array(await file.arrayBuffer()),pdf=await pdfjsLib.getDocument({data}).promise,meta=await pdf.getMetadata(),outline=await pdf.getOutline(),js=await pdf.getJSActions().catch(()=>null);
  const pages=[],families=new Set();let tagged=false;
  for(let n=1;n<=pdf.numPages;n++){const p=await pdf.getPage(n),vp=p.getViewport({scale:1}),tc=await p.getTextContent(),st=await p.getStructTree().catch(()=>null);if(st)tagged=true;for(const it of tc.items){const f=tc.styles?.[it.fontName]?.fontFamily;if(f)families.add(f)}pages.push({n,w:vp.width,h:vp.height,items:tc.items,text:tc.items.map(i=>i.str).join(" ").replace(/\s+/g," ")})}
+ if(pageAccounting==="external-cover-first"&&pages.length<2)throw new Error("External cover accounting requires at least two PDF pages");
+ const coverOffset=pageAccounting==="external-cover-first"?1:0;
+ // A catalog card still occupies an interior physical side even if unnumbered.
  const cs=[ck("pdf.open","Integrity","Readable PDF","Technical prerequisite",PASS,`${pdf.numPages} pages processed locally.`)];
  const bad=pages.filter(p=>Math.abs(p.w-A4[0])>TOL||Math.abs(p.h-A4[1])>TOL).map(p=>p.n);cs.push(nck("layout.a4","page.a4","Layout","Papel A4",bad.length?FAIL:PASS,bad.length?`Pages outside A4: ${bad.join(", ")}`:"All pages are A4.",bad.length?"Configure A4 paper size for all pages.":""));
  const out=[];for(const p of pages){
-  const verso=printMode==="double-sided"&&p.n%2===0,values=verso?versoRule.values:rectoRule.values;
+  if(coverOffset&&p.n===1)continue; // Outer cover is not subject to inner-block mirrored margins.
+  const innerPage=p.n-coverOffset;
+  const verso=printMode==="double-sided"&&innerPage%2===0,values=verso?versoRule.values:rectoRule.values;
   const left=values.left_mm*MM,right=values.right_mm*MM;
   for(const item of p.items){
    const word=item.str?.trim();if(!word)continue;
@@ -82,7 +89,7 @@ export async function analyze(file,profile,documentType="undergraduate-capstone"
  }
  const marginLabel=printMode==="double-sided"?"Margens horizontais: anverso 3 cm / 2 cm; verso 2 cm / 3 cm":"Margens horizontais: anverso 3 cm / 2 cm";
  const marginSource=printMode==="double-sided"?normSource("margin.recto")+" / "+normSource("margin.verso"):normSource("margin.recto");
- cs.push(ck("layout.margins","Layout",marginLabel,marginSource,out.length?FAIL:PASS,out.length?`Mode ${printMode}; examples: ${JSON.stringify(out.slice(0,8))}`:`Mode ${printMode}; no text exceeds the page-specific horizontal margins.`,out.length?"Move the element inside the page-specific text block.":"",true,"geometric","margin.recto",rectoRule.locator,rectoRule.normativity));
+ cs.push(ck("layout.margins","Layout",marginLabel,marginSource,out.length?FAIL:PASS,out.length?`Mode ${printMode}; page_accounting=${pageAccounting}; excluded_outer_cover_pages=${coverOffset}; examples: ${JSON.stringify(out.slice(0,8))}`:`Mode ${printMode}; page_accounting=${pageAccounting}; excluded_outer_cover_pages=${coverOffset}; no text exceeds the page-specific horizontal margins.`,out.length?"Move the element inside the page-specific text block.":"",true,"geometric","margin.recto",rectoRule.locator,rectoRule.normativity));
  const fam=[...families],fn=fam.map(compact),allowed=normativeRules["font.family.body"].values.allowed,keys=allowed.map(compact),lit=fam.filter((_,i)=>keys.some(k=>fn[i].includes(k))),fb=fam.filter(isTextFallback);let fs=lit.length&&!fb.length?PASS:fb.length&&!lit.length?(profile==="portable"?WARN:FAIL):REVIEW;const fontLabel=allowed.join(" or ");cs.push(nck("font.family","font.family.body","Typography",`${fontLabel} literal`,fs,`Literal fonts: ${lit.join(", ")||"none"}; text fallback: ${fb.join(", ")||"none"}.`,fs===PASS?"":`Use strict-font = true with ${fontLabel} and confirm in Deep/CLI mode.`,profile!=="portable","heuristic"));cs.push(ck("font.embedding","Typography","All fonts embedded","PDF/A / preservation",REVIEW,"Web/Lite does not certify that all fonts are embedded.","Run Deep/CLI mode.",profile!=="portable","deep"));
  const u=norm(pages.map(p=>p.text).join("\n")),req=[["cover","Capa","UNIVERSIDADE FEDERAL DO CEARA"],["approval","Folha de aprovação","BANCA EXAMINADORA"],["resumo","Resumo","RESUMO"],["abstract","Abstract","ABSTRACT"],["toc","Sumário","SUMARIO"],["refs","Referências","REFERENCIAS"],["keywords","Palavras-chave","PALAVRAS-CHAVE"],["keywords-en","Keywords","KEYWORDS"]];
  for(const [id,label,token] of req){
@@ -94,7 +101,7 @@ export async function analyze(file,profile,documentType="undergraduate-capstone"
  const acc=profile==="accessibility";cs.push(ck("access.tagged","Accessibility","Tagged/structured PDF","PDF/UA / WCAG",tagged?PASS:(acc?FAIL:WARN),tagged?"Structure tree detected.":"Structure tree not detected.",tagged?"":"Generate a tagged PDF.",acc));cs.push(ck("access.bookmarks","Accessibility","Bookmarks","WCAG PDF2",outline?.length?PASS:WARN,outline?.length?`${outline.length} top-level entries.`:"Not detected.",outline?.length?"":"Add bookmarks.",false));cs.push(ck("security.javascript","Integrity","No embedded JavaScript","Preservation",js&&Object.keys(js).length?WARN:PASS,js&&Object.keys(js).length?"JavaScript actions detected.":"No JavaScript actions detected.","",false));
  const pdfa=normativeRules["deposit.pdfa"].values.project_profile;cs.push(nck("pdfa.deep","deposit.pdfa","PDF/A",`Structural validation ${pdfa}`,REVIEW,"Web/Lite does not replace full ISO validation.",`Run CLI/Deep with veraPDF -f 2b.`,profile!=="portable","deep"));cs.push(nck("catalog.optional","deposit.catalog-card","UFC Deposit","Ficha catalográfica visual",NA,"Visual representation is optional.","",false));cs.push(nck("approval.signatures","deposit.approval-signatures","UFC Deposit","Folha de aprovação sem assinaturas digitalizadas",REVIEW,"Requires visual inspection.","For repository submission, use the Folha de aprovação without signatures.",false,"manual"));cs.push(nck("capes","deposit.capes","UFC Deposit","Agradecimento CAPES quando aplicável",REVIEW,"Depends on funding.","Include the required wording when applicable.",false,"conditional"));
  if(acc){cs.push(ck("access.alt","Accessibility","Adequate alternative text","PDF/UA / WCAG",REVIEW,"Quality requires human review.","Review /Alt and decorative artifacts.",true,"manual"));cs.push(ck("access.order","Accessibility","Logical reading order","PDF/UA / WCAG",REVIEW,"Requires testing with assistive technology.","Review the reading order.",true,"manual"))}
- const reportChecks=cs.map(reportCheck);return {file:file.name,pages:pdf.numPages,profile,document_type:documentType,print_mode:printMode,verdict:verdict(cs),normative_catalog:{schema_version:normativeCatalog.schema_version,reviewed_at:normativeCatalog.reviewed_at},checks:reportChecks,mode:"web-lite-local",generated_at:new Date().toISOString()};
+ const reportChecks=cs.map(reportCheck);return {file:file.name,pages:pdf.numPages,profile,document_type:documentType,print_mode:printMode,page_accounting:pageAccounting,verdict:verdict(cs),normative_catalog:{schema_version:normativeCatalog.schema_version,reviewed_at:normativeCatalog.reviewed_at},checks:reportChecks,mode:"web-lite-local",generated_at:new Date().toISOString()};
 }
 
 export function getLastReport(){return report}
@@ -105,7 +112,7 @@ setLocale("pt-BR");
 $("#ui-locale").addEventListener("change",event=>{setLocale(event.target.value);renderNormativeBase();if(report)render(report)});
 renderNormativeBase();
 $("#report-filter").addEventListener("change",filterReport);
-$("#analyze").addEventListener("click",async()=>{const f=$("#pdf-file").files?.[0];if(!f)return alert(uiText("selectFile"));const b=$("#analyze");b.disabled=true;b.textContent=uiText("validating");try{report=await analyze(f,$("#profile").value,$("#document-type").value,$("#print-mode").value);render(report)}catch(e){console.error(e);alert(uiText("validationFailed",e.message||e))}finally{b.disabled=false;b.textContent=uiText("analyze")}});
+$("#analyze").addEventListener("click",async()=>{const f=$("#pdf-file").files?.[0];if(!f)return alert(uiText("selectFile"));const b=$("#analyze");b.disabled=true;b.textContent=uiText("validating");try{report=await analyze(f,$("#profile").value,$("#document-type").value,$("#print-mode").value,$("#page-accounting").value);render(report)}catch(e){console.error(e);alert(uiText("validationFailed",e.message||e))}finally{b.disabled=false;b.textContent=uiText("analyze")}});
 $("#export-json").addEventListener("click",()=>report&&save("ufc-validation-report.json",JSON.stringify(report,null,2),"application/json;charset=utf-8"));
 $("#export-csv").addEventListener("click",()=>{if(!report)return;const h=["Status","Category","Rule","Source","Evidence","Correction","Level","Mandatory","Normative rule","Locator","Normativity"],rows=report.checks.map(c=>[c.status,c.category,c.rule,c.source,c.evidence,c.correction,c.level,c.mandatory?"yes":"no",c.normative_rule,c.locator,c.normativity]),data=csvRows([h,...rows]);save("ufc-validation-report.csv",`\ufeff${data}`,"text/csv;charset=utf-8")});
 $("#print-report").addEventListener("click",()=>window.print());
