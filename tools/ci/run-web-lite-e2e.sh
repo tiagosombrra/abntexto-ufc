@@ -11,7 +11,7 @@ for profile_pdf in scientific-article research-project anonymized-research-proje
   }
 done
 test -s artifacts/validation/document-profiles/cli-evidence.json
-for pdf in geometry-single-sided geometry-double-sided; do
+for pdf in geometry-single-sided geometry-double-sided geometry-double-sided-with-cover; do
   test -s "artifacts/validation/duplex-margins/$pdf.pdf"
 done
 test -s artifacts/validation/duplex-margins/cli-evidence.json

@@ -136,11 +136,19 @@ ou:
 print-mode = double-sided
 ```
 
-Os validadores distinguem agora o modo de impressão de seu rigor e do tipo documental. No Web/Lite, selecione **Single-sided** ou **Double-sided**; no CLI/Deep, use `--print-mode single-sided` (padrão de compatibilidade) ou `--print-mode double-sided`. Esta escolha precisa refletir o modo efetivamente utilizado na compilação e **não é inferida automaticamente do PDF**. Em `double-sided`, páginas ímpares usam `margin.recto` (esquerda 3 cm, direita 2 cm) e páginas pares usam `margin.verso` (esquerda 2 cm, direita 3 cm). Exemplo:
+Os validadores distinguem agora o modo de impressão de seu rigor e do tipo documental. No Web/Lite, selecione **Single-sided** ou **Double-sided**; no CLI/Deep, use `--print-mode single-sided` (padrão de compatibilidade) ou `--print-mode double-sided`. Esta escolha precisa refletir o modo efetivamente utilizado na compilação e **não é inferida automaticamente do PDF**. Em `double-sided`, páginas internas ímpares usam `margin.recto` (esquerda 3 cm, direita 2 cm) e internas pares usam `margin.verso` (esquerda 2 cm, direita 3 cm). **A capa externa, quando incluída no PDF, não é contada como a primeira página interna**. O validador não infere se existe essa capa, pois o PDF não comprova por si só a política de impressão. Exemplo:
 
 ```bash
 python3 tools/validate-ufc-pdf.py tese.pdf --profile portable --document-type doctoral-thesis --print-mode double-sided --format json
 ```
+
+Se o **PDF começa na capa externa** e só depois apresenta a folha de rosto, use o parâmetro opt-in `--page-accounting external-cover-first` no CLI/Deep ou escolha **“O PDF inclui capa externa não contada”** no Web/Lite:
+
+```bash
+python3 tools/validate-ufc-pdf.py tese-com-capa.pdf --profile portable --document-type doctoral-thesis --print-mode double-sided --page-accounting external-cover-first --format json
+```
+
+O padrão `--page-accounting pdf-first-page` conserva a contagem física anterior (primeira página do PDF é o anverso interno). Na opção com capa externa, a página 1 continua sendo verificada quanto ao tamanho A4, mas fica fora da verificação das margens **internas**; a página 2 passa a ser o anverso interno. A ficha catalográfica, mesmo sem numeração impressa, continua ocupando seu lado físico dentro do miolo e **não** deve provocar outro deslocamento. Essa opção exige `double-sided` e pelo menos duas páginas no PDF. Os relatórios JSON registram `page_accounting`; o método mede margens horizontais, não valida automaticamente se o usuário escolheu o modelo correto.
 
 A verificação automática aqui mede somente limites **horizontais** do texto extraído. Não prova margens superior/inferior, organização semântica ou que o arquivo realmente foi composto para frente e verso.
 
