@@ -6,15 +6,16 @@ tmp_fixture=".abntexto-ufc-geometry.tex"
 log="/tmp/abntexto-ufc-geometry.log"
 
 cleanup() {
-  rm -f "$tmp_fixture" geometry-single-sided.* geometry-double-sided.*
+  rm -f "$tmp_fixture" geometry-single-sided.* geometry-double-sided.* geometry-double-sided-with-cover.*
 }
 trap cleanup EXIT INT TERM
 
 build_mode() {
   label=$1
   runtime_value=$2
+  cover_value=$3
   job="geometry-$label"
-  sed "s/@UFC_PRINT@/$runtime_value/g" "$fixture" > "$tmp_fixture"
+  sed -e "s/@UFC_PRINT@/$runtime_value/g" -e "s/@UFC_COVER@/$cover_value/g" "$fixture" > "$tmp_fixture"
 
   echo "Validating PDF geometry: $label..."
   for pass in 1 2; do
@@ -37,8 +38,9 @@ build_mode() {
 }
 
 # Validate the canonical print-mode values directly.
-build_mode single-sided single-sided
-build_mode double-sided double-sided
+build_mode single-sided single-sided false
+build_mode double-sided double-sided false
+build_mode double-sided-with-cover double-sided true
 
 python3 <<'PY'
 import xml.etree.ElementTree as ET
@@ -136,7 +138,19 @@ def validate(mode):
 for mode in ('single-sided', 'double-sided'):
     validate(mode)
 
-print('PDF geometry measurement completed.')
+# The external cover is PDF page one, not the first internal recto page.
+cover_pages = pages_from('geometry-double-sided-with-cover.html')
+if len(cover_pages) != 5:
+    raise SystemExit(f'double-sided-with-cover: expected 5 PDF pages, got {len(cover_pages)}')
+for inner_index, (left, right) in enumerate((
+    ('UFCLEFTPREONE', 'UFCRIGHTPREONE'),
+    ('UFCLEFTPRETWO', 'UFCRIGHTPRETWO'),
+    ('UFCLEFTTEXTONE', 'UFCRIGHTTEXTONE'),
+    ('UFCLEFTTEXTTWO', 'UFCRIGHTTEXTTWO'),
+), 1):
+    validate_page_margins('double-sided', cover_pages[inner_index], inner_index, left, right)
+
+print('PDF geometry measurement completed, including the external cover.')
 PY
 
 # Preserve both class-compiled PDFs and check the productive CLI/Deep path
@@ -145,6 +159,7 @@ duplex_dir="artifacts/validation/duplex-margins"
 mkdir -p "$duplex_dir"
 cp geometry-single-sided.pdf "$duplex_dir/geometry-single-sided.pdf"
 cp geometry-double-sided.pdf "$duplex_dir/geometry-double-sided.pdf"
+cp geometry-double-sided-with-cover.pdf "$duplex_dir/geometry-double-sided-with-cover.pdf"
 python3 tests/checks/validator/duplex_margin_pdf_evidence.py \
   --pdf-dir "$duplex_dir" \
   --evidence "$duplex_dir/cli-evidence.json"
