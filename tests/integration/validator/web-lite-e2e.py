@@ -332,7 +332,7 @@ def by_id(report: dict[str, Any]) -> dict[str, dict[str, Any]]:
     return result
 
 
-def validate_schema(report: dict[str, Any], profile: str, contract: dict[str, Any], catalog: dict[str, Any], document_type: str = 'undergraduate-capstone', print_mode: str = 'single-sided') -> None:
+def validate_schema(report: dict[str, Any], profile: str, contract: dict[str, Any], catalog: dict[str, Any], document_type: str = 'undergraduate-capstone', print_mode: str = 'single-sided', page_accounting: str = 'pdf-first-page') -> None:
     schema = contract["target_report_schema"]
     missing = [key for key in schema["required_top_level"] if key not in report]
     if missing:
@@ -343,6 +343,8 @@ def validate_schema(report: dict[str, Any], profile: str, contract: dict[str, An
         fail(f"browser document type mismatch: {report.get('document_type')!r} != {document_type!r}")
     if report.get("print_mode") != print_mode:
         fail(f"browser print mode mismatch: {report.get('print_mode')!r} != {print_mode!r}")
+    if report.get("page_accounting") != page_accounting:
+        fail(f"browser page accounting mismatch: {report.get('page_accounting')!r} != {page_accounting!r}")
     if report.get("mode") != "web-lite-local":
         fail(f"browser mode mismatch: {report.get('mode')!r}")
     base = report.get("normative_catalog")
@@ -399,15 +401,16 @@ def csp_log_violations(entries: list[dict[str, Any]]) -> list[str]:
     return violations
 
 
-def analyze_through_ui(browser: Browser, pdf: Path, profile: str, document_type: str = 'undergraduate-capstone', print_mode: str = 'single-sided') -> dict[str, Any]:
+def analyze_through_ui(browser: Browser, pdf: Path, profile: str, document_type: str = 'undergraduate-capstone', print_mode: str = 'single-sided', page_accounting: str = 'pdf-first-page') -> dict[str, Any]:
     browser.execute(
         "window.alert=(message)=>{window.__ufcTestAlert=String(message)};"
         "const p=document.querySelector('#profile');p.value=arguments[0];"
         "const d=document.querySelector('#document-type');d.value=arguments[1];"
         "const m=document.querySelector('#print-mode');m.value=arguments[2];"
+        "const a=document.querySelector('#page-accounting');a.value=arguments[3];"
         "document.querySelector('#summary').classList.add('hidden');"
         "document.querySelector('#pdf-file').value='';return p.value;",
-        [profile, document_type, print_mode],
+        [profile, document_type, print_mode, page_accounting],
     )
     browser.send_file("#pdf-file", pdf)
     browser.click("#analyze")
@@ -467,9 +470,9 @@ def verify_portuguese_ui(browser: Browser) -> None:
         "lead:document.querySelector('header .lead')?.textContent||'',"
         "button:pick('analyze').textContent,"
         "profile:options('profile'),types:options('document-type'),"
-        "print:options('print-mode'),filter:options('report-filter'),"
+        "print:options('print-mode'),accounting:options('page-accounting'),filter:options('report-filter'),"
         "fileLabel:label('pdf-file'),profileLabel:label('profile'),"
-        "docLabel:label('document-type'),printLabel:label('print-mode'),"
+        "docLabel:label('document-type'),printLabel:label('print-mode'),accountingLabel:label('page-accounting'),"
         "filterLabel:document.querySelector('label[for=report-filter]')?.textContent||'',"
         "exportJSON:pick('export-json').textContent,printReport:pick('print-report').textContent};"
     )
@@ -483,6 +486,7 @@ def verify_portuguese_ui(browser: Browser) -> None:
         "profileLabel": "Modo de validação",
         "docLabel": "Tipo de documento",
         "printLabel": "Modo de impressão",
+        "accountingLabel": "Início da contagem",
         "filterLabel": "Exibir verificações",
         "exportJSON": "Exportar JSON",
         "printReport": "Imprimir relatório",
@@ -505,6 +509,8 @@ def verify_portuguese_ui(browser: Browser) -> None:
         fail("Web/Lite changed public validation-mode values")
     if [x["value"] for x in observed["print"]] != ["single-sided", "double-sided"]:
         fail("Web/Lite changed public print-mode values")
+    if [x["value"] for x in observed["accounting"]] != ["pdf-first-page", "external-cover-first"]:
+        fail("Web/Lite changed public page-accounting values")
     filters = observed.get("filter", [])
     if [x["value"] for x in filters] != ["all", "attention", "failures", "manual"]:
         fail(f"Web/Lite changed canonical result filter values: {filters!r}")
@@ -721,6 +727,7 @@ def analyze_through_ui_locale(browser: Browser, pdf: Path, profile: str) -> dict
         "const p=document.querySelector('#profile');p.value=arguments[0];"
         "document.querySelector('#document-type').value='undergraduate-capstone';"
         "document.querySelector('#print-mode').value='single-sided';"
+        "document.querySelector('#page-accounting').value='pdf-first-page';"
         "document.querySelector('#summary').classList.add('hidden');"
         "document.querySelector('#pdf-file').value='';",
         [profile],
@@ -750,7 +757,7 @@ def main() -> None:
     parser.add_argument("--profile", choices=("strict", "portable", "accessibility"), default="portable")
     parser.add_argument("--site-root", type=Path, default=VALIDATOR)
     parser.add_argument("--document-pdf-dir", type=Path, help="Five real class-rendered profile PDFs and matching CLI evidence")
-    parser.add_argument("--duplex-pdf-dir", type=Path, help="Two real recto/verso PDFs and matching CLI evidence")
+    parser.add_argument("--duplex-pdf-dir", type=Path, help="Real recto/verso PDFs including an external cover and matching CLI evidence")
     parser.add_argument("--evidence", type=Path)
     args = parser.parse_args()
 
@@ -912,17 +919,17 @@ def main() -> None:
                 if not evidence_file.is_file():
                     fail("duplex CLI evidence is missing")
                 control = json.loads(evidence_file.read_text(encoding="utf-8"))
-                if control.get("status") != PASS or len(control.get("scenarios", {})) != 4:
+                if control.get("status") != PASS or len(control.get("scenarios", {})) != 7:
                     fail("duplex CLI evidence scenarios are incomplete")
                 for scenario, spec in control["scenarios"].items():
                     pdf = directory / spec["pdf_file"]
                     if not pdf.is_file() or file_sha256(pdf) != spec["pdf_sha256"]:
                         fail("duplex real PDF identity mismatch: " + scenario)
                     report = analyze_through_ui(
-                        browser, pdf, args.profile, "doctoral-thesis", spec["print_mode"]
+                        browser, pdf, args.profile, "doctoral-thesis", spec["print_mode"], spec["page_accounting"]
                     )
                     validate_schema(
-                        report, args.profile, contract, catalog, "doctoral-thesis", spec["print_mode"]
+                        report, args.profile, contract, catalog, "doctoral-thesis", spec["print_mode"], spec["page_accounting"]
                     )
                     checks = by_id(report)
                     if checks.get("pdf.open", {}).get("status") != PASS:
@@ -937,13 +944,14 @@ def main() -> None:
                         fail("duplex PDF is not A4: " + scenario)
                     duplex_reports[scenario] = {
                         "print_mode": spec["print_mode"],
+                        "page_accounting": spec["page_accounting"],
                         "pdf_sha256": spec["pdf_sha256"],
                         "layout_margins": actual,
                         "negative_control": spec["negative_control"],
                     }
                 print(
                     "DUPLEX-MARGIN-PDF-EVIDENCE surface=web-lite status=PASS "
-                    "actual_pdfs=2 scenarios=4 positive=2 negative=2 "
+                    "actual_pdfs=3 scenarios=7 positive=3 negative=4 "
                     "cross_surface_margins=ALIGNED"
                 )
 
