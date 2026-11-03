@@ -145,7 +145,7 @@ def main() -> None:
                 "page_accounting": accounting,
                 "pdf_sha256": digest,
                 "margins": expected,
-                "negative_control": pdf_mode != selected_mode,
+                "negative_control": expected == "FAIL",
             }
             print(
                 "DUPLEX-MARGIN-PDF-EVIDENCE "
@@ -153,8 +153,8 @@ def main() -> None:
                 f"layout_margins={observed} result=PASS"
             )
 
-    if hashes["single-sided"] == hashes["double-sided"]:
-        fail("single-sided and duplex PDFs are not distinct byte sequences")
+    if len(hashes) != 3 or len(set(hashes.values())) != 3:
+        fail("expected three distinct source-bound PDF fixtures")
     payload = {
         "status": "PASS",
         "schema_version": 1,
@@ -162,7 +162,7 @@ def main() -> None:
             ["git", "rev-parse", "HEAD"], cwd=ROOT, check=True, text=True, capture_output=True
         ).stdout.strip(),
         "scope": "horizontal text bounds; explicit print mode; automatic-partial",
-        "actual_pdf_count": 2,
+        "actual_pdf_count": len(hashes),
         "scenarios": records,
         "limits": [
             "Print mode is user-supplied and is not automatically inferred from a PDF.",
