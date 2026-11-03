@@ -2,7 +2,14 @@
 
 \ufcsetup{
   type = doctoral-thesis,
-  print-mode = @UFC_PRINT@
+  print-mode = @UFC_PRINT@,
+  cover = @UFC_COVER@,
+  coat-of-arms = false,
+  institution = {Universidade Federal do Ceará},
+  author = {Geometry Fixture Author},
+  title = {Duplex Geometry Fixture},
+  location = {Fortaleza},
+  year = {2026}
 }
 
 \newcommand{\geometriapagina}[1]{%
@@ -12,6 +19,7 @@
 }
 
 \begin{document}
+\ufcPrintCover
 
 \pretextual
 \geometriapagina{PREONE}
