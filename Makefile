@@ -63,6 +63,7 @@ lua:
 
 static-check:
 	@python3 tests/static.py
+	@python3 tests/integration/frontmatter/comprehensive-pdf-gate.py --selftest
 
 check:
 	@python3 tests/run.py --mode pr
