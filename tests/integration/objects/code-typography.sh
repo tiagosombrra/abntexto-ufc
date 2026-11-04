@@ -7,6 +7,7 @@ flags="-interaction=nonstopmode -halt-on-error -file-line-error"
 
 cleanup() {
   rm -f "$tmp" tipografia-codigo-*.aux tipografia-codigo-*.log tipografia-codigo-*.out tipografia-codigo-*.pdf
+  rm -f abntexto-ufc-code-typography-negative.tex
   rm -f tipografia-codigo-*.loa tipografia-codigo-*.loc
 }
 trap cleanup EXIT INT TERM
@@ -179,14 +180,33 @@ for snippet in expected:
             f'actual rendered listing lost contiguous Python tokens: {snippet!r}'
         )
 
-# Fault injection: the regression predicate must reject tracked-out code.
-bad_lines = ('def r e j e c t _ i n v a l i d ( values ) :',)
-if any(any(snippet in line for line in bad_lines) for snippet in expected):
-    raise SystemExit('regression predicate accepted the historic spaced-letter failure')
 PYCODE
 
     sh tests/integration/layout/font-embedding.sh "$job.pdf"
   done
 done
+
+# A REAL negative PDF must reproduce the historical fixed-column spacing.
+# This checks the rendered output, not a synthetic string substituted in Python.
+negative_fixture="abntexto-ufc-code-typography-negative.tex"
+negative_job="tipografia-codigo-negative-pdflatex"
+sed -e 's/@UFC_FONT@/times/g' \
+    -e 's/numbers=left,numbersep=8pt,breaklines=true/numbers=left,numbersep=8pt,breaklines=true,columns=fixed/' \
+    "$fixture" > "$negative_fixture"
+pdflatex -jobname="$negative_job" $flags "$negative_fixture" > "/tmp/$negative_job.out" 2>&1 || {
+  cat "/tmp/$negative_job.out"
+  exit 1
+}
+pdftotext -layout "$negative_job.pdf" "/tmp/$negative_job.txt"
+python3 - "/tmp/$negative_job.txt" <<'PYNEGATIVE'
+import sys
+from pathlib import Path
+
+text = Path(sys.argv[1]).read_text(encoding='utf-8')
+if 'r e j e c t' not in text:
+    raise SystemExit('negative real-PDF fixture did not recreate broken spacing')
+if 'def reject_invalid(values):' in text:
+    raise SystemExit('negative real-PDF fixture unexpectedly retained contiguous Python source')
+PYNEGATIVE
 
 echo 'Code and algorithm typography and geometry gate completed.'
