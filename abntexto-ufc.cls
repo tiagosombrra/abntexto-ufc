@@ -1218,8 +1218,10 @@
       {
         \tl_gset:Nn \g_ufc_code_module_tl { listings }
         \RequirePackage{listings}
-        % Source code remains in the institutional text family and body size.
-        \lstset{basicstyle=\ttfamily\normalsize}
+        % Preserve the institutional text family without the fixed-column
+        % inter-glyph spacing caused by a proportional typewriter mapping.
+        % Keep indentation and contiguous identifiers readable in real PDFs.
+        \lstset{basicstyle=\ttfamily\normalsize,columns=fullflexible,keepspaces=true}
       },
     code / minted .code:n =
       {
