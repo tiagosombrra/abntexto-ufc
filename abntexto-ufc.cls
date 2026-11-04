@@ -224,10 +224,10 @@
 \prop_gput:Nnn \g_ufc_document_text_prop {en/nature-doctoral} {Doctoral~thesis~submitted~to~the~\ufc_meta_use:n {doctoral-graduate-program}~at~\ufc_institution_display:~in~partial~fulfillment~of~the~requirements~for~the~degree~of~Doctor~in~\ufc_meta_use:n {doctoral-degree-field}.\ufc_meta_if_blank:nF {doctoral-concentration}{~Area~of~concentration:~\ufc_meta_use:n {doctoral-concentration}.}}
 \prop_gput:Nnn \g_ufc_document_text_prop {es/nature-doctoral} {Tesis~presentada~al~\ufc_meta_use:n {doctoral-graduate-program}~de~\ufc_institution_display:~como~requisito~parcial~para~obtener~el~grado~de~doctor~en~\ufc_meta_use:n {doctoral-degree-field}.\ufc_meta_if_blank:nF {doctoral-concentration}{~Área~de~concentración:~\ufc_meta_use:n {doctoral-concentration}.}}
 \prop_gput:Nnn \g_ufc_document_text_prop {fr/nature-doctoral} {Thèse~présentée~au~\ufc_meta_use:n {doctoral-graduate-program}~de~\ufc_institution_display:~en~vue~de~l'obtention~du~grade~de~docteur~en~\ufc_meta_use:n {doctoral-degree-field}.\ufc_meta_if_blank:nF {doctoral-concentration}{~Domaine~de~spécialisation:~\ufc_meta_use:n {doctoral-concentration}.}}
-\prop_gput:Nnn \g_ufc_document_text_prop {pt/nature-project} {\ufc_project_type_text:~apresentado~à~\ufc_submission_entity_display:.}
-\prop_gput:Nnn \g_ufc_document_text_prop {en/nature-project} {\ufc_project_type_text:~submitted~to~\ufc_submission_entity_display:.}
-\prop_gput:Nnn \g_ufc_document_text_prop {es/nature-project} {\ufc_project_type_text:~presentado~a~\ufc_submission_entity_display:.}
-\prop_gput:Nnn \g_ufc_document_text_prop {fr/nature-project} {\ufc_project_type_text:~soumis~à~\ufc_submission_entity_display:.}
+\prop_gput:Nnn \g_ufc_document_text_prop {pt/nature-project} {\ufc_project_type_text:\space apresentado~à~\ufc_submission_entity_display:.}
+\prop_gput:Nnn \g_ufc_document_text_prop {en/nature-project} {\ufc_project_type_text:\space submitted~to~\ufc_submission_entity_display:.}
+\prop_gput:Nnn \g_ufc_document_text_prop {es/nature-project} {\ufc_project_type_text:\space presentado~a~\ufc_submission_entity_display:.}
+\prop_gput:Nnn \g_ufc_document_text_prop {fr/nature-project} {\ufc_project_type_text:\space soumis~à~\ufc_submission_entity_display:.}
 \prop_gput:Nnn \g_ufc_document_text_prop {pt/caption-text-table} {Quadro}
 \prop_gput:Nnn \g_ufc_document_text_prop {en/caption-text-table} {Text~Table}
 \prop_gput:Nnn \g_ufc_document_text_prop {es/caption-text-table} {Cuadro}
