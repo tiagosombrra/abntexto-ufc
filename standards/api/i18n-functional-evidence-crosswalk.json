@@ -10,7 +10,6 @@
   "acceptance": "PENDING_ITEM_PDF_ASSERTIONS_AND_HUMAN_REVIEW",
   "interpretation": "A lexical source link is a research lead, NOT a functional/PDF certification or a linguistic approval. Source SHA comes from the executing CI checkout, not this ledger.",
   "sources": [
-    {"path": "tests/integration/frontmatter/institution-display-locale.py", "suite": "frontmatter", "scope": "eight real PDF locale institution-display cases"},
     {
       "path": "tests/integration/frontmatter/generate-integrated-locale.py",
       "suite": "integrated-28",
@@ -114,9 +113,7 @@
         "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
         "candidate_suite": "integrated-28"
       },
-      "institution-display": {"proof_state": "SOURCE_REFERENCE_ONLY", "candidate_test_file": "tests/integration/frontmatter/institution-display-locale.py", "candidate_suite": "frontmatter"},
-    "submission-entity-display": {"proof_state": "SOURCE_REFERENCE_ONLY", "candidate_test_file": "tests/integration/frontmatter/institution-display-locale.py", "candidate_suite": "frontmatter"},
-    "labels-language": {
+      "labels-language": {
         "proof_state": "SOURCE_REFERENCE_ONLY",
         "candidate_test_file": "tests/integration/frontmatter/primary-document-locale-matrix.sh",
         "candidate_suite": "profile-28"
