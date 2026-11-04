@@ -105,6 +105,30 @@ def fold(text: str) -> str:
     return re.sub(r"-(?=\s+\w)\s+", "-", normalized)
 
 
+def fold_wrapped_prose(text: str) -> str:
+    """Remove only discretionary word hyphens at PDF layout line breaks.
+
+    Preserve real word separators so that an actual glued token such as
+    'Cearáen' cannot satisfy a correct 'Ceará en' boundary assertion.
+    """
+    unwrapped = re.sub(
+        r"(?<=[^\W\d_])-[ \t]*\r?\n[ \t]*(?=[^\W\d_])",
+        "", text,
+    )
+    return fold(unwrapped)
+
+
+def assert_nature_boundary_mutants() -> None:
+    """Prove a legitimate hyphenated line wrap passes but fused words fail."""
+    expected = fold("Université fédérale du Ceará en")
+    wrapped = "Uni-\n               versité fédérale du Ceará en"
+    fused = "Uni-\n               versité fédérale du Cearáen"
+    if expected not in fold_wrapped_prose(wrapped):
+        raise ValueError("valid PDF line-wrap mutation was rejected")
+    if expected in fold_wrapped_prose(fused):
+        raise ValueError("glued institution/nature mutation was accepted")
+
+
 def check_role_title_page(txt: str, profile: str, locale: str) -> dict:
     """Check class-owned labels adjacent to synthetic metadata on a real title page.
 
@@ -347,9 +371,12 @@ def check_text(txt: str, profile: str, locale: str) -> dict:
             "es": "Universidad Federal de Ceará como",
             "fr": "Université fédérale du Ceará en",
         }[locale]
-        if fold(boundary_phrase) not in visible:
+        # Poppler can split a *correct* name as "Uni-\\nversité" at a
+        # physical line boundary. Keep the boundary assertion strict while
+        # removing only end-of-line discretionary hyphenation.
+        if fold(boundary_phrase) not in fold_wrapped_prose(txt):
             raise ValueError(
-                f"glued institution/nature words: {profile}/{locale}: "
+                f"missing institution/nature word boundary: {profile}/{locale}: "
                 f"{boundary_phrase!r}"
             )
     if profile in ACADEMIC:
@@ -415,6 +442,7 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--locale", required=True, choices=tuple(LANGUAGES))
     args = parser.parse_args()
+    assert_nature_boundary_mutants()
     locale = args.locale
     path = ARTIFACTS / locale
     path.mkdir(parents=True, exist_ok=True)
