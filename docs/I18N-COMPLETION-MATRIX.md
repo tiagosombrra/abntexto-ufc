@@ -206,12 +206,12 @@ A auditoria das 70 chaves públicas revelou que `examiner-3` até `examiner-6`, 
 
 ## R3 mixed-table List-of-Tables diagnostic (release blocker #557)
 
-The dedicated workflow \`.github/workflows/r3-table-list-locale.yml\` owns the
-source-bound PT/EN/ES/FR PDF-and-\`.lot\` checks in
-\`tests/integration/objects/table-list-locale-regression.py\`.
-Each diagnostic document places a native ABNTexto short table next to a real
-115-row \`longabnttblr\` table and verifies the two localized, sequential
-List-of-Tables entries against the extracted PDF and original \`.lot\` file.
+The dedicated workflow `.github/workflows/r3-table-list-locale.yml` owns the
+source-bound PT/EN/ES/FR PDF-and-`.lot` checks in
+`tests/integration/objects/table-list-locale-regression.py`.
+Each diagnostic document places a native ABNTexto short table alongside a
+115-row `longabnttblr` and an independent 115-row raw `longtable` and verifies the three localized, sequential
+List-of-Tables entries against the extracted PDF and original `.lot` file.
 Mutation tests reject omitted second entries and bare-number/mixed entries.
 The workflow uploads original PDFs, LaTeX logs and source/hash receipts even
 when the known class defect reproduces. A red baseline is expected until the
