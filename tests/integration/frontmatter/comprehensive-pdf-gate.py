@@ -37,10 +37,17 @@ def table_list_failures(text, locale):
     label = re.compile(r"^" + re.escape(TABLE_LABELS[locale]) + r"\s+(\d+)\b", re.I)
     any_label = re.compile(r"^(?:Table|Tabela|Tabla|Tableau)\s+\d+\b", re.I)
     bare = re.compile(r"^\d+\s+\S")
-    rows = [x.strip() for x in text.replace("\xa0", " ").splitlines() if x.strip()]
-    valid = [label.match(line) for line in rows if label.match(line)]
-    bad = [line for line in rows if bare.match(line)
-           or (any_label.match(line) and not label.match(line))]
+    # Preserve Poppler's original indentation: a wrapped caption may start with
+    # a number, but its continuation is not an independent list entry.
+    rows = [x.replace("\xa0", " ") for x in text.splitlines() if x.strip()]
+    labeled = [(len(x) - len(x.lstrip()), label.match(x.lstrip()))
+               for x in rows if label.match(x.lstrip())]
+    baseline_indent = min((n for n, _ in labeled), default=0)
+    valid = [match for _, match in labeled]
+    bad = [x for x in rows if
+           ((len(x) - len(x.lstrip()) <= baseline_indent + 1 and
+             bare.match(x.lstrip())) or
+            (any_label.match(x.lstrip()) and not label.match(x.lstrip())))]
     failures = []
     if len(valid) < 2:
         failures.append("table_list.fewer_than_two_entries")
@@ -90,9 +97,11 @@ def mutant_selftest():
     good = "LIST OF TABLES\nTable 1 — Initial result........10\nTable 2 — Long result........20"
     missing = "LIST OF TABLES\nTable 1 — Initial result........10"
     bare = "LIST OF TABLES\nTable 1 — Initial result........10\n2 Long result........20"
+    wrapped = "LIST OF TABLES\nTable 1 — Results from\n        2 experiments......10\nTable 2 — Long result........20"
     assert not table_list_failures(good, "en")
     assert "table_list.fewer_than_two_entries" in table_list_failures(missing, "en")
     assert "table_list.mixed_or_bare_prefix" in table_list_failures(bare, "en")
+    assert not table_list_failures(wrapped, "en")
     assert "pagination.orphan_number_only" in pdf_failures(
         {"Title": "Example", "Author": "Someone"},
         ["LIST OF TABLES\n" + good, "60\n"],
@@ -132,11 +141,14 @@ def audit(archive_dir, template):
             for profile in PROFILES:
                 prefix = "integrated-" + profile + "-" + locale
                 pdf = source.read(prefix + ".pdf")
-                tex = source.read(prefix + ".tex").decode("utf-8")
+                tex_bytes = source.read(prefix + ".tex")
+                tex = tex_bytes.decode("utf-8")
                 item = next(x for x in m["entries"] if x["profile"] == profile)
                 digest = hashlib.sha256(pdf).hexdigest()
                 if item["pdf_sha256"] != digest:
                     raise ValueError("PDF sha256 mismatch " + prefix)
+                if item["source_sha256"] != hashlib.sha256(tex_bytes).hexdigest():
+                    raise ValueError("TeX source sha256 mismatch " + prefix)
                 info, pages = extract_pdf_bytes(pdf)
                 failures = pdf_failures(info, pages, tex, locale, profile)
                 results.append({
