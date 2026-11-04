@@ -22,7 +22,7 @@ LOCALES = {
 def fold(value: str) -> str:
     """Normalize output accents, whitespace and case for robust PDF checks."""
     return re.sub(
-        r"\\s+", " ",
+        r"\s+", " ",
         unicodedata.normalize("NFKD", value).encode("ascii", "ignore").decode().lower()
     ).strip()
 
@@ -40,20 +40,20 @@ def compile_case(work: Path, case: str, locale: str, overrides: str,
         "project-program={Synthetic Program},project-identifier={SYNTHETIC-555},"
     )
     source = (
-        f"\\DocumentMetadata{{lang={language},pdfstandard=A-2b,pdfversion=1.7}}\\n"
-        r"\\documentclass{abntexto-ufc}" "\\n"
-        r"\\ufcsetup{" + f"type={profile},document-language={locale},"
+        rf"\DocumentMetadata{{lang={language},pdfstandard=A-2b,pdfversion=1.7}}" + "\n"
+        r"\documentclass{abntexto-ufc}" "\n"
+        r"\ufcsetup{" + f"type={profile},document-language={locale},"
         "print-mode=single-sided,cover=true,coat-of-arms=false,"
         "author={Synthetic Author},title={Institution Display Regression},"
-        "location={Fortaleza},year={2026}," + fields + overrides + "}\\n"
-        r"\\begin{document}" "\\n"
-        r"\\pretextual" "\\n"
-        r"\\ufcPrintCover" "\\n"
-        r"\\ufcPrintTitlePage" "\\n"
-        r"\\textual" "\\n"
-        r"\\section{Synthetic Section}" "\\n"
-        "Source-bound locale check.\\n"
-        r"\\end{document}" "\\n"
+        "location={Fortaleza},year={2026}," + fields + overrides + "}\n"
+        r"\begin{document}" "\n"
+        r"\pretextual" "\n"
+        r"\ufcPrintCover" "\n"
+        r"\ufcPrintTitlePage" "\n"
+        r"\textual" "\n"
+        r"\section{Synthetic Section}" "\n"
+        "Source-bound locale check.\n"
+        r"\end{document}" "\n"
     )
     tex = work / f"{case}.tex"
     tex.write_text(source, encoding="utf-8")
@@ -117,10 +117,10 @@ def main() -> None:
     output.write_text(json.dumps({
         "status": "PASS", "real_pdfs": len(receipts),
         "source_sha": __import__("os").environ.get("GITHUB_SHA", ""),
-        "legal_values_unchanged": True,
+        "legal_metadata_mutation_pdf_test": "NOT_CHECKED",
         "human_approval": "PENDING",
         "receipts": receipts,
-    }, indent=2, ensure_ascii=False) + "\\n", encoding="utf-8")
+    }, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     print("INSTITUTION-DISPLAY-LOCALE status=PASS real_pdfs=8 "
           "locales=pt,en,es,fr custom_names=2 explicit_overrides=2")
 
