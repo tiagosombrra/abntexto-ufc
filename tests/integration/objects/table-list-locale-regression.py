@@ -54,19 +54,30 @@ def selftest() -> None:
             raise AssertionError(f"bare second numeral accepted: {locale}")
         if "table_list.fewer_than_two_entries" not in table_list_failures(missing, locale):
             raise AssertionError(f"omitted second table accepted: {locale}")
-    print("R3-TABLE-LIST-MUTANTS status=PASS locales=4 cases=16", flush=True)
+        three = good + f"\n{label} 3 — RAW............6"
+        bad_third = good + "\n3 RAW............6"
+        if table_list_failures(three, locale):
+            raise AssertionError(f"valid third native longtable rejected: {locale}")
+        if "table_list.mixed_or_bare_prefix" not in table_list_failures(bad_third, locale):
+            raise AssertionError(f"bare third native longtable accepted: {locale}")
+    print("R3-TABLE-LIST-MUTANTS status=PASS locales=4 cases=24", flush=True)
 
 
 def make_source(locale: str) -> str:
-    """Use both class-native short and tabularray-abnt long-table public APIs."""
+    """Exercise class-native, tabularray-abnt and raw longtable caption paths."""
     language, _, _, source_name = LOCALES[locale]
     rows = [
         f"R3LONGROW{i:03d} & {i} " + "\\\\"
         for i in range(1, 116)
     ]
+    raw_rows = [
+        f"R3RAWROW{i:03d} & {i} " + "\\\\"
+        for i in range(1, 116)
+    ]
     return "\n".join([
         rf"\DocumentMetadata{{lang={language},pdfstandard=A-2b,pdfversion=1.7}}",
         r"\documentclass{abntexto-ufc}",
+        r"\usepackage{longtable}",
         rf"\ufcsetup{{type=doctoral-thesis,document-language={locale},"
         r"tables=tabularray,print-mode=single-sided,cover=false,"
         r"coat-of-arms=false,catalog-card=false,"
@@ -76,7 +87,7 @@ def make_source(locale: str) -> str:
         r"\ufcPrintListOfTables",
         r"\textual",
         rf"\section{{R3-TABLES-{locale.upper()}}}",
-        rf"\legend{{table}}{{R3SHORT-{locale.upper()} short native table}}",
+        rf"\legend{{table}}{{R3SHORT-{locale.upper()}}}",
         rf"\ufcSource{{R3-SHORT-{locale.upper()} synthetic source}}",
         r"\begin{ufcobject}[here]",
         r"  \begin{tabular}{rr}",
@@ -95,6 +106,19 @@ def make_source(locale: str) -> str:
         *rows,
         r"\bottomrule",
         r"\end{longabnttblr}",
+        r"\begin{longtable}{rr}",
+        rf"\caption{{R3RAW-{locale.upper()} native longtable}}\label{{tab:r3-native-{locale}}}\\",
+        r"\hline",
+        r"R3RAWHEADER & R3RAWVALUE \\",
+        r"\hline",
+        r"\endfirsthead",
+        r"\hline",
+        r"R3RAWHEADER & R3RAWVALUE \\",
+        r"\hline",
+        r"\endhead",
+        *raw_rows,
+        r"\hline",
+        r"\end{longtable}",
         r"\end{document}",
         "",
     ])
@@ -150,28 +174,30 @@ def check_pdf(locale: str) -> dict:
     page_index, list_page = heading_pages[0]
     short = f"R3SHORT-{locale.upper()}"
     long = f"R3LONG-{locale.upper()}"
+    raw = f"R3RAW-{locale.upper()}"
     lot_text = lot.read_text(encoding="utf-8", errors="replace")
     failures = []
     # Check the actual .lot source before relying on extracted page text.
-    for marker in (short, long):
+    for marker in (short, long, raw):
         if lot_text.count(marker) != 1:
             failures.append(f"lot.{marker}.entry_count={lot_text.count(marker)}")
         if list_page.count(marker) != 1:
             failures.append(f"pdf.list.{marker}.entry_count={list_page.count(marker)}")
     failures += table_list_failures(list_page, locale)
     body = "\f".join(pages[page_index + 1:])
-    for marker in (short, long, f"R3LONGROW115", f"R3-LONGSOURCE-{locale.upper()}"):
+    for marker in (short, long, raw, "R3LONGROW115", "R3RAWROW115",
+                   f"R3-LONGSOURCE-{locale.upper()}"):
         if marker not in body:
             failures.append(f"pdf.body.missing={marker}")
     if len(pages) < 3:
         failures.append("pdf.not_multipage")
-    # Require the actual localized two-caption sequence in the extracted list.
+    # Require all three localized captions, including native longtable.
     numbers = [
         int(match.group(1)) for line in list_page.splitlines()
         if (match := re.match(rf"^\s*{re.escape(label)}\s+(\d+)\b",
                               line, flags=re.I))
     ]
-    if numbers[:2] != [1, 2] or len(numbers) != 2:
+    if numbers != [1, 2, 3]:
         failures.append(f"pdf.list.nonsequential={numbers}")
     receipt = {
         "locale": locale, "status": "FAIL" if failures else "AUTOMATED_PARTIAL",
@@ -188,7 +214,7 @@ def check_pdf(locale: str) -> dict:
     if failures:
         raise ValueError(f"{locale}: mixed table-list regression: {failures}")
     print(f"R3-TABLE-LIST-EVIDENCE status=PASS locale={locale} "
-          f"tables=2 pages={len(pages)} pdf_sha256={receipt['pdf_sha256']}")
+          f"tables=3 pages={len(pages)} pdf_sha256={receipt['pdf_sha256']}")
     return receipt
 
 
