@@ -338,6 +338,20 @@ def check_text(txt: str, profile: str, locale: str) -> dict:
     missing = [token for token in expected if fold(token) not in visible]
     if missing:
         raise ValueError(f"missing PDF text for {profile}/{locale}: {missing}, sample={visible[:750]}")
+    if profile in ACADEMIC and locale != "pt":
+        # Check the word boundary after the translated university name in
+        # the actual academic nature paragraph. A substring-only check misses
+        # false concatenations such as "Cearáin" or "Cearácomo".
+        boundary_phrase = {
+            "en": "Federal University of Ceará in",
+            "es": "Universidad Federal de Ceará como",
+            "fr": "Université fédérale du Ceará en",
+        }[locale]
+        if fold(boundary_phrase) not in visible:
+            raise ValueError(
+                f"glued institution/nature words: {profile}/{locale}: "
+                f"{boundary_phrase!r}"
+            )
     if profile in ACADEMIC:
         # Check the actual dedicated list pages, not the aggregate
         # illustrations list (which also repeats chart/text-table markers).
