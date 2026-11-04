@@ -302,6 +302,15 @@ def check_text(txt: str, profile: str, locale: str) -> dict:
             companion = "en" if locale == "pt" else "pt"
             expected += [f"integrated-summary-{locale}-main",
                          f"integrated-summary-{companion}-companion"]
+    # Check the presentation name rendered in the PDF, not only metadata.
+    # Anonymous work follows a separate no-identity disclosure contract.
+    if profile not in {"scientific-article", "anonymized-research-project"}:
+        expected.append({
+            "pt": "Universidade Federal do Ceará",
+            "en": "Federal University of Ceará",
+            "es": "Universidad Federal de Ceará",
+            "fr": "Université fédérale du Ceará",
+        }[locale])
     if profile in ACADEMIC:
         expected += list(PRETEXTUAL_HEADINGS[locale])
         expected += [
