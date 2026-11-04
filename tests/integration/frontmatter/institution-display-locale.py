@@ -109,9 +109,16 @@ def main() -> None:
                          "submission-entity={Synthetic Legal Agency},"
                          "submission-entity-display={Agence publique test},",
                          "Agence publique test", ("Synthetic Legal Agency",)),
+            compile_case(work, "blank-legal-project-fr", "fr",
+                         "submission-entity={},"
+                         "submission-entity-display={Agence publique test},",
+                         "Agence publique test", ("Université fédérale du Ceará",)),
+            compile_case(work, "blank-default-project-fr", "fr",
+                         "submission-entity={},",
+                         "Université fédérale du Ceará", ("Synthetic Legal Agency",)),
         ]
-    if len(receipts) != 8 or len({x["case"] for x in receipts}) != 8:
-        raise ValueError("Expected eight unique real-PDF cases")
+    if len(receipts) != 10 or len({x["case"] for x in receipts}) != 10:
+        raise ValueError("Expected ten unique real-PDF cases")
     output = ROOT / "artifacts/frontmatter/institution-display-locale.json"
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps({
@@ -121,7 +128,7 @@ def main() -> None:
         "human_approval": "PENDING",
         "receipts": receipts,
     }, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
-    print("INSTITUTION-DISPLAY-LOCALE status=PASS real_pdfs=8 "
+    print("INSTITUTION-DISPLAY-LOCALE status=PASS real_pdfs=10 "
           "locales=pt,en,es,fr custom_names=2 explicit_overrides=2")
 
 
