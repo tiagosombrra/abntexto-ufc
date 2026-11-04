@@ -29,11 +29,15 @@
 {\lst@basicstyle\ufcCodeProbe}
 \makeatother
 
-\lstset{numbers=left,numbersep=8pt}
+\lstset{language=Python,numbers=left,numbersep=8pt,breaklines=true}
 \legend{code}{Código de validação tipográfica}
 \ufcSource{Elaboração própria.}
 \begin{ufclisting}[here]
 UFC-CODE-GEOMETRY-MARKER
+def reject_invalid(values):
+    # Reject invalid input before proceeding.
+    from dataclasses import dataclass
+    return len(values)
 \end{ufclisting}
 
 \legend{algorithm}{Algoritmo de validação tipográfica}
