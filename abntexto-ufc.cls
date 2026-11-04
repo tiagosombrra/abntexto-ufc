@@ -383,9 +383,13 @@
   {
     \ufc_meta_if_blank:nTF {submission-entity-display}
       {
-        \bool_if:NTF \g_ufc_submission_entity_explicit_bool
-          { \ufc_meta_use:n {submission-entity} }
+        \ufc_meta_if_blank:nTF {submission-entity}
           { \ufc_institution_display: }
+          {
+            \bool_if:NTF \g_ufc_submission_entity_explicit_bool
+              { \ufc_meta_use:n {submission-entity} }
+              { \ufc_institution_display: }
+          }
       }
       { \ufc_meta_use:n {submission-entity-display} }
   }
@@ -2349,9 +2353,8 @@
 
 \cs_new_protected:Npn \ufc_project_entity_line:
   {
-    \ufc_meta_if_blank:nTF {submission-entity}
-      { \MakeUppercase{\ufc_institution_display:}\par }
-      { \MakeUppercase{\ufc_submission_entity_display:}\par }
+    % Honor the explicit display name even when the authored legal field is empty.
+    \MakeUppercase{\ufc_submission_entity_display:}\par
   }
 
 \cs_new_protected:Npn \ufc_project_title_extras:
