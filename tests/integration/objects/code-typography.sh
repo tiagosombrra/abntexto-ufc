@@ -160,6 +160,31 @@ for marker in ('UFC-CODE-GEOMETRY-MARKER', 'UFC-ALGORITHM-GEOMETRY-MARKER'):
         )
 PY
 
+    # Validate actual PDF source-code words, not only LaTeX font-family markers.
+    # The old fixed-column configuration split proportional-font identifiers.
+    pdftotext -layout "$job.pdf" "/tmp/$job-listing.txt"
+    python3 - "/tmp/$job-listing.txt" <<'PYCODE'
+import sys
+from pathlib import Path
+
+lines = Path(sys.argv[1]).read_text(encoding='utf-8').splitlines()
+expected = (
+    'def reject_invalid(values):',
+    'from dataclasses import dataclass',
+    'return len(values)',
+)
+for snippet in expected:
+    if not any(snippet in line for line in lines):
+        raise SystemExit(
+            f'actual rendered listing lost contiguous Python tokens: {snippet!r}'
+        )
+
+# Fault injection: the regression predicate must reject tracked-out code.
+bad_lines = ('def r e j e c t _ i n v a l i d ( values ) :',)
+if any(any(snippet in line for line in bad_lines) for snippet in expected):
+    raise SystemExit('regression predicate accepted the historic spaced-letter failure')
+PYCODE
+
     sh tests/integration/layout/font-embedding.sh "$job.pdf"
   done
 done
