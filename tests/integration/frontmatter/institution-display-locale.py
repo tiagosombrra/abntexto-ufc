@@ -17,6 +17,22 @@ LOCALES = {
     "es": ("es-ES", "Universidad Federal de Ceará"),
     "fr": ("fr-FR", "Université fédérale du Ceará"),
 }
+ACADEMIC = (
+    "undergraduate-capstone", "specialization-capstone",
+    "masters-thesis", "doctoral-thesis",
+)
+ACADEMIC_FIELDS = {
+    "undergraduate-capstone":
+        "undergraduate-program={Synthetic Computing},undergraduate-degree={Bachelor},",
+    "specialization-capstone":
+        "specialization-program={Synthetic Computing},",
+    "masters-thesis":
+        "masters-graduate-program={Synthetic Program},"
+        "masters-program={Synthetic Masters Program},masters-degree-field={Computing},",
+    "doctoral-thesis":
+        "doctoral-graduate-program={Synthetic Program},"
+        "doctoral-program={Synthetic Doctoral Program},doctoral-degree-field={Computing},",
+}
 
 
 def fold(value: str) -> str:
@@ -31,12 +47,11 @@ def compile_case(work: Path, case: str, locale: str, overrides: str,
                  expected: str, forbidden: tuple[str, ...]) -> dict:
     """Compile an actual source-bound PDF, then verify its displayed institution."""
     language = LOCALES[locale][0]
-    profile = "research-project" if "project" in case else "doctoral-thesis"
-    fields = (
-        "doctoral-graduate-program={Synthetic Program},"
-        "doctoral-program={Synthetic Doctoral Program},"
-        "doctoral-degree-field={Computing},"
-        if profile == "doctoral-thesis" else
+    # Explicitly test all four academic document profiles rather than only doctoral.
+    profile = next((name for name in ACADEMIC if name in case), None)
+    if profile is None:
+        profile = "research-project" if "project" in case else "doctoral-thesis"
+    fields = ACADEMIC_FIELDS[profile] if profile in ACADEMIC else (
         "project-program={Synthetic Program},project-identifier={SYNTHETIC-555},"
     )
     source = (
@@ -76,6 +91,13 @@ def compile_case(work: Path, case: str, locale: str, overrides: str,
     for invalid in forbidden:
         if fold(invalid) in text:
             raise ValueError(f"{case}: unexpected name {invalid!r} in PDF")
+    if profile in ACADEMIC:
+        # Ensure the actual nature paragraph does not glue the institution name
+        # to the next word, including authored and explicitly overridden names.
+        suffix = {"pt": ", como", "en": " in", "es": " como", "fr": " en"}[locale]
+        phrase = expected + suffix
+        if fold(phrase) not in text:
+            raise ValueError(f"{case}: glued academic nature words: {phrase!r}")
     if profile == "research-project":
         # Assert the real PDF has a space between the localized work type and verb.
         phrase = {
@@ -100,8 +122,11 @@ def main() -> None:
     with tempfile.TemporaryDirectory(prefix="abntexto-institution-display-") as tmp:
         work = Path(tmp)
         receipts = [
-            compile_case(work, f"default-{locale}", locale, "",
-                         display, () if locale == "pt" else ("Universidade Federal do Ceará",))
+            compile_case(
+                work, f"default-{profile}-{locale}", locale, "", display,
+                () if locale == "pt" else ("Universidade Federal do Ceará",)
+            )
+            for profile in ACADEMIC
             for locale, (_, display) in LOCALES.items()
         ]
         receipts += [
@@ -127,8 +152,8 @@ def main() -> None:
                          "submission-entity={},",
                          "Université fédérale du Ceará", ("Synthetic Legal Agency",)),
         ]
-    if len(receipts) != 10 or len({x["case"] for x in receipts}) != 10:
-        raise ValueError("Expected ten unique real-PDF cases")
+    if len(receipts) != 22 or len({x["case"] for x in receipts}) != 22:
+        raise ValueError("Expected 22 unique real-PDF cases")
     output = ROOT / "artifacts/frontmatter/institution-display-locale.json"
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps({
@@ -138,8 +163,9 @@ def main() -> None:
         "human_approval": "PENDING",
         "receipts": receipts,
     }, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
-    print("INSTITUTION-DISPLAY-LOCALE status=PASS real_pdfs=10 "
-          "locales=pt,en,es,fr custom_names=2 explicit_overrides=2")
+    print("INSTITUTION-DISPLAY-LOCALE status=PASS real_pdfs=22 "
+          "academic_profiles=4 locales=pt,en,es,fr "
+          "custom_names=2 explicit_overrides=2")
 
 
 if __name__ == "__main__":
