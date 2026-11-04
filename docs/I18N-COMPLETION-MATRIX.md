@@ -202,3 +202,19 @@ A auditoria das 70 chaves públicas revelou que `examiner-3` até `examiner-6`, 
 **Prova executada:** auditor independente `tests/integration/objects/i18n-listing-font-evidence.py`, controles negativos para marcadores completos, C++ original, log e idioma, SHA-256 de PDF/TeX/C++ e logs no SHA exato, `qpdf` para idioma do catálogo e `pdftotext -bbox-layout` para palavras efetivamente renderizadas. Workflow específico `i18n-listing-font-matrix.yml` evita disparar as matrizes genéricas sem alteração da classe. Mantém-se o Static Contract e a suíte Linux `objects` proporcional ao impacto.
 
 **Estado:** PR [#546](https://github.com/tiagosombrra/abntexto-ufc/pull/546) integrada por squash merge no commit `6e24d263756a54327b4263e7d1f940d06d6ef168`. No HEAD exato `470b9d4e83e41ac63b737c19784ef5ebf9fc9f7d`, Static, quatro PDFs reais e Linux `objects` (7/7) foram aprovados, com revisão Codex CLEAN e zero discussões pendentes. A falha inicial de teste por quebra de linha no erro de Arial e a lacuna inicial na verificação de `return 173;` no PDF foram corrigidas e validadas antes do merge. A certificação pós-merge da nova `main` deve ser verificada separadamente; a conclusão desta PR não autoriza a publicação. Tradução humana, conformidade tipográfica institucional, outros engines/perfis e a cobertura do inventário completo continuam pendentes.
+
+
+## R3 mixed-table List-of-Tables diagnostic (release blocker #557)
+
+The dedicated workflow \`.github/workflows/r3-table-list-locale.yml\` owns the
+source-bound PT/EN/ES/FR PDF-and-\`.lot\` checks in
+\`tests/integration/objects/table-list-locale-regression.py\`.
+Each diagnostic document places a native ABNTexto short table next to a real
+115-row \`longabnttblr\` table and verifies the two localized, sequential
+List-of-Tables entries against the extracted PDF and original \`.lot\` file.
+Mutation tests reject omitted second entries and bare-number/mixed entries.
+The workflow uploads original PDFs, LaTeX logs and source/hash receipts even
+when the known class defect reproduces. A red baseline is expected until the
+caption adapter is corrected; no green test automatically certifies a
+comprehensive document or authorizes v3.1.0 publication. The independent
+full-manuscript 7x4 regression and human visual review remain separate R4/R5.
