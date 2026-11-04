@@ -76,6 +76,16 @@ def compile_case(work: Path, case: str, locale: str, overrides: str,
     for invalid in forbidden:
         if fold(invalid) in text:
             raise ValueError(f"{case}: unexpected name {invalid!r} in PDF")
+    if profile == "research-project":
+        # Assert the real PDF has a space between the localized work type and verb.
+        phrase = {
+            "pt": "Projeto de pesquisa apresentado",
+            "en": "Research project submitted",
+            "es": "Proyecto de investigación presentado",
+            "fr": "Projet de recherche soumis",
+        }[locale]
+        if fold(phrase) not in text:
+            raise ValueError(f"{case}: glued project nature words: {phrase!r}")
     return {
         "case": case, "locale": locale, "profile": profile,
         "expected_display": expected,
