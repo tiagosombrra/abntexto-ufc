@@ -2506,7 +2506,7 @@
                     \tablename\nobreakspace{}####1\nobreakspace{}---\hss
                   }
               }
-            \extline{0pt}{\lotlabelwidth}{\lotifont}{##1}{##2}
+            \extline{0pt}{\lotlabelwidth}{\normalfont}{##1}{##2}
           \group_end:
         }
       \ufcstarttoc{lot}
