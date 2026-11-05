@@ -8,6 +8,7 @@ sh tests/integration/frontmatter/frontmatter-enforcement-negative.sh
 sh tests/integration/frontmatter/frontmatter-acknowledgments-evidence.sh
 sh tests/integration/frontmatter/frontmatter-summary-evidence.sh
 python3 tests/integration/frontmatter/document-locale-catalog.py
+python3 tests/integration/frontmatter/institution-display-locale.py
 sh tests/integration/frontmatter/frontmatter-summary-languages.sh
 sh tests/integration/frontmatter/summary-legacy-context.sh
 sh tests/integration/frontmatter/inherited-object-labels.sh
