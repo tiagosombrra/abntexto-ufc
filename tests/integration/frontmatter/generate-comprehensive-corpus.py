@@ -224,6 +224,40 @@ def generate(profile: str, locale: str, folder: Path) -> dict:
     missing = [feature for feature in SOURCE_FEATURES if feature not in source]
     if missing:
         raise ValueError(f"incomplete R4 manuscript {profile}/{locale}: {missing}")
+    variants = []
+    if profile == "doctoral-thesis":
+        # The native pdfLaTeX write-stream budget cannot hold every pretextual
+        # list simultaneously with glossaries and imakeidx. Preserve the main
+        # doctorate's glossary/index, and exercise both code/algorithm lists
+        # in a separately hashed supplementary doctorate without those modules.
+        variant_source = source.replace("glossary=glossaries", "glossary=none", 1)
+        variant_source = variant_source.replace("index=imakeidx", "index=none", 1)
+        variant_source = variant_source.replace(
+            r"\newglossaryentry{integratedterm}{name={integrated term},description={synthetic term for locale testing}}" + "\n",
+            "", 1,
+        ).replace(r"\gls{integratedterm}\index{integrated term}", "", 1)
+        variant_source = variant_source.replace(r"\ufcPrintGlossary", "", 1)
+        variant_source = variant_source.replace(r"\ufcPrintIndex", "", 1)
+        if (variant_source == source or "glossary=glossaries" in variant_source
+                or "index=imakeidx" in variant_source):
+            raise ValueError("doctoral supplementary feature split was ineffective")
+        variant_name = f"comprehensive-doctoral-code-lists-{locale}"
+        variant_path = folder / f"{variant_name}.tex"
+        variant_path.write_text(variant_source, encoding="utf-8")
+        variants.append({
+            "name": variant_name, "profile": profile, "locale": locale,
+            "source": str(variant_path), "source_sha256": sha(variant_path),
+            "support_sources": sources[1:],
+            "support_sha256": {str(p): sha(Path(p)) for p in sources[1:]},
+            "glossary_enabled": False, "index_enabled": False,
+            "code_algorithm_lists_printed": True,
+            "proof_state": "SOURCE_PREFLIGHT_ONLY",
+        })
+        list_commands = (r"\ufcPrintListOfCodeListings" + "\n"
+                         + r"\ufcPrintListOfAlgorithms" + "\n")
+        if source.count(list_commands) != 1:
+            raise ValueError("expected one doctoral optional-list pair")
+        source = source.replace(list_commands, "", 1)
     fname = f"comprehensive-{profile}-{locale}"
     target = folder / f"{fname}.tex"
     target.write_text(source, encoding="utf-8")
@@ -232,6 +266,10 @@ def generate(profile: str, locale: str, folder: Path) -> dict:
         "source": str(target), "source_sha256": sha(target),
         "support_sources": sources[1:],
         "support_sha256": {str(p): sha(Path(p)) for p in sources[1:]},
+        "supplementary_variants": variants,
+        "glossary_enabled": profile == "doctoral-thesis",
+        "index_enabled": profile == "doctoral-thesis",
+        "code_algorithm_lists_printed": profile not in {"doctoral-thesis", "scientific-article"},
         "features": {
             "multi_section": True, "subsection": True, "subsubsection": True,
             "footnotes": True, "equations": True, "aligned_equations": True,
@@ -270,7 +308,7 @@ def main() -> None:
             "locale": locale, "source_count": len(manifest),
             "complete_pdf_certification": False, "entries": manifest,
         }, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-        tally += len(manifest)
+        tally += len(manifest) + sum(len(entry["supplementary_variants"]) for entry in manifest)
     print(f"R4-COMPREHENSIVE-SOURCES status=PASS sources={tally} "
           f"locales={','.join(locales)} pdf_certification=NOT_YET")
  
