@@ -74,6 +74,13 @@ def orphan_folio_page(page: str) -> bool:
     return bool(re.fullmatch(r"\s*\d+\s*", page))
 
 
+def posttextual_optional_bracket_leak(text: str) -> bool:
+    """Detect literal TeX optional [] serialized before glossary/index titles."""
+    return bool(re.search(
+        r"(?im)^\\s*\\[\\s*\\]\\s*(?:GLOSS|GLOS|ÍNDICE|INDEX)", text
+    ))
+
+
 def assert_page_accounting_mutants() -> None:
     """Reject discarded blank leaves and numbered-only leaf false negatives."""
     three = split_physical_pages("COVER\f\fINDEX\f")
@@ -85,6 +92,14 @@ def assert_page_accounting_mutants() -> None:
         raise AssertionError("numbered-only physical PDF page was discarded")
     if split_physical_pages("COVER\f") != ["COVER"]:
         raise AssertionError("trailing Poppler separator counted as a PDF page")
+    for bad in ("[]GLOSSÁRIO", "[]GLOSSARY", "[]ÍNDICE ALFABÉTICO",
+                "[]GLOSSAIRE", "[]INDEX"):
+        if not posttextual_optional_bracket_leak("CONTENTS\n" + bad + " ... 51"):
+            raise AssertionError(f"hyperref optional bracket was accepted: {bad}")
+    for valid in ("GLOSSÁRIO ..... 51", "INDEX .... 57",
+                  "[] C++ array synthetic code", "[]R4-LEGAL"):
+        if posttextual_optional_bracket_leak(valid):
+            raise AssertionError(f"false positive in glossary/index bracket gate: {valid}")
     if not orphan_folio_page("  53  \n"):
         raise AssertionError("number-only folio regression missed")
     for legitimate in ("", "53\nChapter title", "Appendix 53"):
@@ -118,6 +133,8 @@ def inspect(profile: str, locale: str, tex: str, pdf: Path,
     )
     findings = [f"pdf.text.missing.{mark}" for mark in markers
                 if mark not in aggregate]
+    if posttextual_optional_bracket_leak(aggregate):
+        findings.append("pdf.toc.posttextual_literal_optional_brackets")
     # Verify rendered implementation bodies, not only captions or list entries.
     # A caption may exist even if the code or algorithm environment is empty.
     body_markers = ("int sum(int a, int b)", "return a + b;",
@@ -291,7 +308,7 @@ def main() -> int:
     args = parser.parse_args()
     assert_page_accounting_mutants()
     if args.selftest:
-        print("R4-PHYSICAL-PAGE-MUTANTS status=PASS cases=8")
+        print("R4-PHYSICAL-PAGE-MUTANTS status=PASS cases=17")
         return 0
     if args.locale is None:
         parser.error("--locale required except for --selftest")
