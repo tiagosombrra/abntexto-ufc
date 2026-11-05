@@ -43,6 +43,30 @@ def fold(value: str) -> str:
     ).strip()
 
 
+def fold_pdf_wrapped_prose(value: str) -> str:
+    """Join only PDF discretionary hyphenation across physical line breaks.
+
+    Keep spaces and genuine fused words unchanged. In particular, removing
+    a line-break hyphen cannot turn 'Cearácomo' into 'Ceará como'.
+    """
+    restored = re.sub(
+        r"(?<=[^\\W\\d_])-[ \\t]*\\r?\\n[ \\t]*(?=[^\\W\\d_])",
+        "", value,
+    )
+    return fold(restored)
+
+
+def assert_wrapping_mutants() -> None:
+    """Reject a glued academic phrase but permit normal PDF hyphenation."""
+    phrase = "Universidad Federal de Ceará como"
+    valid = "Uni-\\n     versidad Federal de Ceará como"
+    glued = "Uni-\\n     versidad Federal de Cearácomo"
+    if fold(phrase) not in fold_pdf_wrapped_prose(valid):
+        raise AssertionError("valid hyphenated PDF text rejected")
+    if fold(phrase) in fold_pdf_wrapped_prose(glued):
+        raise AssertionError("glued institution and nature token accepted")
+
+
 def compile_case(work: Path, case: str, locale: str, overrides: str,
                  expected: str, forbidden: tuple[str, ...]) -> dict:
     """Compile an actual source-bound PDF, then verify its displayed institution."""
@@ -96,7 +120,7 @@ def compile_case(work: Path, case: str, locale: str, overrides: str,
         # to the next word, including authored and explicitly overridden names.
         suffix = {"pt": ", como", "en": " in", "es": " como", "fr": " en"}[locale]
         phrase = expected + suffix
-        if fold(phrase) not in text:
+        if fold(phrase) not in fold_pdf_wrapped_prose(output.stdout):
             raise ValueError(f"{case}: glued academic nature words: {phrase!r}")
     if profile == "research-project":
         # Assert the real PDF has a space between the localized work type and verb.
@@ -119,6 +143,7 @@ def compile_case(work: Path, case: str, locale: str, overrides: str,
 
 def main() -> None:
     """Exercise defaults, custom legal names and explicit presentation overrides."""
+    assert_wrapping_mutants()
     with tempfile.TemporaryDirectory(prefix="abntexto-institution-display-") as tmp:
         work = Path(tmp)
         receipts = [
