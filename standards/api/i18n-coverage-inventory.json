@@ -41,6 +41,10 @@
       "origin": "default_or_user_value",
       "requirement": "proper name or user override: never silently translate"
     },
+    "institution-display": {
+      "origin": "localized_default_or_user_presentation",
+      "requirement": "presentation only: legal institution unchanged; official locale review required"
+    },
     "institution-acronym": {
       "origin": "user_supplied_value",
       "requirement": "literal authored metadata: no automatic translation"
@@ -108,6 +112,10 @@
     "submission-entity": {
       "origin": "default_or_user_value",
       "requirement": "proper name or user override: never silently translate"
+    },
+    "submission-entity-display": {
+      "origin": "localized_default_or_user_presentation",
+      "requirement": "presentation only: explicitly authored submission entity unchanged"
     },
     "project-nature-statement": {
       "origin": "user_supplied_value",
