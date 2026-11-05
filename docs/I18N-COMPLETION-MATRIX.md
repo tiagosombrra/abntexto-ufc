@@ -202,3 +202,28 @@ A auditoria das 70 chaves públicas revelou que `examiner-3` até `examiner-6`, 
 **Prova executada:** auditor independente `tests/integration/objects/i18n-listing-font-evidence.py`, controles negativos para marcadores completos, C++ original, log e idioma, SHA-256 de PDF/TeX/C++ e logs no SHA exato, `qpdf` para idioma do catálogo e `pdftotext -bbox-layout` para palavras efetivamente renderizadas. Workflow específico `i18n-listing-font-matrix.yml` evita disparar as matrizes genéricas sem alteração da classe. Mantém-se o Static Contract e a suíte Linux `objects` proporcional ao impacto.
 
 **Estado:** PR [#546](https://github.com/tiagosombrra/abntexto-ufc/pull/546) integrada por squash merge no commit `6e24d263756a54327b4263e7d1f940d06d6ef168`. No HEAD exato `470b9d4e83e41ac63b737c19784ef5ebf9fc9f7d`, Static, quatro PDFs reais e Linux `objects` (7/7) foram aprovados, com revisão Codex CLEAN e zero discussões pendentes. A falha inicial de teste por quebra de linha no erro de Arial e a lacuna inicial na verificação de `return 173;` no PDF foram corrigidas e validadas antes do merge. A certificação pós-merge da nova `main` deve ser verificada separadamente; a conclusão desta PR não autoriza a publicação. Tradução humana, conformidade tipográfica institucional, outros engines/perfis e a cobertura do inventário completo continuam pendentes.
+
+
+## R4 comprehensive 28-PDF corpus (independent technical candidate)
+
+The dedicated workflow `.github/workflows/r4-comprehensive-corpus.yml`
+runs `tests/integration/frontmatter/generate-comprehensive-corpus.py` and
+`tests/integration/frontmatter/run-comprehensive-corpus.py`. Each locale
+generates seven distinct, multi-section PDF *candidates* with original
+synthetic-language paragraphs, title/approval/frontmatter according to profile,
+subsections and subsubsections, equations and aligned equations, footnotes,
+citations, figures, charts/quadros where applicable, short tables, true
+multi-page tabularray and native longtables, pseudocode, embedded and external
+C++ code, bibliography, appendices and annexes, and optional glossary/index.
+The four CI batches yield 7 x 4 actual PDFs; the quick source preflight alone
+never counts as PDF certification. Original source hashes, supporting text
+hashes, per-PDF hashes, physical-page evidence, missing-feature receipts,
+original TeX/Biber logs and PDF/.lot files remain inspectable.
+
+This independent source/real-PDF matrix does **not** waive #557 (native
+longtable captions), #558 (PDF Info/outline and anonymous privacy), #560
+(duplex almost-empty numbered pages), nor the R5 full page-by-page visual
+and R4 alternative-engine/print-mode matrix. A red job is a release-blocking
+diagnostic; successful automatic predicates are marked AUTOMATED_PARTIAL_ONLY,
+never editorial approval, full PDF/A or PDF/UA conformance, or authorization
+to release 3.1.0.
