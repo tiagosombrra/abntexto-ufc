@@ -195,7 +195,7 @@ def generate(profile: str, locale: str, folder: Path) -> dict:
     """Expand one proven base specimen into a complete, independently hashed source."""
     name, sources = MAKE_BASE_DOC(profile, locale, folder)
     original = Path(sources[0]).read_text(encoding="utf-8")
-    if original.count(r"\ufcsetup{" + "\n") != 1:
+    if original.split(r"\begin{document}", 1)[0].count(r"\ufcsetup{" + "\n") != 1:
         raise ValueError("source lost its uniquely addressable class setup")
     source = original.replace(
         "\\ufcsetup{\n",
