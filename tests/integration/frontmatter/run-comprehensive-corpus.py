@@ -7,6 +7,7 @@ The bounded predicates below deliberately do not replace per-page R5 review.
 from __future__ import annotations
 
 import argparse
+from contextlib import nullcontext
 import hashlib
 import json
 import os
@@ -14,7 +15,6 @@ from pathlib import Path
 import re
 import subprocess
 import sys
-import tempfile
 
 ROOT = Path(__file__).resolve().parents[3]
 ARTIFACTS = ROOT / "artifacts" / "comprehensive-7x4"
@@ -38,6 +38,23 @@ def run(command: list[str], log: Path, *, cwd: Path = ROOT) -> None:
         result = subprocess.run(command, cwd=cwd, stdout=out,
                                 stderr=subprocess.STDOUT, check=False, text=True)
     if result.returncode:
+        # Always retain source-bound evidence before raising an exception.
+        # A failed TeX/Biber/MakeIndex build must never lose its native logs.
+        stem = re.sub(r"-(?:pdflatex-\d+|biber|glossaries|index)$",
+                      "", log.stem)
+        source_file = log.parent / (stem + ".tex")
+        receipt = {
+            "status": "FAIL", "command": command,
+            "return_code": result.returncode, "log": str(log),
+            "log_sha256": sha(log),
+            "source_commit_sha": os.environ.get("SOURCE_COMMIT_SHA", ""),
+            "source_sha256": sha(source_file) if source_file.is_file() else None,
+            "human_approval": "PENDING",
+        }
+        (log.parent / f"{log.stem}.failure.json").write_text(
+            json.dumps(receipt, ensure_ascii=False, indent=2) + "\n",
+            encoding="utf-8",
+        )
         excerpt = "\n".join(log.read_text(errors="replace").splitlines()[-55:])
         raise ValueError(f"{command[0]} failed ({result.returncode}):\n{excerpt}")
 
@@ -68,6 +85,15 @@ def inspect(profile: str, locale: str, tex: str, pdf: Path,
     )
     findings = [f"pdf.text.missing.{mark}" for mark in markers
                 if mark not in aggregate]
+    # Verify rendered implementation bodies, not only captions or list entries.
+    # A caption may exist even if the code or algorithm environment is empty.
+    body_markers = ("int sum(int a, int b)", "return a + b;",
+                    "int main()", "std::cout", "end while", "return")
+    for marker in body_markers:
+        if marker not in aggregate:
+            findings.append(f"pdf.rendered_implementation.missing.{marker}")
+    if not re.search(r"(?im)^\s*\d+:\s*while\b.*\bdo\b", aggregate):
+        findings.append("pdf.rendered_algorithm.numbered_while_missing")
     for first, last, family in (
         ("R4LONGROW001", "R4LONGROW125", "tabularray"),
         ("R4NATIVEROW001", "R4NATIVEROW085", "native-longtable"),
@@ -98,10 +124,15 @@ def inspect(profile: str, locale: str, tex: str, pdf: Path,
             findings.append("pdf.table_list.lot_missing")
     elif profile != "scientific-article":
         lot_text = lot.read_text(encoding="utf-8", errors="replace")
-        if "R4LONG-" + locale.upper() not in lot_text:
-            findings.append("lot.longtable_entry_missing")
-        if "R4NATIVE-" + locale.upper() not in lot_text:
-            findings.append("lot.native_entry_missing")
+        expected_entries = (
+            f"INTEGRATED-TABLE-{locale.upper()}",
+            f"R4SHORT-{locale.upper()}",
+            f"R4LONG-{locale.upper()}",
+            f"R4NATIVE-{locale.upper()}",
+        )
+        for marker in expected_entries:
+            if lot_text.count(marker) != 1:
+                findings.append(f"lot.table_entry_count_invalid.{marker}")
         table_heading = {
             "pt": "LISTA DE TABELAS", "en": "LIST OF TABLES",
             "es": "LISTA DE TABLAS", "fr": "LISTE DES TABLEAUX",
@@ -114,8 +145,11 @@ def inspect(profile: str, locale: str, tex: str, pdf: Path,
                 rf"^\s*{re.escape(TABLE_NAMES[locale])}\s+(\d+)\b",
                 list_pages[0], flags=re.M | re.I,
             )
-            if len(names) < 3 or names[:3] != ["1", "2", "3"]:
+            if names != ["1", "2", "3", "4"]:
                 findings.append(f"pdf.table_list.prefix_or_sequence={names}")
+            for marker in expected_entries:
+                if list_pages[0].count(marker) != 1:
+                    findings.append(f"pdf.table_list.caption_entry_invalid.{marker}")
     return {
         "profile": profile, "locale": locale,
         "source_features": {feature: feature in tex for feature in (
@@ -157,8 +191,11 @@ def main() -> int:
     if expected and expected != gitsha:
         raise ValueError(f"wrong checkout SHA: {gitsha} != {expected}")
     reports: list[dict] = []
-    with tempfile.TemporaryDirectory(prefix="abntexto-r4-comprehensive-") as tmp:
+    # Retain raw .aux/.lot/.log and partial PDFs in the same upload artifact,
+    # even when a later compilation phase fails. Never silently delete evidence.
+    with nullcontext(out / "build") as tmp:
         work = Path(tmp)
+        work.mkdir(parents=True, exist_ok=True)
         for entry in [*entries, *variants]:
             job, profile = entry["name"], entry["profile"]
             source = ROOT / entry["source"]
