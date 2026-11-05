@@ -168,13 +168,38 @@ def inspect(profile: str, locale: str, tex: str, pdf: Path,
     if profile not in ("masters-thesis", "doctoral-thesis",
                        "anonymized-research-project") and blank_physical_pages:
         findings.append("pdf.single_sided.unexpected_blank_page")
-    if not info.get("Title"):
-        findings.append("pdf.metadata.title_missing")
+    # Independently examine Info, XMP and navigable PDF outlines, not merely
+    # the presence of a source-level \DocumentMetadata declaration.
+    xmp = subprocess.check_output(
+        ["pdfinfo", "-meta", str(pdf)], cwd=ROOT, text=True
+    )
+    outlines = subprocess.check_output(
+        ["mutool", "show", str(pdf), "outline"], cwd=ROOT, text=True
+    )
+    (pdf.parent / f"{pdf.stem}-xmp.xml").write_text(xmp, encoding="utf-8")
+    (pdf.parent / f"{pdf.stem}-outline.txt").write_text(outlines, encoding="utf-8")
+    expected_title = "Integrated Multilingual Document"
+    expected_author = "Integrated Test Author"
+    expected_heading = f"R4-METHOD-{locale.upper()}"
+    if info.get("Title", "").strip() != expected_title:
+        findings.append("pdf.metadata.info_title_incorrect")
+    if expected_title not in xmp:
+        findings.append("pdf.metadata.xmp_title_missing")
+    if expected_heading not in outlines:
+        findings.append("pdf.navigation.outline_heading_missing")
     if profile == "anonymized-research-project":
-        if info.get("Author"):
+        if info.get("Author", "").strip():
             findings.append("pdf.privacy.anonymous_author_metadata")
-    elif not info.get("Author"):
-        findings.append("pdf.metadata.author_missing")
+        for surface_name, text in (
+            ("xmp", xmp), ("outline", outlines), ("extracted_text", aggregate)
+        ):
+            if expected_author.casefold() in text.casefold():
+                findings.append(f"pdf.privacy.author_leak.{surface_name}")
+    else:
+        if info.get("Author", "").strip() != expected_author:
+            findings.append("pdf.metadata.info_author_incorrect")
+        if expected_author not in xmp:
+            findings.append("pdf.metadata.xmp_author_missing")
     if not lot or not lot.is_file():
         if profile != "scientific-article":
             findings.append("pdf.table_list.lot_missing")
@@ -214,6 +239,11 @@ def inspect(profile: str, locale: str, tex: str, pdf: Path,
             r"\begin{ufcalgorithm}", r"\begin{ufclisting}",
         )},
         "pdf_sha256": sha(pdf),
+        "pdf_info_title": info.get("Title", ""),
+        "pdf_info_author": info.get("Author", ""),
+        "pdf_xmp_sha256": sha(pdf.parent / f"{pdf.stem}-xmp.xml"),
+        "pdf_outline_sha256": sha(pdf.parent / f"{pdf.stem}-outline.txt"),
+        "pdf_outline_heading_verified": expected_heading in outlines,
         "pages": claimed_pages,
         "extracted_physical_pages": len(pages),
         "blank_physical_pages": blank_physical_pages,
