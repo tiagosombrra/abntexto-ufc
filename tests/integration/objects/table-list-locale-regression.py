@@ -36,6 +36,14 @@ def digest(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def verify_multipage_rows(pages: list[str], first: str, last: str) -> bool:
+    """Require the table's first and last data rows on distinct physical pages."""
+    first_pages = [i for i, page in enumerate(pages) if first in page]
+    last_pages = [i for i, page in enumerate(pages) if last in page]
+    return (len(first_pages) == 1 and len(last_pages) == 1
+            and first_pages[0] < last_pages[0])
+
+
 def selftest() -> None:
     """Reject the exact historical mixed and omitted-caption mutations."""
     for locale, (_, heading, label, _) in LOCALES.items():
@@ -60,7 +68,19 @@ def selftest() -> None:
             raise AssertionError(f"valid third native longtable rejected: {locale}")
         if "table_list.mixed_or_bare_prefix" not in table_list_failures(bad_third, locale):
             raise AssertionError(f"bare third native longtable accepted: {locale}")
-    print("R3-TABLE-LIST-MUTANTS status=PASS locales=4 cases=24", flush=True)
+    # A three-page document is not evidence of a multipage table when its
+    # first page contains only the List of Tables.
+    genuine = ["LIST OF TABLES", "R3LONGROW001", "R3LONGROW115"]
+    single = ["LIST OF TABLES", "R3LONGROW001 R3LONGROW115", "unrelated"]
+    if not verify_multipage_rows(genuine, "R3LONGROW001", "R3LONGROW115"):
+        raise AssertionError("genuine two-page table rejected")
+    if verify_multipage_rows(single, "R3LONGROW001", "R3LONGROW115"):
+        raise AssertionError("single-page table accepted as multipage")
+    if verify_multipage_rows(["LIST OF TABLES", "R3LONGROW115"],
+                             "R3LONGROW001", "R3LONGROW115"):
+        raise AssertionError("missing first-row marker accepted")
+    print("R3-TABLE-LIST-MUTANTS status=PASS locales=4 list_cases=24 "
+          "multipage_negative_cases=3", flush=True)
 
 
 def make_source(locale: str) -> str:
@@ -196,8 +216,13 @@ def check_pdf(locale: str) -> dict:
                    f"R3-LONGSOURCE-{locale.upper()}"):
         if marker not in body:
             failures.append(f"pdf.body.missing={marker}")
-    if len(pages) < 3:
-        failures.append("pdf.not_multipage")
+    # A document with three pages may still have a single-page data table:
+    # inspect first/last markers on each physical PDF page independently.
+    for family in ("LONG", "RAW"):
+        first = f"R3{family}ROW001"
+        last = f"R3{family}ROW115"
+        if not verify_multipage_rows(pages, first, last):
+            failures.append(f"pdf.{family.lower()}.not_multipage")
     # Require all three localized captions, including native longtable.
     numbers = [
         int(match.group(1)) for line in list_page.splitlines()
