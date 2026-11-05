@@ -37,6 +37,8 @@ jobs:
           persist-credentials: false
       - name: Generate all 7 profiles x 4 locales, without pretending PDFs exist
         run: python3 tests/integration/frontmatter/generate-comprehensive-corpus.py
+      - name: Prove physical-page accounting rejects discarded duplex leaves
+        run: python3 tests/integration/frontmatter/run-comprehensive-corpus.py --selftest
       - name: Inspect 28 source files, manifest hashes, declared features
         run: |
           python3 - <<'PY'
