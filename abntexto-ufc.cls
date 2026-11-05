@@ -2503,7 +2503,7 @@
               {
                 \hbox to \lotlabelwidth
                   {
-                    \tablename\nobreakspace{}####1\nobreakspace{}---\hss
+                    \ufc_doc_text:n {caption-table}\nobreakspace{}####1\nobreakspace{}---\hss
                   }
               }
             \extline{0pt}{\lotlabelwidth}{\normalfont}{##1}{##2}
