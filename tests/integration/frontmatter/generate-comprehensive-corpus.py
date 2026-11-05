@@ -65,6 +65,12 @@ PROSE = {
     ),
 }
 TABLE_SOURCE = {"pt": "Fonte", "en": "Source", "es": "Fuente", "fr": "Source"}
+INSTITUTION_DISPLAY = {
+    "pt": "Universidade Federal do Ceará",
+    "en": "Federal University of Ceará",
+    "es": "Universidad Federal de Ceará",
+    "fr": "Université fédérale du Ceará",
+}
 CODE_LANG = "C++"
 SOURCE_FEATURES = (
     r"\subsection{", r"\subsubsection{", r"\paragraph{",
@@ -201,7 +207,9 @@ def generate(profile: str, locale: str, folder: Path) -> dict:
     source = original.replace(
         "\\ufcsetup{\n",
         "\\ufcsetup{\n  tables=tabularray,\n  code=listings,\n"
-        "  algorithms=algpseudocodex,\n",
+        "  algorithms=algpseudocodex,\n"
+        f"  institution-display={{{INSTITUTION_DISPLAY[locale]}}},\n"
+        f"  submission-entity-display={{{INSTITUTION_DISPLAY[locale]}}},\n",
         1,
     )
     source = source.replace(
@@ -263,6 +271,7 @@ def generate(profile: str, locale: str, folder: Path) -> dict:
     target.write_text(source, encoding="utf-8")
     return {
         "name": fname, "profile": profile, "locale": locale,
+        "expected_institution_display": INSTITUTION_DISPLAY[locale],
         "source": str(target), "source_sha256": sha(target),
         "support_sources": sources[1:],
         "support_sha256": {str(p): sha(Path(p)) for p in sources[1:]},
