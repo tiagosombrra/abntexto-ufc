@@ -32,7 +32,7 @@ jobs:
       - name: Prove nine negative controls reject false-positive evidence
         run: python3 tests/integration/frontmatter/pdf-metadata-outline.py --selftest
   real-pdfs:
-    name: PDF metadata and outline / ${{ matrix.locale }} (3 PDFs)
+    name: PDF metadata and outline / ${{ matrix.locale }} (4 PDFs + late-negative)
     runs-on: ubuntu-24.04
     needs: fail-closed-mutants
     timeout-minutes: 35
@@ -46,7 +46,7 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
           persist-credentials: false
-      - name: Compile 3 public and anonymous profiles with TeX Live 2026
+      - name: Compile 3 profiles and both anonymous transition paths in TeX Live 2026
         uses: xu-cheng/texlive-action@22c04326a5d855880f9d39bb955138bf11c6df80 # v3
         env:
           SOURCE_COMMIT_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
