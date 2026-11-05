@@ -225,6 +225,72 @@ def main() -> int:
         print(f"PDFINFO-EVIDENCE profile={profile} locale={a.locale} "
               f"status={result['status']} findings={result['failures']}",
               flush=True)
+    # Public -> anonymous *after* \begin{document}, before the first page:
+    # a stale preamble Author value must not survive in PDF Info or XMP.
+    transition, title, secret, section = fixture(
+        "anonymized-research-project", a.locale
+    )
+    if transition.count("type=anonymized-research-project") != 1:
+        raise ValueError("ambiguous original anonymous type")
+    transition = transition.replace(
+        "type=anonymized-research-project", "type=doctoral-thesis", 1
+    ).replace(
+        "\\begin{document}\n",
+        "\\begin{document}\n\\ufcsetup{type=anonymized-research-project}\n",
+        1,
+    )
+    trans_path = work / f"pdfinfo-public-to-anonymous-{a.locale}.tex"
+    trans_path.write_text(transition, encoding="utf-8")
+    for step in (1, 2):
+        run(["pdflatex", "-interaction=nonstopmode", "-halt-on-error",
+             "-file-line-error", f"-jobname={trans_path.stem}",
+             f"-output-directory={work}", str(trans_path)],
+            work / f"{trans_path.stem}-pdflatex-{step}.stdout")
+    trans_result = inspect("anonymized-research-project", a.locale, work,
+                           trans_path, title, secret, section, commit)
+    trans_result["transition"] = "public-to-anonymous-before-first-shipout"
+    results.append(trans_result)
+    print(f"PDFINFO-ANONYMITY-TRANSITION locale={a.locale} "
+          f"status={trans_result['status']} findings={trans_result['failures']}",
+          flush=True)
+
+    # After a real page ships out, changing anonymity is unsafe because PDF
+    # Info/XMP may already be serialized. The class must reject the request.
+    late, _, _, _ = fixture("doctoral-thesis", a.locale)
+    if late.count("\\end{document}\n") != 1:
+        raise ValueError("ambiguous late privacy mutation source")
+    late = late.replace(
+        "\\end{document}\n",
+        "\\clearpage\n\\ufcsetup{type=anonymized-research-project}\n"
+        "\\end{document}\n", 1,
+    )
+    late_path = work / f"pdfinfo-illegal-late-anonymity-{a.locale}.tex"
+    late_path.write_text(late, encoding="utf-8")
+    failure = subprocess.run(
+        ["pdflatex", "-interaction=nonstopmode", "-halt-on-error",
+         "-file-line-error", f"-jobname={late_path.stem}",
+         f"-output-directory={work}", str(late_path)],
+        cwd=ROOT, capture_output=True, text=True, check=False,
+    )
+    transcript = failure.stdout + "\n" + failure.stderr
+    log = work / f"{late_path.stem}-pdflatex-negative.stdout"
+    log.write_text(transcript, encoding="utf-8")
+    if failure.returncode == 0 or "Cannot" not in transcript or "anonymity" not in transcript:
+        raise ValueError("illegal post-shipout anonymity change was not rejected")
+    negative_receipt = {
+        "status": "EXPECTED_REJECTION",
+        "source_sha256": digest(late_path),
+        "log_sha256": digest(log),
+        "source_commit_sha": commit,
+        "locale": a.locale,
+        "rule": "no-anonymity-transition-after-first-shipout",
+    }
+    (work / f"{late_path.stem}-receipt.json").write_text(
+        json.dumps(negative_receipt, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    print(f"PDFINFO-ANONYMITY-LATE-MUTANT locale={a.locale} status=REJECTED",
+          flush=True)
     (work / "manifest.json").write_text(
         json.dumps({"locale": a.locale, "commit": commit,
                     "cases": results, "publication_authorized": False},
