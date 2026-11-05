@@ -81,7 +81,9 @@ def selftest() -> None:
         raise AssertionError("missing first-row marker accepted")
     for locale, wrong in (("es", "Cuadro"), ("fr", "Table")):
         label = LOCALES[locale][2]
-        valid = f"{label} 1 — FIRST............3\\n{label} 2 — SECOND............4"
+        valid = f"{label} 1 — FIRST............3\n{label} 2 — SECOND............4"
+        if table_list_failures(valid, locale):
+            raise AssertionError(f"Valid two-line List of Tables rejected: {locale}")
         incompatible = valid.replace(f"{label} 2", f"{wrong} 2")
         if not table_list_failures(incompatible, locale):
             raise AssertionError(f"Babel-mixed table label accepted: {locale}")
