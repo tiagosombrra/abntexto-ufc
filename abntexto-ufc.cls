@@ -1773,6 +1773,17 @@
   {
     \bool_if:NT \g_ufc_document_language_explicit_bool
       {
+        % Babel re-applies its language-specific table name whenever a
+        % multilingual summary switches languages. The inherited Spanish
+        % caption name is "Cuadro" and French is "Table"; neither matches
+        % the separate UFC "Tabla"/"Tableau" table-list naming policy.
+        % Register caption names on each language switch, so \legend{table},
+        % longabnttblr and native longtable retain one semantic label while
+        % \quadroname continues to designate genuine text tables.
+        \cs_if_exist:NT \captionsspanish
+          { \addto\captionsspanish{\def\tablename{Tabla}} }
+        \cs_if_exist:NT \captionsfrench
+          { \addto\captionsfrench{\def\tablename{Tableau}} }
         \cs_if_exist:NT \appendixname
           { \cs_gset:Npn \appendixname { \ufc_doc_text:n {appendix} } }
         \cs_if_exist:NT \annexname
