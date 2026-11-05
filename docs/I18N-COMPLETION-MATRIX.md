@@ -267,3 +267,16 @@ Legitimate duplex recto padding is NOT automatically classified as a defect:
 every blank leaf must receive independent R5 visual/contextual review;
 single-sided unexpected blank leaves fail the automatic gate. Printed
 folio numbers and physical PDF-page indices are tracked separately.
+
+
+### R5 raster evidence for all physical pages
+
+For each generated comprehensive candidate, the R4 audit now invokes Poppler
+`pdftoppm` at low resolution across **all actual PDF pages**, verifies the
+number of rendered thumbnails against `pdfinfo Pages`, and associates every
+physical-page receipt with the corresponding thumbnail path and SHA256. This
+detects unrenderable pages and leaves a reproducible visual review corpus,
+including duplex blanks and numbered-only leaves, rather than silently
+discarding them. The thumbnails are diagnostic aids: low-DPI rendering cannot
+establish fine-grained glyph spacing, figure resolution, font compliance, or
+margin correctness. All individual human page reviews are still PENDING.
