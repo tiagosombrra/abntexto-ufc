@@ -61,6 +61,11 @@
 \bool_new:N \g_ufc_catalog_card_bool
 \bool_new:N \g_ufc_coat_of_arms_bool
 \prop_new:N \g_ufc_metadata_prop
+% Metadata can be changed with public \ufcsetup before the first PDF page.
+% Protect against late anonymity transitions after serialized pages exist.
+\bool_new:N \g_ufc_pdf_document_started_bool
+\bool_new:N \g_ufc_pdf_first_page_shipped_bool
+\tl_new:N \l_ufc_pdf_previous_type_tl
 
 % Additive display labels: neither document language nor ABNT rules change.
 \prop_new:N \g_ufc_heading_labels_prop
@@ -546,7 +551,40 @@
   }
 
 \NewDocumentCommand \ufcsetup { +m }
-  { \keys_set:nn { ufc } { #1 } }
+  {
+    \tl_set:NV \l_ufc_pdf_previous_type_tl \g_ufc_document_type_tl
+    \keys_set:nn { ufc } { #1 }
+    \bool_if:NT \g_ufc_pdf_document_started_bool
+      {
+        \bool_if:NTF \g_ufc_pdf_first_page_shipped_bool
+          {
+            % A PDF cannot undo a previously shipped private/public identity.
+            % Authored metadata probes after the body remain allowed, but
+            % intentionally do not retroactively rewrite PDF Info/XMP.
+            \str_if_eq:VnTF \l_ufc_pdf_previous_type_tl
+              {anonymized-research-project}
+              {
+                \str_if_eq:VnF \g_ufc_document_type_tl
+                  {anonymized-research-project}
+                  {
+                    \ClassError{abntexto-ufc}
+                      {Cannot~change~anonymity~after~the~first~PDF~page}
+                      {Select~the~document~type~before~the~first~page.}
+                  }
+              }
+              {
+                \str_if_eq:VnT \g_ufc_document_type_tl
+                  {anonymized-research-project}
+                  {
+                    \ClassError{abntexto-ufc}
+                      {Cannot~change~anonymity~after~the~first~PDF~page}
+                      {Select~the~document~type~before~the~first~page.}
+                  }
+              }
+          }
+          { \ufc_pdf_apply_document_properties: }
+      }
+  }
 
 \NewExpandableDocumentCommand \ufcDocumentLanguage { }
   { \tl_use:N \g_ufc_document_language_tl }
@@ -3297,7 +3335,14 @@
       }
   }
 
-\AddToHook{begindocument/end}{\ufc_pdf_apply_document_properties:}
+\AddToHook{begindocument/end}
+  {
+    \ufc_pdf_apply_document_properties:
+    \bool_gset_true:N \g_ufc_pdf_document_started_bool
+  }
+
+\AddToHook{shipout/after}
+  { \bool_gset_true:N \g_ufc_pdf_first_page_shipped_bool }
 
 \ExplSyntaxOff
 
