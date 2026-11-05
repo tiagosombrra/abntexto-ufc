@@ -185,6 +185,13 @@ def check_pdf(locale: str) -> dict:
             failures.append(f"pdf.list.{marker}.entry_count={list_page.count(marker)}")
     failures += table_list_failures(list_page, locale)
     body = "\f".join(pages[page_index + 1:])
+    # The inherited native short-table caption can break the marker at its
+    # real hyphen across a PDF layout line. Preserve the semantic hyphen; only
+    # undo the PDF line wrap. This does not mask any fused table-list prefixes.
+    body = re.sub(
+        r"R3SHORT-[ \t]*\r?\n[ \t]*(?=(?:PT|EN|ES|FR)\b)",
+        "R3SHORT-", body,
+    )
     for marker in (short, long, raw, "R3LONGROW115", "R3RAWROW115",
                    f"R3-LONGSOURCE-{locale.upper()}"):
         if marker not in body:
