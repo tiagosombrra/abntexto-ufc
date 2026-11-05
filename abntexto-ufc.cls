@@ -2540,6 +2540,38 @@
 \RenewDocumentCommand \ufcPrintListOfIllustrations { }
   { \ufc_objects_print_illustration_list: }
 
+% Native longtable's \caption writes \contentsline{table}{\numberline{...}} to
+% .lot, while abntexto \legend{table} and tabularray-abnt use the native
+% \lotlabelbox inside \contentsline{lot}. Render the former using the same
+% localized identification but do not rewrite the original .lot or .aux.
+% Scope the compatibility handler to this public list invocation only.
+\cs_new_protected:Npn \ufc_objects_start_table_toc:
+  {
+    \group_begin:
+      \cs_set_protected:cpn { l@table } ##1##2
+        {
+          \group_begin:
+            \cs_set:Npn \numberline ####1
+              {
+                \hbox to \lotlabelwidth
+                  {
+                    \ufc_doc_text:n {caption-table}\nobreakspace{}####1\nobreakspace{}---\hss
+                  }
+              }
+            \extline{0pt}{\lotlabelwidth}{\normalfont}{##1}{##2}
+          \group_end:
+        }
+      \ufcstarttoc{lot}
+    \group_end:
+  }
+
+\RenewDocumentCommand \ufcPrintListOfTables { }
+  {
+    \exp_args:Ne \ufc_pretextual_list:nn
+      { \ufc_label:n {tables} }
+      { \ufc_objects_start_table_toc: }
+  }
+
 \NewDocumentCommand \ufcSource { m }
   { \src{#1} }
 
