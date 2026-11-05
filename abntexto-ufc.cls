@@ -3266,4 +3266,39 @@
 \ExplSyntaxOff
 
 
+
+% ============================================================================
+% PDF information and outline navigation
+% ============================================================================
+
+% Load hyperref only after all class modules, so its document-level section
+% destinations work without overriding the institution's printed typography.
+% A PDF/A declaration alone does not populate Title/Author metadata or outlines.
+\RequirePackage[unicode,hidelinks]{hyperref}
+
+\ExplSyntaxOn
+
+\cs_new_protected:Npn \ufc_pdf_apply_document_properties:
+  {
+    % Source-authored fields are finalized by \ufcsetup in the preamble.
+    % Keep presentation metadata independent of institution name translation.
+    \hypersetup
+      {
+        pdftitle={\ufc_meta_use:n {title}},
+        pdfsubject={\tl_use:N \g_ufc_document_type_tl}
+      }
+    \str_if_eq:VnTF \g_ufc_document_type_tl {anonymized-research-project}
+      {
+        % Never expand or copy the original authored name into PDF Info/XMP.
+        \hypersetup{pdfauthor={}}
+      }
+      {
+        \hypersetup{pdfauthor={\ufc_meta_use:n {author}}}
+      }
+  }
+
+\AddToHook{begindocument/end}{\ufc_pdf_apply_document_properties:}
+
+\ExplSyntaxOff
+
 \endinput
