@@ -50,7 +50,7 @@ def fold_pdf_wrapped_prose(value: str) -> str:
     a line-break hyphen cannot turn 'Cearácomo' into 'Ceará como'.
     """
     restored = re.sub(
-        r"(?<=[^\\W\\d_])-[ \\t]*\\r?\\n[ \\t]*(?=[^\\W\\d_])",
+        r"(?<=[^\W\d_])-[ \t]*\r?\n[ \t]*(?=[^\W\d_])",
         "", value,
     )
     return fold(restored)
@@ -59,8 +59,8 @@ def fold_pdf_wrapped_prose(value: str) -> str:
 def assert_wrapping_mutants() -> None:
     """Reject a glued academic phrase but permit normal PDF hyphenation."""
     phrase = "Universidad Federal de Ceará como"
-    valid = "Uni-\\n     versidad Federal de Ceará como"
-    glued = "Uni-\\n     versidad Federal de Cearácomo"
+    valid = "Uni-\n     versidad Federal de Ceará como"
+    glued = "Uni-\n     versidad Federal de Cearácomo"
     if fold(phrase) not in fold_pdf_wrapped_prose(valid):
         raise AssertionError("valid hyphenated PDF text rejected")
     if fold(phrase) in fold_pdf_wrapped_prose(glued):
