@@ -247,3 +247,23 @@ technical matrix**: 28 baseline PDFs plus 4 extra doctoral list variants,
 not 32 accepted manuscripts. Additional engines, duplex/single-sided
 alternatives and the original all-modules combination still need independent
 engineering and auditing.
+
+
+### R5 physical-page accounting correction
+
+A source-bound independent inspection of the English doctoral candidate confirmed
+that its real PDF has 58 physical pages, including 20 extracted blank leaves
+(physical pages 3,5,7,9,11,13,15,17,19,21,23,25,27,29,43,49,51,53,55,57).
+The previous automatic R4 report incorrectly claimed 38 pages because
+`text_pdf` **discarded every whitespace-only page**. That old receipt is
+invalid as page-by-page evidence even where all other content predicates passed.
+
+The new PDF runner preserves the Poppler physical form-feed sequence, cross
+checks it against `pdfinfo Pages`, and retains a per-physical-page record
+(1-based page, character count, word count, actual blank/folio-only status,
+short text sample, and explicit human-review=PENDING). Negative mutations
+prove that a blank page and a numbered-only page are never silently discarded.
+Legitimate duplex recto padding is NOT automatically classified as a defect:
+every blank leaf must receive independent R5 visual/contextual review;
+single-sided unexpected blank leaves fail the automatic gate. Printed
+folio numbers and physical PDF-page indices are tracked separately.
