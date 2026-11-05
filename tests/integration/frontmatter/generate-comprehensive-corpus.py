@@ -15,7 +15,8 @@ from pathlib import Path
 import runpy
 
 ROOT = Path(__file__).resolve().parents[3]
-ARTIFACTS = ROOT / "artifacts" / "comprehensive-7x4"
+# Repository-relative inputs avoid embedding runner-specific paths in TeX.
+ARTIFACTS = Path("artifacts/comprehensive-7x4")
 BASE = runpy.run_path(str(
     ROOT / "tests/integration/frontmatter/generate-integrated-locale.py"
 ))
