@@ -122,6 +122,23 @@ def check_fields(info: dict[str, str], xmp: str, outlines: str, text: str,
     return sorted(set(errors))
 
 
+def verify_outline_stdout_isolated() -> None:
+    """Reject terminal output overwriting hyperref's .out bookmark stream."""
+    for path in (
+        "tests/integration/objects/table-ibge-unit-evidence.sh",
+        "tests/integration/objects/table-ibge-notes-evidence.sh",
+    ):
+        script = (ROOT / path).read_text(encoding="utf-8")
+        safe = '> "$job.stdout" 2>&1'
+        colliding = '> "$job.out" 2>&1'
+        if safe not in script or colliding in script:
+            raise AssertionError(f"Hyperref .out collides with compiler stdout: {path}")
+        mutation = script.replace(safe, colliding, 1)
+        if colliding not in mutation:
+            raise AssertionError(f"Failed to reproduce .out collision mutant: {path}")
+    print("PDFINFO-OUTLINE-STREAM-GATE status=PASS shell_scripts=2 mutants=2")
+
+
 def selftest() -> None:
     """Prove title, author, outline and anonymous privacy mutants are rejected."""
     title, author, section = "PUBLIC-TITLE", "PRIVATE-AUTHOR", "PUBLIC-SECTION"
@@ -152,6 +169,7 @@ def selftest() -> None:
     ]
     if any(not problems for problems in checks):
         raise AssertionError("missing negative control: at least one mutant passed")
+    verify_outline_stdout_isolated()
     print(f"PDFINFO-NEGATIVE-CONTROLS status=PASS mutants={len(checks)}")
 
 
