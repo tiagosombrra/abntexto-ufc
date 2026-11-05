@@ -202,3 +202,24 @@ A auditoria das 70 chaves públicas revelou que `examiner-3` até `examiner-6`, 
 **Prova executada:** auditor independente `tests/integration/objects/i18n-listing-font-evidence.py`, controles negativos para marcadores completos, C++ original, log e idioma, SHA-256 de PDF/TeX/C++ e logs no SHA exato, `qpdf` para idioma do catálogo e `pdftotext -bbox-layout` para palavras efetivamente renderizadas. Workflow específico `i18n-listing-font-matrix.yml` evita disparar as matrizes genéricas sem alteração da classe. Mantém-se o Static Contract e a suíte Linux `objects` proporcional ao impacto.
 
 **Estado:** PR [#546](https://github.com/tiagosombrra/abntexto-ufc/pull/546) integrada por squash merge no commit `6e24d263756a54327b4263e7d1f940d06d6ef168`. No HEAD exato `470b9d4e83e41ac63b737c19784ef5ebf9fc9f7d`, Static, quatro PDFs reais e Linux `objects` (7/7) foram aprovados, com revisão Codex CLEAN e zero discussões pendentes. A falha inicial de teste por quebra de linha no erro de Arial e a lacuna inicial na verificação de `return 173;` no PDF foram corrigidas e validadas antes do merge. A certificação pós-merge da nova `main` deve ser verificada separadamente; a conclusão desta PR não autoriza a publicação. Tradução humana, conformidade tipográfica institucional, outros engines/perfis e a cobertura do inventário completo continuam pendentes.
+
+
+## R3 PDF information, XMP and anonymous navigation diagnostic (#558)
+
+The independent workflow `.github/workflows/pdf-metadata-outline.yml`
+compiles 12 actual PDFs (doctoral, scientific article and anonymized project,
+all in PT/EN/ES/FR) and uses the same authored `ufcsetup` metadata that
+prints the title/author in the class. It verifies PDF Info Title/Author,
+XMP serialization, genuine PDF outline destinations and that anonymously
+authored names do not occur in the PDF Info, XMP, outlines, extracted text
+or embedded attachment bytes. Synthetic mutations must reproduce missing
+metadata, missing outline, and private-identity disclosure.
+
+Hyperref adds PDF outline navigation without changing printed heading
+typography; an anonymized project's author must always map to an **empty**
+PDF Author field irrespective of the internal authored data. This narrow
+matrix tests metadata/outline paths rather than all 28 full manuscript
+profiles. Original PDF binaries, TeX inputs, logs and SHA256 receipts are
+retained even on diagnostic failures. It cannot certify PDF/A-2b without
+external veraPDF, cannot certify PDF/UA (separate #459), and cannot substitute
+for R5 independent page-by-page audit. v3.1.0 remains UNRELEASED.
