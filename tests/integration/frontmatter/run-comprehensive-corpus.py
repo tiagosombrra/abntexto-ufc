@@ -69,8 +69,13 @@ def split_physical_pages(extracted: str) -> list[str]:
     return pages
 
 
+def orphan_folio_page(page: str) -> bool:
+    """Distinguish a page consisting solely of its folio from a blank verso."""
+    return bool(re.fullmatch(r"\s*\d+\s*", page))
+
+
 def assert_page_accounting_mutants() -> None:
-    """Reject the historical bug: dropping every empty page during splitting."""
+    """Reject discarded blank leaves and numbered-only leaf false negatives."""
     three = split_physical_pages("COVER\f\fINDEX\f")
     if len(three) != 3 or three != ["COVER", "", "INDEX"]:
         raise AssertionError("blank physical PDF page was discarded")
@@ -80,6 +85,11 @@ def assert_page_accounting_mutants() -> None:
         raise AssertionError("numbered-only physical PDF page was discarded")
     if split_physical_pages("COVER\f") != ["COVER"]:
         raise AssertionError("trailing Poppler separator counted as a PDF page")
+    if not orphan_folio_page("  53  \n"):
+        raise AssertionError("number-only folio regression missed")
+    for legitimate in ("", "53\nChapter title", "Appendix 53"):
+        if orphan_folio_page(legitimate):
+            raise AssertionError("legitimate page falsely flagged as orphan folio")
 
 
 def text_pdf(pdf: Path) -> list[str]:
@@ -127,7 +137,7 @@ def inspect(profile: str, locale: str, tex: str, pdf: Path,
             findings.append(f"pdf.{family}.no_physical_continuation")
     if len(pages) < 6:
         findings.append("pdf.insufficient_physical_pages")
-    if any(re.fullmatch(r"\s*\d+\s*", page) for page in raw_pages):
+    if any(orphan_folio_page(page) for page in raw_pages):
         findings.append("pdf.pagination.orphan-number-only")
     info_output = subprocess.check_output(
         ["pdfinfo", str(pdf)], cwd=ROOT, text=True
@@ -146,7 +156,7 @@ def inspect(profile: str, locale: str, tex: str, pdf: Path,
             "extracted_characters": len(page.strip()),
             "word_count": len(re.findall(r"\b\w+\b", page)),
             "blank": not bool(page.strip()),
-            "number_only": bool(re.fullmatch(r"\s*\d+\s*", page)),
+            "number_only": orphan_folio_page(page),
             "sample": " ".join(page.split())[:120],
             "human_visual_review": "PENDING",
         }
@@ -225,7 +235,7 @@ def main() -> int:
     args = parser.parse_args()
     assert_page_accounting_mutants()
     if args.selftest:
-        print("R4-PHYSICAL-PAGE-MUTANTS status=PASS cases=4")
+        print("R4-PHYSICAL-PAGE-MUTANTS status=PASS cases=8")
         return 0
     if args.locale is None:
         parser.error("--locale required except for --selftest")
