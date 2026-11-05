@@ -306,6 +306,26 @@ def main() -> int:
                                        if entry in variants else "main-baseline")
             report["glossary_enabled"] = entry.get("glossary_enabled", False)
             report["code_algorithm_lists_printed"] = entry.get("code_algorithm_lists_printed", False)
+            # Rasterize *every* physical PDF page. Extraction alone does not
+            # reveal clipping, broken glyphs or blank verso layout defects.
+            # These small, immutable JPEG thumbnails are R5 human review inputs,
+            # not automatic claims of visual/ABNT conformity.
+            raster_folder = out / "page-thumbnails" / job
+            raster_folder.mkdir(parents=True, exist_ok=True)
+            prefix = raster_folder / "page"
+            run(["pdftoppm", "-r", "28", "-jpeg", "-jpegopt", "quality=70",
+                 str(retained), str(prefix)],
+                out / f"{job}-raster.stdout")
+            thumbnails = sorted(raster_folder.glob("page-*.jpg"))
+            if len(thumbnails) != report["pages"]:
+                report["failures"].append(
+                    f"raster.physical_page_count={len(thumbnails)}/{report['pages']}"
+                )
+            for item, thumb in zip(report["page_receipts"], thumbnails):
+                item["thumbnail_sha256"] = sha(thumb)
+                item["thumbnail_path"] = str(thumb)
+            report["rasterized_physical_pages"] = len(thumbnails)
+            report["raster_proof"] = "ALL_PAGES_RENDERED_NOT_VISUALLY_APPROVED"
             report["source_commit_sha"] = gitsha
             report["source_sha256"] = sha(source)
             report["support_source_sha256"] = entry["support_sha256"]
