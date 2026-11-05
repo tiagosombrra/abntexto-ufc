@@ -61,6 +61,12 @@
       "owner_doc": "docs/I18N-COMPLETION-MATRIX.md",
       "purpose": "Prove optional class-owned labels and inherited module behavior in twelve PT/EN/ES/FR real PDFs including long tables, listings, algorithms and minted.",
       "reason": "Runs a dedicated four-locale parallel workflow with TeX Live and minted dependencies so regular Linux integration need not duplicate expensive optional PDF builds."
+    },
+    {
+      "path": ".github/workflows/r4-comprehensive-corpus.yml",
+      "owner_doc": "docs/I18N-COMPLETION-MATRIX.md",
+      "purpose": "Run the source-bound 7-profile by 4-locale real-PDF comprehensive corpus preflight and full TeX Live 2026 compile and inspect batch.",
+      "reason": "A heavy 28-PDF manuscript matrix is intentionally independent from the routine Linux checks; this ownership declaration does not replace full human visual R5 certification."
     }
   ]
 }
