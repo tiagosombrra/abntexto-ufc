@@ -218,3 +218,34 @@ when the known class defect reproduces. A red baseline is expected until the
 caption adapter is corrected; no green test automatically certifies a
 comprehensive document or authorizes v3.1.0 publication. The independent
 full-manuscript 7x4 regression and human visual review remain separate R4/R5.
+
+## R3 PDF information, XMP and anonymous navigation diagnostic (#558)
+
+The independent workflow `.github/workflows/pdf-metadata-outline.yml`
+compiles 16 actual PDFs (three baseline profiles and one public-to-anonymous transition in each locale: doctoral, scientific article and anonymized project,
+all in PT/EN/ES/FR) and uses the same authored `ufcsetup` metadata that
+prints the title/author in the class. It verifies PDF Info Title/Author,
+XMP serialization, genuine PDF outline destinations and that anonymously
+authored names do not occur in the PDF Info, XMP, outlines, extracted text
+or embedded attachment bytes. Synthetic mutations must reproduce missing
+metadata, missing outline, and private-identity disclosure.
+
+Hyperref adds PDF outline navigation without changing printed heading
+typography; an anonymized project's author must always map to an **empty**
+PDF Author field irrespective of the internal authored data. This narrow
+matrix tests metadata/outline paths rather than all 28 full manuscript
+profiles. Original PDF binaries, TeX inputs, logs and SHA256 receipts are
+retained even on diagnostic failures. It cannot certify PDF/A-2b without
+external veraPDF, cannot certify PDF/UA (separate #459), and cannot substitute
+for R5 independent page-by-page audit. v3.1.0 remains UNRELEASED.
+
+**Privacy transition regression (P1):** public `\ufcsetup` still accepts
+document type and authored metadata after `\begin{document}`. Before the first
+physical PDF shipout, switching from public to anonymized must refresh PDF
+Info/XMP so even a name supplied earlier in the preamble is omitted. After a
+page has shipped, the class explicitly rejects switches across the
+anonymous/public boundary because already serialized pages and metadata cannot
+be safely retracted. The dedicated workflow adds four real positive transition
+PDFs and four intentionally rejected late-transition TeX sources, all retained
+with original negative logs. Reconfiguration of unrelated metadata after a
+shipped page remains permitted but cannot retroactively rewrite PDF Info/XMP.
