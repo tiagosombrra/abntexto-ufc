@@ -169,7 +169,7 @@ def inspect(profile: str, locale: str, work: Path, source: Path,
                work / f"{source.stem}-pdftotext.stdout")
     attachment_dir = work / f"{source.stem}-attachments"
     attachment_dir.mkdir(exist_ok=True)
-    run(["pdfdetach", "-saveall", str(pdf)],
+    run(["pdfdetach", "-saveall", str(pdf.resolve())],
         work / f"{source.stem}-attachments.stdout", cwd=attachment_dir)
     attachments = [p.read_bytes() for p in attachment_dir.iterdir() if p.is_file()]
     errors = check_fields(info, xmp, outline, text, attachments,
@@ -195,9 +195,14 @@ def inspect(profile: str, locale: str, work: Path, source: Path,
 
 def main() -> int:
     p = argparse.ArgumentParser()
-    p.add_argument("--locale", choices=tuple(LOCALES), required=True)
+    p.add_argument("--locale", choices=tuple(LOCALES))
+    p.add_argument("--selftest", action="store_true")
     a = p.parse_args()
     selftest()
+    if a.selftest:
+        return 0
+    if a.locale is None:
+        p.error("--locale is required except with --selftest")
     work = ARTIFACTS / a.locale
     work.mkdir(parents=True, exist_ok=True)
     commit = subprocess.check_output(["git", "rev-parse", "HEAD"],
