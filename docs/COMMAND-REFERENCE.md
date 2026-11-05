@@ -57,7 +57,8 @@ Ao configurar `document-language` explicitamente, a classe traduz as naturezas a
 
 | Chave | Uso |
 | --- | --- |
-| `institution` | nome da instituição |
+| `institution` | denominação jurídica da instituição; permanece inalterada em `\ufcMeta{institution}` |
+| `institution-display` | nome exibido em capa e natureza acadêmica; por padrão acompanha `document-language` somente para a instituição padrão UFC; se informado, sobrepõe o nome exibido sem modificar a denominação jurídica |
 | `institution-acronym` | sigla institucional |
 | `center` | centro, faculdade, instituto ou campus |
 | `department` | departamento/unidade; pode ficar vazio |
@@ -90,7 +91,8 @@ Ao configurar `document-language` explicitamente, a classe traduz as naturezas a
 | --- | --- |
 | `project-program` | programa/processo ao qual o projeto se vincula |
 | `project-type` | denominação do projeto |
-| `submission-entity` | entidade à qual o projeto é apresentado |
+| `submission-entity` | denominação jurídica da entidade à qual o projeto é apresentado |
+| `submission-entity-display` | nome da entidade exibido no projeto; por padrão acompanha o nome exibido da UFC quando não há entidade explícita; respeita dados autorais explícitos |
 | `project-nature-statement` | substitui o texto automático da natureza |
 | `project-identifier` | identificador público do perfil anonimizado |
 

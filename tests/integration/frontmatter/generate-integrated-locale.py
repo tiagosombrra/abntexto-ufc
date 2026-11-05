@@ -18,6 +18,14 @@ PROFILES = (
     "scientific-article",
 )
 LOCALES = {"pt": "pt-BR", "en": "en-US", "es": "es-ES", "fr": "fr-FR"}
+# Presentation-only labels; retain the official legal institution metadata verbatim.
+# English scholarly affiliation follows the separate UFC/CEPE naming convention.
+INSTITUTION_DISPLAY = {
+    "pt": "Universidade Federal do Ceará",
+    "en": "Federal University of Ceará",
+    "es": "Universidad Federal de Ceará",
+    "fr": "Université fédérale du Ceará",
+}
 USER_DATES = {
     "pt": "21 de outubro de 2026",
     "en": "21 October 2026",
@@ -101,6 +109,7 @@ def make_doc(profile: str, locale: str, target: Path) -> tuple[str, list[str]]:
         "author": "{Integrated Test Author}",
         "title": "{Integrated Multilingual Document}",
         "institution": "{Universidade Federal do Ceará}",
+        "institution-display": "{" + INSTITUTION_DISPLAY[locale] + "}",
         "location": "{Fortaleza}",
         "year": "{2026}",
         "approval-date": "{" + date + "}",
@@ -126,6 +135,7 @@ def make_doc(profile: str, locale: str, target: Path) -> tuple[str, list[str]]:
         "project-program": "{Graduate Selection}",
         "project-identifier": "{SYNTHETIC-ANON-001}",
         "submission-entity": "{Universidade Federal do Ceará}",
+        "submission-entity-display": "{" + INSTITUTION_DISPLAY[locale] + "}",
     }
     if profile in ACADEMIC_PROFILES:
         for slot in range(2, APPROVAL_LAST_EXAMINER[profile] + 1):

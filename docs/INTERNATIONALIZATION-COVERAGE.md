@@ -9,6 +9,12 @@ This is the implementation inventory for the requested PT / EN / ES / FR *comple
 - `\DocumentMetadata{lang=...}` is declared by the author before `\documentclass`, and is *not* inferred or silently mutated from `document-language`. English, Spanish and French names of UFC units, degrees, real programs, academic bodies and individual names must be checked against institutional official nomenclature, not guessed by the class.
 - The default project type ("Projeto de pesquisa") is translated only when no `project-type` is explicitly supplied. The entire Portuguese research-project nature sentence follows its original composition to preserve the tested baseline. Spanish `Fecha de aprobación` and French `Date d'approbation` are gender-neutral, so they remain grammatically valid for both masculine and feminine academic work types. User-authored and program-mandated titles or nature statements override the descriptive translations.
 
+## University name: legal metadata and translated presentation
+
+`institution` and `submission-entity` are legal/user-supplied fields and are never silently overwritten. The localized **presentation** for the UFC default is PT `Universidade Federal do Ceará`, EN `Federal University of Ceará`, ES `Universidad Federal de Ceará`, FR `Université fédérale du Ceará`; the Spanish and French forms are illustrative and require institutional signoff before external official use. Custom institution names remain as authored; explicit `institution-display` or `submission-entity-display` changes the rendering without changing the legal fields.
+
+**A separate official English scholarly-affiliation convention exists.** UFC/CEPE Resolution 12/2018 and UFC's published guidance require `Federal University of Ceara` (without accent) for scientific-paper author affiliations: https://labomar.ufc.br/pt/saiba-como-citar-corretamente-a-ufc-em-ingles/ . UFC's international pages use the descriptive display `Federal University of Ceará` (with accent): https://prointer.ufc.br/en/ . The display label must not be mistaken for the legal name or an author-affiliation rule.
+
 ## Inventory of class-owned text (37 document keys and 9 title keys)
 
 The current fail-closed `tests/integration/frontmatter/document-locale-catalog.py` contract enumerates **37** document-string keys per locale, plus **nine** independent pretextual title keys and **two** summary/keyword catalogs. This is a source/catalog parity and routing assertion, **not** proof that all variants have been individually certified in actual PDFs or received a linguistic/institutional signoff.
@@ -23,7 +29,9 @@ The current fail-closed `tests/integration/frontmatter/document-locale-catalog.p
 | Bibliography/reference and glossary headings | PT/EN/ES/FR | `document-language` |
 | Additional code/algorithm/chart list headings and legend labels | PT/EN/ES/FR | `document-language` |
 | Inherited appendix, annex, index, figure/table captions, object source/note prefixes and text-table captions | Opt-in bindings to actual upstream `\appendixlabel`, `\annexlabel`, `\abntextonotelabel` and other available inherited macros | `document-language`, only when relevant macros are provided by installed dependencies |
-| Institution names, degree titles, program names, PDF language metadata | Supplied by author or by institution | No automatic translation of proper names or legal descriptors |
+| Legal institution names, degree titles, program names and PDF language metadata | Supplied by author or institution | Legal names and authored content are never translated automatically |
+| Default UFC presentation name | PT/EN/ES/FR | `document-language` localizes the display only when `institution` was not explicitly authored; override with `institution-display` |
+| Default research-project submission presentation name | PT/EN/ES/FR | Follows the default UFC display for an implicit submission entity; override with `submission-entity-display` |
 | Externally generated citation language, figure/table legends, bibliography localization | Controlled by Babel, biblatex-abnt, abntexto, tabularray-abnt and their installed versions | PDF tests and independent compatibility review required; class does not promise arbitrary third-party terminology is fully translated |
 | Body text, quotations, bibliography entry contents, alt text, research data | Supplied by author | Not automatically translated |
 
