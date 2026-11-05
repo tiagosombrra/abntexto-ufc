@@ -14,6 +14,7 @@ import os
 from pathlib import Path
 import re
 import subprocess
+import unicodedata
 import sys
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -25,6 +26,12 @@ PROFILES = (
 )
 LOCALES = {"pt": "pt-BR", "en": "en-US", "es": "es-ES", "fr": "fr-FR"}
 TABLE_NAMES = {"pt": "Tabela", "en": "Table", "es": "Tabla", "fr": "Tableau"}
+INSTITUTION_DISPLAY = {
+    "pt": "Universidade Federal do Ceará",
+    "en": "Federal University of Ceará",
+    "es": "Universidad Federal de Ceará",
+    "fr": "Université fédérale du Ceará",
+}
 
 
 def sha(path: Path) -> str:
@@ -99,6 +106,16 @@ def text_pdf(pdf: Path) -> list[str]:
     return split_physical_pages(completed.stdout)
 
 
+def folded_pdf_text(text: str) -> str:
+    """Normalize layout line wrapping while retaining real word separators."""
+    unwrapped = re.sub(r"(?<=\w)-[ \t]*\r?\n[ \t]*(?=\w)", "", text)
+    no_accents = "".join(
+        ch for ch in unicodedata.normalize("NFKD", unwrapped.casefold())
+        if not unicodedata.combining(ch)
+    )
+    return re.sub(r"\s+", " ", no_accents).strip()
+
+
 def inspect(profile: str, locale: str, tex: str, pdf: Path,
             lot: Path | None) -> dict:
     """Check real content separately from declared source feature flags."""
@@ -118,6 +135,14 @@ def inspect(profile: str, locale: str, tex: str, pdf: Path,
     )
     findings = [f"pdf.text.missing.{mark}" for mark in markers
                 if mark not in aggregate]
+    # R2 must translate *visible* presentation, not only the declaration.
+    # The legal Portuguese UFC metadata may remain unchanged; require the
+    # localized name on a real cover or title page in the selected language.
+    if profile != "scientific-article":
+        visible_title_pages = folded_pdf_text("\n".join(raw_pages[:2]))
+        expected_display = folded_pdf_text(INSTITUTION_DISPLAY[locale])
+        if expected_display not in visible_title_pages:
+            findings.append("pdf.institution.localized_display_missing")
     # Verify rendered implementation bodies, not only captions or list entries.
     # A caption may exist even if the code or algorithm environment is empty.
     body_markers = ("int sum(int a, int b)", "return a + b;",
