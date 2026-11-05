@@ -79,13 +79,28 @@ def selftest() -> None:
     if verify_multipage_rows(["LIST OF TABLES", "R3LONGROW115"],
                              "R3LONGROW001", "R3LONGROW115"):
         raise AssertionError("missing first-row marker accepted")
-    print("R3-TABLE-LIST-MUTANTS status=PASS locales=4 list_cases=24 "
+    for locale, wrong in (("es", "Cuadro"), ("fr", "Table")):
+        label = LOCALES[locale][2]
+        valid = f"{label} 1 — FIRST............3\\n{label} 2 — SECOND............4"
+        incompatible = valid.replace(f"{label} 2", f"{wrong} 2")
+        if not table_list_failures(incompatible, locale):
+            raise AssertionError(f"Babel-mixed table label accepted: {locale}")
+    print("R3-TABLE-LIST-MUTANTS status=PASS locales=4 list_cases=26 "
           "multipage_negative_cases=3", flush=True)
 
 
 def make_source(locale: str) -> str:
     """Exercise class-native, tabularray-abnt and raw longtable caption paths."""
     language, _, _, source_name = LOCALES[locale]
+    # Reproduce an actual thesis: a Portuguese companion summary switches
+    # Babel away from and back to the manuscript language before the tables.
+    # This originally reverted Spanish 'Tabla' to 'Cuadro' and French
+    # 'Tableau' to 'Table' in native and tabularray-abnt captions.
+    switch_back = {"pt": "brazilian", "en": "english",
+                   "es": "spanish", "fr": "french"}[locale]
+    language_switch = ([r"\selectlanguage{brazilian}",
+                        rf"\selectlanguage{{{switch_back}}}"]
+                       if locale in ("es", "fr") else [])
     rows = [
         f"R3LONGROW{i:03d} & {i} " + "\\\\"
         for i in range(1, 116)
@@ -107,6 +122,7 @@ def make_source(locale: str) -> str:
         r"\ufcPrintListOfTables",
         r"\textual",
         rf"\section{{R3-TABLES-{locale.upper()}}}",
+        *language_switch,
         rf"\legend{{table}}{{R3SHORT-{locale.upper()}}}",
         rf"\ufcSource{{R3-SHORT-{locale.upper()} synthetic source}}",
         r"\begin{ufcobject}[here]",
