@@ -26,7 +26,7 @@ concurrency:
   cancel-in-progress: true
 jobs:
   source-preflight:
-    name: Build and audit 28 independent full-length TeX source candidates
+    name: Build and audit 28 baseline plus 4 supplementary doctoral TeX sources
     runs-on: ubuntu-24.04
     timeout-minutes: 4
     steps:
@@ -59,10 +59,19 @@ jobs:
                       assert entry['features'][key] is True, (locale,entry['profile'],key)
                   count += 1
           assert count == 28, count
-          print('R4-COMPREHENSIVE-PREFLIGHT status=PASS independent_sources=28 pdf_acceptance=NO')
+          variants = [v for locale in ('pt','en','es','fr')
+                      for e in json.loads((root / locale / 'source-index.json').read_text())['entries']
+                      for v in e.get('supplementary_variants', [])]
+          assert len(variants) == 4, len(variants)
+          for item in variants:
+              source = Path(item['source'])
+              assert source.is_file()
+              assert hashlib.sha256(source.read_bytes()).hexdigest() == item['source_sha256']
+              assert not item['glossary_enabled'] and item['code_algorithm_lists_printed']
+          print('R4-COMPREHENSIVE-PREFLIGHT status=PASS main_sources=28 variants=4 pdf_acceptance=NO')
           PY
   real-pdfs:
-    name: R4 full documents / ${{ matrix.locale }} (7 PDFs)
+    name: R4 full documents / ${{ matrix.locale }} (7 baseline + 1 variant)
     runs-on: ubuntu-24.04
     needs: source-preflight
     timeout-minutes: 65
