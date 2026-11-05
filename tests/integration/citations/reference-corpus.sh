@@ -209,6 +209,10 @@ if toc_end is None:
 
 toc = '\n'.join(raw_pages[toc_start:toc_end])
 toc_flat = normalize_pdf_text(toc)
+# hyperref must not expose LaTeX's \MakeUppercase [] moving-argument syntax
+# as literal brackets before posttextual headings in a rendered PDF.
+if re.search(r'\[\s*\]\s*(?:GLOSSÁRIO|REFERÊNCIAS|ÍNDICE REMISSIVO)', toc_flat):
+    raise SystemExit('Corpus failed: hyperref introduced literal [] before a TOC heading.')
 if 'ÍNDICE REMISSIVO' in toc_flat:
     raise SystemExit(
         'Corpus failed: canonical tutorial table of contents contains the optional remissive index.'
