@@ -145,6 +145,9 @@ def main() -> int:
          "--locale", locale], out / "generation.stdout")
     manifest = json.loads((out / "source-index.json").read_text(encoding="utf-8"))
     entries = manifest["entries"]
+    variants = [v for entry in entries for v in entry.get("supplementary_variants", [])]
+    if len(variants) != 1 or variants[0]["profile"] != "doctoral-thesis":
+        raise ValueError("expected exactly one independently sourced doctoral lists variant")
     if len(entries) != 7 or {v["profile"] for v in entries} != set(PROFILES):
         raise ValueError("R4 corpus has fewer than seven independent profiles")
     gitsha = subprocess.check_output(
@@ -156,7 +159,7 @@ def main() -> int:
     reports: list[dict] = []
     with tempfile.TemporaryDirectory(prefix="abntexto-r4-comprehensive-") as tmp:
         work = Path(tmp)
-        for entry in entries:
+        for entry in [*entries, *variants]:
             job, profile = entry["name"], entry["profile"]
             source = ROOT / entry["source"]
             if sha(source) != entry["source_sha256"]:
@@ -175,9 +178,10 @@ def main() -> int:
             run(["biber", "--input-directory", str(work),
                  "--output-directory", str(work), job],
                 out / f"{job}-biber.log")
-            if profile == "doctoral-thesis":
+            if entry.get("glossary_enabled", profile == "doctoral-thesis"):
                 run(["makeglossaries", "-d", str(work), job],
                     out / f"{job}-glossaries.log")
+            if entry.get("index_enabled", profile == "doctoral-thesis"):
                 run(["makeindex", f"{job}.idx", "-o", f"{job}.ind"],
                     out / f"{job}-index.log", cwd=work)
             for part in (2, 3):
@@ -193,6 +197,10 @@ def main() -> int:
                 lot.write_bytes(native_lot.read_bytes())
             report = inspect(profile, locale, source.read_text(encoding="utf-8"),
                              retained, lot)
+            report["specimen_kind"] = ("supplementary-doctoral-code-lists"
+                                       if entry in variants else "main-baseline")
+            report["glossary_enabled"] = entry.get("glossary_enabled", False)
+            report["code_algorithm_lists_printed"] = entry.get("code_algorithm_lists_printed", False)
             report["source_commit_sha"] = gitsha
             report["source_sha256"] = sha(source)
             report["support_source_sha256"] = entry["support_sha256"]
@@ -204,6 +212,7 @@ def main() -> int:
     failed = [report for report in reports if report["failures"]]
     evidence = {
         "source_commit_sha": gitsha, "locale": locale, "pdfs": len(reports),
+        "main_baseline_pdfs": len(entries), "supplementary_variants": len(variants),
         "automatic_failures": len(failed),
         "release_authorized": False, "human_approval": "PENDING",
         "scope": "Full R4 technical candidates, not R5 accepted documents",
@@ -219,7 +228,8 @@ def main() -> int:
                   f"profile={report['profile']} findings={report['failures']}")
         return 1
     print(f"R4-COMPREHENSIVE-EVIDENCE status=AUTOMATED_PARTIAL locale={locale} "
-          f"pdfs=7 pages={sum(x['pages'] for x in reports)} "
+          f"pdfs={len(reports)} baseline=7 variants={len(variants)} "
+          f"pages={sum(x['pages'] for x in reports)} "
           f"human_approval=PENDING")
     return 0
 
