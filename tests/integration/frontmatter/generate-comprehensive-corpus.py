@@ -204,12 +204,14 @@ def generate(profile: str, locale: str, folder: Path) -> dict:
     original = Path(sources[0]).read_text(encoding="utf-8")
     if original.split(r"\begin{document}", 1)[0].count(r"\ufcsetup{" + "\n") != 1:
         raise ValueError("source lost its uniquely addressable class setup")
+    if original.count("institution-display={" + INSTITUTION_DISPLAY[locale] + "}") != 1:
+        raise ValueError("R2 source omitted unique localized institution presentation")
+    if original.count("submission-entity-display={" + INSTITUTION_DISPLAY[locale] + "}") != 1:
+        raise ValueError("R2 source omitted unique localized project entity presentation")
     source = original.replace(
         "\\ufcsetup{\n",
         "\\ufcsetup{\n  tables=tabularray,\n  code=listings,\n"
-        "  algorithms=algpseudocodex,\n"
-        f"  institution-display={{{INSTITUTION_DISPLAY[locale]}}},\n"
-        f"  submission-entity-display={{{INSTITUTION_DISPLAY[locale]}}},\n",
+        "  algorithms=algpseudocodex,\n",
         1,
     )
     source = source.replace(
