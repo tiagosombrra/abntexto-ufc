@@ -59,11 +59,34 @@ def run(command: list[str], log: Path, *, cwd: Path = ROOT) -> None:
         raise ValueError(f"{command[0]} failed ({result.returncode}):\n{excerpt}")
 
 
+def split_physical_pages(extracted: str) -> list[str]:
+    """Preserve all pages, including duplex blanks and numbered-only pages."""
+    pages = extracted.split("\f")
+    # Poppler prints exactly one trailing form-feed as the last page delimiter.
+    # That terminal separator is not an additional physical PDF page.
+    if extracted.endswith("\f"):
+        pages.pop()
+    return pages
+
+
+def assert_page_accounting_mutants() -> None:
+    """Reject the historical bug: dropping every empty page during splitting."""
+    three = split_physical_pages("COVER\f\fINDEX\f")
+    if len(three) != 3 or three != ["COVER", "", "INDEX"]:
+        raise AssertionError("blank physical PDF page was discarded")
+    if len(split_physical_pages("COVER\fINDEX\f")) != 2:
+        raise AssertionError("incorrect PDF page boundary count")
+    if len(split_physical_pages("COVER\f60\fINDEX\f")) != 3:
+        raise AssertionError("numbered-only physical PDF page was discarded")
+    if split_physical_pages("COVER\f") != ["COVER"]:
+        raise AssertionError("trailing Poppler separator counted as a PDF page")
+
+
 def text_pdf(pdf: Path) -> list[str]:
-    """Inspect the actual generated PDF text, including physical page breaks."""
+    """Inspect every physical page extracted from the actual PDF."""
     completed = subprocess.run(["pdftotext", "-layout", str(pdf), "-"],
                                cwd=ROOT, capture_output=True, text=True, check=True)
-    return [s for s in completed.stdout.split("\f") if s.strip()]
+    return split_physical_pages(completed.stdout)
 
 
 def inspect(profile: str, locale: str, tex: str, pdf: Path,
@@ -112,6 +135,29 @@ def inspect(profile: str, locale: str, tex: str, pdf: Path,
     info = dict(line.split(":", 1) for line in info_output.splitlines()
                 if ":" in line)
     info = {key.strip(): val.strip() for key, val in info.items()}
+    claimed_pages = int(info.get("Pages", "0"))
+    if len(raw_pages) != claimed_pages:
+        findings.append(
+            f"pdf.page_accounting.physical_mismatch={len(raw_pages)}/{claimed_pages}"
+        )
+    page_receipts = [
+        {
+            "physical_page": n,
+            "extracted_characters": len(page.strip()),
+            "word_count": len(re.findall(r"\b\w+\b", page)),
+            "blank": not bool(page.strip()),
+            "number_only": bool(re.fullmatch(r"\s*\d+\s*", page)),
+            "sample": " ".join(page.split())[:120],
+            "human_visual_review": "PENDING",
+        }
+        for n, page in enumerate(raw_pages, start=1)
+    ]
+    blank_physical_pages = [
+        row["physical_page"] for row in page_receipts if row["blank"]
+    ]
+    if profile not in ("masters-thesis", "doctoral-thesis",
+                       "anonymized-research-project") and blank_physical_pages:
+        findings.append("pdf.single_sided.unexpected_blank_page")
     if not info.get("Title"):
         findings.append("pdf.metadata.title_missing")
     if profile == "anonymized-research-project":
@@ -158,7 +204,12 @@ def inspect(profile: str, locale: str, tex: str, pdf: Path,
             r"\begin{ufcalgorithm}", r"\begin{ufclisting}",
         )},
         "pdf_sha256": sha(pdf),
-        "pages": len(pages),
+        "pages": claimed_pages,
+        "extracted_physical_pages": len(pages),
+        "blank_physical_pages": blank_physical_pages,
+        "blank_page_semantics": ("REQUIRES_R5_REVIEW" if blank_physical_pages
+                                 else "NO_EXTRACTED_BLANK_PAGES"),
+        "page_receipts": page_receipts,
         "failures": sorted(set(findings)),
         "human_page_by_page_review": "PENDING",
         "pdf_a_verapdf": "NOT_TESTED",
@@ -169,8 +220,15 @@ def inspect(profile: str, locale: str, tex: str, pdf: Path,
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--locale", choices=tuple(LOCALES), required=True)
+    parser.add_argument("--locale", choices=tuple(LOCALES))
+    parser.add_argument("--selftest", action="store_true")
     args = parser.parse_args()
+    assert_page_accounting_mutants()
+    if args.selftest:
+        print("R4-PHYSICAL-PAGE-MUTANTS status=PASS cases=4")
+        return 0
+    if args.locale is None:
+        parser.error("--locale required except for --selftest")
     locale = args.locale
     out = ARTIFACTS / locale
     out.mkdir(parents=True, exist_ok=True)
