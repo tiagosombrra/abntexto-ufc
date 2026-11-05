@@ -227,3 +227,23 @@ and R4 alternative-engine/print-mode matrix. A red job is a release-blocking
 diagnostic; successful automatic predicates are marked AUTOMATED_PARTIAL_ONLY,
 never editorial approval, full PDF/A or PDF/UA conformance, or authorization
 to release 3.1.0.
+
+
+### R4 doctoral write-channel boundary (extra four PDFs)
+
+The full 28-file baseline includes a doctoral thesis with real glossary/index
+and with algorithm/code **objects in the body**. A separate four-locale
+supplementary doctoral specimen additionally prints the two optional lists of
+algorithms and code, but leaves glossary/index disabled. The TeX Live 2026
+pdfLaTeX diagnostic of the initially combined configuration failed explicitly
+with `No room for a new \write` when the additional optional lists were
+opened at `\ufcPrintTableOfContents` (the original complete doctoral
+manuscript had several other list output streams and imakeidx/glossaries).
+Suppressing this diagnostic silently or promoting the split into a claim that
+one doctoral PDF supports all combinations would be incorrect. The separate
+files preserve both test surfaces, mark the limitation as a BLOCKER, and avoid
+unapproved `morewrites` compatibility packages. This is a **32-candidate
+technical matrix**: 28 baseline PDFs plus 4 extra doctoral list variants,
+not 32 accepted manuscripts. Additional engines, duplex/single-sided
+alternatives and the original all-modules combination still need independent
+engineering and auditing.
