@@ -165,6 +165,31 @@ def inspect(profile: str, locale: str, tex: str, pdf: Path,
     blank_physical_pages = [
         row["physical_page"] for row in page_receipts if row["blank"]
     ]
+    # Record evidence for every blank leaf. A repeated verso pattern is only
+    # a recto-padding *candidate*, not ABNT authorization or visual approval.
+    duplex_profiles = {"masters-thesis", "doctoral-thesis",
+                       "anonymized-research-project"}
+    blank_page_context = []
+    for n in blank_physical_pages:
+        previous_page = page_receipts[n - 2] if n > 1 else None
+        following_page = page_receipts[n] if n < len(page_receipts) else None
+        possible_duplex_padding = bool(
+            profile in duplex_profiles and n % 2 == 1
+            and previous_page and following_page
+            and not previous_page["blank"] and not following_page["blank"]
+        )
+        blank_page_context.append({
+            "physical_page": n,
+            "preceding_text_excerpt": (previous_page["sample"]
+                                        if previous_page else None),
+            "following_text_excerpt": (following_page["sample"]
+                                        if following_page else None),
+            "candidate_duplex_recto_padding": possible_duplex_padding,
+            "normative_justification": "PENDING_R5_REVIEW",
+            "visual_approval": "PENDING",
+        })
+        if profile in duplex_profiles and not possible_duplex_padding:
+            findings.append(f"pdf.pagination.unclassified_blank_page.{n}")
     if profile not in ("masters-thesis", "doctoral-thesis",
                        "anonymized-research-project") and blank_physical_pages:
         findings.append("pdf.single_sided.unexpected_blank_page")
@@ -247,6 +272,7 @@ def inspect(profile: str, locale: str, tex: str, pdf: Path,
         "pages": claimed_pages,
         "extracted_physical_pages": len(pages),
         "blank_physical_pages": blank_physical_pages,
+        "blank_page_context": blank_page_context,
         "blank_page_semantics": ("REQUIRES_R5_REVIEW" if blank_physical_pages
                                  else "NO_EXTRACTED_BLANK_PAGES"),
         "page_receipts": page_receipts,
