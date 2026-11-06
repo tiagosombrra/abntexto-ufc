@@ -1,5 +1,6 @@
 name: R4 twenty-eight comprehensive real PDF candidates
 on:
+  workflow_dispatch:
   pull_request:
     branches: [main]
     types: [opened, synchronize, reopened, ready_for_review]
@@ -11,6 +12,8 @@ on:
       - tests/fixtures/references.bib
       - tests/fixtures/example.cpp
       - .github/workflows/r4-comprehensive-corpus.yml
+      - examples/canonical-mesh-study/**
+      - tools/examples/generate_mesh_study.py
   push:
     branches: [main]
     paths:
@@ -19,6 +22,8 @@ on:
       - tests/integration/frontmatter/generate-comprehensive-corpus.py
       - tests/integration/frontmatter/run-comprehensive-corpus.py
       - .github/workflows/r4-comprehensive-corpus.yml
+      - examples/canonical-mesh-study/**
+      - tools/examples/generate_mesh_study.py
 permissions:
   contents: read
 concurrency:
@@ -37,6 +42,8 @@ jobs:
           persist-credentials: false
       - name: Generate all 7 profiles x 4 locales, without pretending PDFs exist
         run: python3 tests/integration/frontmatter/generate-comprehensive-corpus.py
+      - name: Validate source-bound scientific figures and four manuscript languages
+        run: python3 tests/checks/examples/mesh_study.py --artifacts artifacts/canonical-mesh-study
       - name: Prove physical-page accounting rejects discarded duplex leaves
         run: python3 tests/integration/frontmatter/run-comprehensive-corpus.py --selftest
       - name: Inspect 28 source files, manifest hashes, declared features
@@ -59,6 +66,20 @@ jobs:
                               'tabularray_multipage','native_longtable','algorithm',
                               'inline_code','external_code','bibliography','figure'):
                       assert entry['features'][key] is True, (locale,entry['profile'],key)
+                  assert entry['canonical_study_id'] == 'unit-square-structured-mesh-v1'
+                  assert entry['scientific_content_state'] == 'verified_didactic_geometry_not_novel_research'
+                  assert entry['canonical_study_sha256'] == hashlib.sha256(
+                      Path('examples/canonical-mesh-study/study.json').read_bytes()
+                  ).hexdigest()
+                  assert entry['profile_context_sha256'] == hashlib.sha256(
+                      Path('examples/canonical-mesh-study/profile-contexts.json').read_bytes()
+                  ).hexdigest()
+                  assert entry['generated_asset_manifest_sha256'] == hashlib.sha256(
+                      Path('artifacts/canonical-mesh-study/manifest.json').read_bytes()
+                  ).hexdigest()
+                  assert source.read_text().count(
+                      r'\input{artifacts/canonical-mesh-study/body-' + locale + '.tex}'
+                  ) == 1
                   count += 1
           assert count == 28, count
           variants = [v for locale in ('pt','en','es','fr')
@@ -76,6 +97,9 @@ jobs:
     name: R4 full documents / ${{ matrix.locale }} (7 baseline + 1 variant)
     runs-on: ubuntu-24.04
     needs: source-preflight
+    # Draft PRs pay only for source/mathematical checks. Ready-for-review,
+    # manual and main-push runs still compile the ENTIRE 28+4 PDF matrix.
+    if: github.event_name != 'pull_request' || github.event.pull_request.draft == false
     timeout-minutes: 65
     strategy:
       fail-fast: false
