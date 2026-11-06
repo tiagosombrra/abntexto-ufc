@@ -302,8 +302,14 @@ def inspect(profile: str, locale: str, tex: str, pdf: Path,
             findings.append("pdf.table_list.lot_missing")
     elif profile != "scientific-article":
         lot_text = lot.read_text(encoding="utf-8", errors="replace")
+        scientific_table_title = json.loads(
+            (ROOT / "examples/canonical-mesh-study/study.json").read_text(
+                encoding="utf-8"
+            )
+        )["locales"][locale]["table_title"]
         expected_entries = (
             f"INTEGRATED-TABLE-{locale.upper()}",
+            scientific_table_title,
             f"R4SHORT-{locale.upper()}",
             f"R4LONG-{locale.upper()}",
             f"R4NATIVE-{locale.upper()}",
@@ -323,7 +329,7 @@ def inspect(profile: str, locale: str, tex: str, pdf: Path,
                 rf"^\s*{re.escape(TABLE_NAMES[locale])}\s+(\d+)\b",
                 list_pages[0], flags=re.M | re.I,
             )
-            if names != ["1", "2", "3", "4"]:
+            if names != ["1", "2", "3", "4", "5"]:
                 findings.append(f"pdf.table_list.prefix_or_sequence={names}")
             for marker in expected_entries:
                 if list_pages[0].count(marker) != 1:
