@@ -78,6 +78,12 @@ FORCE_COMPLETE_PREFIXES = (
 )
 
 PATH_RULES: tuple[tuple[str, tuple[str, ...]], ...] = (
+    # Content-only assets are validated by a separate deterministic Python
+    # gate; do not recompile 42 LaTeX integrations for each prose or SVG edit.
+    # Any concurrent class/runtime or release change still forces full CI.
+    ("smoke", ("examples/canonical-mesh-study/", "tools/examples/",
+               "tests/checks/mesh_study.py",
+               ".github/workflows/mesh-canonical-fast.yml")),
     ("article", ("tests/integration/scientific-article", "tests/documents/scientific-article", "tests/checks/scientific_article")),
     ("frontmatter", ("template/frontmatter/", "tests/integration/frontmatter", "tests/integration/duplex-frontmatter", "tests/integration/i18n-pretextual-api-evidence.py")),
     ("layout", ("tests/integration/layout", "tests/integration/pdf-geometry", "tests/integration/pdf-validation-core", "tests/integration/math", "tests/integration/normative-complement")),
@@ -155,6 +161,13 @@ def git_changed_paths(base: str, head: str) -> list[str]:
 def self_test() -> None:
     cases = {
         ("docs/ARCHITECTURE.md",): (),
+        ("examples/canonical-mesh-study/study.json",): ("smoke",),
+        ("tools/examples/generate_mesh_study.py",): ("smoke",),
+        ("tests/checks/examples/mesh_study.py",): ("smoke",),
+        (".github/workflows/mesh-canonical-fast.yml",): ("smoke",),
+        ("examples/canonical-mesh-study/study.json", "abntexto-ufc.cls"): ("complete",),
+        ("examples/canonical-mesh-study/study.json", "tests/integration/frontmatter/frontmatter.sh"):
+            ("smoke", "frontmatter"),
         ("release/history/v3/v3.0.1-final-corrections.json",): (),
         ("abntexto-ufc.cls",): ("complete",),
         ("tests/run.py",): ("smoke",),
