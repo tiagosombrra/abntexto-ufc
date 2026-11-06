@@ -94,7 +94,7 @@ PATH_RULES: tuple[tuple[str, tuple[str, ...]], ...] = (
     ("profiles", ("tests/integration/profile-matrix", "tests/integration/tagged-pdf-baseline", "tests/documents/tagged-pdf-baseline", "tests/integration/tagged-pdf-graphics", "tests/documents/tagged-pdf-graphics", "tests/integration/tagged-pdf-table", "tests/documents/tagged-pdf-table", "tests/integration/tagged-pdf-mathml", "tests/documents/tagged-pdf-mathml", "tests/integration/build-path", "tests/integration/multivolume", "tests/integration/catalog-card", "tests/smoke/base-profile.tex")),
     ("reference-document", ("template/main.tex", "template/chapters/", "tests/integration/reference-document", "tests/integration/reference-corpus", "tests/integration/pdf-validator")),
     ("distribution", ("tools/build-public-bundles.py", "tools/build-distribution-bundles.py", "tests/integration/distribution-bundles.sh")),
-    ("web-lite", ("validator/", "tests/checks/validator/validator_source.py", "tests/integration/web-lite-e2e.py", "tools/ci/run-web-lite-e2e.sh", "tools/ci/build-pages-site.sh")),
+    ("web-lite", ("validator/", "tests/checks/validator_source.py", "tests/integration/web-lite-e2e.py", "tools/ci/run-web-lite-e2e.sh", "tools/ci/build-pages-site.sh")),
 )
 
 
