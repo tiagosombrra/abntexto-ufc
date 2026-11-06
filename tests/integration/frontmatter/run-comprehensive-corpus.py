@@ -122,7 +122,7 @@ def assert_page_accounting_mutants() -> None:
         if posttextual_optional_bracket_leak(valid):
             raise AssertionError(f"false positive in glossary/index bracket gate: {valid}")
     for locale, legal in INSTITUTION_DISPLAY.items():
-        first = f"{legal}\\nINTEGRATED-TITLE"
+        first = f"{legal}\nINTEGRATED-TITLE"
         if not institutional_cover_matches(first, locale):
             raise AssertionError(f"genuine localized cover rejected: {locale}")
         second_only = "PORTUGUESE LEGAL COVER TITLE"
