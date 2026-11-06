@@ -123,7 +123,7 @@ if missing:
 for file in ('1-introduction.tex', '2-theoretical-background.tex',
              '5-conclusion.tex'):
     source = (Path('chapters') / file).read_text(encoding='utf-8')
-    if '\\\\LaTeX' in source:
+    if '\\LaTeX' in source:
         raise SystemExit(f'Corpus failed: special LaTeX logo remains in {file}')
 if 'Sistemas de preparação de documentos como o LaTeX' not in flat:
     raise SystemExit('Corpus failed: ordinary LaTeX body typography was not rendered')
