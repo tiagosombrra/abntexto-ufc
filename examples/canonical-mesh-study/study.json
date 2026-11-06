@@ -1,0 +1,168 @@
+{
+  "schema_version": 1,
+  "id": "unit-square-structured-mesh-v1",
+  "status": "deterministic_didactic_baseline_not_novel_research",
+  "domain": {
+    "name": "unit_square",
+    "x_min": 0,
+    "x_max": 1,
+    "y_min": 0,
+    "y_max": 1
+  },
+  "cases": [
+    {
+      "id": "uniform_quads",
+      "family": "quadrilateral",
+      "nx": 8,
+      "ny": 8
+    },
+    {
+      "id": "anisotropic_quads",
+      "family": "quadrilateral",
+      "nx": 16,
+      "ny": 4
+    },
+    {
+      "id": "uniform_triangles",
+      "family": "triangle",
+      "nx": 8,
+      "ny": 8
+    }
+  ],
+  "reference_sources": [
+    {
+      "key": "bommes2009",
+      "type": "peer_reviewed",
+      "title": "Mixed-Integer Quadrangulation",
+      "authors": [
+        "David Bommes",
+        "Henrik Zimmer",
+        "Leif Kobbelt"
+      ],
+      "year": 2009,
+      "doi": "10.1145/1576246.1531383",
+      "url": "https://cgg.unibe.ch/publications/miq/",
+      "role": "background_only_not_algorithm_implemented"
+    },
+    {
+      "key": "shewchuk2002",
+      "type": "peer_reviewed",
+      "title": "Delaunay refinement algorithms for triangular mesh generation",
+      "authors": [
+        "Jonathan Richard Shewchuk"
+      ],
+      "year": 2002,
+      "doi": "10.1016/S0925-7721(01)00047-5",
+      "url": "https://www.sciencedirect.com/science/article/pii/S0925772101000475",
+      "role": "background_only_not_algorithm_implemented"
+    },
+    {
+      "key": "ufc-templates",
+      "type": "official_structure",
+      "title": "Templates — Sistema de Bibliotecas UFC",
+      "url": "https://biblioteca.ufc.br/pt/servicos-e-produtos/templates/",
+      "role": "document_structure_only_normative_revision_required"
+    },
+    {
+      "key": "ufc-normalization",
+      "type": "official_structure",
+      "title": "Normalização de trabalhos acadêmicos — Sistema de Bibliotecas UFC",
+      "url": "https://biblioteca.ufc.br/pt/servicos-e-produtos/normalizacao-de-trabalhos-academicos/",
+      "role": "document_structure_only_normative_revision_required"
+    }
+  ],
+  "locales": {
+    "pt": {
+      "heading": "Estudo de caso reprodutível: malhas estruturadas no quadrado unitário",
+      "motivation": "A geração de malhas é uma etapa da discretização geométrica empregada em simulações numéricas. Nesta demonstração, comparamos três discretizações estruturadas do mesmo domínio, sem atribuir superioridade a qualquer algoritmo de geração.",
+      "method": "O domínio é o quadrado unitário. Duas malhas utilizam células quadrangulares, com resoluções de 8 por 8 e 16 por 4; a terceira subdivide cada célula de uma grade 8 por 8 em dois triângulos retângulos. As contagens decorrem da conectividade construída, e não de medições externas.",
+      "interpretation": "A malha quadrangular anisotrópica possui a mesma quantidade de células que a quadrangular uniforme, mas outro número de vértices e arestas. O contraste geométrico é controlado pela razão entre os comprimentos dos lados das células; essa observação não constitui avaliação de erro numérico, desempenho ou qualidade de um método de malhamento.",
+      "limitations": "Os casos são grades analíticas, não resultados de um algoritmo de remalhamento e tampouco evidência de originalidade científica. Uma comparação científica exigiria geometrias adicionais, métricas de qualidade definidas, estatística experimental e código de execução documentado.",
+      "figure_title": "Três discretizações estruturadas do quadrado unitário",
+      "table_title": "Contagens topológicas calculadas para as malhas de demonstração",
+      "table_headings": [
+        "Configuração",
+        "Vértices",
+        "Arestas",
+        "Células",
+        "Razão"
+      ],
+      "case_names": [
+        "Quadrang. uniforme",
+        "Quadrang. anisotrópica",
+        "Triang. estruturada"
+      ],
+      "figure_source": "Elaboração própria, figuras geradas pelo script reprodutível.",
+      "table_source": "Cálculo determinístico a partir da conectividade."
+    },
+    "en": {
+      "heading": "Reproducible case study: structured meshes on the unit square",
+      "motivation": "Mesh generation is part of geometric discretization for numerical simulation. This demonstration compares three structured discretizations of one domain without claiming that any meshing algorithm is superior.",
+      "method": "The domain is the unit square. Two meshes use quadrilateral cells at resolutions 8 by 8 and 16 by 4; the third splits every cell of an 8 by 8 grid into two right triangles. All counts follow from constructed connectivity rather than external measurements.",
+      "interpretation": "The anisotropic quadrilateral mesh has the same number of cells as the uniform quadrilateral mesh, but different vertex and edge counts. Geometric contrast is controlled by the ratio of cell-side lengths; this is not an assessment of numerical error, runtime performance, or meshing-method quality.",
+      "limitations": "These are analytical grids, not outputs of a remeshing algorithm and not evidence of scientific novelty. A research-grade comparison would require additional geometries, defined quality metrics, experimental statistics, and documented executable code.",
+      "figure_title": "Three structured discretizations of the unit square",
+      "table_title": "Calculated topological counts for the demonstration meshes",
+      "table_headings": [
+        "Configuration",
+        "Vertices",
+        "Edges",
+        "Cells",
+        "Ratio"
+      ],
+      "case_names": [
+        "Uniform quads",
+        "Anisotropic quads",
+        "Structured triangles"
+      ],
+      "figure_source": "Original figures generated by the reproducible script.",
+      "table_source": "Deterministic computation from cell connectivity."
+    },
+    "es": {
+      "heading": "Estudio de caso reproducible: mallas estructuradas en el cuadrado unitario",
+      "motivation": "La generación de mallas forma parte de la discretización geométrica para la simulación numérica. Esta demostración compara tres discretizaciones estructuradas del mismo dominio sin afirmar la superioridad de ningún algoritmo.",
+      "method": "El dominio es el cuadrado unitario. Dos mallas utilizan celdas cuadrangulares de 8 por 8 y 16 por 4; la tercera divide cada celda de una cuadrícula de 8 por 8 en dos triángulos rectángulos. Los recuentos se derivan de la conectividad construida, no de mediciones externas.",
+      "interpretation": "La malla cuadrangular anisotrópica tiene tantas celdas como la uniforme, pero diferentes números de vértices y aristas. El contraste geométrico se controla mediante la relación entre las longitudes de los lados; esto no demuestra diferencias de error numérico, rendimiento ni calidad de métodos.",
+      "limitations": "Estas cuadrículas analíticas no proceden de un algoritmo de remallado y no prueban originalidad científica. Una comparación científica requeriría otras geometrías, métricas definidas, estadística experimental y código ejecutable documentado.",
+      "figure_title": "Tres discretizaciones estructuradas del cuadrado unitario",
+      "table_title": "Recuentos topológicos calculados para las mallas de demostración",
+      "table_headings": [
+        "Configuración",
+        "Vértices",
+        "Aristas",
+        "Celdas",
+        "Razón"
+      ],
+      "case_names": [
+        "Cuadr. uniforme",
+        "Cuadr. anisotrópica",
+        "Triáng. estructurada"
+      ],
+      "figure_source": "Elaboración propia, figuras generadas mediante el script reproducible.",
+      "table_source": "Cálculo determinista a partir de la conectividad."
+    },
+    "fr": {
+      "heading": "Étude de cas reproductible : maillages structurés du carré unité",
+      "motivation": "La génération de maillages intervient dans la discrétisation géométrique des simulations numériques. Cette démonstration compare trois discrétisations structurées d'un même domaine sans conclure à la supériorité d'un algorithme.",
+      "method": "Le domaine est le carré unité. Deux maillages utilisent des cellules quadrangulaires de 8 par 8 et 16 par 4 ; le troisième partage chaque cellule d'une grille 8 par 8 en deux triangles rectangles. Les décomptes proviennent de la connectivité construite, sans mesures externes.",
+      "interpretation": "Le maillage quadrangulaire anisotrope possède autant de cellules que la grille uniforme, mais des nombres de sommets et d'arêtes différents. Le contraste géométrique est déterminé par le rapport des longueurs des côtés ; cela ne mesure ni l'erreur numérique, ni la performance, ni la qualité d'une méthode.",
+      "limitations": "Ces grilles analytiques ne résultent pas d'un algorithme de remaillage et ne prouvent aucune nouveauté scientifique. Une comparaison de recherche nécessiterait d'autres géométries, des métriques définies, des statistiques expérimentales et un code exécutable documenté.",
+      "figure_title": "Trois discrétisations structurées du carré unité",
+      "table_title": "Décomptes topologiques calculés pour les maillages de démonstration",
+      "table_headings": [
+        "Configuration",
+        "Sommets",
+        "Arêtes",
+        "Cellules",
+        "Rapport"
+      ],
+      "case_names": [
+        "Quads uniformes",
+        "Quads anisotropes",
+        "Triangles structurés"
+      ],
+      "figure_source": "Élaboration personnelle, figures produites par le script reproductible.",
+      "table_source": "Calcul déterministe de la connectivité."
+    }
+  }
+}
