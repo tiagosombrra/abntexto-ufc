@@ -77,7 +77,7 @@ def orphan_folio_page(page: str) -> bool:
 def posttextual_optional_bracket_leak(text: str) -> bool:
     """Detect literal TeX optional [] serialized before glossary/index titles."""
     return bool(re.search(
-        r"(?im)^\\s*\\[\\s*\\]\\s*(?:GLOSS|GLOS|ÍNDICE|INDEX)", text
+        r"(?im)^\s*\[\s*\]\s*(?:GLOSS|GLOS|ÍNDICE|INDEX)", text
     ))
 
 
