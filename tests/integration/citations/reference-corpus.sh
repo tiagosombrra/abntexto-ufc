@@ -339,6 +339,34 @@ def validate_signature_geometry():
     return len(rows)
 
 
+def validate_anverso_folio():
+    """Verify first textual page number at upper-right, 2cm from A4 edge."""
+    page = bbox_pages[toc_end]
+    width = float(page.attrib['width'])
+    candidates = []
+    for word in (node for node in page.iter() if local(node.tag) == 'word'):
+        label = ''.join(word.itertext()).strip()
+        x_min = float(word.attrib['xMin'])
+        y_min = float(word.attrib['yMin'])
+        if label.isdigit() and x_min > width - 95 and y_min < 85:
+            candidates.append(word)
+    if len(candidates) != 1:
+        raise SystemExit(
+            f'Corpus failed: textual-page header folio count: {len(candidates)}'
+        )
+    folio = candidates[0]
+    # Glyph outlines differ from the baseline/anchor by a few points.
+    right_margin = width - float(folio.attrib['xMax'])
+    top_glyph = float(folio.attrib['yMin'])
+    target_pt = 2 * 72 / 2.54
+    if abs(right_margin - target_pt) > 2 or abs(top_glyph - target_pt) > 10:
+        raise SystemExit(
+            f'Corpus failed: textual folio off the 2cm upper-right anchor: '
+            f'right={right_margin:.2f}pt, top_glyph={top_glyph:.2f}pt'
+        )
+    return right_margin, top_glyph
+
+
 def toc_title_x(marker: str) -> float:
     matches = []
     for page_index in range(toc_start, toc_end):
@@ -364,6 +392,7 @@ def toc_title_x(marker: str) -> float:
 
 uniform_dotted_rows = validate_uniform_dotted_leaders()
 committee_members = validate_signature_geometry()
+folio_right_pt, folio_top_pt = validate_anverso_folio()
 
 numbered_reference_x = toc_title_x('INTRODUÇÃO')
 for marker in (
@@ -390,7 +419,8 @@ for marker in ('REFERÊNCIAS', 'GLOSSÁRIO'):
         )
 
 print(f'VISUAL-PDF-GEOMETRY-EVIDENCE status=PASS leader_rows={uniform_dotted_rows} '
-      f'committee_members={committee_members} name_institution_line_spacing=1.5')
+      f'committee_members={committee_members} name_institution_line_spacing=1.5 '
+      f'folio_right_margin_pt={folio_right_pt:.2f} folio_top_glyph_pt={folio_top_pt:.2f}')
 
 print(
     'TUTORIAL-CORPUS-EVIDENCE status=PASS '
