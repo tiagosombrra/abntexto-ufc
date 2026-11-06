@@ -91,7 +91,11 @@ def posttextual_optional_bracket_leak(text: str) -> bool:
 
 def folded_pdf_text(text: str) -> str:
     """Normalize actual PDF linewraps without accepting glued legal names."""
-    text = re.sub(r"(?<=\w)-[ \t]*\r?\n[ \t]*(?=\w)", "", text)
+    # Read the untouched Poppler output: premature line joining preserves a
+    # discretionary "-" and makes correct words impossible to recover.
+    text = re.sub(r"(?<=\w)[-\u2010\u00ad][ \t]*\r?\n[ \t]*(?=\w)", "", text)
+    # PDF text extractors may turn French ASCII apostrophes into curly glyphs.
+    text = text.translate(str.maketrans({"’": "'", "‘": "'", "ʼ": "'"}))
     return re.sub(r"\s+", " ", "".join(
         c for c in unicodedata.normalize("NFKD", text.casefold())
         if not unicodedata.combining(c)
@@ -181,6 +185,25 @@ def assert_scientific_content_mutants() -> None:
         complete = "\n".join([*paragraphs, *rows, *references])
         if scientific_content_failures(complete, locale, study):
             raise AssertionError(f"Valid scientific manuscript rejected: {locale}")
+        method = narrative["method"]
+        candidate = re.search(r"\b\w{9,}\b", method)
+        if candidate is None:
+            raise AssertionError(f"Scientific method has no substantial word: {locale}")
+        word = candidate.group(0)
+        split = max(2, len(word) // 2)
+        broken_method = method[:candidate.start()] + word[:split] + "-\n   " + (
+            word[split:] + method[candidate.end():]
+        )
+        hyphenated = complete.replace(method, broken_method, 1)
+        if scientific_content_failures(hyphenated, locale, study):
+            raise AssertionError(f"Valid discretionary hyphenation rejected: {locale}")
+        prematurely_glued = hyphenated.replace("-\n   ", "-", 1)
+        if not scientific_content_failures(prematurely_glued, locale, study):
+            raise AssertionError(f"Pre-normalized discretionary hyphen accepted: {locale}")
+        if locale == "fr":
+            typographic = complete.replace("'", "’")
+            if scientific_content_failures(typographic, locale, study):
+                raise AssertionError("Correct French typographic apostrophe rejected")
         corrupted = {
             "method": complete.replace(narrative["method"], "", 1),
             "interpretation": complete.replace(narrative["interpretation"], "", 1),
@@ -274,7 +297,7 @@ def inspect(profile: str, locale: str, tex: str, pdf: Path,
     # Verify full scholarly paragraphs, exact calculated table rows and
     # actual bibliography titles; cited surnames alone cannot pass.
     study = json.loads((ROOT / "examples/canonical-mesh-study/study.json").read_text())
-    missing_science = scientific_content_failures(aggregate, locale, study)
+    missing_science = scientific_content_failures("\n".join(raw_pages), locale, study)
     markers = (
         f"R4-METHOD-{locale.upper()}",
         f"R4-RESULTS-{locale.upper()}",
@@ -424,7 +447,8 @@ def inspect(profile: str, locale: str, tex: str, pdf: Path,
             "pt": "LISTA DE TABELAS", "en": "LIST OF TABLES",
             "es": "LISTA DE TABLAS", "fr": "LISTE DES TABLEAUX",
         }[locale]
-        list_pages = [page for page in pages if table_heading in page.upper()]
+        # Caption comparison needs raw line breaks for discretionary hyphens.
+        list_pages = [page for page in raw_pages if table_heading in page.upper()]
         if len(list_pages) != 1:
             findings.append("pdf.table_list.heading_invalid")
         else:
