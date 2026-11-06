@@ -97,7 +97,7 @@ jobs:
           run: |
             export DEBIAN_FRONTEND=noninteractive
             apt-get update -y
-            apt-get install -y --no-install-recommends poppler-utils
+            apt-get install -y --no-install-recommends poppler-utils mupdf-tools
             git config --global --add safe.directory "$PWD"
             python3 tests/integration/frontmatter/run-comprehensive-corpus.py --locale ${{ matrix.locale }}
       - name: Preserve sources, binaries, PDF/LOT evidence and failure logs

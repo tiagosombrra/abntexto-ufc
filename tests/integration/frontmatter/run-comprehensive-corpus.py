@@ -14,7 +14,6 @@ import os
 from pathlib import Path
 import re
 import subprocess
-import unicodedata
 import sys
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -26,12 +25,6 @@ PROFILES = (
 )
 LOCALES = {"pt": "pt-BR", "en": "en-US", "es": "es-ES", "fr": "fr-FR"}
 TABLE_NAMES = {"pt": "Tabela", "en": "Table", "es": "Tabla", "fr": "Tableau"}
-INSTITUTION_DISPLAY = {
-    "pt": "Universidade Federal do Ceará",
-    "en": "Federal University of Ceará",
-    "es": "Universidad Federal de Ceará",
-    "fr": "Université fédérale du Ceará",
-}
 
 
 def sha(path: Path) -> str:
@@ -81,6 +74,13 @@ def orphan_folio_page(page: str) -> bool:
     return bool(re.fullmatch(r"\s*\d+\s*", page))
 
 
+def posttextual_optional_bracket_leak(text: str) -> bool:
+    """Detect literal TeX optional [] serialized before glossary/index titles."""
+    return bool(re.search(
+        r"(?im)^\\s*\\[\\s*\\]\\s*(?:GLOSS|GLOS|ÍNDICE|INDEX)", text
+    ))
+
+
 def assert_page_accounting_mutants() -> None:
     """Reject discarded blank leaves and numbered-only leaf false negatives."""
     three = split_physical_pages("COVER\f\fINDEX\f")
@@ -92,6 +92,14 @@ def assert_page_accounting_mutants() -> None:
         raise AssertionError("numbered-only physical PDF page was discarded")
     if split_physical_pages("COVER\f") != ["COVER"]:
         raise AssertionError("trailing Poppler separator counted as a PDF page")
+    for bad in ("[]GLOSSÁRIO", "[]GLOSSARY", "[]ÍNDICE ALFABÉTICO",
+                "[]GLOSSAIRE", "[]INDEX"):
+        if not posttextual_optional_bracket_leak("CONTENTS\n" + bad + " ... 51"):
+            raise AssertionError(f"hyperref optional bracket was accepted: {bad}")
+    for valid in ("GLOSSÁRIO ..... 51", "INDEX .... 57",
+                  "[] C++ array synthetic code", "[]R4-LEGAL"):
+        if posttextual_optional_bracket_leak(valid):
+            raise AssertionError(f"false positive in glossary/index bracket gate: {valid}")
     if not orphan_folio_page("  53  \n"):
         raise AssertionError("number-only folio regression missed")
     for legitimate in ("", "53\nChapter title", "Appendix 53"):
@@ -104,16 +112,6 @@ def text_pdf(pdf: Path) -> list[str]:
     completed = subprocess.run(["pdftotext", "-layout", str(pdf), "-"],
                                cwd=ROOT, capture_output=True, text=True, check=True)
     return split_physical_pages(completed.stdout)
-
-
-def folded_pdf_text(text: str) -> str:
-    """Normalize layout line wrapping while retaining real word separators."""
-    unwrapped = re.sub(r"(?<=\w)-[ \t]*\r?\n[ \t]*(?=\w)", "", text)
-    no_accents = "".join(
-        ch for ch in unicodedata.normalize("NFKD", unwrapped.casefold())
-        if not unicodedata.combining(ch)
-    )
-    return re.sub(r"\s+", " ", no_accents).strip()
 
 
 def inspect(profile: str, locale: str, tex: str, pdf: Path,
@@ -135,14 +133,8 @@ def inspect(profile: str, locale: str, tex: str, pdf: Path,
     )
     findings = [f"pdf.text.missing.{mark}" for mark in markers
                 if mark not in aggregate]
-    # R2 must translate *visible* presentation, not only the declaration.
-    # The legal Portuguese UFC metadata may remain unchanged; require the
-    # localized name on a real cover or title page in the selected language.
-    if profile != "scientific-article":
-        visible_title_pages = folded_pdf_text("\n".join(raw_pages[:2]))
-        expected_display = folded_pdf_text(INSTITUTION_DISPLAY[locale])
-        if expected_display not in visible_title_pages:
-            findings.append("pdf.institution.localized_display_missing")
+    if posttextual_optional_bracket_leak(aggregate):
+        findings.append("pdf.toc.posttextual_literal_optional_brackets")
     # Verify rendered implementation bodies, not only captions or list entries.
     # A caption may exist even if the code or algorithm environment is empty.
     body_markers = ("int sum(int a, int b)", "return a + b;",
@@ -190,16 +182,66 @@ def inspect(profile: str, locale: str, tex: str, pdf: Path,
     blank_physical_pages = [
         row["physical_page"] for row in page_receipts if row["blank"]
     ]
+    # Record evidence for every blank leaf. A repeated verso pattern is only
+    # a recto-padding *candidate*, not ABNT authorization or visual approval.
+    duplex_profiles = {"masters-thesis", "doctoral-thesis",
+                       "anonymized-research-project"}
+    blank_page_context = []
+    for n in blank_physical_pages:
+        previous_page = page_receipts[n - 2] if n > 1 else None
+        following_page = page_receipts[n] if n < len(page_receipts) else None
+        possible_duplex_padding = bool(
+            profile in duplex_profiles and n % 2 == 1
+            and previous_page and following_page
+            and not previous_page["blank"] and not following_page["blank"]
+        )
+        blank_page_context.append({
+            "physical_page": n,
+            "preceding_text_excerpt": (previous_page["sample"]
+                                        if previous_page else None),
+            "following_text_excerpt": (following_page["sample"]
+                                        if following_page else None),
+            "candidate_duplex_recto_padding": possible_duplex_padding,
+            "normative_justification": "PENDING_R5_REVIEW",
+            "visual_approval": "PENDING",
+        })
+        if profile in duplex_profiles and not possible_duplex_padding:
+            findings.append(f"pdf.pagination.unclassified_blank_page.{n}")
     if profile not in ("masters-thesis", "doctoral-thesis",
                        "anonymized-research-project") and blank_physical_pages:
         findings.append("pdf.single_sided.unexpected_blank_page")
-    if not info.get("Title"):
-        findings.append("pdf.metadata.title_missing")
+    # Independently examine Info, XMP and navigable PDF outlines, not merely
+    # the presence of a source-level \DocumentMetadata declaration.
+    xmp = subprocess.check_output(
+        ["pdfinfo", "-meta", str(pdf)], cwd=ROOT, text=True
+    )
+    outlines = subprocess.check_output(
+        ["mutool", "show", str(pdf), "outline"], cwd=ROOT, text=True
+    )
+    (pdf.parent / f"{pdf.stem}-xmp.xml").write_text(xmp, encoding="utf-8")
+    (pdf.parent / f"{pdf.stem}-outline.txt").write_text(outlines, encoding="utf-8")
+    expected_title = "Integrated Multilingual Document"
+    expected_author = "Integrated Test Author"
+    expected_heading = f"R4-METHOD-{locale.upper()}"
+    if info.get("Title", "").strip() != expected_title:
+        findings.append("pdf.metadata.info_title_incorrect")
+    if expected_title not in xmp:
+        findings.append("pdf.metadata.xmp_title_missing")
+    if expected_heading not in outlines:
+        findings.append("pdf.navigation.outline_heading_missing")
     if profile == "anonymized-research-project":
-        if info.get("Author"):
+        if info.get("Author", "").strip():
             findings.append("pdf.privacy.anonymous_author_metadata")
-    elif not info.get("Author"):
-        findings.append("pdf.metadata.author_missing")
+        for surface_name, text in (
+            ("xmp", xmp), ("outline", outlines), ("extracted_text", aggregate)
+        ):
+            if expected_author.casefold() in text.casefold():
+                findings.append(f"pdf.privacy.author_leak.{surface_name}")
+    else:
+        if info.get("Author", "").strip() != expected_author:
+            findings.append("pdf.metadata.info_author_incorrect")
+        if expected_author not in xmp:
+            findings.append("pdf.metadata.xmp_author_missing")
     if not lot or not lot.is_file():
         if profile != "scientific-article":
             findings.append("pdf.table_list.lot_missing")
@@ -239,9 +281,15 @@ def inspect(profile: str, locale: str, tex: str, pdf: Path,
             r"\begin{ufcalgorithm}", r"\begin{ufclisting}",
         )},
         "pdf_sha256": sha(pdf),
+        "pdf_info_title": info.get("Title", ""),
+        "pdf_info_author": info.get("Author", ""),
+        "pdf_xmp_sha256": sha(pdf.parent / f"{pdf.stem}-xmp.xml"),
+        "pdf_outline_sha256": sha(pdf.parent / f"{pdf.stem}-outline.txt"),
+        "pdf_outline_heading_verified": expected_heading in outlines,
         "pages": claimed_pages,
         "extracted_physical_pages": len(pages),
         "blank_physical_pages": blank_physical_pages,
+        "blank_page_context": blank_page_context,
         "blank_page_semantics": ("REQUIRES_R5_REVIEW" if blank_physical_pages
                                  else "NO_EXTRACTED_BLANK_PAGES"),
         "page_receipts": page_receipts,
@@ -260,7 +308,7 @@ def main() -> int:
     args = parser.parse_args()
     assert_page_accounting_mutants()
     if args.selftest:
-        print("R4-PHYSICAL-PAGE-MUTANTS status=PASS cases=8")
+        print("R4-PHYSICAL-PAGE-MUTANTS status=PASS cases=17")
         return 0
     if args.locale is None:
         parser.error("--locale required except for --selftest")

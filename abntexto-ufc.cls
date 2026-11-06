@@ -66,6 +66,7 @@
 \bool_new:N \g_ufc_pdf_document_started_bool
 \bool_new:N \g_ufc_pdf_first_page_shipped_bool
 \tl_new:N \l_ufc_pdf_previous_type_tl
+
 \bool_new:N \g_ufc_institution_explicit_bool
 \bool_new:N \g_ufc_submission_entity_explicit_bool
 
@@ -960,7 +961,10 @@
 % Reserve the shared TOC label width without creating an empty eqbox label,
 % which previously produced a visible punctuation artifact.
 \DeclareRobustCommand{\ufcTocPosttextualTitle}[1]{%
-  \makebox[\toclabelwidth][l]{}#1%
+  % Uppercase only while typesetting the TOC. Never expand \MakeUppercase
+  % inside a moving \addcontentsline argument: hyperref can serialize its
+  % internal optional [] argument as literal "[ ]" in the PDF text.
+  \makebox[\toclabelwidth][l]{}\MakeUppercase{#1}%
 }
 \appto\pdfstringdefPreHook{%
   \def\ufcTocPosttextualTitle#1{#1}%
@@ -1773,13 +1777,11 @@
   {
     \bool_if:NT \g_ufc_document_language_explicit_bool
       {
-        % Babel re-applies its language-specific table name whenever a
-        % multilingual summary switches languages. The inherited Spanish
-        % caption name is "Cuadro" and French is "Table"; neither matches
-        % the separate UFC "Tabla"/"Tableau" table-list naming policy.
-        % Register caption names on each language switch, so \legend{table},
-        % longabnttblr and native longtable retain one semantic label while
-        % \quadroname continues to designate genuine text tables.
+        % Babel re-applies its language-specific caption names after summary
+        % language switches. Its Spanish/French defaults ("Cuadro"/"Table")
+        % conflict with UFC's distinct table names ("Tabla"/"Tableau").
+        % Register the table label on each switch; retain \quadroname as
+        % the independent label for textual frames in the illustration list.
         \cs_if_exist:NT \captionsspanish
           { \addto\captionsspanish{\def\tablename{Tabla}} }
         \cs_if_exist:NT \captionsfrench
@@ -3328,12 +3330,12 @@
   }
 
 \cs_new_protected:Npn \ufc_posttextual_heading:n #1
-  { \ufc_posttextual_heading:nn { \MakeUppercase{#1} } {#1} }
+  { \ufc_posttextual_heading:nn { \ufcTocPosttextualTitle{#1} } {#1} }
 
 \cs_new_protected:Npn \ufc_aligned_posttextual_heading:n #1
   {
     \ufc_posttextual_heading:nn
-      { \ufcTocPosttextualTitle{\MakeUppercase{#1}} }
+      { \ufcTocPosttextualTitle{#1} }
       {#1}
   }
 
