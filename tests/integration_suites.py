@@ -94,7 +94,7 @@ PATH_RULES: tuple[tuple[str, tuple[str, ...]], ...] = (
     ("profiles", ("tests/integration/profile-matrix", "tests/integration/tagged-pdf-baseline", "tests/documents/tagged-pdf-baseline", "tests/integration/tagged-pdf-graphics", "tests/documents/tagged-pdf-graphics", "tests/integration/tagged-pdf-table", "tests/documents/tagged-pdf-table", "tests/integration/tagged-pdf-mathml", "tests/documents/tagged-pdf-mathml", "tests/integration/build-path", "tests/integration/multivolume", "tests/integration/catalog-card", "tests/smoke/base-profile.tex")),
     ("reference-document", ("template/main.tex", "template/chapters/", "tests/integration/reference-document", "tests/integration/reference-corpus", "tests/integration/pdf-validator")),
     ("distribution", ("tools/build-public-bundles.py", "tools/build-distribution-bundles.py", "tests/integration/distribution-bundles.sh")),
-    ("web-lite", ("validator/", "tests/checks/validator_source.py", "tests/integration/web-lite-e2e.py", "tools/ci/run-web-lite-e2e.sh", "tools/ci/build-pages-site.sh")),
+    ("web-lite", ("validator/", "tests/checks/validator/validator_source.py", "tests/integration/web-lite-e2e.py", "tools/ci/run-web-lite-e2e.sh", "tools/ci/build-pages-site.sh")),
 )
 
 
@@ -113,10 +113,14 @@ def normalized_movable_test_path(path: str) -> str:
 
 
 def matching_suites(path: str) -> set[str]:
-    path = normalized_movable_test_path(path)
+    # Match both the actual tracked path and the historical normalized alias.
+    # This avoids fake/flat paths in the registry while retaining legacy tests.
+    normalized = normalized_movable_test_path(path)
     matched: set[str] = set()
     for suite, patterns in PATH_RULES:
-        if any(path == pattern or path.startswith(pattern) for pattern in patterns):
+        if any(path == pattern or path.startswith(pattern)
+               or normalized == pattern or normalized.startswith(pattern)
+               for pattern in patterns):
             matched.add(suite)
     return matched
 
@@ -126,7 +130,8 @@ def infer_suites(paths: list[str]) -> tuple[str, ...]:
     if not technical:
         return ()
 
-    technical = [normalized_movable_test_path(path) for path in technical]
+    # Preserve repository-native paths for static reachability validation.
+    # Only the matcher below may derive a legacy flattened comparison key.
     orchestration = [path for path in technical if path in ORCHESTRATION_EXACT]
     domain_technical = [path for path in technical if path not in ORCHESTRATION_EXACT]
     if orchestration and not domain_technical:
