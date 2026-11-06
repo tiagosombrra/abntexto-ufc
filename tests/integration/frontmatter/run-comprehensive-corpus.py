@@ -155,6 +155,22 @@ def inspect(profile: str, locale: str, tex: str, pdf: Path,
     cover_name_verified = (profile == "scientific-article" or
                            bool(raw_pages and institutional_cover_matches(raw_pages[0], locale)))
     aggregate = "\n".join(pages)
+    # Check actual scholarly text and bibliography, not merely \input presence.
+    study = json.loads((ROOT / "examples/canonical-mesh-study/study.json").read_text())
+    narrative = study["locales"][locale]
+    folded = folded_pdf_text(aggregate)
+    substantive = (
+        narrative["heading"],
+        narrative["motivation"][:50],
+        narrative["figure_title"],
+        narrative["table_title"],
+        "Bommes", "Shewchuk",
+    )
+    missing_science = [term for term in substantive if
+                       folded_pdf_text(term) not in folded]
+    for name in narrative["case_names"]:
+        if folded_pdf_text(name) not in folded:
+            missing_science.append(f"case_name:{name}")
     markers = (
         f"R4-METHOD-{locale.upper()}",
         f"R4-RESULTS-{locale.upper()}",
@@ -168,6 +184,8 @@ def inspect(profile: str, locale: str, tex: str, pdf: Path,
     )
     findings = [f"pdf.text.missing.{mark}" for mark in markers
                 if mark not in aggregate]
+    findings.extend(f"pdf.science.content_missing.{term[:40]}"
+                    for term in missing_science)
     if not cover_name_verified:
         findings.append("pdf.cover.localized_institution_name_missing")
     if posttextual_optional_bracket_leak(aggregate):
@@ -318,6 +336,9 @@ def inspect(profile: str, locale: str, tex: str, pdf: Path,
             r"\begin{ufcalgorithm}", r"\begin{ufclisting}",
         )},
         "localized_cover_name_verified": cover_name_verified,
+        "scientific_study_id": "unit-square-structured-mesh-v1",
+        "scientific_content_check": ("PASS" if not missing_science else "FAIL"),
+        "scientific_content_missing": missing_science,
         "pdf_sha256": sha(pdf),
         "pdf_info_title": info.get("Title", ""),
         "pdf_info_author": info.get("Author", ""),
@@ -383,6 +404,14 @@ def main() -> int:
             for path, expected_hash in entry["support_sha256"].items():
                 if sha(ROOT / path) != expected_hash:
                     raise ValueError("R4 supporting text hash mismatch")
+            expected_science = (
+                ("examples/canonical-mesh-study/study.json", "canonical_study_sha256"),
+                ("examples/canonical-mesh-study/profile-contexts.json", "profile_context_sha256"),
+                ("artifacts/canonical-mesh-study/manifest.json", "generated_asset_manifest_sha256"),
+            )
+            for path, key in expected_science:
+                if sha(ROOT / path) != entry[key]:
+                    raise ValueError(f"R4 scientific source mismatch: {path} ({key})")
             print(f"R4-COMPREHENSIVE-PDF locale={locale} profile={profile}",
                   flush=True)
             command = [
