@@ -14,6 +14,7 @@ import os
 from pathlib import Path
 import re
 import subprocess
+import unicodedata
 import sys
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -25,6 +26,12 @@ PROFILES = (
 )
 LOCALES = {"pt": "pt-BR", "en": "en-US", "es": "es-ES", "fr": "fr-FR"}
 TABLE_NAMES = {"pt": "Tabela", "en": "Table", "es": "Tabla", "fr": "Tableau"}
+INSTITUTION_DISPLAY = {
+    "pt": "Universidade Federal do Ceará",
+    "en": "Federal University of Ceará",
+    "es": "Universidad Federal de Ceará",
+    "fr": "Université fédérale du Ceará",
+}
 
 
 def sha(path: Path) -> str:
@@ -81,6 +88,20 @@ def posttextual_optional_bracket_leak(text: str) -> bool:
     ))
 
 
+def folded_pdf_text(text: str) -> str:
+    """Normalize actual PDF linewraps without accepting glued legal names."""
+    text = re.sub(r"(?<=\w)-[ \t]*\r?\n[ \t]*(?=\w)", "", text)
+    return re.sub(r"\s+", " ", "".join(
+        c for c in unicodedata.normalize("NFKD", text.casefold())
+        if not unicodedata.combining(c)
+    )).strip()
+
+
+def institutional_cover_matches(first_page: str, locale: str) -> bool:
+    """Require the institution name on the first physical cover, never page 2."""
+    return folded_pdf_text(INSTITUTION_DISPLAY[locale]) in folded_pdf_text(first_page)
+
+
 def assert_page_accounting_mutants() -> None:
     """Reject discarded blank leaves and numbered-only leaf false negatives."""
     three = split_physical_pages("COVER\f\fINDEX\f")
@@ -100,6 +121,16 @@ def assert_page_accounting_mutants() -> None:
                   "[] C++ array synthetic code", "[]R4-LEGAL"):
         if posttextual_optional_bracket_leak(valid):
             raise AssertionError(f"false positive in glossary/index bracket gate: {valid}")
+    for locale, legal in INSTITUTION_DISPLAY.items():
+        first = f"{legal}\\nINTEGRATED-TITLE"
+        if not institutional_cover_matches(first, locale):
+            raise AssertionError(f"genuine localized cover rejected: {locale}")
+        second_only = "PORTUGUESE LEGAL COVER TITLE"
+        if institutional_cover_matches(second_only, locale):
+            raise AssertionError(f"translated name absent from cover accepted: {locale}")
+        wrong = INSTITUTION_DISPLAY["pt"] if locale != "pt" else INSTITUTION_DISPLAY["en"]
+        if locale != "pt" and institutional_cover_matches(wrong, locale):
+            raise AssertionError(f"Portuguese legal cover accepted as {locale} title")
     if not orphan_folio_page("  53  \n"):
         raise AssertionError("number-only folio regression missed")
     for legitimate in ("", "53\nChapter title", "Appendix 53"):
@@ -119,6 +150,10 @@ def inspect(profile: str, locale: str, tex: str, pdf: Path,
     """Check real content separately from declared source feature flags."""
     raw_pages = text_pdf(pdf)
     pages = [re.sub(r"-(?=\s+\w)\s+", "-", page) for page in raw_pages]
+    # A two-page search is a false positive: a translated title-page nature
+    # paragraph must not mask the original Portuguese name on the cover.
+    cover_name_verified = (profile == "scientific-article" or
+                           bool(raw_pages and institutional_cover_matches(raw_pages[0], locale)))
     aggregate = "\n".join(pages)
     markers = (
         f"R4-METHOD-{locale.upper()}",
@@ -133,6 +168,8 @@ def inspect(profile: str, locale: str, tex: str, pdf: Path,
     )
     findings = [f"pdf.text.missing.{mark}" for mark in markers
                 if mark not in aggregate]
+    if not cover_name_verified:
+        findings.append("pdf.cover.localized_institution_name_missing")
     if posttextual_optional_bracket_leak(aggregate):
         findings.append("pdf.toc.posttextual_literal_optional_brackets")
     # Verify rendered implementation bodies, not only captions or list entries.
@@ -280,6 +317,7 @@ def inspect(profile: str, locale: str, tex: str, pdf: Path,
             r"\begin{longabnttblr}", r"\begin{longtable}",
             r"\begin{ufcalgorithm}", r"\begin{ufclisting}",
         )},
+        "localized_cover_name_verified": cover_name_verified,
         "pdf_sha256": sha(pdf),
         "pdf_info_title": info.get("Title", ""),
         "pdf_info_author": info.get("Author", ""),
