@@ -10,6 +10,7 @@ import argparse
 from contextlib import nullcontext
 import hashlib
 import json
+import math
 import os
 from pathlib import Path
 import re
@@ -97,6 +98,121 @@ def folded_pdf_text(text: str) -> str:
     )).strip()
 
 
+
+def scientific_content_failures(extracted: str, locale: str, study: dict) -> list[str]:
+    """Require fully rendered methodology, measured table rows and bibliography."""
+    narrative = study["locales"][locale]
+    normalized = folded_pdf_text(extracted)
+    failures = []
+    for key in ("heading", "motivation", "method", "interpretation",
+                "limitations", "figure_title", "table_title"):
+        if folded_pdf_text(narrative[key]) not in normalized:
+            failures.append(f"pdf.science.prose_missing.{key}")
+
+    for case, name in zip(study["cases"], narrative["case_names"]):
+        nx, ny = case["nx"], case["ny"]
+        triangles = case["family"] == "triangle"
+        vertices = (nx + 1) * (ny + 1)
+        edges = nx * (ny + 1) + ny * (nx + 1) + (nx * ny if triangles else 0)
+        cells = nx * ny * (2 if triangles else 1)
+        dx, dy = 1 / nx, 1 / ny
+        ratio = (math.hypot(dx, dy) / min(dx, dy) if triangles
+                 else max(dx, dy) / min(dx, dy))
+        expected_row = (
+            rf"(?<!\w){re.escape(folded_pdf_text(name))}\s+"
+            rf"{vertices}\s+{edges}\s+{cells}\s+{ratio:.3f}(?!\d)"
+        )
+        if not re.search(expected_row, normalized):
+            failures.append(f"pdf.science.numeric_row_missing.{case['id']}")
+
+    # Citation surnames alone do not prove that Biber rendered the entries.
+    for reference in study["reference_sources"]:
+        if reference["key"] in ("bommes2009", "shewchuk2002"):
+            if folded_pdf_text(reference["title"]) not in normalized:
+                failures.append(f"pdf.science.bibliography_entry_missing.{reference['key']}")
+    return failures
+
+
+def table_list_entry_failures(page: str, locale: str,
+                              expected_captions: tuple[str, ...]) -> list[str]:
+    """Check exact numbering and caption-to-entry association after line wraps."""
+    pattern = rf"(?im)^\s*{re.escape(TABLE_NAMES[locale])}\s+(\d+)\b"
+    entries = list(re.finditer(pattern, page))
+    numbers = [match.group(1) for match in entries]
+    expected_numbers = [str(i) for i in range(1, len(expected_captions) + 1)]
+    failures = []
+    if numbers != expected_numbers:
+        failures.append(f"pdf.table_list.prefix_or_sequence={numbers}")
+        return failures
+    for i, (entry, caption) in enumerate(zip(entries, expected_captions)):
+        next_start = entries[i + 1].start() if i + 1 < len(entries) else len(page)
+        rendered_entry = page[entry.end():next_start]
+        if folded_pdf_text(caption) not in folded_pdf_text(rendered_entry):
+            failures.append(f"pdf.table_list.caption_entry_invalid.{caption}")
+    return failures
+
+
+def assert_scientific_content_mutants() -> None:
+    """Prove that a plausible but incomplete PDF cannot pass the science gate."""
+    study = json.loads((ROOT / "examples/canonical-mesh-study/study.json").read_text(
+        encoding="utf-8"
+    ))
+    for locale in LOCALES:
+        narrative = study["locales"][locale]
+        paragraphs = [narrative[key] for key in (
+            "heading", "motivation", "method", "interpretation",
+            "limitations", "figure_title", "table_title"
+        )]
+        rows = []
+        for case, name in zip(study["cases"], narrative["case_names"]):
+            nx, ny = case["nx"], case["ny"]
+            triangle = case["family"] == "triangle"
+            vertices = (nx + 1) * (ny + 1)
+            edges = nx * (ny + 1) + ny * (nx + 1) + (nx * ny if triangle else 0)
+            cells = nx * ny * (2 if triangle else 1)
+            dx, dy = 1 / nx, 1 / ny
+            ratio = (math.hypot(dx, dy) / min(dx, dy) if triangle
+                     else max(dx, dy) / min(dx, dy))
+            rows.append(f"{name}  {vertices}  {edges}  {cells}  {ratio:.3f}")
+        references = [
+            source["title"] for source in study["reference_sources"]
+            if source["key"] in ("bommes2009", "shewchuk2002")
+        ]
+        complete = "\n".join([*paragraphs, *rows, *references])
+        if scientific_content_failures(complete, locale, study):
+            raise AssertionError(f"Valid scientific manuscript rejected: {locale}")
+        corrupted = {
+            "method": complete.replace(narrative["method"], "", 1),
+            "interpretation": complete.replace(narrative["interpretation"], "", 1),
+            "measured_row": complete.replace(rows[1], "", 1),
+            "wrong_cell_count": complete.replace(rows[0], rows[0].replace(" 64 ", " 65 "), 1),
+            "bibliography": complete.replace(references[0], "", 1),
+        }
+        for label, mutant in corrupted.items():
+            if not scientific_content_failures(mutant, locale, study):
+                raise AssertionError(f"Scientific {label} mutant passed: {locale}")
+
+        captions = ("SYNTHETIC-ONE", narrative["table_title"],
+                    "SYNTHETIC-THREE", "SYNTHETIC-FOUR", "SYNTHETIC-FIVE")
+        listing = "\n".join(
+            f"{TABLE_NAMES[locale]} {i} {caption} ........ {i + 7}"
+            for i, caption in enumerate(captions, 1)
+        )
+        if table_list_entry_failures(listing, locale, captions):
+            raise AssertionError(f"Valid table list rejected: {locale}")
+        long_caption = captions[1]
+        word_break = long_caption.find(" ", max(2, len(long_caption) // 3))
+        if word_break < 0:
+            raise AssertionError(f"Unbreakable scientific caption: {locale}")
+        wrapped = listing.replace(long_caption,
+                                  long_caption[:word_break] + "\n   "
+                                  + long_caption[word_break + 1:], 1)
+        if table_list_entry_failures(wrapped, locale, captions):
+            raise AssertionError(f"Wrapped table list rejected: {locale}")
+        wrong = listing.replace(long_caption, "INCORRECT-CAPTION", 1)
+        if not table_list_entry_failures(wrong, locale, captions):
+            raise AssertionError(f"Incorrect caption accepted: {locale}")
+
 def institutional_cover_matches(first_page: str, locale: str) -> bool:
     """Require the institution name on the first physical cover, never page 2."""
     return folded_pdf_text(INSTITUTION_DISPLAY[locale]) in folded_pdf_text(first_page)
@@ -155,22 +271,10 @@ def inspect(profile: str, locale: str, tex: str, pdf: Path,
     cover_name_verified = (profile == "scientific-article" or
                            bool(raw_pages and institutional_cover_matches(raw_pages[0], locale)))
     aggregate = "\n".join(pages)
-    # Check actual scholarly text and bibliography, not merely \input presence.
+    # Verify full scholarly paragraphs, exact calculated table rows and
+    # actual bibliography titles; cited surnames alone cannot pass.
     study = json.loads((ROOT / "examples/canonical-mesh-study/study.json").read_text())
-    narrative = study["locales"][locale]
-    folded = folded_pdf_text(aggregate)
-    substantive = (
-        narrative["heading"],
-        narrative["motivation"][:50],
-        narrative["figure_title"],
-        narrative["table_title"],
-        "Bommes", "Shewchuk",
-    )
-    missing_science = [term for term in substantive if
-                       folded_pdf_text(term) not in folded]
-    for name in narrative["case_names"]:
-        if folded_pdf_text(name) not in folded:
-            missing_science.append(f"case_name:{name}")
+    missing_science = scientific_content_failures(aggregate, locale, study)
     markers = (
         f"R4-METHOD-{locale.upper()}",
         f"R4-RESULTS-{locale.upper()}",
@@ -184,8 +288,7 @@ def inspect(profile: str, locale: str, tex: str, pdf: Path,
     )
     findings = [f"pdf.text.missing.{mark}" for mark in markers
                 if mark not in aggregate]
-    findings.extend(f"pdf.science.content_missing.{term[:40]}"
-                    for term in missing_science)
+    findings.extend(missing_science)
     if not cover_name_verified:
         findings.append("pdf.cover.localized_institution_name_missing")
     if posttextual_optional_bracket_leak(aggregate):
@@ -325,15 +428,9 @@ def inspect(profile: str, locale: str, tex: str, pdf: Path,
         if len(list_pages) != 1:
             findings.append("pdf.table_list.heading_invalid")
         else:
-            names = re.findall(
-                rf"^\s*{re.escape(TABLE_NAMES[locale])}\s+(\d+)\b",
-                list_pages[0], flags=re.M | re.I,
-            )
-            if names != ["1", "2", "3", "4", "5"]:
-                findings.append(f"pdf.table_list.prefix_or_sequence={names}")
-            for marker in expected_entries:
-                if list_pages[0].count(marker) != 1:
-                    findings.append(f"pdf.table_list.caption_entry_invalid.{marker}")
+            findings.extend(table_list_entry_failures(
+                list_pages[0], locale, expected_entries
+            ))
     return {
         "profile": profile, "locale": locale,
         "source_features": {feature: feature in tex for feature in (
@@ -374,8 +471,10 @@ def main() -> int:
     parser.add_argument("--selftest", action="store_true")
     args = parser.parse_args()
     assert_page_accounting_mutants()
+    assert_scientific_content_mutants()
     if args.selftest:
         print("R4-PHYSICAL-PAGE-MUTANTS status=PASS cases=17")
+        print("R4-SCIENCE-AND-LOT-MUTANTS status=PASS locales=4 science_mutants=20 lot_mutants=4")
         return 0
     if args.locale is None:
         parser.error("--locale required except for --selftest")
