@@ -13,6 +13,8 @@ import hashlib
 import json
 from pathlib import Path
 import runpy
+import subprocess
+import sys
 
 ROOT = Path(__file__).resolve().parents[3]
 # Repository-relative inputs avoid embedding runner-specific paths in TeX.
@@ -72,6 +74,11 @@ INSTITUTION_DISPLAY = {
     "fr": "Université fédérale du Ceará",
 }
 CODE_LANG = "C++"
+STUDY_DIR = ROOT / "examples" / "canonical-mesh-study"
+STUDY_FILE = STUDY_DIR / "study.json"
+CONTEXT_FILE = STUDY_DIR / "profile-contexts.json"
+FIGURE_OUTPUT = ROOT / "artifacts" / "canonical-mesh-study"
+PROFILE_CONTEXTS = json.loads(CONTEXT_FILE.read_text(encoding="utf-8"))["profile_context"]
 SOURCE_FEATURES = (
     r"\subsection{", r"\subsubsection{", r"\paragraph{",
     r"\begin{equation}", r"\begin{align}", r"\footnote{",
@@ -90,6 +97,9 @@ def sha(path: Path) -> str:
 def extra_body(profile: str, locale: str) -> str:
     """Add genuine authored content and documented optional public objects."""
     first, second = PROSE[locale]
+    specific = PROFILE_CONTEXTS[profile][locale]
+    if len(specific) < 120:
+        raise ValueError(f"Missing substantive profile-specific source: {profile}/{locale}")
     rows = [
         f"R4LONGROW{i:03d} & {i} " + "\\\\"
         for i in range(1, 126)
@@ -100,6 +110,11 @@ def extra_body(profile: str, locale: str) -> str:
     ]
     lines = [
         rf"\section{{R4-METHOD-{locale.upper()}}}",
+        first,
+        # One source-bound scientific method/figure/table section across types,
+        # but a distinct genre-specific discussion for each academic profile.
+        rf"\input{{artifacts/canonical-mesh-study/body-{locale}.tex}}",
+        specific,
         first,
         rf"\subsection{{R4-SUBSECTION-{locale.upper()}}}",
         second + r"\footnote{R4-FOOTNOTE synthetic and nonpersonal evidence.}",
@@ -217,7 +232,16 @@ def generate(profile: str, locale: str, folder: Path) -> dict:
     source = source.replace(
         "\\documentclass{abntexto-ufc}\n",
         "\\documentclass{abntexto-ufc}\n\\usepackage{amsmath}\n"
-        "\\usepackage{longtable}\n", 1,
+        "\\usepackage{longtable}\n\\usepackage{graphicx}\n", 1,
+    )
+    canonical_bib = r"\ufcAddBibliographyResource{tests/fixtures/references.bib}"
+    if source.count(canonical_bib) != 1:
+        raise ValueError("Missing unique bibliography resource anchor")
+    source = source.replace(
+        canonical_bib,
+        canonical_bib + "\n"
+        + r"\ufcAddBibliographyResource{examples/canonical-mesh-study/references.bib}",
+        1,
     )
     if profile != "scientific-article":
         token = r"\ufcPrintTableOfContents"
@@ -231,6 +255,13 @@ def generate(profile: str, locale: str, folder: Path) -> dict:
     if source.count(token) != 1:
         raise ValueError("missing bibliography insertion anchor")
     source = source.replace(token, extra_body(profile, locale) + token, 1)
+    for required in (
+        rf"\input{{artifacts/canonical-mesh-study/body-{locale}.tex}}",
+        r"\ufcAddBibliographyResource{examples/canonical-mesh-study/references.bib}",
+        PROFILE_CONTEXTS[profile][locale],
+    ):
+        if required not in source:
+            raise ValueError(f"Missing verified scientific case: {profile}/{locale}")
     missing = [feature for feature in SOURCE_FEATURES if feature not in source]
     if missing:
         raise ValueError(f"incomplete R4 manuscript {profile}/{locale}: {missing}")
@@ -275,6 +306,11 @@ def generate(profile: str, locale: str, folder: Path) -> dict:
         "name": fname, "profile": profile, "locale": locale,
         "expected_institution_display": INSTITUTION_DISPLAY[locale],
         "source": str(target), "source_sha256": sha(target),
+        "canonical_study_id": "unit-square-structured-mesh-v1",
+        "canonical_study_sha256": sha(STUDY_FILE),
+        "profile_context_sha256": sha(CONTEXT_FILE),
+        "generated_asset_manifest_sha256": sha(FIGURE_OUTPUT / "manifest.json"),
+        "scientific_content_state": "verified_didactic_geometry_not_novel_research",
         "support_sources": sources[1:],
         "support_sha256": {str(p): sha(Path(p)) for p in sources[1:]},
         "supplementary_variants": variants,
@@ -306,6 +342,13 @@ def main() -> None:
     parser.add_argument("--locale", choices=LOCALES)
     parser.add_argument("--output", type=Path, default=ARTIFACTS)
     args = parser.parse_args()
+    # Build original vector figures, CSV and multilingual excerpts exactly
+    # once before authoring all seven profiles; each R4 job verifies hashes.
+    generator = ROOT / "tools" / "examples" / "generate_mesh_study.py"
+    subprocess.run([sys.executable, str(generator), "--output", str(FIGURE_OUTPUT)],
+                   cwd=ROOT, check=True)
+    subprocess.run([sys.executable, str(generator), "--check",
+                    "--output", str(FIGURE_OUTPUT)], cwd=ROOT, check=True)
     locales = (args.locale,) if args.locale else LOCALES
     tally = 0
     for locale in locales:
