@@ -93,6 +93,42 @@ jobs:
               assert not item['glossary_enabled'] and item['code_algorithm_lists_printed']
           print('R4-COMPREHENSIVE-PREFLIGHT status=PASS main_sources=28 variants=4 pdf_acceptance=NO')
           PY
+  focused-draft-pdf:
+    name: R4 draft single-document mesh smoke (PT TCC)
+    runs-on: ubuntu-24.04
+    needs: source-preflight
+    timeout-minutes: 25
+    # One genuine PDF catches broken figure paths, bibliography and math
+    # before reviewers request the complete 32-PDF source-bound build.
+    if: github.event_name == 'pull_request' && github.event.pull_request.draft == true
+    steps:
+      - name: Checkout immutable candidate
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
+      - name: Compile and inspect exactly one real Portuguese TCC PDF
+        uses: xu-cheng/texlive-action@22c04326a5d855880f9d39bb955138bf11c6df80 # v3
+        env:
+          SOURCE_COMMIT_SHA: ${{ github.event.pull_request.head.sha }}
+        with:
+          texlive_version: 2026
+          os: debian
+          run: |
+            export DEBIAN_FRONTEND=noninteractive
+            apt-get update -y
+            apt-get install -y --no-install-recommends poppler-utils mupdf-tools
+            git config --global --add safe.directory "$PWD"
+            python3 tests/integration/frontmatter/run-comprehensive-corpus.py \
+              --locale pt --profile undergraduate-capstone
+      - name: Preserve focused PDF and its failure evidence
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: r4-focused-draft-pt-${{ github.run_id }}
+          path: artifacts/comprehensive-7x4/pt/**
+          retention-days: 14
+          if-no-files-found: warn
   real-pdfs:
     name: R4 full documents / ${{ matrix.locale }} (7 baseline + 1 variant)
     runs-on: ubuntu-24.04
