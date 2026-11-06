@@ -311,3 +311,20 @@ be safely retracted. The dedicated workflow adds four real positive transition
 PDFs and four intentionally rejected late-transition TeX sources, all retained
 with original negative logs. Reconfiguration of unrelated metadata after a
 shipped page remains permitted but cannot retroactively rewrite PDF Info/XMP.
+
+## R3 mixed-table List-of-Tables diagnostic (release blocker #557)
+
+The dedicated workflow `.github/workflows/r3-table-list-locale.yml` owns the
+source-bound PT/EN/ES/FR PDF-and-`.lot` checks in
+`tests/integration/objects/table-list-locale-regression.py`.
+Each diagnostic document places a native ABNTexto short table alongside a
+115-row `longabnttblr` and an independent 115-row raw `longtable` and verifies the three localized, sequential
+List-of-Tables entries against the extracted PDF and original `.lot` file.
+Mutation tests reject omitted second entries and bare-number/mixed entries.
+The workflow uploads original PDFs, LaTeX logs and source/hash receipts even
+when the known class defect reproduces. A red baseline is expected until the
+caption adapter is corrected; no green test automatically certifies a
+comprehensive document or authorizes v3.1.0 publication. The independent
+full-manuscript 7x4 regression and human visual review remain separate R4/R5.
+
+Diagnostic ownership is explicit: this workflow tests short ABNTexto, `longabnttblr` and raw `longtable` numberlines on real PDFs. Separate R4 full manuscripts and R5 page-by-page review remain release blockers; these dedicated tests cannot certify the entire publication.
