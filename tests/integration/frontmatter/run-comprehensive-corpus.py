@@ -363,6 +363,8 @@ def inspect(profile: str, locale: str, tex: str, pdf: Path,
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--locale", choices=tuple(LOCALES))
+    parser.add_argument("--profile", choices=PROFILES,
+                        help="Build one real baseline PDF for quick draft review, never certify 28+4")
     parser.add_argument("--selftest", action="store_true")
     args = parser.parse_args()
     assert_page_accounting_mutants()
@@ -390,13 +392,18 @@ def main() -> int:
     expected = os.environ.get("SOURCE_COMMIT_SHA")
     if expected and expected != gitsha:
         raise ValueError(f"wrong checkout SHA: {gitsha} != {expected}")
+    to_compile = ([*entries, *variants] if args.profile is None
+                  else [next(item for item in entries
+                             if item["profile"] == args.profile)])
+    proof_scope = ("FULL_28_PLUS_4" if args.profile is None
+                   else f"FOCUSED_ONE_PDF:{args.profile}")
     reports: list[dict] = []
     # Retain raw .aux/.lot/.log and partial PDFs in the same upload artifact,
     # even when a later compilation phase fails. Never silently delete evidence.
     with nullcontext(out / "build") as tmp:
         work = Path(tmp)
         work.mkdir(parents=True, exist_ok=True)
-        for entry in [*entries, *variants]:
+        for entry in to_compile:
             job, profile = entry["name"], entry["profile"]
             source = ROOT / entry["source"]
             if sha(source) != entry["source_sha256"]:
@@ -477,10 +484,16 @@ def main() -> int:
     failed = [report for report in reports if report["failures"]]
     evidence = {
         "source_commit_sha": gitsha, "locale": locale, "pdfs": len(reports),
-        "main_baseline_pdfs": len(entries), "supplementary_variants": len(variants),
+        "declared_main_sources": len(entries),
+        "declared_supplementary_sources": len(variants),
+        "main_baseline_pdfs": sum(x["specimen_kind"] == "main-baseline" for x in reports),
+        "supplementary_variants": sum(
+            x["specimen_kind"] == "supplementary-doctoral-code-lists" for x in reports
+        ),
         "automatic_failures": len(failed),
         "release_authorized": False, "human_approval": "PENDING",
-        "scope": "Full R4 technical candidates, not R5 accepted documents",
+        "scope": proof_scope,
+        "full_matrix_build": args.profile is None,
         "entries": reports,
     }
     (out / "pdf-receipts.json").write_text(
@@ -493,7 +506,9 @@ def main() -> int:
                   f"profile={report['profile']} findings={report['failures']}")
         return 1
     print(f"R4-COMPREHENSIVE-EVIDENCE status=AUTOMATED_PARTIAL locale={locale} "
-          f"pdfs={len(reports)} baseline=7 variants={len(variants)} "
+          f"pdfs={len(reports)} scope={proof_scope} "
+          f"baseline={sum(x['specimen_kind']=='main-baseline' for x in reports)} "
+          f"variants={sum(x['specimen_kind']=='supplementary-doctoral-code-lists' for x in reports)} "
           f"pages={sum(x['pages'] for x in reports)} "
           f"human_approval=PENDING")
     return 0
