@@ -281,7 +281,9 @@ def normalized_line_words(line):
 def validate_uniform_dotted_leaders():
     """Measure real PDF dot coordinates, not only textual leader presence."""
     checked = 0
-    for page_index in range(toc_start, toc_end):
+    # Also inspect illustration/table/code lists before the table of contents.
+    # A valid leader must never have an abnormally wide first dot interval.
+    for page_index in range(0, toc_end):
         page = bbox_pages[page_index]
         for line in (node for node in page.iter() if local(node.tag) == 'line'):
             words, _ = normalized_line_words(line)
