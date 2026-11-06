@@ -17,7 +17,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 STUDY_DIR = ROOT / "examples" / "canonical-mesh-study"
 SOURCE = STUDY_DIR / "study.json"
-DEFAULT_OUTPUT = STUDY_DIR / "generated"
+DEFAULT_OUTPUT = ROOT / "artifacts" / "canonical-mesh-study"
 CASES = ("uniform_quads", "anisotropic_quads", "uniform_triangles")
 LOCALES = ("pt", "en", "es", "fr")
 
@@ -148,26 +148,27 @@ def latex_body(locale: str, text: dict, metrics: list[dict]) -> bytes:
     nl = "\\\\"
     lines = [
         f"% Canonical mesh demonstration v1, locale={locale}; generated, do not edit.",
+        r"\providecommand{\MeshStudyFigurePath}{artifacts/canonical-mesh-study}",
         rf"\subsection{{{text['heading']}}}",
         rf"\label{{sec:canonical-mesh-{locale}}}",
         text["motivation"], r"\par", text["method"], r"\par",
         r"\begin{equation}",
-        r"V=(n_x+1)(n_y+1),\quad"
+        r"V=(n_x+1)(n_y+1),\quad "
         r"E_{\mathrm{quad}}=n_x(n_y+1)+n_y(n_x+1),",
         r"\end{equation}",
         r"\begin{equation}",
-        r"F_{\mathrm{quad}}=n_xn_y,\quad"
+        r"F_{\mathrm{quad}}=n_xn_y,\quad "
         r"F_{\mathrm{tri}}=2n_xn_y,\quad V-E+F=1.",
         r"\end{equation}",
         rf"\legend{{figure}}{{{text['figure_title']}}}",
         rf"\ufcSource{{{text['figure_source']}}}",
         r"\begin{ufcobject}[here]",
         r"\centering",
-        r"\includegraphics[width=.28\linewidth]{examples/canonical-mesh-study/generated/uniform_quads.pdf}",
+        r"\includegraphics[width=.28\linewidth]{\MeshStudyFigurePath/uniform_quads.pdf}",
         r"\hfill",
-        r"\includegraphics[width=.28\linewidth]{examples/canonical-mesh-study/generated/anisotropic_quads.pdf}",
+        r"\includegraphics[width=.28\linewidth]{\MeshStudyFigurePath/anisotropic_quads.pdf}",
         r"\hfill",
-        r"\includegraphics[width=.28\linewidth]{examples/canonical-mesh-study/generated/uniform_triangles.pdf}",
+        r"\includegraphics[width=.28\linewidth]{\MeshStudyFigurePath/uniform_triangles.pdf}",
         r"\end{ufcobject}",
         rf"\legend{{table}}{{{text['table_title']}}}",
         rf"\ufcSource{{{text['table_source']}}}",
