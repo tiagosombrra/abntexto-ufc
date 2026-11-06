@@ -37,6 +37,7 @@ pdftotext -bbox-layout main.pdf /tmp/abntexto-ufc-reference-corpus-bbox.html
 
 python3 <<'PY'
 import re
+import statistics
 import unicodedata
 import xml.etree.ElementTree as ET
 from pathlib import Path
@@ -117,6 +118,16 @@ if missing:
     raise SystemExit(
         'Corpus failed: markers missing in the tutorial PDF: ' + ', '.join(missing)
     )
+# The author's body text should use the selected family, not the special
+# typographic TeX logo whose mixed letter positions differ from prose.
+for file in ('1-introduction.tex', '2-theoretical-background.tex',
+             '5-conclusion.tex'):
+    source = (Path('chapters') / file).read_text(encoding='utf-8')
+    if '\\\\LaTeX' in source:
+        raise SystemExit(f'Corpus failed: special LaTeX logo remains in {file}')
+if 'Sistemas de preparação de documentos como o LaTeX' not in flat:
+    raise SystemExit('Corpus failed: ordinary LaTeX body typography was not rendered')
+
 if '??' in text:
     raise SystemExit('Corpus failed: unresolved reference found in the tutorial PDF.')
 
@@ -267,6 +278,65 @@ def normalized_line_words(line):
     return words, normalized
 
 
+def validate_uniform_dotted_leaders():
+    """Measure real PDF dot coordinates, not only textual leader presence."""
+    checked = 0
+    for page_index in range(toc_start, toc_end):
+        page = bbox_pages[page_index]
+        for line in (node for node in page.iter() if local(node.tag) == 'line'):
+            words, _ = normalized_line_words(line)
+            dots = [float(w.attrib['xMin']) for w in words
+                    if ''.join(w.itertext()).strip() == '.']
+            if len(dots) < 4:
+                continue
+            pitch = [b - a for a, b in zip(dots, dots[1:])]
+            typical_pitch = statistics.median(pitch)
+            # The known failure had a 16.9pt initial gap and 9pt thereafter.
+            if not 7.0 <= typical_pitch <= 11.0 or any(
+                    abs(delta - typical_pitch) > 1.5 for delta in pitch):
+                raise SystemExit(
+                    'Corpus failed: nonuniform TOC leader pitch at '
+                    f'page={page_index + 1}, intervals={pitch[:8]}'
+                )
+            checked += 1
+    if checked < 10:
+        raise SystemExit(f'Corpus failed: insufficient measured dot rows: {checked}')
+    return checked
+
+
+def validate_signature_geometry():
+    """Check the actual UFC three-person approval lines at 1.5 spacing."""
+    lines = []
+    for line in (node for node in bbox_pages[2].iter()
+                 if local(node.tag) == 'line'):
+        words, text_line = normalized_line_words(line)
+        if words:
+            lines.append((text_line, float(words[0].attrib['yMin'])))
+    names = ('Nome do Orientador', 'Nome do Segundo Membro',
+             'Nome do Terceiro Membro')
+    rows = []
+    for name in names:
+        found = [(i, y) for i, (txt, y) in enumerate(lines) if name in txt]
+        if len(found) != 1:
+            raise SystemExit(f'Corpus failed: approval member not unique: {name}')
+        index, top = found[0]
+        institutions = [(i, y) for i, (txt, y) in enumerate(lines)
+                        if i > index and 'Universidade Federal do Ceará (UFC)' in txt]
+        if not institutions:
+            raise SystemExit(f'Corpus failed: missing institution after {name}')
+        institution_top = institutions[0][1]
+        if not 17 <= institution_top - top <= 27:
+            raise SystemExit(
+                f'Corpus failed: committee name/institution spacing '
+                f'for {name}: {institution_top - top:.2f}pt'
+            )
+        rows.append(top)
+    for earlier, later in zip(rows, rows[1:]):
+        if later - earlier < 60:
+            raise SystemExit('Corpus failed: committee signature blocks too crowded')
+    return len(rows)
+
+
 def toc_title_x(marker: str) -> float:
     matches = []
     for page_index in range(toc_start, toc_end):
@@ -289,6 +359,9 @@ def toc_title_x(marker: str) -> float:
         )
     return matches[0][1]
 
+
+uniform_dotted_rows = validate_uniform_dotted_leaders()
+committee_members = validate_signature_geometry()
 
 numbered_reference_x = toc_title_x('INTRODUÇÃO')
 for marker in (
@@ -313,6 +386,9 @@ for marker in ('REFERÊNCIAS', 'GLOSSÁRIO'):
             f'Corpus failed: post-textual entry {marker} is misaligned in the TOC: '
             f'x={actual_x:.2f}, numbered-reference={numbered_reference_x:.2f}.'
         )
+
+print(f'VISUAL-PDF-GEOMETRY-EVIDENCE status=PASS leader_rows={uniform_dotted_rows} '
+      f'committee_members={committee_members} name_institution_line_spacing=1.5')
 
 print(
     'TUTORIAL-CORPUS-EVIDENCE status=PASS '
