@@ -288,6 +288,11 @@ def generate(profile: str, locale: str, folder: Path) -> dict:
         variants.append({
             "name": variant_name, "profile": profile, "locale": locale,
             "source": str(variant_path), "source_sha256": sha(variant_path),
+            "canonical_study_id": "unit-square-structured-mesh-v1",
+            "canonical_study_sha256": sha(STUDY_FILE),
+            "profile_context_sha256": sha(CONTEXT_FILE),
+            "generated_asset_manifest_sha256": sha(FIGURE_OUTPUT / "manifest.json"),
+            "scientific_content_state": "verified_didactic_geometry_not_novel_research",
             "support_sources": sources[1:],
             "support_sha256": {str(p): sha(Path(p)) for p in sources[1:]},
             "glossary_enabled": False, "index_enabled": False,
