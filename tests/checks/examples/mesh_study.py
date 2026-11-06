@@ -85,6 +85,10 @@ def check_assets(out: Path) -> None:
             raise AssertionError(f"Missing original written content: {locale}")
         if any(f"{name}.pdf" not in text for name in EXPECTED):
             raise AssertionError(f"Missing figure from scientific manuscript: {locale}")
+        if r"\providecommand{\MeshStudyFigurePath}{artifacts/canonical-mesh-study}" not in text:
+            raise AssertionError(f"Nonportable image locator in {locale}")
+        if any(x in text for x in (r"\quadE", r"\quadF")):
+            raise AssertionError(f"Undefined TeX control sequence caused by adjacent math tokens: {locale}")
         if any(x not in text for x in (
             r"\begin{equation}", r"\legend{table}", r"\autocite{meshBommes2009,meshShewchuk2002}"
         )):
