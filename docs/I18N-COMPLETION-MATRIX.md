@@ -204,6 +204,114 @@ A auditoria das 70 chaves públicas revelou que `examiner-3` até `examiner-6`, 
 **Estado:** PR [#546](https://github.com/tiagosombrra/abntexto-ufc/pull/546) integrada por squash merge no commit `6e24d263756a54327b4263e7d1f940d06d6ef168`. No HEAD exato `470b9d4e83e41ac63b737c19784ef5ebf9fc9f7d`, Static, quatro PDFs reais e Linux `objects` (7/7) foram aprovados, com revisão Codex CLEAN e zero discussões pendentes. A falha inicial de teste por quebra de linha no erro de Arial e a lacuna inicial na verificação de `return 173;` no PDF foram corrigidas e validadas antes do merge. A certificação pós-merge da nova `main` deve ser verificada separadamente; a conclusão desta PR não autoriza a publicação. Tradução humana, conformidade tipográfica institucional, outros engines/perfis e a cobertura do inventário completo continuam pendentes.
 
 
+## R4 comprehensive 28-PDF corpus (independent technical candidate)
+
+The dedicated workflow `.github/workflows/r4-comprehensive-corpus.yml`
+runs `tests/integration/frontmatter/generate-comprehensive-corpus.py` and
+`tests/integration/frontmatter/run-comprehensive-corpus.py`. Each locale
+generates seven distinct, multi-section PDF *candidates* with original
+synthetic-language paragraphs, title/approval/frontmatter according to profile,
+subsections and subsubsections, equations and aligned equations, footnotes,
+citations, figures, charts/quadros where applicable, short tables, true
+multi-page tabularray and native longtables, pseudocode, embedded and external
+C++ code, bibliography, appendices and annexes, and optional glossary/index.
+The four CI batches yield 7 x 4 actual PDFs; the quick source preflight alone
+never counts as PDF certification. Original source hashes, supporting text
+hashes, per-PDF hashes, physical-page evidence, missing-feature receipts,
+original TeX/Biber logs and PDF/.lot files remain inspectable.
+
+This independent source/real-PDF matrix does **not** waive #557 (native
+longtable captions), #558 (PDF Info/outline and anonymous privacy), #560
+(duplex almost-empty numbered pages), nor the R5 full page-by-page visual
+and R4 alternative-engine/print-mode matrix. A red job is a release-blocking
+diagnostic; successful automatic predicates are marked AUTOMATED_PARTIAL_ONLY,
+never editorial approval, full PDF/A or PDF/UA conformance, or authorization
+to release 3.1.0.
+
+
+### R4 doctoral write-channel boundary (extra four PDFs)
+
+The full 28-file baseline includes a doctoral thesis with real glossary/index
+and with algorithm/code **objects in the body**. A separate four-locale
+supplementary doctoral specimen additionally prints the two optional lists of
+algorithms and code, but leaves glossary/index disabled. The TeX Live 2026
+pdfLaTeX diagnostic of the initially combined configuration failed explicitly
+with `No room for a new \write` when the additional optional lists were
+opened at `\ufcPrintTableOfContents` (the original complete doctoral
+manuscript had several other list output streams and imakeidx/glossaries).
+Suppressing this diagnostic silently or promoting the split into a claim that
+one doctoral PDF supports all combinations would be incorrect. The separate
+files preserve both test surfaces, mark the limitation as a BLOCKER, and avoid
+unapproved `morewrites` compatibility packages. This is a **32-candidate
+technical matrix**: 28 baseline PDFs plus 4 extra doctoral list variants,
+not 32 accepted manuscripts. Additional engines, duplex/single-sided
+alternatives and the original all-modules combination still need independent
+engineering and auditing.
+
+
+### R5 physical-page accounting correction
+
+A source-bound independent inspection of the English doctoral candidate confirmed
+that its real PDF has 58 physical pages, including 20 extracted blank leaves
+(physical pages 3,5,7,9,11,13,15,17,19,21,23,25,27,29,43,49,51,53,55,57).
+The previous automatic R4 report incorrectly claimed 38 pages because
+`text_pdf` **discarded every whitespace-only page**. That old receipt is
+invalid as page-by-page evidence even where all other content predicates passed.
+
+The new PDF runner preserves the Poppler physical form-feed sequence, cross
+checks it against `pdfinfo Pages`, and retains a per-physical-page record
+(1-based page, character count, word count, actual blank/folio-only status,
+short text sample, and explicit human-review=PENDING). Negative mutations
+prove that a blank page and a numbered-only page are never silently discarded.
+Legitimate duplex recto padding is NOT automatically classified as a defect:
+every blank leaf must receive independent R5 visual/contextual review;
+single-sided unexpected blank leaves fail the automatic gate. Printed
+folio numbers and physical PDF-page indices are tracked separately.
+
+
+### R5 raster evidence for all physical pages
+
+For each generated comprehensive candidate, the R4 audit now invokes Poppler
+`pdftoppm` at low resolution across **all actual PDF pages**, verifies the
+number of rendered thumbnails against `pdfinfo Pages`, and associates every
+physical-page receipt with the corresponding thumbnail path and SHA256. This
+detects unrenderable pages and leaves a reproducible visual review corpus,
+including duplex blanks and numbered-only leaves, rather than silently
+discarding them. The thumbnails are diagnostic aids: low-DPI rendering cannot
+establish fine-grained glyph spacing, figure resolution, font compliance, or
+margin correctness. All individual human page reviews are still PENDING.
+
+## R3 PDF information, XMP and anonymous navigation diagnostic (#558)
+
+The independent workflow `.github/workflows/pdf-metadata-outline.yml`
+compiles 16 actual PDFs (three baseline profiles and one public-to-anonymous transition in each locale: doctoral, scientific article and anonymized project,
+all in PT/EN/ES/FR) and uses the same authored `ufcsetup` metadata that
+prints the title/author in the class. It verifies PDF Info Title/Author,
+XMP serialization, genuine PDF outline destinations and that anonymously
+authored names do not occur in the PDF Info, XMP, outlines, extracted text
+or embedded attachment bytes. Synthetic mutations must reproduce missing
+metadata, missing outline, and private-identity disclosure.
+
+Hyperref adds PDF outline navigation without changing printed heading
+typography; an anonymized project's author must always map to an **empty**
+PDF Author field irrespective of the internal authored data. This narrow
+matrix tests metadata/outline paths rather than all 28 full manuscript
+profiles. Original PDF binaries, TeX inputs, logs and SHA256 receipts are
+retained even on diagnostic failures. It cannot certify PDF/A-2b without
+external veraPDF, cannot certify PDF/UA (separate #459), and cannot substitute
+for R5 independent page-by-page audit. v3.1.0 remains UNRELEASED.
+
+**Privacy transition regression (P1):** public `\ufcsetup` still accepts
+document type and authored metadata after `\begin{document}`. Before the first
+physical PDF shipout, switching from public to anonymized must refresh PDF
+Info/XMP so even a name supplied earlier in the preamble is omitted. After a
+page has shipped, the class explicitly rejects switches across the
+anonymous/public boundary because already serialized pages and metadata cannot
+be safely retracted. The dedicated workflow adds four real positive transition
+PDFs and four intentionally rejected late-transition TeX sources, all retained
+with original negative logs. Reconfiguration of unrelated metadata after a
+shipped page remains permitted but cannot retroactively rewrite PDF Info/XMP.
+
 ## R3 mixed-table List-of-Tables diagnostic (release blocker #557)
 
 The dedicated workflow `.github/workflows/r3-table-list-locale.yml` owns the
@@ -218,3 +326,5 @@ when the known class defect reproduces. A red baseline is expected until the
 caption adapter is corrected; no green test automatically certifies a
 comprehensive document or authorizes v3.1.0 publication. The independent
 full-manuscript 7x4 regression and human visual review remain separate R4/R5.
+
+Diagnostic ownership is explicit: this workflow tests short ABNTexto, `longabnttblr` and raw `longtable` numberlines on real PDFs. Separate R4 full manuscripts and R5 page-by-page review remain release blockers; these dedicated tests cannot certify the entire publication.
