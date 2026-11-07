@@ -22,8 +22,8 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     env:
-      SOURCE_RUN: "42387260385"
-      SOURCE_SHA: "1ac95dd4bcdef08e3a469469b7fdcf8d0b8f8232"
+      SOURCE_RUN: "42419218920"
+      SOURCE_SHA: "1886bf81bdce8c57e7e28f54e1f2dc9c0749adc7"
       GH_TOKEN: ${{ github.token }}
     steps:
       - name: Checkout independent validation rules
