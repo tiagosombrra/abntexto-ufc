@@ -124,6 +124,37 @@ def assert_localized_cover_mutants() -> None:
                 raise AssertionError("Positive locale control mutated unexpectedly")
 
 
+
+def nature_grammar_failures(profile: str, locale: str, extracted_pages: list[str]) -> list[str]:
+    """Reject missing articles in university nature paragraphs on real title pages."""
+    if profile == "scientific-article" or len(extracted_pages) < 2:
+        return []
+    # The R4 corpus includes a physical cover before the title page.
+    folded = folded_pdf_text(extracted_pages[1])
+    forbidden = {
+        "en": (" at federal university",),
+        "es": (" de universidad federal", " a universidad federal"),
+        "fr": (" de universite federale", " a universite federale"),
+    }.get(locale, ())
+    return ["pdf.nature.missing_institution_article" for value in forbidden
+            if value in folded]
+
+
+def assert_nature_grammar_mutants() -> None:
+    """Prove that actual EN/ES/FR missing-article strings fail closed."""
+    bad = {"en": "submitted at Federal University of Ceara",
+           "es": "presentada de Universidad Federal de Ceará",
+           "fr": "présenté de Université fédérale du Ceará"}
+    good = {"en": "submitted at the Federal University of Ceara",
+            "es": "presentada de la Universidad Federal de Ceará",
+            "fr": "présenté de l'Université fédérale du Ceará"}
+    for loc in ("en", "es", "fr"):
+        if not nature_grammar_failures("masters-thesis", loc, ["Cover", bad[loc]]):
+            raise AssertionError(f"Missing university article was accepted: {loc}")
+        if nature_grammar_failures("masters-thesis", loc, ["Cover", good[loc]]):
+            raise AssertionError(f"Correct university article was rejected: {loc}")
+
+
 def sha(path: Path) -> str:
     """Hash the actual retained PDF or source file."""
     return hashlib.sha256(path.read_bytes()).hexdigest()
@@ -407,6 +438,7 @@ def inspect(profile: str, locale: str, tex: str, pdf: Path,
         profile, locale, raw_pages[0] if raw_pages else "",
         raw_pages[1] if len(raw_pages) > 1 else ""
     ))
+    findings.extend(nature_grammar_failures(profile, locale, raw_pages))
     if posttextual_optional_bracket_leak(aggregate):
         findings.append("pdf.toc.posttextual_literal_optional_brackets")
     # Verify rendered implementation bodies, not only captions or list entries.
@@ -590,6 +622,7 @@ def main() -> int:
     assert_page_accounting_mutants()
     assert_scientific_content_mutants()
     assert_localized_cover_mutants()
+    assert_nature_grammar_mutants()
     if args.selftest:
         print("R4-PHYSICAL-PAGE-MUTANTS status=PASS cases=17")
         print("R4-SCIENCE-AND-LOT-MUTANTS status=PASS locales=4 science_mutants=20 lot_mutants=4")

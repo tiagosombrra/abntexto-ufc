@@ -29,7 +29,7 @@ INSTITUTION_DISPLAY = {
 PROGRAM_METADATA = {
     "pt": {
         "undergraduate-program": "Ciência da Computação",
-        "undergraduate-degree": "Bacharelado em Ciência da Computação",
+        "undergraduate-degree": "Bacharelado",
         "specialization-program": "Ciência da Computação",
         "masters-graduate-program": "Programa de Pós-Graduação em Ciência da Computação",
         "masters-program": "Mestrado em Ciência da Computação",
@@ -41,7 +41,7 @@ PROGRAM_METADATA = {
     },
     "en": {
         "undergraduate-program": "Computer Science",
-        "undergraduate-degree": "Bachelor of Science in Computer Science",
+        "undergraduate-degree": "Bachelor of Science",
         "specialization-program": "Computer Science",
         "masters-graduate-program": "Graduate Program in Computer Science",
         "masters-program": "Master of Science in Computer Science",
@@ -53,7 +53,7 @@ PROGRAM_METADATA = {
     },
     "es": {
         "undergraduate-program": "Ciencias de la Computación",
-        "undergraduate-degree": "Grado en Ciencias de la Computación",
+        "undergraduate-degree": "Grado",
         "specialization-program": "Ciencias de la Computación",
         "masters-graduate-program": "Programa de Posgrado en Ciencias de la Computación",
         "masters-program": "Maestría en Ciencias de la Computación",
@@ -65,7 +65,7 @@ PROGRAM_METADATA = {
     },
     "fr": {
         "undergraduate-program": "Informatique",
-        "undergraduate-degree": "Licence en informatique",
+        "undergraduate-degree": "Licence",
         "specialization-program": "Informatique",
         "masters-graduate-program": "Programme de formation supérieure en informatique",
         "masters-program": "Master en informatique",
