@@ -127,7 +127,7 @@ def verify_cover_display(profile: str, locale: str, text: str) -> list[str]:
     """Reject duplicate cover lines and nonlocalized anonymous placeholders."""
     cover = text.split("\f", 1)[0]
     # Rejoin words hyphenated by pdftotext line wrapping without dropping accents.
-    folded = normalized(re.sub(r"-\s*\n(?=\w)", "", cover))
+    folded = normalized(re.sub(r"-\r?\n[ \t]*(?=\w)", "", cover))
     lines = [normalized(line) for line in cover.splitlines() if line.strip()]
     errors = []
     if profile in {"masters-thesis", "doctoral-thesis"}:
@@ -217,6 +217,11 @@ def selftest() -> None:
         "Research project submitted to Undisclosed institution"
     ):
         raise AssertionError("Valid anonymized institutional placeholder was rejected")
+    if verify_cover_display(
+        "anonymized-research-project", "es",
+        "Proyecto presentado a Institu-\n     ción no identificada"
+    ):
+        raise AssertionError("Valid hyphenated Spanish anonymous label was rejected")
     print(f"PUBLIC-MESH-PDF-NEGATIVE status=PASS mutants={len(mutations)}",
           flush=True)
 
