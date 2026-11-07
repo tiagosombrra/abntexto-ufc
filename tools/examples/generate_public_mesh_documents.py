@@ -51,13 +51,32 @@ def line(value: str) -> str:
     return value
 
 
+ANONYMOUS_ENTITY_LABEL = {
+    "pt": "Instituição não identificada",
+    "en": "Undisclosed institution",
+    "es": "Institución no identificada",
+    "fr": "Établissement non identifié",
+}
+
+GRADUATE_LEVEL_LABELS = {
+    "pt": ("Mestrado em Ciência da Computação", "Doutorado em Ciência da Computação"),
+    "en": ("Master of Science in Computer Science", "Doctorate in Computer Science"),
+    "es": ("Maestría en Ciencias de la Computación", "Doctorado en Ciencias de la Computación"),
+    "fr": ("Master en informatique", "Doctorat en informatique"),
+}
+
+
 def tex_config(profile: str, locale: str, data: dict) -> str:
     """Keep institution legal identity distinct from translated display text."""
     anonymized = profile == "anonymized-research-project"
-    institution = ("Instituição não identificada" if anonymized
+    institution = (ANONYMOUS_ENTITY_LABEL[locale] if anonymized
                    else "Universidade Federal do Ceará")
     presentation = institution if anonymized else data["institution_display"]
     program, degree, spec, graduate, field = (line(x) for x in data["programs"])
+    # Graduate-program and degree labels must not print identical cover lines.
+    masters_level, doctoral_level = (
+        line(value) for value in GRADUATE_LEVEL_LABELS[locale]
+    )
     author = "" if anonymized else line(data["author"])
     options = {
         "type": profile,
@@ -80,10 +99,10 @@ def tex_config(profile: str, locale: str, data: dict) -> str:
         "undergraduate-degree": "{" + degree + "}",
         "specialization-program": "{" + spec + "}",
         "masters-graduate-program": "{" + graduate + "}",
-        "masters-program": "{" + graduate + "}",
+        "masters-program": "{" + masters_level + "}",
         "masters-degree-field": "{" + field + "}",
         "doctoral-graduate-program": "{" + graduate + "}",
-        "doctoral-program": "{" + graduate + "}",
+        "doctoral-program": "{" + doctoral_level + "}",
         "doctoral-degree-field": "{" + field + "}",
         "project-program": "{" + line(data["project_program"]) + "}",
         "submission-entity": "{" + institution + "}",
@@ -91,9 +110,9 @@ def tex_config(profile: str, locale: str, data: dict) -> str:
     }
     if profile in ACADEMIC:
         options["examiner-2"] = "{" + line(data["examiner"]) + "}"
-        options["examiner-2-institution"] = "{Universidade Federal do Ceará}"
+        options["examiner-2-institution"] = "{" + line(data["institution_display"]) + "}"
         options["examiner-3"] = "{" + line(data["examiner"]) + "}"
-        options["examiner-3-institution"] = "{Universidade Federal do Ceará}"
+        options["examiner-3-institution"] = "{" + line(data["institution_display"]) + "}"
     return "\n".join(f"  {key}={value}{',' if i < len(options)-1 else ''}"
                      for i, (key, value) in enumerate(options.items()))
 
