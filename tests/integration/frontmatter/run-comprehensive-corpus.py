@@ -78,6 +78,18 @@ FORBIDDEN_UNTRANSLATED_R4_LABELS = (
 )
 
 
+def folded_program_name(text: str) -> str:
+    """Match hyphenated university program names across TeX line breaks.
+
+    A PDF may break an authored compound such as Pós-Graduação as
+    "Pós-\nGraduação", while the extracted text no longer distinguishes the
+    discretionary break from an authored hyphen. Only hyphens between
+    letters are normalized; the full sequence of letters must still match.
+    """
+    normalized = folded_pdf_text(text)
+    return re.sub(r"(?<=\w)-(?=\w)", "", normalized)
+
+
 def localized_cover_failures(profile: str, locale: str,
                              first_page: str, second_page: str) -> list[str]:
     """Detect untranslated cover fields in real PDFs, not merely source declarations."""
@@ -87,7 +99,7 @@ def localized_cover_failures(profile: str, locale: str,
     first = folded_pdf_text(first_page)
     second = folded_pdf_text(second_page)
     expected = EXPECTED_LOCALIZED_COVER_VALUES[locale][profile]
-    if folded_pdf_text(expected) not in first:
+    if folded_program_name(expected) not in folded_program_name(first_page):
         findings.append("pdf.cover.academic_program_not_localized")
     for label in FORBIDDEN_UNTRANSLATED_R4_LABELS:
         if folded_pdf_text(label) in first:
@@ -98,7 +110,7 @@ def localized_cover_failures(profile: str, locale: str,
                  "es": "Ciencias de la Computación", "fr": "Informatique"}[locale]
         if folded_pdf_text(field) not in second:
             findings.append("pdf.title_page.degree_field_untranslated")
-        if folded_pdf_text(expected) not in second:
+        if folded_program_name(expected) not in folded_program_name(second_page):
             findings.append("pdf.title_page.academic_program_untranslated")
     return findings
 
@@ -122,6 +134,24 @@ def assert_localized_cover_mutants() -> None:
                     raise AssertionError(f"Untranslated R4 label passed: {locale}/{bad}")
             if localized_cover_failures(profile, locale, cover, title) != []:
                 raise AssertionError("Positive locale control mutated unexpectedly")
+    # A real Portuguese masters PDF wraps Pós-Graduação across two lines.
+    intact = ("Programa de Pós-Graduação em Ciência da Computação")
+    extracted = "Programa de Pós-\nGraduação em Ciência da Computação"
+    valid = localized_cover_failures(
+        "masters-thesis", "pt", intact,
+        extracted + "\nCiência da Computação"
+    )
+    if valid:
+        raise AssertionError(f"PT discretionary compound was falsely rejected: {valid}")
+    corrupted = extracted.replace("Graduação", "Doutorado")
+    if not localized_cover_failures(
+        "masters-thesis", "pt", intact,
+        corrupted + "\nCiência da Computação"
+    ):
+        raise AssertionError("Substantively altered postgraduate program escaped")
+
+
+
 
 
 
