@@ -1,0 +1,191 @@
+name: R5 external PDF/A-2b exact E3 artifact validation
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened]
+    paths:
+      - .github/workflows/r5-pdfa-exact-e3.yml
+      - docs/R5-PDFA-EXTERNAL-VALIDATION.md
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: r5-pdfa-artifacts-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify-pdfa:
+    name: veraPDF 2b on SHA-bound 28 original public PDFs
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    env:
+      SOURCE_RUN: "42387260385"
+      SOURCE_SHA: "1ac95dd4bcdef08e3a469469b7fdcf8d0b8f8232"
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: Checkout independent validation rules
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - name: Read exactly four original workflow artifact sets
+        shell: bash
+        run: |
+          set -euo pipefail
+          actual_sha="$(gh run view "$SOURCE_RUN" --repo "$GITHUB_REPOSITORY" --json headSha --jq .headSha)"
+          if [ "$actual_sha" != "$SOURCE_SHA" ]; then
+            echo "R5-PDFA-BLOCKED source commit mismatch: $actual_sha"
+            exit 1
+          fi
+          mkdir -p artifacts/r5-pdfa/source
+          for loc in pt en es fr; do
+            gh run download "$SOURCE_RUN" --repo "$GITHUB_REPOSITORY" \
+              --name "public-full7-$loc-$SOURCE_RUN" \
+              --dir "artifacts/r5-pdfa/source/$loc"
+          done
+          python3 - <<'PY'
+          import hashlib,json,os,pathlib,re
+          root=pathlib.Path('artifacts/r5-pdfa')
+          allowed={'undergraduate-capstone','specialization-capstone','masters-thesis',
+                   'doctoral-thesis','research-project','anonymized-research-project',
+                   'scientific-article'}
+          out=root/'pdfs';out.mkdir(exist_ok=True)
+          items=[]
+          sha=os.environ['SOURCE_SHA']
+          for locale in ('pt','en','es','fr'):
+              base=root/'source'/locale/'public-mesh-documents'/'matrix'/locale
+              receipt=json.loads((base/'matrix-receipt.json').read_text('utf-8'))
+              assert receipt['source_commit_sha']==sha, f'{locale}: wrong SHA'
+              assert receipt['status']=='AUTOMATED_PARTIAL'
+              rows=receipt['receipts']
+              assert len(rows)==7 and {x['profile'] for x in rows}==allowed
+              for x in rows:
+                  filename=f"public-{x['profile']}-{locale}.pdf"
+                  assert x['pdf']==filename and not x['failures']
+                  payload=(base/filename).read_bytes()
+                  binary_sha=hashlib.sha256(payload).hexdigest()
+                  assert payload.startswith(b'%PDF-')
+                  assert binary_sha==x['pdf_sha256'], filename
+                  (out/filename).write_bytes(payload)
+                  items.append({'filename':filename,'sha256':binary_sha,
+                                'pages':x['pages'],'profile':x['profile'],
+                                'locale':locale,'source_commit_sha':sha,
+                                'status':'PDF_A_EXTERNAL_PENDING'})
+          assert len(items)==28 and len({r['filename'] for r in items})==28
+          manifest={'source_commit_sha':sha,'source_run':os.environ['SOURCE_RUN'],
+                    'documents':items,'expected_profile':'PDF/A-2b',
+                    'human_review':'PENDING','publication_authorized':False}
+          (root/'input-manifest.json').write_text(
+              json.dumps(manifest,indent=2,ensure_ascii=False)+'\n','utf-8')
+          print('R5-PDFA-SOURCE status=PASS originals=28 source_sha='+sha)
+          PY
+      - name: Run independent official veraPDF container
+        shell: bash
+        run: |
+          set -euo pipefail
+          docker pull verapdf/cli:latest
+          docker image inspect verapdf/cli:latest --format '{{json .RepoDigests}}' \
+            > artifacts/r5-pdfa/validator-image-digests.json
+          docker run --rm -v "$PWD/artifacts/r5-pdfa/pdfs:/data:ro" \
+            verapdf/cli:latest --flavour 2b --format raw --recurse /data \
+            > artifacts/r5-pdfa/verapdf-raw.xml \
+            2> artifacts/r5-pdfa/verapdf-stderr.log || {
+              echo "R5-PDFA: validator process returned nonzero; retaining raw result"
+              test -s artifacts/r5-pdfa/verapdf-raw.xml
+            }
+          test -s artifacts/r5-pdfa/verapdf-raw.xml
+      - name: Independently interpret all 28 validation reports and failed rules
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import hashlib,json,pathlib,sys,xml.etree.ElementTree as ET
+          root=pathlib.Path('artifacts/r5-pdfa')
+          manifest=json.loads((root/'input-manifest.json').read_text('utf-8'))
+          original={x['filename']:x for x in manifest['documents']}
+          assert len(original)==28
+          for name,x in original.items():
+              assert hashlib.sha256((root/'pdfs'/name).read_bytes()).hexdigest()==x['sha256'],name
+          xml=ET.parse(root/'verapdf-raw.xml').getroot()
+          for e in xml.iter():
+              if '}' in e.tag:e.tag=e.tag.rsplit('}',1)[-1]
+          assert xml.tag=='report','Invalid veraPDF root'
+          jobs=xml.findall('./jobs/job')
+          results={}
+          if len(jobs)!=28:raise RuntimeError(f'Expected 28 veraPDF jobs, got {len(jobs)}')
+          for job in jobs:
+              label=job.findtext('item/name')
+              if not label:raise RuntimeError('Missing input path')
+              name=pathlib.PurePosixPath(label).name
+              if name not in original or name in results:
+                  raise RuntimeError(f'Duplicate or unexpected PDF job: {name}')
+              v=job.find('validationReport')
+              if v is None or v.get('isCompliant') not in ('true','false'):
+                  raise RuntimeError(f'Missing conformance result: {name}')
+              if '2b' not in v.get('profileName','').lower():
+                  raise RuntimeError(f'Wrong conformance profile: {name}')
+              details=v.find('details')
+              if details is None:raise RuntimeError(f'Missing rules summary: {name}')
+              failed=[]
+              for rule in details.findall('rule'):
+                  if rule.get('status')=='failed':
+                      failed.append({
+                          'specification':rule.get('specification'),
+                          'clause':rule.get('clause'),
+                          'test':rule.get('testNumber'),
+                          'failedChecks':rule.get('failedChecks'),
+                          'description':(rule.findtext('description') or '').strip()
+                      })
+              ok=v.get('isCompliant')=='true'
+              if ok and failed:raise RuntimeError(f'Contradictory veraPDF result: {name}')
+              results[name]={'pdfa_2b_compliant':ok,'failed_rules':failed,
+                             'failed_checks':details.get('failedChecks'),
+                             'profile':v.get('profileName')}
+          bs=xml.find('batchSummary')
+          if bs is None:raise RuntimeError('Missing veraPDF batch summary')
+          for item in ('failedToParse','encrypted','outOfMemory','veraExceptions'):
+              if bs.get(item)!='0':raise RuntimeError('Validator failed: '+item)
+          totals=bs.find('validationReports')
+          compliant=sum(x['pdfa_2b_compliant'] for x in results.values())
+          if totals is None or int(totals.get('compliant','-1'))!=compliant or \
+              int(totals.get('nonCompliant','-1'))!=28-compliant:
+              raise RuntimeError('Invalid PDF/A batch totals')
+          for item in manifest['documents']:
+              item['verapdf']=results[item['filename']]
+          manifest.update({
+              'validator':'veraPDF official Docker image',
+              'validator_image_digests':json.loads(
+                  (root/'validator-image-digests.json').read_text()),
+              'pdfa2b_compliant':compliant,
+              'pdfa2b_noncompliant':28-compliant,
+              'human_review':'PENDING','publication_authorized':False,
+              'status':'PASS_EXTERNAL_PDF_A_2B' if compliant==28 else 'BLOCKED_EXTERNAL_PDF_A_2B'
+          })
+          (root/'results.json').write_text(json.dumps(
+              manifest,ensure_ascii=False,indent=2)+'\n','utf-8')
+          print('R5-PDFA-EVIDENCE status='+manifest['status']+
+                f' compliant={compliant} noncompliant={28-compliant}' +
+                ' human_review=PENDING publication_authorized=false')
+          if compliant!=28:
+              for doc in manifest['documents']:
+                  if not doc['verapdf']['pdfa_2b_compliant']:
+                      print('NONCOMPLIANT '+doc['filename']+
+                            ' '+str([(r['clause'],r['test']) for r in doc['verapdf']['failed_rules']]))
+              sys.exit(1)
+          PY
+      - name: Preserve validator XML, failed rules, original hashes and results
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: r5-external-verapdf-2b-original28-${{ github.run_id }}
+          path: |
+            artifacts/r5-pdfa/input-manifest.json
+            artifacts/r5-pdfa/validator-image-digests.json
+            artifacts/r5-pdfa/verapdf-raw.xml
+            artifacts/r5-pdfa/verapdf-stderr.log
+            artifacts/r5-pdfa/results.json
+          if-no-files-found: warn
+          retention-days: 21
