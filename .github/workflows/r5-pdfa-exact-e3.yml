@@ -112,38 +112,40 @@ jobs:
           xml=ET.parse(root/'verapdf-raw.xml').getroot()
           for e in xml.iter():
               if '}' in e.tag:e.tag=e.tag.rsplit('}',1)[-1]
-          assert xml.tag=='report','Invalid veraPDF root'
-          jobs=xml.findall('./jobs/job')
+          if xml.tag!='rawResults':
+              raise RuntimeError(f'Unexpected veraPDF raw root: {xml.tag}')
+          config=xml.find('processorConfig/validatorConfig')
+          if config is None or config.get('flavour')!='PDFA_2_B':
+              raise RuntimeError('Validator did not actually select PDF/A-2b')
+          nodes=[x for x in xml if x.tag not in ('processorConfig','batchSummary')]
+          if len(nodes)!=56:raise RuntimeError(f'Expected 28 item/result pairs, got {len(nodes)} nodes')
           results={}
-          if len(jobs)!=28:raise RuntimeError(f'Expected 28 veraPDF jobs, got {len(jobs)}')
-          for job in jobs:
-              label=job.findtext('item/name')
-              if not label:raise RuntimeError('Missing input path')
+          for i in range(0,len(nodes),2):
+              item,v=nodes[i:i+2]
+              if item.tag!='item' or v.tag!='validationResult':
+                  raise RuntimeError(f'Missing paired real validation result at index {i}')
+              label=item.findtext('name')
+              if not label:raise RuntimeError('Missing PDF input name')
               name=pathlib.PurePosixPath(label).name
               if name not in original or name in results:
-                  raise RuntimeError(f'Duplicate or unexpected PDF job: {name}')
-              v=job.find('validationReport')
-              if v is None or v.get('isCompliant') not in ('true','false'):
-                  raise RuntimeError(f'Missing conformance result: {name}')
-              if '2b' not in v.get('profileName','').lower():
-                  raise RuntimeError(f'Wrong conformance profile: {name}')
-              details=v.find('details')
-              if details is None:raise RuntimeError(f'Missing rules summary: {name}')
+                  raise RuntimeError(f'Duplicate or unexpected PDF validation: {name}')
+              if v.get('flavour')!='PDFA_2_B' or v.get('jobEndStatus')!='NORMAL':
+                  raise RuntimeError(f'Wrong flavour or abnormal validator status: {name}')
+              val=v.get('isCompliant')
+              if val not in ('true','false'):
+                  raise RuntimeError(f'Missing boolean compliance result for {name}')
+              evidence=v.find('assertions')
+              if evidence is None:
+                  raise RuntimeError(f'No assertion record for {name}')
               failed=[]
-              for rule in details.findall('rule'):
-                  if rule.get('status')=='failed':
-                      failed.append({
-                          'specification':rule.get('specification'),
-                          'clause':rule.get('clause'),
-                          'test':rule.get('testNumber'),
-                          'failedChecks':rule.get('failedChecks'),
-                          'description':(rule.findtext('description') or '').strip()
-                      })
-              ok=v.get('isCompliant')=='true'
-              if ok and failed:raise RuntimeError(f'Contradictory veraPDF result: {name}')
+              for assertion in evidence:
+                  failed.append({'element':assertion.tag,'properties':assertion.attrib,
+                                 'description':' '.join(assertion.itertext()).strip()[:1200]})
+              ok=val=='true'
+              if ok and failed:raise RuntimeError(f'Contradictory compliant assertion for {name}')
               results[name]={'pdfa_2b_compliant':ok,'failed_rules':failed,
-                             'failed_checks':details.get('failedChecks'),
-                             'profile':v.get('profileName')}
+                             'total_assertions':v.get('totalAssertions'),
+                             'profile':'PDF/A-2b'}
           bs=xml.find('batchSummary')
           if bs is None:raise RuntimeError('Missing veraPDF batch summary')
           for item in ('failedToParse','encrypted','outOfMemory','veraExceptions'):
