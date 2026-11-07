@@ -167,21 +167,21 @@ def manuscript(profile: str, locale: str, content: dict, output: Path) -> tuple[
     lines += [
         r"\textual",
         rf"\section{{{headings[0]}}}",
-        line(d["introduction"]),
+        line(d["introduction"]), r"\par",
         rf"\section{{{headings[1]}}}",
-        line(d["objective"]),
-        specific,
+        line(d["objective"]), r"\par",
+        specific, r"\par",
         rf"\section{{{headings[2]}}}",
         rf"\input{{{CANONICAL_ASSETS.as_posix()}/body-{locale}.tex}}",
         rf"\section{{{headings[3]}}}",
-        line(d["discussion"]),
-        specific,
+        line(d["discussion"]), r"\par",
+        specific, r"\par",
         rf"\section{{{headings[4]}}}",
-        line(d["proposal_conclusion"] if profile in PROPOSALS else d["conclusion"]),
+        line(d["proposal_conclusion"] if profile in PROPOSALS else d["conclusion"]), r"\par",
         r"\ufcPrintReferences",
         r"\end{document}",
     ]
-    tex = "\n\n".join(lines) + "\n"
+    tex = "\n".join(lines) + "\n"
     for marker in FORBIDDEN:
         if marker.casefold() in tex.casefold():
             raise ValueError(f"Public example contains synthetic fixture marker: {marker}")
