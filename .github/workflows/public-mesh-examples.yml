@@ -72,6 +72,8 @@ jobs:
           texlive_version: 2026
           os: debian
           run: |
+            MATRIX_LOCALE="${{ matrix.locale }}"
+            SOURCE_COMMIT_SHA="${{ github.event.pull_request.head.sha || github.sha }}"
             export DEBIAN_FRONTEND=noninteractive
             apt-get update -y
             apt-get install -y --no-install-recommends poppler-utils
