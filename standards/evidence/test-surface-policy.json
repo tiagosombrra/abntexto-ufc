@@ -67,6 +67,12 @@
       "owner_doc": "docs/I18N-COMPLETION-MATRIX.md",
       "purpose": "Execute R3 four-locale source-bound real-PDF native-versus-multipage table-caption and List-of-Tables regression under pinned TeX Live 2026.",
       "reason": "A dedicated expensive, initially negative four-language PDF diagnostic must remain separately reviewable instead of silently joining the ordinary Linux integration suite; no release certification is inferred."
+    },
+    {
+      "path": "tools/audit_r5_artifacts.py",
+      "owner_doc": "docs/R5-ARTIFACT-REVIEW.md",
+      "purpose": "Independently audit exact SHA-bound 32-PDF R4 ZIP artifacts and require explicit page-by-page human dispositions before R5 sign-off.",
+      "reason": "The R5 auditor needs separately downloaded original workflow artifacts and a human normative review, so normal static and Linux CI execute only its dedicated fail-closed self-test."
     }
   ]
 }
