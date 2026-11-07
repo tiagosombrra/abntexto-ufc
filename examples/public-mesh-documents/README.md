@@ -86,3 +86,10 @@ sem validação independente.
 
 O projeto ABNTEXTO-UFC é comunitário e não constitui um modelo
 oficialmente homologado pela Universidade Federal do Ceará.
+
+## Responsabilidade do workflow de CI
+
+O fluxo dedicado `.github/workflows/public-mesh-examples.yml` é a raiz de
+execução dos testes de fonte e PDF destes exemplos. Ele roda apenas a
+compilação focal de um TCC por idioma; a matriz 28-PDF completa e a auditoria
+R5 permanecem portas independentes de homologação, não suprimidas por este CI.
