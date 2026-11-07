@@ -1,0 +1,160 @@
+name: R5 source-bound human-review gate self-test
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - tools/audit_r5_artifacts.py
+      - docs/R5-ARTIFACT-REVIEW.md
+      - docs/R5-DUPLEX-NORMATIVE-AND-MERGE-PLAN.md
+      - .github/workflows/r5-artifact-review.yml
+  push:
+    branches: [main]
+    paths:
+      - tools/audit_r5_artifacts.py
+      - docs/R5-ARTIFACT-REVIEW.md
+      - .github/workflows/r5-artifact-review.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  verifier-self-test:
+    name: Fail-closed source / page / review predicates
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - name: Checkout immutable candidate
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - name: Install pinned PDF inspection dependency
+        run: python3 -m pip install --user pymupdf==1.26.5
+      - name: Check syntax and negative R5 review controls
+        run: |
+          python3 -m py_compile tools/audit_r5_artifacts.py
+          python3 tools/audit_r5_artifacts.py --self-test
+
+
+  original-r4-source-bound-replay:
+    name: 32 original PDFs, 300 duplex pages and blocked R5 approval
+    needs: verifier-self-test
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    env:
+      SOURCE_RUN: "42285583668"
+      SOURCE_SHA: "934faec1e2d3c2670b4a791d0adcd8823c3c80a4"
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: Check out exact R5 audit source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - name: Install pinned PyMuPDF
+        run: python3 -m pip install --user pymupdf==1.26.5
+      - name: Download immutable R4 original artifact ZIPs, not edited PDF files
+        shell: bash
+        run: |
+          set -euo pipefail
+          actual_sha="$(gh run view "$SOURCE_RUN" --repo "$GITHUB_REPOSITORY" --json headSha --jq '.headSha')"
+          test "$actual_sha" = "$SOURCE_SHA" || {
+            echo "R5-R4-BLOCKED: wrong source head $actual_sha"
+            exit 1
+          }
+          mkdir -p artifacts/r5-replay/original-zip
+          gh api "repos/$GITHUB_REPOSITORY/actions/runs/$SOURCE_RUN/artifacts?per_page=100" \
+            > artifacts/r5-replay/artifact-list.json
+          for locale in pt en es fr; do
+            item="r4-full-corpus-$locale-$SOURCE_RUN"
+            id="$(jq -er --arg name "$item" '.artifacts[] | select(.name == $name and .expired == false) | .id' \
+              artifacts/r5-replay/artifact-list.json)"
+            output="artifacts/r5-replay/original-zip/r4-$locale.zip"
+            curl --fail --silent --show-error --location \
+              --header "Authorization: Bearer $GH_TOKEN" \
+              --header "Accept: application/vnd.github+json" \
+              "https://api.github.com/repos/$GITHUB_REPOSITORY/actions/artifacts/$id/zip" \
+              --output "$output"
+            unzip -t "$output" > /dev/null
+            sha256sum "$output" >> artifacts/r5-replay/original-zip-sha256.txt
+          done
+      - name: Verify every PDF source hash, logical side and normative target
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 tools/audit_r5_artifacts.py \
+            --artifact artifacts/r5-replay/original-zip/r4-pt.zip \
+            --artifact artifacts/r5-replay/original-zip/r4-en.zip \
+            --artifact artifacts/r5-replay/original-zip/r4-es.zip \
+            --artifact artifacts/r5-replay/original-zip/r4-fr.zip \
+            --output artifacts/r5-replay/audit
+          python3 - <<'PY'
+          import collections,json,pathlib
+          p=pathlib.Path('artifacts/r5-replay/audit/inventory.json')
+          d=json.loads(p.read_text('utf-8'))
+          assert d['source_commit_sha'] == '934faec1e2d3c2670b4a791d0adcd8823c3c80a4'
+          assert d['pdfs'] == 32 and d['pages'] == 1364
+          assert d['classification_counts']['DUPLEX_VERSO_CANDIDATE'] == 300
+          assert d['classification_counts']['UNEXPLAINED_BLANK'] == 0
+          assert d['classification_counts']['NUMBER_ONLY'] == 0
+          counted=collections.Counter()
+          standards=collections.Counter()
+          for document in d['documents']:
+              for page in document['pages']:
+                  if page['classification']!='DUPLEX_VERSO_CANDIDATE':continue
+                  assert page['internal_side']=='VERSO'
+                  assert page['following_logical_side']=='RECTO'
+                  assert page['cover_outside_count'] is True
+                  assert page['review_status']=='PENDING'
+                  counted[page['target_element']]+=1
+                  standards[page['applicable_standard']]+=1
+          expected={
+            'PRETEXTUAL_HEADING':164,
+            'PRETEXTUAL_APPROVAL':12,
+            'PRIMARY_SECTION':68,
+            'POSTTEXTUAL':56,
+          }
+          assert dict(counted)==expected,(counted,expected)
+          assert standards['ABNT NBR 15287:2025']==48,standards
+          assert standards['ABNT NBR 14724:2024, corrected 2025']==252,standards
+          assert d['human_review']=='PENDING'
+          assert d['publication_authorized'] is False
+          print(f"R5-DUPLEX-NORMATIVE-EVIDENCE PASS pages=1364 blanks=300 "
+                f"roles={dict(counted)} standards={dict(standards)} "
+                "human_review=PENDING publication_authorized=false")
+          PY
+      - name: Demonstrate refusal to approve synthetic data without human review
+        shell: bash
+        run: |
+          set -euo pipefail
+          if python3 tools/audit_r5_artifacts.py \
+              --artifact artifacts/r5-replay/original-zip/r4-pt.zip \
+              --artifact artifacts/r5-replay/original-zip/r4-en.zip \
+              --artifact artifacts/r5-replay/original-zip/r4-es.zip \
+              --artifact artifacts/r5-replay/original-zip/r4-fr.zip \
+              --output artifacts/r5-replay/negative \
+              --require-r5-approval > artifacts/r5-replay/negative-stdout.txt 2>&1; then
+            echo "R5-CRITICAL-FAIL: synthetic fixtures were accepted as a release"
+            exit 1
+          fi
+          grep -q "R5-AUDIT-BLOCKED" artifacts/r5-replay/negative-stdout.txt
+          grep -q '"publication_authorized": false' artifacts/r5-replay/negative/gate.json
+          grep -q '"status": "BLOCKED"' artifacts/r5-replay/negative/gate.json
+          echo "R5-FAIL-CLOSED-PASS: synthetic fixtures and missing human review rejected"
+      - name: Retain original artifact hashes and page-by-page findings
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: r5-300-duplex-independent-normative-${{ github.run_id }}
+          path: |
+            artifacts/r5-replay/original-zip-sha256.txt
+            artifacts/r5-replay/artifact-list.json
+            artifacts/r5-replay/audit/inventory.json
+            artifacts/r5-replay/audit/pages.csv
+            artifacts/r5-replay/audit/gate.json
+            artifacts/r5-replay/negative-stdout.txt
+            artifacts/r5-replay/negative/gate.json
+          retention-days: 21
+          if-no-files-found: warn
