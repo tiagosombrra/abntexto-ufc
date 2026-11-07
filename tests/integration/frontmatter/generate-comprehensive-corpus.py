@@ -69,7 +69,7 @@ PROSE = {
 TABLE_SOURCE = {"pt": "Fonte", "en": "Source", "es": "Fuente", "fr": "Source"}
 INSTITUTION_DISPLAY = {
     "pt": "Universidade Federal do Ceará",
-    "en": "Federal University of Ceará",
+    "en": "Federal University of Ceara",
     "es": "Universidad Federal de Ceará",
     "fr": "Université fédérale du Ceará",
 }

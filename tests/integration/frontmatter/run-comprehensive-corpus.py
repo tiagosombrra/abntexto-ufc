@@ -29,7 +29,7 @@ LOCALES = {"pt": "pt-BR", "en": "en-US", "es": "es-ES", "fr": "fr-FR"}
 TABLE_NAMES = {"pt": "Tabela", "en": "Table", "es": "Tabla", "fr": "Tableau"}
 INSTITUTION_DISPLAY = {
     "pt": "Universidade Federal do Ceará",
-    "en": "Federal University of Ceará",
+    "en": "Federal University of Ceara",
     "es": "Universidad Federal de Ceará",
     "fr": "Université fédérale du Ceará",
 }

@@ -22,10 +22,61 @@ LOCALES = {"pt": "pt-BR", "en": "en-US", "es": "es-ES", "fr": "fr-FR"}
 # English scholarly affiliation follows the separate UFC/CEPE naming convention.
 INSTITUTION_DISPLAY = {
     "pt": "Universidade Federal do Ceará",
-    "en": "Federal University of Ceará",
+    "en": "Federal University of Ceara",
     "es": "Universidad Federal de Ceará",
     "fr": "Université fédérale du Ceará",
 }
+PROGRAM_METADATA = {
+    "pt": {
+        "undergraduate-program": "Ciência da Computação",
+        "undergraduate-degree": "Bacharelado em Ciência da Computação",
+        "specialization-program": "Ciência da Computação",
+        "masters-graduate-program": "Programa de Pós-Graduação em Ciência da Computação",
+        "masters-program": "Mestrado em Ciência da Computação",
+        "masters-degree-field": "Ciência da Computação",
+        "doctoral-graduate-program": "Programa de Pós-Graduação em Ciência da Computação",
+        "doctoral-program": "Doutorado em Ciência da Computação",
+        "doctoral-degree-field": "Ciência da Computação",
+        "project-program": "Pesquisa em Computação",
+    },
+    "en": {
+        "undergraduate-program": "Computer Science",
+        "undergraduate-degree": "Bachelor of Science in Computer Science",
+        "specialization-program": "Computer Science",
+        "masters-graduate-program": "Graduate Program in Computer Science",
+        "masters-program": "Master of Science in Computer Science",
+        "masters-degree-field": "Computer Science",
+        "doctoral-graduate-program": "Graduate Program in Computer Science",
+        "doctoral-program": "Doctoral Program in Computer Science",
+        "doctoral-degree-field": "Computer Science",
+        "project-program": "Research in Computing",
+    },
+    "es": {
+        "undergraduate-program": "Ciencias de la Computación",
+        "undergraduate-degree": "Grado en Ciencias de la Computación",
+        "specialization-program": "Ciencias de la Computación",
+        "masters-graduate-program": "Programa de Posgrado en Ciencias de la Computación",
+        "masters-program": "Maestría en Ciencias de la Computación",
+        "masters-degree-field": "Ciencias de la Computación",
+        "doctoral-graduate-program": "Programa de Posgrado en Ciencias de la Computación",
+        "doctoral-program": "Doctorado en Ciencias de la Computación",
+        "doctoral-degree-field": "Ciencias de la Computación",
+        "project-program": "Investigación en Computación",
+    },
+    "fr": {
+        "undergraduate-program": "Informatique",
+        "undergraduate-degree": "Licence en informatique",
+        "specialization-program": "Informatique",
+        "masters-graduate-program": "Programme de formation supérieure en informatique",
+        "masters-program": "Master en informatique",
+        "masters-degree-field": "Informatique",
+        "doctoral-graduate-program": "Programme de formation supérieure en informatique",
+        "doctoral-program": "Doctorat en informatique",
+        "doctoral-degree-field": "Informatique",
+        "project-program": "Recherche en informatique",
+    },
+}
+
 USER_DATES = {
     "pt": "21 de outubro de 2026",
     "en": "21 October 2026",
@@ -123,20 +174,15 @@ def make_doc(profile: str, locale: str, target: Path) -> tuple[str, list[str]]:
         "coadvisor-feminine-label": (
             "true" if ROLE_GENDERS[profile][1] else "false"
         ),
-         "undergraduate-program": "{Computing}",
-        "undergraduate-degree": "{Bachelor}",
-        "specialization-program": "{Specialization in Computing}",
-        "masters-graduate-program": "{Graduate Program in Computing}",
-        "masters-program": "{Master of Computing}",
-        "masters-degree-field": "{Computer Science}",
-        "doctoral-graduate-program": "{Graduate Program in Computing}",
-        "doctoral-program": "{Doctoral Program in Computing}",
-        "doctoral-degree-field": "{Computer Science}",
-        "project-program": "{Graduate Selection}",
-        "project-identifier": "{SYNTHETIC-ANON-001}",
+         "project-identifier": "{SYNTHETIC-ANON-001}",
         "submission-entity": "{Universidade Federal do Ceará}",
         "submission-entity-display": "{" + INSTITUTION_DISPLAY[locale] + "}",
     }
+    # Exercise real localized program values without duplicating class prefixes.
+    options.update({
+        key: "{" + value + "}"
+        for key, value in PROGRAM_METADATA[locale].items()
+    })
     if profile in ACADEMIC_PROFILES:
         for slot in range(2, APPROVAL_LAST_EXAMINER[profile] + 1):
             options[f"examiner-{slot}"] = f"{{Integrated Examiner {slot}}}"
