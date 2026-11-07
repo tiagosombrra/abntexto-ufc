@@ -67,6 +67,12 @@
       "owner_doc": "docs/I18N-COMPLETION-MATRIX.md",
       "purpose": "Execute R3 four-locale source-bound real-PDF native-versus-multipage table-caption and List-of-Tables regression under pinned TeX Live 2026.",
       "reason": "A dedicated expensive, initially negative four-language PDF diagnostic must remain separately reviewable instead of silently joining the ordinary Linux integration suite; no release certification is inferred."
+    },
+    {
+      "path": ".github/workflows/r5-pdfa-r4-original-32.yml",
+      "owner_doc": "docs/R5-PDFA-R4-ORIGINAL-32.md",
+      "purpose": "Externally certify 32 exact source-bound synthetic R4 PDFs against PDF/A-2b with veraPDF and preserve every nonconforming rule and binary source hash.",
+      "reason": "Dedicated expensive independent PDF/A validation is intentionally separate from ordinary static or Linux CI and never replaces human review or normative approval."
     }
   ]
 }
