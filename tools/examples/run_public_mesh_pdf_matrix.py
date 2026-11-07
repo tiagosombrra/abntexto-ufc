@@ -111,7 +111,13 @@ ANONYMOUS_ENTITY_LABEL = {
     "es": "Institución no identificada",
     "fr": "Établissement non identifié",
 }
-SPECIALIZATION_LEVEL = {
+SPECIALIZATION_COVER_PREFIX = {
+    "pt": "curso de especialização em",
+    "en": "specialization program in",
+    "es": "programa de especialización en",
+    "fr": "programme de spécialisation en",
+}
+SPECIALIZATION_REDUNDANT_PREFIX = {
     "pt": "especialização em", "en": "specialization in",
     "es": "especialización en", "fr": "spécialisation en",
 }
@@ -129,11 +135,13 @@ def verify_cover_display(profile: str, locale: str, text: str) -> list[str]:
                for left, right in zip(lines, lines[1:])):
             errors.append("pdf.cover.duplicate_program_line")
     if profile == "specialization-capstone":
-        needle = SPECIALIZATION_LEVEL[locale]
-        if folded.count(needle) > 1:
-            errors.append("pdf.cover.duplicate_specialization")
-        if needle not in folded:
+        prefix = SPECIALIZATION_COVER_PREFIX[locale]
+        pos = folded.find(prefix)
+        if pos < 0:
             errors.append("pdf.cover.specialization_missing")
+        elif folded[pos + len(prefix):].lstrip().startswith(
+                SPECIALIZATION_REDUNDANT_PREFIX[locale]):
+            errors.append("pdf.cover.duplicate_specialization")
     if profile == "anonymized-research-project":
         if normalized(ANONYMOUS_ENTITY_LABEL[locale]) not in folded:
             errors.append("pdf.anon.localized_institution_missing")
@@ -194,6 +202,16 @@ def selftest() -> None:
         "CURSO DE ESPECIALIZAÇÃO EM CIÊNCIA DA COMPUTAÇÃO"
     ):
         raise AssertionError("Valid specialization cover was rejected")
+    if verify_cover_display(
+        "specialization-capstone", "en",
+        "SPECIALIZATION PROGRAM IN COMPUTER SCIENCE"
+    ):
+        raise AssertionError("Valid English specialization cover was rejected")
+    if not verify_cover_display(
+        "specialization-capstone", "en",
+        "SPECIALIZATION PROGRAM IN SPECIALIZATION IN COMPUTER SCIENCE"
+    ):
+        raise AssertionError("Duplicated English specialization cover passed")
     if verify_cover_display(
         "anonymized-research-project", "en",
         "Research project submitted to Undisclosed institution"
