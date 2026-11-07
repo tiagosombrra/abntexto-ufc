@@ -40,7 +40,14 @@ def sha(path: Path) -> str:
 
 def normalized(value: str) -> str:
     """Collapse line breaks while preserving accents and locale-specific words."""
-    return re.sub(r"\s+", " ", unicodedata.normalize("NFC", value)).strip().casefold()
+    canonical = unicodedata.normalize("NFC", value)
+    # Babel may typeset straight French apostrophes as typographic U+2019.
+    # Normalize punctuation variants without deleting authored words.
+    canonical = canonical.translate(str.maketrans({
+        "\u2018": "'", "\u2019": "'", "\u02bc": "'",
+        "\u00ad": "",
+    }))
+    return re.sub(r"\s+", " ", canonical).strip().casefold()
 
 
 def command(argv: list[str], log: Path, cwd: Path = ROOT) -> str:
@@ -124,6 +131,10 @@ def selftest() -> None:
     ]
     if any(not issues for issues in mutations):
         raise AssertionError("one PDF negative control was incorrectly accepted")
+    if normalized("l'efficacité d'une analyse") != normalized("l’efficacité d’une analyse"):
+        raise AssertionError("French Babel punctuation variants were not normalized")
+    if normalized("l'efficacité d'une analyse") == normalized("l'efficacité d'un résumé"):
+        raise AssertionError("Punctuation normalization erased substantive differences")
     print(f"PUBLIC-MESH-PDF-NEGATIVE status=PASS mutants={len(mutations)}",
           flush=True)
 
