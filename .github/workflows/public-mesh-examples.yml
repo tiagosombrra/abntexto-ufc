@@ -1,0 +1,113 @@
+name: Public academic mesh examples
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths:
+      - examples/public-mesh-documents/**
+      - tools/examples/generate_public_mesh_documents.py
+      - tests/checks/examples/public_mesh_documents.py
+      - .github/workflows/public-mesh-examples.yml
+  push:
+    branches: [main]
+    paths:
+      - examples/public-mesh-documents/**
+      - tools/examples/generate_public_mesh_documents.py
+      - tests/checks/examples/public_mesh_documents.py
+      - .github/workflows/public-mesh-examples.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+concurrency:
+  group: public-mesh-examples-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  source:
+    name: Verify 28 editable scholarly sources and negative controls
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - name: Generate and inspect all 28 sources
+        run: |
+          python3 tools/examples/generate_public_mesh_documents.py
+          python3 tools/examples/generate_mesh_study.py --check --output artifacts/canonical-mesh-study
+          python3 tests/checks/examples/mesh_study.py --artifacts artifacts/canonical-mesh-study
+          python3 tests/checks/examples/public_mesh_documents.py
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: always()
+        with:
+          name: public-mesh-28-sources-${{ github.run_id }}
+          path: |
+            artifacts/public-mesh-documents/**
+            artifacts/canonical-mesh-study/**
+          retention-days: 21
+          if-no-files-found: warn
+
+  pdf-preview:
+    name: Compile one real academic PDF / ${{ matrix.locale }}
+    needs: source
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    strategy:
+      fail-fast: false
+      matrix:
+        locale: [pt, en, es, fr]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - name: TeX Live 2026 real document smoke
+        uses: xu-cheng/texlive-action@22c04326a5d855880f9d39bb955138bf11c6df80 # v3
+        env:
+          MATRIX_LOCALE: ${{ matrix.locale }}
+          SOURCE_COMMIT_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        with:
+          texlive_version: 2026
+          os: debian
+          run: |
+            export DEBIAN_FRONTEND=noninteractive
+            apt-get update -y
+            apt-get install -y --no-install-recommends poppler-utils
+            git config --global --add safe.directory "$PWD"
+            python3 tools/examples/generate_public_mesh_documents.py
+            folder="artifacts/public-mesh-documents/build/$MATRIX_LOCALE"
+            mkdir -p "$folder"
+            source="artifacts/public-mesh-documents/$MATRIX_LOCALE/undergraduate-capstone.tex"
+            job="public-mesh-tcc-$MATRIX_LOCALE"
+            for pass in 1 2 3; do
+              pdflatex -interaction=nonstopmode -halt-on-error -file-line-error \
+                -jobname="$job" "$source" > "$folder/$job-pass-$pass.stdout" 2>&1 || {
+                  cat "$folder/$job-pass-$pass.stdout"
+                  exit 1
+                }
+              if [ "$pass" = 1 ]; then
+                biber "$job" > "$folder/$job-biber.stdout" 2>&1 || {
+                  cat "$folder/$job-biber.stdout"
+                  exit 1
+                }
+              fi
+            done
+            pdfinfo "$job.pdf" | grep -E 'Pages:|Page size:'
+            pdftotext -layout "$job.pdf" "$folder/$job.txt"
+            test -s "$folder/$job.txt"
+            if grep -Ei 'INTEGRATED-|R4-METHOD-|R4SHORT-|SYNTHETIC-ANON' "$folder/$job.txt"; then
+              echo "PUBLIC-PDF-FAIL synthetic regression text leaked"
+              exit 1
+            fi
+            cp "$job.pdf" "$job.log" "$folder/"
+            sha256sum "$job.pdf" "$source" > "$folder/$job.sha256"
+            echo "PUBLIC-PDF-EVIDENCE status=AUTOMATED_PARTIAL locale=$MATRIX_LOCALE human_review=PENDING source_sha=$SOURCE_COMMIT_SHA"
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: always()
+        with:
+          name: public-mesh-pdf-${{ matrix.locale }}-${{ github.run_id }}
+          path: artifacts/public-mesh-documents/**
+          retention-days: 21
+          if-no-files-found: warn
