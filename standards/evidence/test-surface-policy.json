@@ -67,6 +67,12 @@
       "owner_doc": "docs/I18N-COMPLETION-MATRIX.md",
       "purpose": "Execute R3 four-locale source-bound real-PDF native-versus-multipage table-caption and List-of-Tables regression under pinned TeX Live 2026.",
       "reason": "A dedicated expensive, initially negative four-language PDF diagnostic must remain separately reviewable instead of silently joining the ordinary Linux integration suite; no release certification is inferred."
+    },
+    {
+      "path": ".github/workflows/public-mesh-examples.yml",
+      "owner_doc": "examples/public-mesh-documents/README.md",
+      "purpose": "Generate 28 real-content editable LaTeX source candidates, enforce deterministic scientific source integrity, and compile one per-locale preview with original PDF evidence.",
+      "reason": "Dedicated public-example source and TeX CI is intentionally isolated from the exhaustive synthetic R4 stress matrix and the mandatory per-page R5 release audit."
     }
   ]
 }
