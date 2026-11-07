@@ -93,3 +93,10 @@ O fluxo dedicado `.github/workflows/public-mesh-examples.yml` é a raiz de
 execução dos testes de fonte e PDF destes exemplos. Ele roda apenas a
 compilação focal de um TCC por idioma; a matriz 28-PDF completa e a auditoria
 R5 permanecem portas independentes de homologação, não suprimidas por este CI.
+
+## Guia de uso e política UFC de 2026
+
+Consulte [o guia completo](../../docs/PUBLIC-MESH-USER-GUIDE.md) para
+configuração de idiomas, instalação, compilação, bibliografia, exemplos de
+código/algoritmos, anonimização, nomes institucionais oficiais e normas de
+depósito (incluindo a ficha catalográfica visual facultativa em 2026).
