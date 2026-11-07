@@ -219,16 +219,16 @@ ACADEMIC_PROFILES_WITH_DEDICATION = {
     "masters-thesis", "doctoral-thesis",
 }
 DEDICATION_TEXT = {
-    "pt": "Dedico este documento de ensaio à verificacao rigorosa da estrutura academica.",
+    "pt": "Dedico este documento de ensaio à verificação rigorosa da estrutura acadêmica.",
     "en": "I dedicate this test document to rigorous verification of academic structure.",
-    "es": "Dedico este documento de prueba a la verificacion rigurosa de la estructura academica.",
-    "fr": "Je dedie ce document de test a la verification rigoureuse de la structure universitaire.",
+    "es": "Dedico este documento de prueba a la verificación rigurosa de la estructura académica.",
+    "fr": "Je dédie ce document de test à la vérification rigoureuse de la structure universitaire.",
 }
 EPIGRAPH_TEXT = {
-    "pt": "Uma afirmacao so se sustenta quando suas evidencias podem ser examinadas.",
+    "pt": "Uma afirmação só se sustenta quando suas evidências podem ser examinadas.",
     "en": "A claim is only as reliable as the evidence that can be examined.",
-    "es": "Una afirmacion solo es fiable cuando sus pruebas pueden examinarse.",
-    "fr": "Une affirmation n'est fiable que si ses preuves peuvent etre examinees.",
+    "es": "Una afirmación solo es fiable cuando sus pruebas pueden examinarse.",
+    "fr": "Une affirmation n'est fiable que si ses preuves peuvent être examinées.",
 }
 
 
