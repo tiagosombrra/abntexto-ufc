@@ -53,6 +53,9 @@ def check() -> None:
         locale, profile = entry["locale"], entry["profile"]
         assert f"type={profile}" in source
         assert f"document-language={locale}" in source
+        assert "\\ufcsetup{\n  type=" in source
+        assert "\\ufcsetup{\n\n" not in source
+        assert "\n\n}\n" not in source
         assert fr"\input{{artifacts/canonical-mesh-study/body-{locale}.tex}}" in source
         assert r"\ufcAddBibliographyResource{examples/canonical-mesh-study/references.bib}" in source
         assert source.count(r"\section{") == 5
