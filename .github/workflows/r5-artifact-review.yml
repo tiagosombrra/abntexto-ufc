@@ -1,0 +1,36 @@
+name: R5 source-bound human-review gate self-test
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - tools/audit_r5_artifacts.py
+      - docs/R5-ARTIFACT-REVIEW.md
+      - .github/workflows/r5-artifact-review.yml
+  push:
+    branches: [main]
+    paths:
+      - tools/audit_r5_artifacts.py
+      - docs/R5-ARTIFACT-REVIEW.md
+      - .github/workflows/r5-artifact-review.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verifier-self-test:
+    name: Fail-closed source / page / review predicates
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - name: Checkout immutable candidate
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - name: Install pinned PDF inspection dependency
+        run: python3 -m pip install --user pymupdf==1.26.5
+      - name: Check syntax and negative R5 review controls
+        run: |
+          python3 -m py_compile tools/audit_r5_artifacts.py
+          python3 tools/audit_r5_artifacts.py --self-test
