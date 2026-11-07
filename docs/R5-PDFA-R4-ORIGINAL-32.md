@@ -9,6 +9,8 @@
 - 32 PDFs R4 (7 tipos + variante de tese, PT/EN/ES/FR): **1.428 páginas A4**, **324 versos brancos candidatos**, em 16 documentos duplex.
 - O workflow valida a origem GitHub, os recibos e hashes SHA256 dos **32 PDFs e seus 32 arquivos TeX** antes de repassar binários intactos ao veraPDF. Confere tipo/perfil, oito documentos por idioma, 357 páginas por idioma, 81 versos por idioma e proibição de homologação humana pelo CI.
 
+O workflow responsável é **`.github/workflows/r5-pdfa-r4-original-32.yml`**, explicitamente registrado no inventário de testes com proprietário documental nesta página.
+
 ## Verificação externa
 
 O workflow usa o contêiner oficial `verapdf/cli:latest` sobre os 32 originais,
