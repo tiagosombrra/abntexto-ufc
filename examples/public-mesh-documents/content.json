@@ -1,0 +1,179 @@
+{
+  "schema_version": 1,
+  "purpose": "User-facing editable academic exemplars, not R4 synthetic fixture documents",
+  "data_origin": "examples/canonical-mesh-study/study.json",
+  "profile_context": {
+    "undergraduate-capstone": {
+      "pt": "Neste trabalho de graduação, a implementação de malhas estruturadas permite acompanhar a representação do domínio, a enumeração de entidades e a visualização de células. Os experimentos apresentados verificam contagens topológicas e não substituem uma avaliação de métodos avançados.",
+      "en": "In this undergraduate study, implementing structured meshes illustrates domain representation, entity enumeration, and cell visualization. The reported exercises verify topology counts rather than evaluating advanced meshing methods.",
+      "es": "En este trabajo de grado, la implementación de mallas estructuradas ilustra la representación del dominio, la enumeración de entidades y la visualización de celdas. Los ejercicios comprueban recuentos topológicos, no métodos avanzados.",
+      "fr": "Dans ce travail de licence, l'implémentation de maillages structurés illustre la représentation du domaine, le décompte des entités et la visualisation des cellules. Les essais valident des identités topologiques, non des méthodes avancées."
+    },
+    "specialization-capstone": {
+      "pt": "O estudo de especialização privilegia a escolha de uma discretização para fins de visualização e intercâmbio de dados. A tabela de contagens serve à verificação de consistência de arquivos, sem extrapolação para custo de processamento ou precisão de simulação.",
+      "en": "The specialization study emphasizes selecting a discretization for visualization and data exchange. Counts are used to check file consistency, without extrapolation to computational cost or simulation accuracy.",
+      "es": "El estudio de especialización enfatiza la elección de discretizaciones para visualización e intercambio de datos. Los recuentos verifican la coherencia de archivos, sin inferir coste computacional ni exactitud de simulación.",
+      "fr": "L'étude de spécialisation privilégie le choix d'une discrétisation pour la visualisation et l'échange de données. Les décomptes vérifient la cohérence des fichiers, sans inférer coût de calcul ni précision numérique."
+    },
+    "masters-thesis": {
+      "pt": "A dissertação enquadra o exemplo em um protocolo controlado de comparação de conectividade. As três discretizações têm definição formal e resultados calculados independentemente; qualquer conclusão sobre a qualidade dos elementos requer métricas adicionais e novas geometrias.",
+      "en": "The master's dissertation places the example in a controlled connectivity-comparison protocol. All three meshes have formal definitions and independently derived counts; element-quality conclusions require additional metrics and geometries.",
+      "es": "La disertación de maestría sitúa el ejemplo en un protocolo controlado de comparación de conectividad. Los tres casos están definidos formalmente; las conclusiones de calidad requieren otras métricas y geometrías.",
+      "fr": "Le mémoire de master utilise un protocole contrôlé de comparaison de connectivité. Les trois cas sont formellement définis ; les conclusions sur la qualité exigent d'autres métriques et géométries."
+    },
+    "doctoral-thesis": {
+      "pt": "A tese apresenta estas grades somente como caso de verificação de infraestrutura computacional. O corpus não demonstra contribuição científica inédita nem valida geração anisotrópica automática. Uma pesquisa doutoral precisaria formular hipóteses originais, comparar literatura, implementar métodos e avaliar diversas geometrias.",
+      "en": "The doctoral manuscript uses these grids solely to verify computational infrastructure. The corpus demonstrates neither a novel scientific contribution nor automatic anisotropic mesh generation; doctoral research requires original hypotheses, implemented methods, literature comparisons, and diverse geometries.",
+      "es": "La tesis utiliza estas cuadrículas solo para verificar infraestructura computacional. No demuestra novedad científica ni generación anisotrópica automática; una investigación doctoral exige hipótesis originales, métodos implementados y diversas geometrías.",
+      "fr": "La thèse utilise ces grilles uniquement pour vérifier l'infrastructure informatique. Ce corpus ne prouve aucune nouveauté ni génération anisotrope automatique ; un travail doctoral requiert des hypothèses originales et des méthodes évaluées sur plusieurs géométries."
+    },
+    "research-project": {
+      "pt": "Neste projeto de pesquisa, o estudo analítico define uma verificação preliminar do pipeline. A execução futura deverá incluir métodos não estruturados, métricas de forma e erro, cronograma de replicação e critérios objetivos de sucesso; resultados esperados não são apresentados como observados.",
+      "en": "In this research proposal, the analytical example defines a preliminary pipeline check. Future work will include unstructured methods, shape and error metrics, a replication schedule, and measurable success criteria; expected outcomes are not presented as observations.",
+      "es": "En este proyecto, el caso analítico define una comprobación preliminar del pipeline. El trabajo futuro incluirá métodos no estructurados, métricas de forma y error, calendario de replicación y criterios de éxito; los resultados esperados no se presentan como observados.",
+      "fr": "Dans ce projet de recherche, le cas analytique sert à vérifier d'abord la chaîne de traitement. Le travail futur inclura méthodes non structurées, métriques de forme et d'erreur, calendrier de réplication et critères de réussite ; les résultats attendus ne sont pas présentés comme mesurés."
+    },
+    "anonymized-research-project": {
+      "pt": "A proposta anonimizada conserva os mesmos dados públicos e o protocolo de verificação, mas não identifica o proponente, orientador, laboratório ou instituição específica associada à autoria. Informações pessoais devem permanecer ausentes do texto, de metadados PDF e de anexos.",
+      "en": "The anonymized proposal preserves the public dataset and verification protocol without identifying the proponent, supervisor, laboratory, or author-affiliated institution. Personal details must remain absent from document text, PDF metadata, and attachments.",
+      "es": "La propuesta anonimizada conserva los datos públicos y el protocolo sin identificar al autor, tutor, laboratorio ni institución vinculada. Los datos personales deben quedar fuera del texto, los metadatos PDF y los anexos.",
+      "fr": "Le projet anonymisé conserve les données publiques et le protocole sans identifier l'auteur, le responsable, le laboratoire ou une institution liée à l'auteur. Les données personnelles doivent être absentes du texte, des métadonnées PDF et des annexes."
+    },
+    "scientific-article": {
+      "pt": "O artigo apresenta um protocolo de demonstração limitado ao domínio quadrado unitário. A comparação consiste em contagens de elementos, vértices e arestas e na visualização das grades; não permite generalizações para aplicações físicas, soluções numéricas ou métodos alternativos.",
+      "en": "The article presents a demonstration protocol restricted to the unit square. The comparison consists of cell, vertex, and edge counts and grid visualization; it cannot be generalized to physical applications, numerical solutions, or alternative generation methods.",
+      "es": "El artículo presenta un protocolo demostrativo limitado al cuadrado unitario. Compara recuentos de celdas, vértices y aristas y visualizaciones; no permite generalizaciones a aplicaciones físicas ni a métodos de generación.",
+      "fr": "L'article présente un protocole démonstratif limité au carré unité. La comparaison porte sur le nombre de cellules, sommets et arêtes et sur les figures ; elle ne permet aucune généralisation aux applications physiques ou à d'autres méthodes."
+    }
+  },
+  "locales": {
+    "pt": {
+      "lang": "pt-BR",
+      "institution_display": "Universidade Federal do Ceará",
+      "author": "Equipe de documentação do ABNTEXTO-UFC",
+      "advisor": "Docente responsável pela orientação",
+      "examiner": "Membro da banca de exemplo",
+      "title": "Análise reprodutível de malhas estruturadas no quadrado unitário",
+      "proposal_title": "Proposta de avaliação reprodutível de discretizações geométricas",
+      "introduction": "A discretização de domínios geométricos é uma etapa importante de aplicações computacionais que utilizam malhas. O presente exemplo compara três configurações estruturadas sobre um quadrado unitário, com valores determinados diretamente de sua conectividade.",
+      "objective": "Descrever de forma verificável a construção de malhas quadrangulares e triangulares e comparar contagens topológicas e razões geométricas sem atribuir desempenho não medido.",
+      "discussion": "As contagens registradas permitem conferir a coerência entre resolução, vértices, arestas e células. Elas não avaliam a precisão de uma simulação, a eficiência de um algoritmo nem a qualidade universal de uma discretização.",
+      "conclusion": "O conjunto de três malhas fornece dados reproduzíveis para demonstrar a estrutura de um documento acadêmico. Comparações científicas mais amplas dependeriam de outras geometrias, métricas e experimentos independentes.",
+      "proposal_conclusion": "A etapa futura consiste em definir novas geometrias, selecionar métricas e preparar um protocolo de avaliação replicável. Os dados da grade analítica são uma verificação preliminar; resultados futuros não são tratados como observações realizadas.",
+      "abstract": "Este exemplo apresenta a construção determinística de malhas estruturadas em um quadrado unitário. Compara células, vértices, arestas e razão geométrica, explicitando as limitações de um estudo didático.",
+      "keywords": "malhas estruturadas; discretização geométrica; reprodutibilidade",
+      "headings": [
+        "Introdução",
+        "Objetivos",
+        "Metodologia e estudo de caso",
+        "Discussão",
+        "Considerações finais"
+      ],
+      "programs": [
+        "Ciência da Computação",
+        "Bacharelado",
+        "Especialização em Ciência da Computação",
+        "Programa de Pós-Graduação em Ciência da Computação",
+        "Ciência da Computação"
+      ],
+      "project_program": "Pesquisa em Computação",
+      "article_note": "Exemplo demonstrativo do projeto ABNTEXTO-UFC; substituir os metadados antes de qualquer submissão."
+    },
+    "en": {
+      "lang": "en-US",
+      "institution_display": "Federal University of Ceara",
+      "author": "ABNTEXTO-UFC Documentation Team",
+      "advisor": "Academic supervisor for this example",
+      "examiner": "Example committee member",
+      "title": "Reproducible analysis of structured meshes on the unit square",
+      "proposal_title": "Proposal for reproducible evaluation of geometric discretizations",
+      "introduction": "Discretizing geometric domains is an important step in computational applications involving meshes. This example compares three structured configurations over the unit square, using values derived directly from their constructed connectivity.",
+      "objective": "Document a verifiable construction of quadrilateral and triangular meshes and compare topology counts and geometric ratios without claiming unmeasured performance.",
+      "discussion": "The recorded counts provide a consistency check between resolution, vertices, edges, and cells. They do not assess numerical-simulation accuracy, algorithmic efficiency, or universal mesh quality.",
+      "conclusion": "The three-mesh dataset provides reproducible material for demonstrating academic document structure. Broader scientific comparisons would require additional geometries, metrics, and independent experiments.",
+      "proposal_conclusion": "Future work will define new geometries, select metrics, and establish a replicable evaluation protocol. The analytical grids form a preliminary check; future outcomes are not presented as observations.",
+      "abstract": "This example constructs structured meshes deterministically on a unit square. It compares cells, vertices, edges, and geometric ratios while clearly stating the limitations of a didactic study.",
+      "keywords": "structured meshes; geometric discretization; reproducibility",
+      "headings": [
+        "Introduction",
+        "Objectives",
+        "Methodology and case study",
+        "Discussion",
+        "Concluding remarks"
+      ],
+      "programs": [
+        "Computer Science",
+        "Bachelor of Science",
+        "Specialization in Computer Science",
+        "Graduate Program in Computer Science",
+        "Computer Science"
+      ],
+      "project_program": "Computing Research",
+      "article_note": "ABNTEXTO-UFC illustrative example; replace metadata before submission."
+    },
+    "es": {
+      "lang": "es-ES",
+      "institution_display": "Universidad Federal de Ceará",
+      "author": "Equipo de documentación de ABNTEXTO-UFC",
+      "advisor": "Docente responsable de la dirección",
+      "examiner": "Miembro de tribunal de ejemplo",
+      "title": "Análisis reproducible de mallas estructuradas en el cuadrado unitario",
+      "proposal_title": "Propuesta de evaluación reproducible de discretizaciones geométricas",
+      "introduction": "La discretización de dominios geométricos es una etapa importante en las aplicaciones informáticas basadas en mallas. Este ejemplo compara tres configuraciones estructuradas en el cuadrado unitario a partir de datos calculados directamente de su conectividad.",
+      "objective": "Describir una construcción verificable de mallas cuadrangulares y triangulares y comparar recuentos topológicos y razones geométricas sin atribuir rendimientos no medidos.",
+      "discussion": "Los recuentos permiten verificar la coherencia entre resolución, vértices, aristas y celdas. No evalúan la precisión de una simulación, la eficiencia algorítmica ni la calidad universal de la malla.",
+      "conclusion": "El conjunto de tres mallas proporciona datos reproducibles para demostrar la estructura de un documento académico. Una comparación científica más amplia exigiría otras geometrías, métricas y experimentos independientes.",
+      "proposal_conclusion": "El trabajo futuro definirá nuevas geometrías, seleccionará métricas y establecerá un protocolo de evaluación replicable. Las cuadrículas analíticas constituyen una comprobación preliminar, no resultados futuros observados.",
+      "abstract": "Este ejemplo construye mallas estructuradas de forma determinista en un cuadrado unitario. Compara celdas, vértices, aristas y razones geométricas, e indica las limitaciones de un estudio didáctico.",
+      "keywords": "mallas estructuradas; discretización geométrica; reproducibilidad",
+      "headings": [
+        "Introducción",
+        "Objetivos",
+        "Metodología y estudio de caso",
+        "Discusión",
+        "Consideraciones finales"
+      ],
+      "programs": [
+        "Ciencias de la Computación",
+        "Grado",
+        "Especialización en Ciencias de la Computación",
+        "Programa de Posgrado en Ciencias de la Computación",
+        "Ciencias de la Computación"
+      ],
+      "project_program": "Investigación en Computación",
+      "article_note": "Ejemplo ilustrativo de ABNTEXTO-UFC; sustituya los metadatos antes de enviarlo."
+    },
+    "fr": {
+      "lang": "fr-FR",
+      "institution_display": "Université fédérale du Ceará",
+      "author": "Équipe de documentation ABNTEXTO-UFC",
+      "advisor": "Responsable de l'encadrement de l'exemple",
+      "examiner": "Membre du jury à titre d'exemple",
+      "title": "Analyse reproductible de maillages structurés du carré unité",
+      "proposal_title": "Projet d'évaluation reproductible de discrétisations géométriques",
+      "introduction": "La discrétisation des domaines géométriques est une étape importante dans les applications numériques utilisant des maillages. Cet exemple compare trois configurations structurées du carré unité à partir de données déduites directement de leur connectivité.",
+      "objective": "Décrire une construction vérifiable de maillages quadrangulaires et triangulaires et comparer les décomptes topologiques et les rapports géométriques sans avancer de performances non mesurées.",
+      "discussion": "Les décomptes permettent de vérifier la cohérence entre résolution, sommets, arêtes et cellules. Ils ne mesurent ni la précision d'une simulation, ni l'efficacité d'un algorithme, ni la qualité universelle du maillage.",
+      "conclusion": "Ces trois maillages fournissent des données reproductibles pour illustrer la structure d'un document universitaire. Une comparaison scientifique plus large nécessiterait d'autres géométries, des métriques et des expériences indépendantes.",
+      "proposal_conclusion": "Le travail futur définira de nouvelles géométries, choisira des métriques et établira un protocole d'évaluation reproductible. Les grilles analytiques sont un contrôle préliminaire, et non des résultats futurs déjà observés.",
+      "abstract": "Cet exemple construit de manière déterministe des maillages structurés sur le carré unité. Il compare cellules, sommets, arêtes et rapports géométriques, tout en explicitant les limites d'une étude didactique.",
+      "keywords": "maillages structurés; discrétisation géométrique; reproductibilité",
+      "headings": [
+        "Introduction",
+        "Objectifs",
+        "Méthodologie et étude de cas",
+        "Discussion",
+        "Conclusion"
+      ],
+      "programs": [
+        "Informatique",
+        "Licence",
+        "Spécialisation en informatique",
+        "Programme de deuxième et troisième cycles en informatique",
+        "Informatique"
+      ],
+      "project_program": "Recherche en informatique",
+      "article_note": "Exemple illustratif ABNTEXTO-UFC ; remplacer les métadonnées avant soumission."
+    }
+  }
+}
