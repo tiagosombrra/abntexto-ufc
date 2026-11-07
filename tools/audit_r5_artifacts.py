@@ -25,6 +25,23 @@ MARKERS = (
     "R4SHORT-",
 )
 VALID_REVIEW = {"ACCEPT", "NEEDS_CHANGES", "REJECT"}
+PRETEXT_START = (
+    "AGRADECIMENTOS", "ACKNOWLEDGMENTS", "AGRADECIMIENTOS",
+    "REMERCIEMENTS", "ERRATA", "FE DE ERRATAS", "RESUMO", "ABSTRACT",
+    "RESUMEN", "RÉSUMÉ", "LISTA", "LIST OF", "LISTE DES", "SUMÁRIO",
+    "CONTENTS", "ÍNDICE GENERAL", "TABLE DES MATIÈRES",
+)
+POSTTEXT_START = (
+    "REFERÊNCIAS", "REFERENCES", "REFERENCIAS", "RÉFÉRENCES",
+    "APÊNDICE", "APPENDIX", "APÉNDICE", "ANNEXE", "ANNEX", "ANEXO",
+    "GLOSSÁRIO", "GLOSSARY", "GLOSARIO", "GLOSSAIRE",
+    "ÍNDICE REMISSIVO", "ÍNDICE ALFABÉTICO", "INDEX",
+)
+PRIMARY = re.compile(
+    r"(?:^|\\s)[1-4]\\s+(?:INTEGRATED-SECTION-|R4-METHOD-|"
+    r"R4-RESULTS-|R4-IMPLEMENTATION-)"
+)
+
 
 
 def require(condition: bool, message: str) -> None:
@@ -61,7 +78,51 @@ def receipts_by_filename(receipts: dict, locale: str) -> dict:
     return found
 
 
-def physical_page(page, page_number: int, duplex: bool) -> dict:
+def logical_side(physical: int, external_cover: bool) -> str:
+    """A cover is outside the book block; PDF physical page 2 is recto."""
+    logical = physical - int(external_cover)
+    if logical < 1:
+        return "EXTERNAL_COVER"
+    return "RECTO" if logical % 2 == 1 else "VERSO"
+
+
+def classify_next(text: str, before_textual: bool) -> str:
+    """Classify structure without automatically accepting its legal basis."""
+    full = " ".join(text.split()).upper()
+    cleaned = re.sub(r"^\\d{1,4}\\s+", "", full)
+    if not cleaned:
+        return "MISSING_NEXT_ELEMENT"
+    if any(cleaned.startswith(value) for value in POSTTEXT_START):
+        return "POSTTEXTUAL"
+    if PRIMARY.search(cleaned[:115]):
+        return "PRIMARY_SECTION"
+    if before_textual:
+        if any(value in cleaned for value in (
+            "BANCA EXAMINADORA", "EXAMINING COMMITTEE",
+            "TRIBUNAL EXAMINADOR", "JURY D’EXAMEN"
+        )):
+            return "PRETEXTUAL_APPROVAL"
+        if any(cleaned.startswith(value) for value in PRETEXT_START):
+            return "PRETEXTUAL_HEADING"
+        return "PRETEXTUAL_OTHER"
+    return "OTHER"
+
+
+def normative_bucket(profile: str, element: str) -> str:
+    """Apply the correct ABNT standard to research proposals vs theses."""
+    proposal = profile == "anonymized-research-project"
+    if element == "PRIMARY_SECTION":
+        return "NBR15287_2025_5_2_2" if proposal else "NBR14724_2024_5_2_2"
+    if element in ("PRETEXTUAL_HEADING", "PRETEXTUAL_APPROVAL"):
+        return "NBR15287_2025_5_1" if proposal else "NBR14724_2024_5_1"
+    if element == "POSTTEXTUAL":
+        return ("NBR15287_2025_POSTTEXT_REVIEW" if proposal else
+                "UFC_2022_POSTTEXT_VS_NBR14724_2024_REVIEW")
+    return "NORMATIVE_REVIEW_REQUIRED"
+
+
+def physical_page(page, page_number: int, duplex: bool,
+                  external_cover: bool = True) -> dict:
     text = page.get_text("text").strip()
     no_objects = not page.get_images(full=True) and not page.get_drawings()
     white = None
@@ -71,7 +132,8 @@ def physical_page(page, page_number: int, duplex: bool) -> dict:
         white = min(pix.samples) >= 250
     blank = not text and no_objects and white is True
     number_only = bool(re.fullmatch(r"\d{1,5}", text))
-    if blank and duplex and page_number > 1 and page_number % 2 == 1:
+    side = logical_side(page_number, external_cover)
+    if blank and duplex and page_number > 1 and side == "VERSO":
         classification = "DUPLEX_VERSO_CANDIDATE"
     elif blank:
         classification = "UNEXPLAINED_BLANK"
@@ -84,6 +146,8 @@ def physical_page(page, page_number: int, duplex: bool) -> dict:
     return {
         "physical_page": page_number,
         "classification": classification,
+        "internal_side": side,
+        "cover_outside_count": external_cover,
         "a4": (abs(page.rect.width - 595.276) < 1
                and abs(page.rect.height - 841.89) < 1),
         "text_characters": len(text),
@@ -125,8 +189,46 @@ def audit_zip(path: Path) -> dict:
             doc = fitz.open(stream=pdf_bytes, filetype="pdf")
             require(len(doc) == receipt["pages"], f"{filename}: page count mismatch")
             duplex = bool(source.get("features", {}).get("duplex", False))
-            pages = [physical_page(page, number, duplex)
+            source_name = filename.removesuffix(".pdf") + ".tex"
+            source_bytes = archive.read(source_name)
+            require(digest(source_bytes) == receipt["source_sha256"],
+                    f"{filename}: source bytes SHA mismatch")
+            original_tex = source_bytes.decode("utf-8")
+            external_cover = r"\ufcPrintCover" in original_tex
+            require(not duplex or external_cover,
+                    f"{filename}: cannot infer duplex logical recto without cover")
+            pages = [physical_page(page, number, duplex, external_cover)
                      for number, page in enumerate(doc, 1)]
+            if duplex:
+                texts = [page.get_text("text") for page in doc]
+                first_textual = next((
+                    position for position, raw in enumerate(texts, 1)
+                    if "1 INTEGRATED-SECTION-" in " ".join(raw.split())[:125]
+                ), None)
+                require(first_textual is not None,
+                        f"{filename}: first primary section cannot be located")
+                for entry in pages:
+                    if entry["classification"] != "DUPLEX_VERSO_CANDIDATE":
+                        continue
+                    physical = entry["physical_page"]
+                    require(physical < len(doc),
+                            f"{filename}:{physical}: terminal blank verso")
+                    following = texts[physical]
+                    require(bool(following.strip()),
+                            f"{filename}:{physical}: next recto has no text")
+                    element = classify_next(
+                        following, physical + 1 < first_textual)
+                    entry["target_element"] = element
+                    entry["normative_bucket"] = normative_bucket(
+                        source["profile"], element)
+                    entry["applicable_standard"] = (
+                        "ABNT NBR 15287:2025"
+                        if source["profile"] == "anonymized-research-project"
+                        else "ABNT NBR 14724:2024, corrected 2025")
+                    entry["following_logical_side"] = logical_side(
+                        physical + 1, external_cover)
+                    require(entry["following_logical_side"] == "RECTO",
+                            f"{filename}:{physical}: incorrect recto transition")
             require(all(page["a4"] for page in pages), f"{filename}: non-A4 leaf")
             textless = [page["physical_page"] for page in pages
                         if not page["text_characters"]]
@@ -209,6 +311,17 @@ def self_test() -> None:
             "Blank duplex verso not detected")
     require(physical_page(doc[0], 2, True)["classification"] == "UNEXPLAINED_BLANK",
             "Unexpected blank was not detected")
+    require(physical_page(doc[0], 3, True, False)["classification"] == "UNEXPLAINED_BLANK",
+            "Missing external cover did not alter side parity")
+    require(logical_side(2, True) == "RECTO"
+            and logical_side(3, True) == "VERSO",
+            "External cover physical-to-logical mapping wrong")
+    require(classify_next("39 ANNEX A— INTEGRATED-ANNEX-EN", False) == "POSTTEXTUAL",
+            "Annex target missing")
+    require(classify_next("Author EXAMINING COMMITTEE name", True)
+            == "PRETEXTUAL_APPROVAL", "Approval heading not classified")
+    require(normative_bucket("anonymized-research-project", "PRIMARY_SECTION")
+            == "NBR15287_2025_5_2_2", "Project normative scope wrong")
     doc[0].insert_text((72, 72), "123")
     require(physical_page(doc[0], 3, True)["classification"] == "NUMBER_ONLY",
             "Number-only page was not detected")
@@ -232,7 +345,7 @@ def self_test() -> None:
     require(any("review_pdf_sha_mismatch" in error
                 for error in review_problems(sample, reviews)),
             "Stale PDF hash was not detected")
-    print("R5-AUDIT-SELFTEST status=PASS cases=6 release_authorized=false")
+    print("R5-AUDIT-SELFTEST status=PASS cases=11 release_authorized=false")
 
 
 def main() -> None:
