@@ -113,6 +113,8 @@ def manuscript(profile: str, locale: str, content: dict, output: Path) -> tuple[
     specific = line(content["profile_context"][profile][locale])
     appendix = output / locale / f"{profile}-summary.tex"
     companion_path = output / locale / f"{profile}-companion.tex"
+    appendix_ref = appendix.relative_to(ROOT).as_posix()
+    companion_ref = companion_path.relative_to(ROOT).as_posix()
     support = {}
     if profile in ACADEMIC:
         support[str(appendix)] = summary(locale, content)
@@ -154,8 +156,8 @@ def manuscript(profile: str, locale: str, content: dict, output: Path) -> tuple[
         if profile in ACADEMIC:
             lines += [
                 r"\ufcPrintApprovalPage",
-                rf"\ufcPrintRequiredSummaries{{{appendix.as_posix()}}}"
-                + "{" + companion_path.as_posix() + "}",
+                rf"\ufcPrintRequiredSummaries{{{appendix_ref}}}"
+                + "{" + companion_ref + "}",
             ]
         lines += [
             r"\ufcPrintListOfFigures",
@@ -208,9 +210,9 @@ def build(content: dict, output: Path) -> dict[str, bytes]:
                 built[path] = value.encode("utf-8")
             inventory.append({
                 "profile": profile, "locale": locale,
-                "source": str(name),
+                "source": name.relative_to(ROOT).as_posix(),
                 "source_sha256": digest(source.encode("utf-8")),
-                "support": {path: digest(value.encode("utf-8")) for path, value in extras.items()},
+                "support": {Path(path).relative_to(ROOT).as_posix(): digest(value.encode("utf-8")) for path, value in extras.items()},
                 "status": "SOURCE_ONLY_PDF_UNVERIFIED",
                 "human_approval": "PENDING",
             })
