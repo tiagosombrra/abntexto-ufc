@@ -38,7 +38,7 @@ POSTTEXT_START = (
     "ÍNDICE REMISSIVO", "ÍNDICE ALFABÉTICO", "INDEX",
 )
 PRIMARY = re.compile(
-    r"(?:^|\\s)[1-4]\\s+(?:INTEGRATED-SECTION-|R4-METHOD-|"
+    r"(?:^|\s)[1-4]\s+(?:INTEGRATED-SECTION-|R4-METHOD-|"
     r"R4-RESULTS-|R4-IMPLEMENTATION-)"
 )
 
@@ -89,7 +89,7 @@ def logical_side(physical: int, external_cover: bool) -> str:
 def classify_next(text: str, before_textual: bool) -> str:
     """Classify structure without automatically accepting its legal basis."""
     full = " ".join(text.split()).upper()
-    cleaned = re.sub(r"^\\d{1,4}\\s+", "", full)
+    cleaned = re.sub(r"^\d{1,4}\s+", "", full)
     if not cleaned:
         return "MISSING_NEXT_ELEMENT"
     if any(cleaned.startswith(value) for value in POSTTEXT_START):
@@ -318,6 +318,8 @@ def self_test() -> None:
             "External cover physical-to-logical mapping wrong")
     require(classify_next("39 ANNEX A— INTEGRATED-ANNEX-EN", False) == "POSTTEXTUAL",
             "Annex target missing")
+    require(classify_next("35 3 R4-RESULTS-EN", False) == "PRIMARY_SECTION",
+            "Primary-section regex did not match a real PDF heading")
     require(classify_next("Author EXAMINING COMMITTEE name", True)
             == "PRETEXTUAL_APPROVAL", "Approval heading not classified")
     require(normative_bucket("anonymized-research-project", "PRIMARY_SECTION")
@@ -345,7 +347,7 @@ def self_test() -> None:
     require(any("review_pdf_sha_mismatch" in error
                 for error in review_problems(sample, reviews)),
             "Stale PDF hash was not detected")
-    print("R5-AUDIT-SELFTEST status=PASS cases=11 release_authorized=false")
+    print("R5-AUDIT-SELFTEST status=PASS cases=12 release_authorized=false")
 
 
 def main() -> None:
