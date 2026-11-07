@@ -105,6 +105,43 @@ def verify(info: dict[str, str], xmp: str, outline: str, text: str,
     return sorted(set(errors))
 
 
+ANONYMOUS_ENTITY_LABEL = {
+    "pt": "Instituição não identificada",
+    "en": "Undisclosed institution",
+    "es": "Institución no identificada",
+    "fr": "Établissement non identifié",
+}
+SPECIALIZATION_LEVEL = {
+    "pt": "especialização em", "en": "specialization in",
+    "es": "especialización en", "fr": "spécialisation en",
+}
+
+
+def verify_cover_display(profile: str, locale: str, text: str) -> list[str]:
+    """Reject duplicate cover lines and nonlocalized anonymous placeholders."""
+    cover = text.split("\f", 1)[0]
+    # Rejoin words hyphenated by pdftotext line wrapping without dropping accents.
+    folded = normalized(re.sub(r"-\s*\n(?=\w)", "", cover))
+    lines = [normalized(line) for line in cover.splitlines() if line.strip()]
+    errors = []
+    if profile in {"masters-thesis", "doctoral-thesis"}:
+        if any(left == right and len(left) > 16
+               for left, right in zip(lines, lines[1:])):
+            errors.append("pdf.cover.duplicate_program_line")
+    if profile == "specialization-capstone":
+        needle = SPECIALIZATION_LEVEL[locale]
+        if folded.count(needle) > 1:
+            errors.append("pdf.cover.duplicate_specialization")
+        if needle not in folded:
+            errors.append("pdf.cover.specialization_missing")
+    if profile == "anonymized-research-project":
+        if normalized(ANONYMOUS_ENTITY_LABEL[locale]) not in folded:
+            errors.append("pdf.anon.localized_institution_missing")
+        if locale != "pt" and normalized(ANONYMOUS_ENTITY_LABEL["pt"]) in folded:
+            errors.append("pdf.anon.portuguese_placeholder_leaked")
+    return sorted(set(errors))
+
+
 def selftest() -> None:
     """Prove the detector rejects the four historically observed defects."""
     good_info = {"Title": "Public study", "Author": "Public researcher",
@@ -135,6 +172,33 @@ def selftest() -> None:
         raise AssertionError("French Babel punctuation variants were not normalized")
     if normalized("l'efficacité d'une analyse") == normalized("l'efficacité d'un résumé"):
         raise AssertionError("Punctuation normalization erased substantive differences")
+    # These regression mutants reproduce concrete defects found in public PDFs.
+    visible_mutants = [
+        verify_cover_display(
+            "specialization-capstone", "pt",
+            "CURSO DE ESPECIALIZAÇÃO EM ESPECIALIZAÇÃO EM CIÊNCIA DA COMPUTAÇÃO"
+        ),
+        verify_cover_display(
+            "masters-thesis", "en",
+            "GRADUATE PROGRAM IN COMPUTER SCIENCE\nGRADUATE PROGRAM IN COMPUTER SCIENCE"
+        ),
+        verify_cover_display(
+            "anonymized-research-project", "fr",
+            "Projet de recherche soumis à Instituição não identificada"
+        ),
+    ]
+    if any(not issues for issues in visible_mutants):
+        raise AssertionError("An observed public PDF cover defect passed")
+    if verify_cover_display(
+        "specialization-capstone", "pt",
+        "CURSO DE ESPECIALIZAÇÃO EM CIÊNCIA DA COMPUTAÇÃO"
+    ):
+        raise AssertionError("Valid specialization cover was rejected")
+    if verify_cover_display(
+        "anonymized-research-project", "en",
+        "Research project submitted to Undisclosed institution"
+    ):
+        raise AssertionError("Valid anonymized institutional placeholder was rejected")
     print(f"PUBLIC-MESH-PDF-NEGATIVE status=PASS mutants={len(mutations)}",
           flush=True)
 
@@ -163,6 +227,7 @@ def inspect(profile: str, locale: str, job: str, output: Path,
     expected_author = "" if anonymized else context["author"]
     errors = verify(info, xmp, outline, text, title, expected_author,
                     context["headings"][0], CAPTIONS[locale], anonymized)
+    errors.extend(verify_cover_display(profile, locale, text))
     if normalized(canon["heading"]) not in normalized(text):
         errors.append("pdf.text.canonical_method_missing")
     if normalized(context["discussion"]) not in normalized(text):
