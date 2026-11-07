@@ -63,10 +63,40 @@
       "reason": "Runs a dedicated four-locale parallel workflow with TeX Live and minted dependencies so regular Linux integration need not duplicate expensive optional PDF builds."
     },
     {
+      "path": ".github/workflows/r4-comprehensive-corpus.yml",
+      "owner_doc": "docs/I18N-COMPLETION-MATRIX.md",
+      "purpose": "Run the source-bound 7-profile by 4-locale real-PDF comprehensive corpus preflight and full TeX Live 2026 compile and inspect batch.",
+      "reason": "A heavy 28-PDF manuscript matrix is intentionally independent from the routine Linux checks; this ownership declaration does not replace full human visual R5 certification."
+    },
+    {
       "path": ".github/workflows/r3-table-list-locale.yml",
       "owner_doc": "docs/I18N-COMPLETION-MATRIX.md",
       "purpose": "Execute R3 four-locale source-bound real-PDF native-versus-multipage table-caption and List-of-Tables regression under pinned TeX Live 2026.",
       "reason": "A dedicated expensive, initially negative four-language PDF diagnostic must remain separately reviewable instead of silently joining the ordinary Linux integration suite; no release certification is inferred."
+    },
+    {
+      "path": ".github/workflows/pdf-metadata-outline.yml",
+      "owner_doc": "docs/I18N-COMPLETION-MATRIX.md",
+      "purpose": "Maintain a separately reviewable TeX Live 2026 four-locale actual-PDF Info, XMP, outline navigation and anonymized-author privacy evidence matrix for P0 R3 #558.",
+      "reason": "Twelve source-bound PDF and XMP/attachment inspections are a dedicated time-consuming metadata regression, not a routine subset of each Linux integration or general frontmatter smoke."
+    },
+    {
+      "path": ".github/workflows/public-mesh-examples.yml",
+      "owner_doc": "examples/public-mesh-documents/README.md",
+      "purpose": "Generate 28 real-content editable LaTeX source candidates, enforce deterministic scientific source integrity, and compile one per-locale preview with original PDF evidence.",
+      "reason": "Dedicated public-example source and TeX CI is intentionally isolated from the exhaustive synthetic R4 stress matrix and the mandatory per-page R5 release audit."
+    },
+    {
+      "path": "tools/audit_r5_artifacts.py",
+      "owner_doc": "docs/R5-ARTIFACT-REVIEW.md",
+      "purpose": "Independently audit exact SHA-bound 32-PDF R4 ZIP artifacts and require explicit page-by-page human dispositions before R5 sign-off.",
+      "reason": "The R5 auditor needs separately downloaded original workflow artifacts and a human normative review, so normal static and Linux CI execute only its dedicated fail-closed self-test."
+    },
+    {
+      "path": ".github/workflows/r5-pdfa-exact-e3.yml",
+      "owner_doc": "docs/R5-PDFA-EXTERNAL-VALIDATION.md",
+      "purpose": "Require an external veraPDF PDF/A-2b validation against all 28 immutable E3 PDF binary artifacts with SHA-bound receipts, raw XML and complete rule results.",
+      "reason": "The source-bound independent PDF/A diagnostic is a costly one-off artifact validation stage outside the permanent source-only Linux static and integration runners."
     }
   ]
 }

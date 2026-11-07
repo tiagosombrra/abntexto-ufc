@@ -61,6 +61,12 @@
 \bool_new:N \g_ufc_catalog_card_bool
 \bool_new:N \g_ufc_coat_of_arms_bool
 \prop_new:N \g_ufc_metadata_prop
+% Metadata can be changed with public \ufcsetup before the first PDF page.
+% Protect against late anonymity transitions after serialized pages exist.
+\bool_new:N \g_ufc_pdf_document_started_bool
+\bool_new:N \g_ufc_pdf_first_page_shipped_bool
+\tl_new:N \l_ufc_pdf_previous_type_tl
+
 \bool_new:N \g_ufc_institution_explicit_bool
 \bool_new:N \g_ufc_submission_entity_explicit_bool
 
@@ -209,25 +215,25 @@
     fr/index = {Index}
   }
 \prop_gput:Nnn \g_ufc_document_text_prop {pt/nature-undergraduate} {Trabalho~de~Conclusão~de~Curso~apresentado~ao~Curso~de~Graduação~em~\ufc_meta_use:n {undergraduate-program}~da~\ufc_institution_display:,~como~requisito~parcial~à~obtenção~do~grau~de~\ufc_meta_use:n {undergraduate-degree}~em~\ufc_meta_use:n {undergraduate-program}.}
-\prop_gput:Nnn \g_ufc_document_text_prop {en/nature-undergraduate} {Undergraduate~capstone~submitted~to~the~\ufc_meta_use:n {undergraduate-program}~program~at~\ufc_institution_display:\space in~partial~fulfillment~of~the~requirements~for~the~degree~of~\ufc_meta_use:n {undergraduate-degree}~in~\ufc_meta_use:n {undergraduate-program}.}
-\prop_gput:Nnn \g_ufc_document_text_prop {es/nature-undergraduate} {Trabajo~de~fin~de~grado~presentado~al~programa~de~\ufc_meta_use:n {undergraduate-program}~de~\ufc_institution_display:\space como~requisito~parcial~para~obtener~el~título~de~\ufc_meta_use:n {undergraduate-degree}~en~\ufc_meta_use:n {undergraduate-program}.}
-\prop_gput:Nnn \g_ufc_document_text_prop {fr/nature-undergraduate} {Mémoire~de~fin~de~licence~présenté~au~programme~de~\ufc_meta_use:n {undergraduate-program}~de~\ufc_institution_display:\space en~vue~de~l'obtention~du~diplôme~de~\ufc_meta_use:n {undergraduate-degree}~en~\ufc_meta_use:n {undergraduate-program}.}
+\prop_gput:Nnn \g_ufc_document_text_prop {en/nature-undergraduate} {Undergraduate~capstone~submitted~to~the~\ufc_meta_use:n {undergraduate-program}~program~at~the~\ufc_institution_display:\space in~partial~fulfillment~of~the~requirements~for~the~degree~of~\ufc_meta_use:n {undergraduate-degree}~in~\ufc_meta_use:n {undergraduate-program}.}
+\prop_gput:Nnn \g_ufc_document_text_prop {es/nature-undergraduate} {Trabajo~de~fin~de~grado~presentado~al~programa~de~\ufc_meta_use:n {undergraduate-program}~de~la~\ufc_institution_display:\space como~requisito~parcial~para~obtener~el~título~de~\ufc_meta_use:n {undergraduate-degree}~en~\ufc_meta_use:n {undergraduate-program}.}
+\prop_gput:Nnn \g_ufc_document_text_prop {fr/nature-undergraduate} {Mémoire~de~fin~de~licence~présenté~au~programme~de~\ufc_meta_use:n {undergraduate-program}~de~l'\ufc_institution_display:\space en~vue~de~l'obtention~du~diplôme~de~\ufc_meta_use:n {undergraduate-degree}~en~\ufc_meta_use:n {undergraduate-program}.}
 \prop_gput:Nnn \g_ufc_document_text_prop {pt/nature-specialization} {Trabalho~de~Conclusão~de~Curso~apresentado~ao~Curso~de~Especialização~em~\ufc_meta_use:n {specialization-program}~da~\ufc_institution_display:,~como~requisito~parcial~à~obtenção~do~título~de~especialista~em~\ufc_meta_use:n {specialization-program}.}
-\prop_gput:Nnn \g_ufc_document_text_prop {en/nature-specialization} {Specialization~capstone~submitted~to~the~\ufc_meta_use:n {specialization-program}~program~at~\ufc_institution_display:\space in~partial~fulfillment~of~the~requirements~for~the~specialist~qualification~in~\ufc_meta_use:n {specialization-program}.}
-\prop_gput:Nnn \g_ufc_document_text_prop {es/nature-specialization} {Trabajo~final~de~especialización~presentado~al~programa~de~\ufc_meta_use:n {specialization-program}~de~\ufc_institution_display:\space como~requisito~parcial~para~obtener~la~especialización~en~\ufc_meta_use:n {specialization-program}.}
-\prop_gput:Nnn \g_ufc_document_text_prop {fr/nature-specialization} {Mémoire~de~spécialisation~présenté~au~programme~de~\ufc_meta_use:n {specialization-program}~de~\ufc_institution_display:\space en~vue~de~l'obtention~du~titre~de~spécialiste~en~\ufc_meta_use:n {specialization-program}.}
+\prop_gput:Nnn \g_ufc_document_text_prop {en/nature-specialization} {Specialization~capstone~submitted~to~the~\ufc_meta_use:n {specialization-program}~program~at~the~\ufc_institution_display:\space in~partial~fulfillment~of~the~requirements~for~the~specialist~qualification~in~\ufc_meta_use:n {specialization-program}.}
+\prop_gput:Nnn \g_ufc_document_text_prop {es/nature-specialization} {Trabajo~final~de~especialización~presentado~al~programa~de~\ufc_meta_use:n {specialization-program}~de~la~\ufc_institution_display:\space como~requisito~parcial~para~obtener~la~especialización~en~\ufc_meta_use:n {specialization-program}.}
+\prop_gput:Nnn \g_ufc_document_text_prop {fr/nature-specialization} {Mémoire~de~spécialisation~présenté~au~programme~de~\ufc_meta_use:n {specialization-program}~de~l'\ufc_institution_display:\space en~vue~de~l'obtention~du~titre~de~spécialiste~en~\ufc_meta_use:n {specialization-program}.}
 \prop_gput:Nnn \g_ufc_document_text_prop {pt/nature-masters} {Dissertação~apresentada~ao~\ufc_meta_use:n {masters-graduate-program}~da~\ufc_institution_display:,~como~requisito~parcial~à~obtenção~do~título~de~mestre~em~\ufc_meta_use:n {masters-degree-field}.\ufc_meta_if_blank:nF {masters-concentration}{~Área~de~concentração:~\ufc_meta_use:n {masters-concentration}.}}
-\prop_gput:Nnn \g_ufc_document_text_prop {en/nature-masters} {Master's~dissertation~submitted~to~the~\ufc_meta_use:n {masters-graduate-program}~at~\ufc_institution_display:\space in~partial~fulfillment~of~the~requirements~for~the~degree~of~Master~in~\ufc_meta_use:n {masters-degree-field}.\ufc_meta_if_blank:nF {masters-concentration}{~Area~of~concentration:~\ufc_meta_use:n {masters-concentration}.}}
-\prop_gput:Nnn \g_ufc_document_text_prop {es/nature-masters} {Disertación~presentada~al~\ufc_meta_use:n {masters-graduate-program}~de~\ufc_institution_display:\space como~requisito~parcial~para~obtener~el~grado~de~Máster~en~\ufc_meta_use:n {masters-degree-field}.\ufc_meta_if_blank:nF {masters-concentration}{~Área~de~concentración:~\ufc_meta_use:n {masters-concentration}.}}
-\prop_gput:Nnn \g_ufc_document_text_prop {fr/nature-masters} {Mémoire~présenté~au~\ufc_meta_use:n {masters-graduate-program}~de~\ufc_institution_display:\space en~vue~de~l'obtention~du~grade~de~master~en~\ufc_meta_use:n {masters-degree-field}.\ufc_meta_if_blank:nF {masters-concentration}{~Domaine~de~spécialisation:~\ufc_meta_use:n {masters-concentration}.}}
+\prop_gput:Nnn \g_ufc_document_text_prop {en/nature-masters} {Master's~dissertation~submitted~to~the~\ufc_meta_use:n {masters-graduate-program}~at~the~\ufc_institution_display:\space in~partial~fulfillment~of~the~requirements~for~the~degree~of~Master~in~\ufc_meta_use:n {masters-degree-field}.\ufc_meta_if_blank:nF {masters-concentration}{~Area~of~concentration:~\ufc_meta_use:n {masters-concentration}.}}
+\prop_gput:Nnn \g_ufc_document_text_prop {es/nature-masters} {Disertación~presentada~al~\ufc_meta_use:n {masters-graduate-program}~de~la~\ufc_institution_display:\space como~requisito~parcial~para~obtener~el~grado~de~Máster~en~\ufc_meta_use:n {masters-degree-field}.\ufc_meta_if_blank:nF {masters-concentration}{~Área~de~concentración:~\ufc_meta_use:n {masters-concentration}.}}
+\prop_gput:Nnn \g_ufc_document_text_prop {fr/nature-masters} {Mémoire~présenté~au~\ufc_meta_use:n {masters-graduate-program}~de~l'\ufc_institution_display:\space en~vue~de~l'obtention~du~grade~de~master~en~\ufc_meta_use:n {masters-degree-field}.\ufc_meta_if_blank:nF {masters-concentration}{~Domaine~de~spécialisation:~\ufc_meta_use:n {masters-concentration}.}}
 \prop_gput:Nnn \g_ufc_document_text_prop {pt/nature-doctoral} {Tese~apresentada~ao~\ufc_meta_use:n {doctoral-graduate-program}~da~\ufc_institution_display:,~como~requisito~parcial~à~obtenção~do~título~de~doutor~em~\ufc_meta_use:n {doctoral-degree-field}.\ufc_meta_if_blank:nF {doctoral-concentration}{~Área~de~concentração:~\ufc_meta_use:n {doctoral-concentration}.}}
-\prop_gput:Nnn \g_ufc_document_text_prop {en/nature-doctoral} {Doctoral~thesis~submitted~to~the~\ufc_meta_use:n {doctoral-graduate-program}~at~\ufc_institution_display:\space in~partial~fulfillment~of~the~requirements~for~the~degree~of~Doctor~in~\ufc_meta_use:n {doctoral-degree-field}.\ufc_meta_if_blank:nF {doctoral-concentration}{~Area~of~concentration:~\ufc_meta_use:n {doctoral-concentration}.}}
-\prop_gput:Nnn \g_ufc_document_text_prop {es/nature-doctoral} {Tesis~presentada~al~\ufc_meta_use:n {doctoral-graduate-program}~de~\ufc_institution_display:\space como~requisito~parcial~para~obtener~el~grado~de~doctor~en~\ufc_meta_use:n {doctoral-degree-field}.\ufc_meta_if_blank:nF {doctoral-concentration}{~Área~de~concentración:~\ufc_meta_use:n {doctoral-concentration}.}}
-\prop_gput:Nnn \g_ufc_document_text_prop {fr/nature-doctoral} {Thèse~présentée~au~\ufc_meta_use:n {doctoral-graduate-program}~de~\ufc_institution_display:\space en~vue~de~l'obtention~du~grade~de~docteur~en~\ufc_meta_use:n {doctoral-degree-field}.\ufc_meta_if_blank:nF {doctoral-concentration}{~Domaine~de~spécialisation:~\ufc_meta_use:n {doctoral-concentration}.}}
+\prop_gput:Nnn \g_ufc_document_text_prop {en/nature-doctoral} {Doctoral~thesis~submitted~to~the~\ufc_meta_use:n {doctoral-graduate-program}~at~the~\ufc_institution_display:\space in~partial~fulfillment~of~the~requirements~for~the~degree~of~Doctor~in~\ufc_meta_use:n {doctoral-degree-field}.\ufc_meta_if_blank:nF {doctoral-concentration}{~Area~of~concentration:~\ufc_meta_use:n {doctoral-concentration}.}}
+\prop_gput:Nnn \g_ufc_document_text_prop {es/nature-doctoral} {Tesis~presentada~al~\ufc_meta_use:n {doctoral-graduate-program}~de~la~\ufc_institution_display:\space como~requisito~parcial~para~obtener~el~grado~de~doctor~en~\ufc_meta_use:n {doctoral-degree-field}.\ufc_meta_if_blank:nF {doctoral-concentration}{~Área~de~concentración:~\ufc_meta_use:n {doctoral-concentration}.}}
+\prop_gput:Nnn \g_ufc_document_text_prop {fr/nature-doctoral} {Thèse~présentée~au~\ufc_meta_use:n {doctoral-graduate-program}~de~l'\ufc_institution_display:\space en~vue~de~l'obtention~du~grade~de~docteur~en~\ufc_meta_use:n {doctoral-degree-field}.\ufc_meta_if_blank:nF {doctoral-concentration}{~Domaine~de~spécialisation:~\ufc_meta_use:n {doctoral-concentration}.}}
 \prop_gput:Nnn \g_ufc_document_text_prop {pt/nature-project} {\ufc_project_type_text:\space apresentado~à~\ufc_submission_entity_display:.}
 \prop_gput:Nnn \g_ufc_document_text_prop {en/nature-project} {\ufc_project_type_text:\space submitted~to~\ufc_submission_entity_display:.}
-\prop_gput:Nnn \g_ufc_document_text_prop {es/nature-project} {\ufc_project_type_text:\space presentado~a~\ufc_submission_entity_display:.}
-\prop_gput:Nnn \g_ufc_document_text_prop {fr/nature-project} {\ufc_project_type_text:\space soumis~à~\ufc_submission_entity_display:.}
+\prop_gput:Nnn \g_ufc_document_text_prop {es/nature-project} {\ufc_project_type_text:\space presentado~a~la~\ufc_submission_entity_display:.}
+\prop_gput:Nnn \g_ufc_document_text_prop {fr/nature-project} {\ufc_project_type_text:\space soumis~à~l'\ufc_submission_entity_display:.}
 \prop_gput:Nnn \g_ufc_document_text_prop {pt/caption-text-table} {Quadro}
 \prop_gput:Nnn \g_ufc_document_text_prop {en/caption-text-table} {Text~Table}
 \prop_gput:Nnn \g_ufc_document_text_prop {es/caption-text-table} {Cuadro}
@@ -599,7 +605,40 @@
   }
 
 \NewDocumentCommand \ufcsetup { +m }
-  { \keys_set:nn { ufc } { #1 } }
+  {
+    \tl_set:NV \l_ufc_pdf_previous_type_tl \g_ufc_document_type_tl
+    \keys_set:nn { ufc } { #1 }
+    \bool_if:NT \g_ufc_pdf_document_started_bool
+      {
+        \bool_if:NTF \g_ufc_pdf_first_page_shipped_bool
+          {
+            % A PDF cannot undo a previously shipped private/public identity.
+            % Authored metadata probes after the body remain allowed, but
+            % intentionally do not retroactively rewrite PDF Info/XMP.
+            \str_if_eq:VnTF \l_ufc_pdf_previous_type_tl
+              {anonymized-research-project}
+              {
+                \str_if_eq:VnF \g_ufc_document_type_tl
+                  {anonymized-research-project}
+                  {
+                    \ClassError{abntexto-ufc}
+                      {Cannot~change~anonymity~after~the~first~PDF~page}
+                      {Select~the~document~type~before~the~first~page.}
+                  }
+              }
+              {
+                \str_if_eq:VnT \g_ufc_document_type_tl
+                  {anonymized-research-project}
+                  {
+                    \ClassError{abntexto-ufc}
+                      {Cannot~change~anonymity~after~the~first~PDF~page}
+                      {Select~the~document~type~before~the~first~page.}
+                  }
+              }
+          }
+          { \ufc_pdf_apply_document_properties: }
+      }
+  }
 
 \NewExpandableDocumentCommand \ufcDocumentLanguage { }
   { \tl_use:N \g_ufc_document_language_tl }
@@ -922,18 +961,21 @@
 % Reserve the shared TOC label width without creating an empty eqbox label,
 % which previously produced a visible punctuation artifact.
 \DeclareRobustCommand{\ufcTocPosttextualTitle}[1]{%
-  \makebox[\toclabelwidth][l]{}#1%
+  % Uppercase only while typesetting the TOC. Never expand \MakeUppercase
+  % inside a moving \addcontentsline argument: hyperref can serialize its
+  % internal optional [] argument as literal "[ ]" in the PDF text.
+  \makebox[\toclabelwidth][l]{}\MakeUppercase{#1}%
 }
 \appto\pdfstringdefPreHook{%
   \def\ufcTocPosttextualTitle#1{#1}%
 }
 
-% UFC examples use spaced dotted leaders up to the right-aligned page number.
-% Preserve a compact visible leader when a primary entry nearly fills the line.
+% One continuous leader run preserves uniform dot pitch. The old forced
+% 1.1em leading box followed by a second \leaders run created a single
+% 17--20pt gap between the first two dots (regular pitch: 9pt).
 \def\ufctocdot{\hbox{$\mathsurround=0pt\mkern4.5mu\hbox{.}\mkern4.5mu$}}
 \def\extdotleaders{%
   \nobreak
-  \hbox to 1.1em{\leaders\ufctocdot\hfil}%
   \leaders\ufctocdot\hfil
 }
 \appto\hooktocsection{\let\extleaders=\extdotleaders}
@@ -1519,11 +1561,13 @@
     \ufc_count_committee_key:n {examiner-5}
     \ufc_count_committee_key:n {examiner-6}
 
-    \dim_set:Nn \l_ufc_signature_gap_dim { .65\baselineskip }
+    % Allow the three-member committee more breathing room; adapt to larger
+    % committees to avoid pushing the final signature off the approval page.
+    \dim_set:Nn \l_ufc_signature_gap_dim { .85\baselineskip }
     \int_compare:nNnT { \l_ufc_committee_count_int } > {4}
-      { \dim_set:Nn \l_ufc_signature_gap_dim { .35\baselineskip } }
+      { \dim_set:Nn \l_ufc_signature_gap_dim { .25\baselineskip } }
     \int_compare:nNnT { \l_ufc_committee_count_int } > {5}
-      { \dim_set:Nn \l_ufc_signature_gap_dim { .2\baselineskip } }
+      { \dim_zero:N \l_ufc_signature_gap_dim }
   }
 
 \cs_new_protected:Npn \ufc_signature_from_keys:nn #1#2
@@ -1532,8 +1576,11 @@
       {
         \par\vspace{\l_ufc_signature_gap_dim}
         \begingroup
-          \centering\singlesp
+          % UFC approval-page guidance calls for 1.5 line spacing for
+          % member names and their institutions, unlike the nature paragraph.
+          \centering\onehalfsp
           \rule{8cm}{0.4pt}\par
+          \vspace{.15\baselineskip}
           \ufc_meta_use:n {#1}\par
           \ufc_meta_if_blank:nF {#2} { \ufc_meta_use:n {#2}\par }
         \endgroup
@@ -1735,6 +1782,12 @@
   {
     \bool_if:NT \g_ufc_document_language_explicit_bool
       {
+        % Babel restores language-specific caption names after summary switches.
+        % Preserve Tabla/Tableau for numeric tables and keep cuadro separate.
+        \cs_if_exist:NT \captionsspanish
+          { \addto\captionsspanish{\def\tablename{Tabla}} }
+        \cs_if_exist:NT \captionsfrench
+          { \addto\captionsfrench{\def\tablename{Tableau}} }
         \cs_if_exist:NT \appendixname
           { \cs_gset:Npn \appendixname { \ufc_doc_text:n {appendix} } }
         \cs_if_exist:NT \annexname
@@ -3279,12 +3332,12 @@
   }
 
 \cs_new_protected:Npn \ufc_posttextual_heading:n #1
-  { \ufc_posttextual_heading:nn { \MakeUppercase{#1} } {#1} }
+  { \ufc_posttextual_heading:nn { \ufcTocPosttextualTitle{#1} } {#1} }
 
 \cs_new_protected:Npn \ufc_aligned_posttextual_heading:n #1
   {
     \ufc_posttextual_heading:nn
-      { \ufcTocPosttextualTitle{\MakeUppercase{#1}} }
+      { \ufcTocPosttextualTitle{#1} }
       {#1}
   }
 
@@ -3349,5 +3402,45 @@
 
 \ExplSyntaxOff
 
+
+% PDF information and outline navigation
+% ============================================================================
+
+% Load hyperref only after all class modules, so its document-level section
+% destinations work without overriding the institution's printed typography.
+% A PDF/A declaration alone does not populate Title/Author metadata or outlines.
+\RequirePackage[unicode,hidelinks]{hyperref}
+
+\ExplSyntaxOn
+
+\cs_new_protected:Npn \ufc_pdf_apply_document_properties:
+  {
+    % Source-authored fields are finalized by \ufcsetup in the preamble.
+    % Keep presentation metadata independent of institution name translation.
+    \hypersetup
+      {
+        pdftitle={\ufc_meta_use:n {title}},
+        pdfsubject={\tl_use:N \g_ufc_document_type_tl}
+      }
+    \str_if_eq:VnTF \g_ufc_document_type_tl {anonymized-research-project}
+      {
+        % Never expand or copy the original authored name into PDF Info/XMP.
+        \hypersetup{pdfauthor={}}
+      }
+      {
+        \hypersetup{pdfauthor={\ufc_meta_use:n {author}}}
+      }
+  }
+
+\AddToHook{begindocument/end}
+  {
+    \ufc_pdf_apply_document_properties:
+    \bool_gset_true:N \g_ufc_pdf_document_started_bool
+  }
+
+\AddToHook{shipout/after}
+  { \bool_gset_true:N \g_ufc_pdf_first_page_shipped_bool }
+
+\ExplSyntaxOff
 
 \endinput
