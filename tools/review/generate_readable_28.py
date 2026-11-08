@@ -37,7 +37,7 @@ STRINGS = {
         "results": "Resultados e análise", "implementation": "Implementação computacional",
         "discussion": "Discussão dos resultados", "replication": "Verificação experimental",
         "appendix": "Procedimento complementar de processamento",
-        "annex": "Síntese bibliográfica sobre geração de malhas",
+        "annex": "Registro bibliográfico externo sobre quadrangulação",
         "figure": "Configuração de uma malha estruturada",
         "chart": "Comparação ilustrativa de malhas estruturadas",
         "texttable": "Síntese dos parâmetros experimentais",
@@ -97,7 +97,7 @@ STRINGS = {
         "results": "Results and analysis", "implementation": "Computational implementation",
         "discussion": "Discussion of results", "replication": "Experimental verification",
         "appendix": "Supplementary processing procedure",
-        "annex": "Supporting literature on mesh generation",
+        "annex": "External bibliographic record on quadrangulation",
         "figure": "Structured mesh configuration",
         "chart": "Illustrative comparison of structured meshes",
         "texttable": "Summary of experimental parameters",
@@ -156,7 +156,7 @@ STRINGS = {
         "results": "Resultados y análisis", "implementation": "Implementación computacional",
         "discussion": "Discusión de los resultados", "replication": "Verificación experimental",
         "appendix": "Procedimiento complementario de procesamiento",
-        "annex": "Síntesis bibliográfica sobre generación de mallas",
+        "annex": "Registro bibliográfico externo sobre cuadrangulación",
         "figure": "Configuración de una malla estructurada",
         "chart": "Comparación ilustrativa de mallas estructuradas",
         "texttable": "Resumen de parámetros experimentales",
@@ -216,7 +216,7 @@ STRINGS = {
         "results": "Résultats et analyse", "implementation": "Implémentation informatique",
         "discussion": "Discussion des résultats", "replication": "Vérification expérimentale",
         "appendix": "Procédure complémentaire de traitement",
-        "annex": "Synthèse bibliographique sur la génération de maillages",
+        "annex": "Notice bibliographique externe sur la quadrangulation",
         "figure": "Configuration d'un maillage structuré",
         "chart": "Comparaison illustrative de maillages structurés",
         "texttable": "Synthèse des paramètres expérimentaux",
@@ -741,25 +741,75 @@ PROFILE_PURPOSE = {
 }
 
 
+# A short, unmodified selection of bibliographic fields issued by the
+# publication's own research group. It is an external document, unlike the
+# author's literature discussion, and contains factual metadata only.
+# Source: https://cgg.unibe.ch/publications/miq/
+EXTERNAL_BIBTEX_RECORD = """@article{Bommes:MIQ,
+  author  = {Bommes, David and Zimmer, Henrik and Kobbelt, Leif},
+  journal = {ACM Transactions on Graphics},
+  number  = {3},
+  title   = {Mixed-integer quadrangulation},
+  volume  = {28},
+  year    = {2009},
+  doi     = {10.1145/1576246.1531383}
+}"""
+
+EXTERNAL_ANNEX_LABELS = {
+    "pt": {
+        "intro": "Transcrição parcial de um registro BibTeX publicado pelo grupo de pesquisa dos autores. Os campos originais são apresentados sem tradução; trata-se de documento externo, não de uma síntese produzida para este trabalho.",
+        "source": "Fonte do documento externo",
+    },
+    "en": {
+        "intro": "Partial transcription of a BibTeX record published by the authors' research group. The original metadata fields are reproduced without translation. This is external source material, not a literature review written for this manuscript.",
+        "source": "Source of the external document",
+    },
+    "es": {
+        "intro": "Transcripción parcial de un registro BibTeX publicado por el grupo de investigación de los autores. Los campos originales se mantienen sin traducir. Es un documento externo, no una síntesis redactada para este trabajo.",
+        "source": "Fuente del documento externo",
+    },
+    "fr": {
+        "intro": "Transcription partielle d'une notice BibTeX publiée par le groupe de recherche des auteurs. Les champs originaux restent dans leur langue d'origine. Il s'agit d'un document externe, non d'une synthèse rédigée pour ce manuscrit.",
+        "source": "Source du document externe",
+    },
+}
+
+
+def external_annex_document(locale: str) -> str:
+    """Preserve external scholarly metadata and explicit provenance."""
+    data = EXTERNAL_ANNEX_LABELS[locale]
+    return "\n".join([
+        data["intro"],
+        r"\begin{verbatim}",
+        EXTERNAL_BIBTEX_RECORD,
+        r"\end{verbatim}",
+        r"\noindent\textbf{" + data["source"] + r":} "
+        + r"\url{https://cgg.unibe.ch/publications/miq/}.",
+    ])
+
+
 def appendices_for_review(locale: str) -> tuple[str, str]:
-    """Provide real author-created procedures and a cited literature synopsis."""
+    """Keep authored analysis in the appendix and genuine external data in the annex."""
     entry = MESH_STUDY[locale]
     steps = "\n".join(
         rf"\item {step}." for step in entry["steps"]
     )
+    # The bibliography citation belongs to the end of the LAST sentence,
+    # never to an independently indented paragraph beginning with \par.
+    author_literature_review = (
+        entry["annex"].rstrip(".")
+        + r"~\autocite{meshBommes2009,meshShewchuk2002}."
+    )
     appendix = "\n".join([
         entry["appendix"],
+        "\n" + author_literature_review + "\n",
         r"\begin{enumerate}",
         steps,
         r"\end{enumerate}",
         r"\begin{equation}\label{eq:r7-app-quad}V=(n+1)^2,\quad E=2n(n+1),\quad Q=n^2.\end{equation}",
         r"\begin{equation}\label{eq:r7-app-tri}E_{\triangle}=E+Q,\quad T=2Q,\quad V-E_{\triangle}+T=1.\end{equation}",
     ])
-    annex = "\n".join([
-        entry["annex"],
-        r"\par\autocite{meshBommes2009,meshShewchuk2002}.",
-    ])
-    return appendix, annex
+    return appendix, external_annex_document(locale)
 
 
 def replace_once(text: str, old: str, new: str, label: str) -> str:
@@ -897,6 +947,12 @@ def readable_source(source: str, profile: str, loc: str) -> str:
     }
     for token, key in simple.items():
         source = source.replace(token + "-" + loc.upper(), d[key])
+    # The inherited definition-list API does not insert punctuation by itself.
+    # Supply an explicit separator in the authored example.
+    glued = rf"\ufcListEntry{{{d['term']}}}{{{d['definition']}.}}"
+    separated = rf"\ufcListEntry{{{d['term']}:~}}{{{d['definition']}.}}"
+    source = replace_once(source, glued, separated,
+                          "term and definition must not run together")
     # Preserve nested-list punctuation while using natural prose.
     source = source.replace("INTEGRATED-NESTED-LIST:", d["nested"])
     source = source.replace("R4-FOOTNOTE synthetic and nonpersonal evidence.",
@@ -912,7 +968,16 @@ def readable_source(source: str, profile: str, loc: str) -> str:
                     lambda m: f"{d['native_case']} {int(m[1])}", source)
     source = source.replace("long numeric observations", "")
     source = source.replace("source caption", "")
-    source = source.replace("See synthetic sources", d["citation"])
+    # Use verified real scholarly references and a localized conjunction.
+    # The R4 engineering citation fixtures are not editorial references.
+    conjunction = {"pt": " e ", "en": " and ",
+                   "es": " y ", "fr": " et "}[loc]
+    source = replace_once(
+        source,
+        r"See synthetic sources \parencite{silva2020} and \textcite{oliveira2011}.",
+        d["citation"] + " " + r"\parencite{meshBommes2009}"
+        + conjunction + r"\textcite{meshShewchuk2002}.",
+        "localized real scholarly sources")
     source = source.replace("Synthetic original", d["source"])
     source = source.replace("Synthetic object note", d["note"])
     source = source.replace(
