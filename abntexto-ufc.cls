@@ -1596,6 +1596,11 @@
       { \dim_set:Nn \l_ufc_signature_gap_dim { .25\baselineskip } }
     \int_compare:nNnT { \l_ufc_committee_count_int } > {5}
       { \dim_zero:N \l_ufc_signature_gap_dim }
+    % Seven-signature committees need a tighter inter-member rhythm to
+    % retain every institution on the same physical approval page.
+    % Preserve the 1.5-line name/institution spacing.
+    \int_compare:nNnT { \l_ufc_committee_count_int } > {6}
+      { \dim_set:Nn \l_ufc_signature_gap_dim { -.4\baselineskip } }
   }
 
 \cs_new_protected:Npn \ufc_signature_from_keys:nnn #1#2#3
