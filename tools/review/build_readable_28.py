@@ -125,6 +125,7 @@ def main() -> int:
     parser.add_argument("--preflight", action="store_true")
     args = parser.parse_args()
     loc = args.locale
+    (OUT / loc).mkdir(parents=True, exist_ok=True)
     src_manifest = OUT / loc / "review-sources.json"
     if not src_manifest.is_file():
         run([sys.executable, "tools/review/generate_readable_28.py",
