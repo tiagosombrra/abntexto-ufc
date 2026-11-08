@@ -951,17 +951,19 @@ def readable_source(source: str, profile: str, loc: str) -> str:
     }
     for token, key in simple.items():
         source = source.replace(token + "-" + loc.upper(), d[key])
-    # The source's default 3 cm description label is too narrow for the
-    # translated mesh term, so label and definition physically collide.
-    # Widen the list label rather than hiding the defect with punctuation.
+    # Render one editorial definition as natural-flow prose, with exactly
+    # one inter-word space. Fixed description-list columns (3/5 cm) caused
+    # overlapping text and then a 51 pt gap in the rendered R8 PDF.
+    # The R4 test suite and front matter still exercise ufcdefinitionlist.
+    old_definition = "\n".join([
+        r"\begin{ufcdefinitionlist}[3cm]",
+        rf"\ufcListEntry{{{d['term']}}}{{{d['definition']}.}}",
+        r"\end{ufcdefinitionlist}",
+    ])
+    new_definition = rf"\noindent\textbf{{{d['term']}:}} {d['definition']}."
     source = replace_once(
-        source, r"\begin{ufcdefinitionlist}[3cm]",
-        r"\begin{ufcdefinitionlist}[5cm]",
-        "definition-list label width for mesh terminology")
-    glued = rf"\ufcListEntry{{{d['term']}}}{{{d['definition']}.}}"
-    separated = rf"\ufcListEntry{{{d['term']}:}}{{{d['definition']}.}}"
-    source = replace_once(source, glued, separated,
-                          "term and definition must not run together")
+        source, old_definition, new_definition,
+        "natural-flow editorial definition")
     # Preserve nested-list punctuation while using natural prose.
     source = source.replace("INTEGRATED-NESTED-LIST:", d["nested"])
     source = source.replace("R4-FOOTNOTE synthetic and nonpersonal evidence.",
@@ -985,7 +987,7 @@ def readable_source(source: str, profile: str, loc: str) -> str:
         source,
         r"See synthetic sources \parencite{silva2020} and \textcite{oliveira2011}.",
         d["citation"] + " " + r"\parencite{meshBommes2009}"
-        + conjunction + r"\textcite{meshShewchuk2002}.",
+        + conjunction + r"\mbox{\textcite{meshShewchuk2002}}.",
         "localized real scholarly sources")
     source = source.replace("Synthetic original", d["source"])
     source = source.replace("Synthetic object note", d["note"])
