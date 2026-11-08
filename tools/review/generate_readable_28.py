@@ -355,6 +355,143 @@ EQUATION_REFERENCE = {
     "fr": r"Voir également l'équation~\ref{eq:r4-sum}.",
 }
 
+
+# These are original, self-authored passages used to test long quotations.
+# They are not attributed to real publications, to avoid fabricated citations.
+# Their content deliberately exceeds three printed lines at the 4 cm indent.
+QUOTE_EXAMPLES = {
+    "pt": {
+        "heading": "Citações diretas e notas de rodapé",
+        "intro": "Os dois blocos seguintes demonstram citações longas, com recuo à esquerda, fonte reduzida e espaço simples. Ambos são textos originais de ensaio e não reproduzem obras publicadas.",
+        "first": ("Uma malha computacional representa um domínio contínuo por uma coleção "
+                  "finita de elementos conectados. Cada elemento possui uma posição "
+                  "no domínio e relações topológicas com seus vizinhos. A qualidade "
+                  "da representação depende não apenas da quantidade de células, "
+                  "mas também da definição explícita de suas conexões e da "
+                  "consistência dos dados geométricos. Para que uma comparação "
+                  "seja reproduzível, é necessário preservar a entrada, os critérios "
+                  "de construção e o procedimento de contagem."),
+        "between": "O próximo bloco exemplifica a identificação da origem após a transcrição; a referência é descritiva e corresponde exclusivamente ao texto-modelo.",
+        "second": ("A análise de uma discretização começa pela descrição do domínio "
+                   "e das regras que determinam seus elementos. Em seguida, "
+                   "registram-se as medidas calculadas e os pressupostos adotados. "
+                   "Uma comparação só é interpretável quando especifica as "
+                   "condições de obtenção de cada resultado e distingue o que "
+                   "foi demonstrado do que permanece como hipótese. A apresentação "
+                   "dos dados deve permitir que outras pessoas refaçam as "
+                   "operações sem depender de conhecimento não documentado."),
+        "author_note": "Trechos originais produzidos somente para ensaio de normalização; não constituem citações bibliográficas de terceiros.",
+        "source_tail": "(Texto demonstrativo de autoria própria, 2026).",
+        "foot_1": "Esta é uma nota explicativa de teste. A numeração e o corpo da nota devem permanecer junto ao rodapé da página.",
+        "foot_2": "As contagens apresentadas são ilustrativas e não devem ser utilizadas como resultados de uma pesquisa empírica.",
+        "foot_3": "Uma terceira nota permite inspecionar a continuidade da numeração e a formatação do separador.",
+        "short": "Uma citação curta demonstrativa, entre aspas, também deve permanecer no corpo do parágrafo.",
+    },
+    "en": {
+        "heading": "Direct quotations and footnotes",
+        "intro": "The two blocks below demonstrate long quotations with a left indent, reduced font size and single spacing. Both are original sample passages rather than excerpts from published works.",
+        "first": ("A computational mesh represents a continuous domain with a finite "
+                  "collection of connected elements. Each element has a position "
+                  "in the domain and topological relations with its neighbors. "
+                  "Representation quality depends not only on the number of cells "
+                  "but also on explicitly defined connections and consistent "
+                  "geometric data. To make a comparison reproducible, the "
+                  "input, construction criteria and counting procedure must "
+                  "be preserved."),
+        "between": "The next block demonstrates a descriptive attribution placed after the excerpt. It refers exclusively to this original sample text.",
+        "second": ("The analysis of a discretization begins by describing the domain "
+                   "and the rules that determine its elements. The calculated "
+                   "measures and assumptions are then recorded. A comparison "
+                   "can only be interpreted when it specifies how each result "
+                   "was obtained and distinguishes established findings from "
+                   "open hypotheses. Data presentation should allow other "
+                   "researchers to repeat the computations without relying "
+                   "on undocumented knowledge."),
+        "author_note": "Original passages written exclusively for typesetting verification; they are not quotations from external publications.",
+        "source_tail": "(Original demonstration passage, 2026).",
+        "foot_1": "This explanatory test footnote must remain at the foot of the page with its numbering and typographic separator.",
+        "foot_2": "The reported counts are illustrative rather than empirical research findings.",
+        "foot_3": "A third note allows reviewers to inspect numbering continuity and separator formatting.",
+        "short": "A short illustrative quotation in quotation marks belongs within the surrounding paragraph.",
+    },
+    "es": {
+        "heading": "Citas directas y notas a pie de página",
+        "intro": "Los dos bloques siguientes ejemplifican citas extensas con sangría izquierda, letra reducida e interlineado sencillo. Ambos textos son originales de demostración y no reproducen obras publicadas.",
+        "first": ("Una malla computacional representa un dominio continuo mediante "
+                  "una colección finita de elementos conectados. Cada elemento "
+                  "ocupa una posición en el dominio y mantiene relaciones "
+                  "topológicas con sus vecinos. La calidad de la representación "
+                  "depende no solo del número de celdas, sino también de la "
+                  "definición explícita de sus conexiones y la coherencia "
+                  "de los datos geométricos. Para garantizar la reproducibilidad, "
+                  "deben conservarse las entradas, los criterios constructivos "
+                  "y el procedimiento de conteo."),
+        "between": "El segundo bloque presenta una identificación descriptiva al final del fragmento; se refiere solamente al texto original de este ejemplo.",
+        "second": ("El análisis de una discretización comienza con la descripción "
+                   "del dominio y las reglas que determinan sus elementos. "
+                   "Después se registran las magnitudes calculadas y las "
+                   "hipótesis adoptadas. Una comparación solo puede interpretarse "
+                   "cuando se explicitan las condiciones de obtención de cada "
+                   "resultado y se distingue entre lo demostrado y lo supuesto. "
+                   "La presentación debe permitir reproducir las operaciones "
+                   "sin conocimientos que no estén documentados."),
+        "author_note": "Fragmentos originales escritos para comprobar la composición; no son citas de publicaciones ajenas.",
+        "source_tail": "(Texto demostrativo de elaboración propia, 2026).",
+        "foot_1": "Esta nota explicativa de prueba debe aparecer a pie de página con su numeración y separador tipográfico.",
+        "foot_2": "Los conteos mostrados son ilustrativos y no constituyen resultados de investigación empírica.",
+        "foot_3": "Una tercera nota permite revisar la continuidad de numeración y el formato del separador.",
+        "short": "Una cita breve demostrativa, entre comillas, permanece dentro del párrafo.",
+    },
+    "fr": {
+        "heading": "Citations directes et notes de bas de page",
+        "intro": "Les deux blocs suivants illustrent des citations longues avec retrait à gauche, caractères réduits et interligne simple. Ces passages originaux servent uniquement à la démonstration et ne reproduisent pas une publication.",
+        "first": ("Un maillage informatique représente un domaine continu au moyen "
+                  "d'un ensemble fini d'éléments connectés. Chaque élément "
+                  "occupe une position dans le domaine et entretient des "
+                  "relations topologiques avec ses voisins. La qualité de "
+                  "la représentation dépend non seulement du nombre de "
+                  "cellules, mais aussi de la définition explicite des "
+                  "connexions et de la cohérence des données géométriques. "
+                  "Pour rendre la comparaison reproductible, il faut "
+                  "conserver les entrées, les critères de construction "
+                  "et la méthode de dénombrement."),
+        "between": "Le second bloc montre une attribution descriptive placée après l'extrait et renvoyant exclusivement à ce texte original.",
+        "second": ("L'analyse d'une discrétisation commence par la description "
+                   "du domaine et des règles qui déterminent ses éléments. "
+                   "On consigne ensuite les mesures calculées et les "
+                   "hypothèses retenues. Une comparaison n'est interprétable "
+                   "que si les conditions d'obtention de chaque résultat "
+                   "sont explicites et si les faits démontrés se distinguent "
+                   "des hypothèses. La présentation doit permettre de "
+                   "reproduire les opérations sans connaissances implicites."),
+        "author_note": "Passages originaux créés uniquement pour vérifier la mise en page; ils ne proviennent pas de publications tierces.",
+        "source_tail": "(Texte de démonstration original, 2026).",
+        "foot_1": "Cette note explicative de test doit figurer en bas de page, avec sa numérotation et son filet séparateur.",
+        "foot_2": "Les dénombrements présentés sont illustratifs et ne constituent pas des résultats de recherche empirique.",
+        "foot_3": "Une troisième note permet de contrôler la continuité de numérotation et la typographie du séparateur.",
+        "short": "Une courte citation illustrative entre guillemets reste intégrée au paragraphe.",
+    },
+}
+
+
+def quotation_section(locale: str) -> str:
+    """Build two actual long-citation environments and three distinct footnotes."""
+    data = QUOTE_EXAMPLES[locale]
+    return "\n".join([
+        rf"\section{{{data['heading']}}}",
+        data["intro"] + rf"\footnote{{{data['author_note']}}}",
+        r"\begin{citacao}",
+        data["first"],
+        r"\end{citacao}",
+        data["between"] + rf"\footnote{{{data['foot_1']}}}",
+        r"\begin{citacao}",
+        data["second"] + " " + data["source_tail"],
+        r"\end{citacao}",
+        data["short"] + rf"\footnote{{{data['foot_2']}}}",
+        data["intro"] + rf"\footnote{{{data['foot_3']}}}",
+    ]) + "\n"
+
+
 def replace_once(text: str, old: str, new: str, label: str) -> str:
     count = text.count(old)
     if count != 1:
@@ -590,6 +727,13 @@ def readable_source(source: str, profile: str, loc: str) -> str:
 
     # Replace punctuation duplicated by the original engineering sentinels.
     source = re.sub(r"(?<!\.)\.\.(?!\.)", ".", source)
+
+    # The introductory quotation tests deliberately use the inherited
+    # public 'citacao' environment: 4 cm indent, reduced font, single spacing.
+    first_results = rf"\\section{{{d['results']}}}"
+    source = replace_once(
+        source, first_results, quotation_section(loc) + first_results,
+        "long-quotation section")
 
     # Academic nature and front matter remain the class's own implementations.
     return source
