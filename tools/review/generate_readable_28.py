@@ -385,6 +385,7 @@ QUOTE_EXAMPLES = {
         "foot_1": "Esta é uma nota explicativa de teste. A numeração e o corpo da nota devem permanecer junto ao rodapé da página.",
         "foot_2": "As contagens apresentadas são ilustrativas e não devem ser utilizadas como resultados de uma pesquisa empírica.",
         "foot_3": "Uma terceira nota permite inspecionar a continuidade da numeração e a formatação do separador.",
+        "closing": "Esse conjunto mostra como a apresentação tipográfica diferencia a citação longa do corpo do texto e como as notas complementam a explicação.",
         "short": "Uma citação curta demonstrativa, entre aspas, também deve permanecer no corpo do parágrafo.",
     },
     "en": {
@@ -412,6 +413,7 @@ QUOTE_EXAMPLES = {
         "foot_1": "This explanatory test footnote must remain at the foot of the page with its numbering and typographic separator.",
         "foot_2": "The reported counts are illustrative rather than empirical research findings.",
         "foot_3": "A third note allows reviewers to inspect numbering continuity and separator formatting.",
+        "closing": "These examples also show the typographic distinction between long quotations and running text, while footnotes supplement the analysis.",
         "short": "A short illustrative quotation in quotation marks belongs within the surrounding paragraph.",
     },
     "es": {
@@ -440,6 +442,7 @@ QUOTE_EXAMPLES = {
         "foot_1": "Esta nota explicativa de prueba debe aparecer a pie de página con su numeración y separador tipográfico.",
         "foot_2": "Los conteos mostrados son ilustrativos y no constituyen resultados de investigación empírica.",
         "foot_3": "Una tercera nota permite revisar la continuidad de numeración y el formato del separador.",
+        "closing": "Los ejemplos también permiten distinguir tipográficamente las citas extensas del texto normal y muestran el uso complementario de las notas.",
         "short": "Una cita breve demostrativa, entre comillas, permanece dentro del párrafo.",
     },
     "fr": {
@@ -469,6 +472,7 @@ QUOTE_EXAMPLES = {
         "foot_1": "Cette note explicative de test doit figurer en bas de page, avec sa numérotation et son filet séparateur.",
         "foot_2": "Les dénombrements présentés sont illustratifs et ne constituent pas des résultats de recherche empirique.",
         "foot_3": "Une troisième note permet de contrôler la continuité de numérotation et la typographie du séparateur.",
+        "closing": "Ces exemples permettent de distinguer les citations longues du texte courant et montrent comment les notes complètent l'analyse.",
         "short": "Une courte citation illustrative entre guillemets reste intégrée au paragraphe.",
     },
 }
@@ -488,7 +492,7 @@ def quotation_section(locale: str) -> str:
         data["second"] + " " + data["source_tail"],
         r"\end{citacao}",
         data["short"] + rf"\footnote{{{data['foot_2']}}}",
-        data["intro"] + rf"\footnote{{{data['foot_3']}}}",
+        data["closing"] + rf"\footnote{{{data['foot_3']}}}",
     ]) + "\n"
 
 
