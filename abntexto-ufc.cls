@@ -207,7 +207,7 @@
     pt/appendix = {Apêndice},
     en/appendix = {Appendix},
     es/appendix = {Apéndice},
-    fr/appendix = {Annexe},
+    fr/appendix = {Appendice},
     pt/annex = {Anexo},
     en/annex = {Annex},
     es/annex = {Anexo},
