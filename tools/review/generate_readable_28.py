@@ -583,17 +583,17 @@ def readable_source(source: str, profile: str, loc: str) -> str:
             "undergraduate-capstone", "specialization-capstone"
         } else 3
         excess = re.findall(
-            r"(?m)^\\s*examiner-(\\d+)(?:-institution|-unit)?=\\{[^{}\\n]*\\},?\\s*$",
+            r"(?m)^[ \t]*examiner-(\d+)(?:-institution|-unit)?=\{[^{}\n]*\},?[ \t]*$",
             source,
         )
         if not excess:
             raise RuntimeError(f"Missing examiner metadata: {profile}/{loc}")
         source = re.sub(
-            r"(?m)^\\s*examiner-(\\d+)(?:-institution|-unit)?=\\{[^{}\\n]*\\},?\\s*\\n?",
+            r"(?m)^[ \t]*examiner-(\d+)(?:-institution|-unit)?=\{[^{}\n]*\},?[ \t]*\n?",
             lambda m: "" if int(m.group(1)) > last_examiner else m.group(0),
             source,
         )
-        included = re.findall(r"(?m)^\\s*examiner-(\\d+)=\\{", source)
+        included = re.findall(r"(?m)^[ \t]*examiner-(\d+)=\{", source)
         expected = [str(n) for n in range(2, last_examiner + 1)]
         if included != expected:
             raise RuntimeError(
