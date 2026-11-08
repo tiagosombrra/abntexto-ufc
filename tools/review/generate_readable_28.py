@@ -269,6 +269,92 @@ STRINGS = {
     },
 }
 
+
+# Human review text must never display engineering marker names or leaked English
+# placeholders from the original integration suite.
+NAMES = {
+    "advisor": "Alex Ferreira",
+    "coadvisor": "Cris Almeida",
+    "examiners": {
+        2: "Marina Carvalho", 3: "João Mendes", 4: "Rafael Soares",
+        5: "Carla Brito", 6: "Laura Lima",
+    },
+}
+DIFFERENT_CAPTIONS = {
+    "pt": {
+        "introfigure": "Malha quadrilateral no domínio unitário",
+        "introchart": "Grade inicial de comparação das configurações",
+        "introtexttable": "Variáveis consideradas na construção das malhas",
+        "introtable": "Contagens iniciais de componentes da malha",
+    },
+    "en": {
+        "introfigure": "Quadrilateral mesh on the unit square",
+        "introchart": "Initial comparison grid for the configurations",
+        "introtexttable": "Variables used to construct the meshes",
+        "introtable": "Initial counts of mesh components",
+    },
+    "es": {
+        "introfigure": "Malla cuadrilateral en el dominio unitario",
+        "introchart": "Cuadrícula inicial de comparación de configuraciones",
+        "introtexttable": "Variables usadas para construir las mallas",
+        "introtable": "Conteos iniciales de componentes de malla",
+    },
+    "fr": {
+        "introfigure": "Maillage quadrilatéral du domaine unité",
+        "introchart": "Grille initiale de comparaison des configurations",
+        "introtexttable": "Variables utilisées pour construire les maillages",
+        "introtable": "Dénombrements initiaux des composants du maillage",
+    },
+}
+NEW_PROSE = {
+    "pt": (
+        "A discretização do quadrado unitário por malhas estruturadas "
+        "permite verificar propriedades topológicas de forma controlada. "
+        "Os casos contemplam células quadrilaterais e triangulares e "
+        "resoluções definidas explicitamente.",
+        "Os resultados são derivados de contagens determinísticas de "
+        "vértices, arestas e células. A análise diferencia medidas "
+        "calculadas de avaliações de desempenho e apresenta referências "
+        "cruzadas para figuras, tabelas e algoritmos.",
+    ),
+    "en": (
+        "Discretizing the unit square with structured meshes enables "
+        "controlled checks of topological properties. The cases include "
+        "quadrilateral and triangular cells with explicitly specified "
+        "resolutions.",
+        "The results derive from deterministic counts of vertices, edges "
+        "and cells. The analysis distinguishes calculated measurements "
+        "from performance evaluation and uses cross-references to "
+        "figures, tables and algorithms.",
+    ),
+    "es": (
+        "La discretización del cuadrado unitario mediante mallas "
+        "estructuradas permite verificar propiedades topológicas de "
+        "manera controlada. Los casos consideran celdas cuadriláteras "
+        "y triangulares con resoluciones explícitas.",
+        "Los resultados proceden de conteos deterministas de vértices, "
+        "aristas y celdas. El análisis distingue mediciones calculadas "
+        "de evaluaciones de rendimiento y utiliza referencias cruzadas "
+        "a figuras, tablas y algoritmos.",
+    ),
+    "fr": (
+        "La discrétisation du carré unité par des maillages structurés "
+        "permet de vérifier les propriétés topologiques dans un cadre "
+        "contrôlé. Les cas comprennent des cellules quadrilatérales "
+        "et triangulaires de résolutions explicites.",
+        "Les résultats découlent du dénombrement déterministe des "
+        "sommets, arêtes et cellules. L'analyse distingue les mesures "
+        "calculées des évaluations de performance et utilise des renvois "
+        "aux figures, tableaux et algorithmes.",
+    ),
+}
+EQUATION_REFERENCE = {
+    "pt": r"Consulte também a Equação~\ref{eq:r4-sum}.",
+    "en": r"See also Equation~\ref{eq:r4-sum}.",
+    "es": r"Véase también la ecuación~\ref{eq:r4-sum}.",
+    "fr": r"Voir également l'équation~\ref{eq:r4-sum}.",
+}
+
 def replace_once(text: str, old: str, new: str, label: str) -> str:
     count = text.count(old)
     if count != 1:
@@ -313,7 +399,8 @@ def rewrite_support(entry: dict, loc: str, d: dict) -> None:
 
 def readable_source(source: str, profile: str, loc: str) -> str:
     """Rewrite presentation only; keep class API calls and mathematical study."""
-    d = STRINGS[loc]
+    d = {**STRINGS[loc], **DIFFERENT_CAPTIONS[loc]}
+    original_prose = runpy.run_path(str(R4))["PROSE"][loc]
     project = profile.endswith("research-project")
     anonymous = profile == "anonymized-research-project"
     title = d["project_title"] if project else d["title"]
@@ -330,11 +417,11 @@ def readable_source(source: str, profile: str, loc: str) -> str:
     source = source.replace("article-author-note={Synthetic Test Author Note}",
                             f"article-author-note={{{d['article_note']}}}")
     source = source.replace("advisor={Integrated Advisor}",
-                            "advisor={Academic supervisor}")
+                            "advisor={" + NAMES["advisor"] + "}")
     source = source.replace("coadvisor={Integrated Coadvisor}",
-                            "coadvisor={Co-supervisor}")
+                            "coadvisor={" + NAMES["coadvisor"] + "}")
     source = re.sub(r"examiner-(\d+)={(?:Integrated Examiner \d+)}",
-                    lambda m: f"examiner-{m[1]}={{Committee member {m[1]}}}", source)
+                    lambda m: f"examiner-{m[1]}={{{NAMES['examiners'][int(m[1])]}}}", source)
     source = re.sub(r"examiner-(\d+)-institution={(?:Integrated Institution \d+)}",
                     lambda m: f"examiner-{m[1]}-institution={{{d['institution']}}}", source)
     source = source.replace("SYNTHETIC-ANON-001", "REVIEW-PROPOSAL-001")
@@ -352,8 +439,8 @@ def readable_source(source: str, profile: str, loc: str) -> str:
         "R4LONG": "longtable", "R4NATIVE": "nativetable",
         "R4-INLINE-CODE": "inlinecode", "R4-EXTERNAL-CODE": "externalcode",
         "R4-ALGORITHM": "algorithm",
-        "INTEGRATED-OBJECT": "figure", "INTEGRATED-TABLE": "shorttable",
-        "INTEGRATED-CHART": "chart", "INTEGRATED-TEXTTABLE": "texttable",
+        "INTEGRATED-OBJECT": "introfigure", "INTEGRATED-TABLE": "introtable",
+        "INTEGRATED-CHART": "introchart", "INTEGRATED-TEXTTABLE": "introtexttable",
         "INTEGRATED-TERM": "term", "INTEGRATED-DEFINITION": "definition",
         "INTEGRATED-LETTER": "letter", "INTEGRATED-NESTED-LIST": "nested",
         "INTEGRATED-DASH": "dash",
@@ -380,8 +467,7 @@ def readable_source(source: str, profile: str, loc: str) -> str:
     source = source.replace("Synthetic object note", d["note"])
     source = source.replace(
         "Equation~\\ref{eq:r4-sum} is an artificial reproducibility marker.",
-        d["equation_note"] + r" Consulte também a Equação~\ref{eq:r4-sum}." if loc == "pt"
-        else d["equation_note"] + r" See Equation~\ref{eq:r4-sum}.",
+        d["equation_note"] + " " + EQUATION_REFERENCE[loc],
     )
 
     for flag in ("PROJECT", "ANON"):
@@ -408,6 +494,11 @@ def readable_source(source: str, profile: str, loc: str) -> str:
         r"\newglossaryentry{integratedterm}{name={integrated term},description={synthetic term for locale testing}}",
         rf"\newglossaryentry{{integratedterm}}{{name={{{d['term']}}},description={{{d['definition']}}}}}")
     source = source.replace(r"\index{integrated term}", rf"\index{{{d['term']}}}")
+
+    for old, new_text in zip(original_prose, NEW_PROSE[loc]):
+        if old not in source:
+            raise RuntimeError(f"Original artificial prose not found: {profile}/{loc}")
+        source = source.replace(old, new_text)
 
     # Remove the six cloned synthetic sections; retain three distinct cases.
     replicated = (rf"\\subsection{{R4-REPLICATION-{loc.upper()}-1}}"
