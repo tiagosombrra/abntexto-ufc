@@ -99,7 +99,10 @@ def build_one(entry: dict, loc: str, out: Path, work: Path) -> dict:
             "fr": ("Maillage quadrilatéral du domaine unité",
                    "Configuration d'un maillage structuré"),
         }[loc]
-        if not all(name in extracted for name in names):
+        # PDF text extraction commonly changes a French apostrophe to U+2019.
+        # Normalize punctuation only, without discarding substantive letters.
+        rendered = extracted.replace("’", "'").replace("‘", "'")
+        if not all(name.replace("’", "'") in rendered for name in names):
             findings.append("distinct_figure_titles_missing")
     if profile not in {"scientific-article", "anonymized-research-project"}:
         if images_on_cover(final) < 1:
