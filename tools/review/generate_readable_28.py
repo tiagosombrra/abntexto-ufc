@@ -843,18 +843,22 @@ def readable_source(source: str, profile: str, loc: str) -> str:
         last_examiner = 2 if profile in {
             "undergraduate-capstone", "specialization-capstone"
         } else 3
+        header, begin_token, body = source.partition(r"\begin{document}")
+        if not begin_token:
+            raise RuntimeError("Missing document boundary before committee metadata")
         excess = re.findall(
             r"(?m)^[ \t]*examiner-(\d+)(?:-institution|-unit)?=\{[^{}\n]*\},?[ \t]*$",
-            source,
+            header,
         )
         if not excess:
             raise RuntimeError(f"Missing examiner metadata: {profile}/{loc}")
-        source = re.sub(
+        header = re.sub(
             r"(?m)^[ \t]*examiner-(\d+)(?:-institution|-unit)?=\{[^{}\n]*\},?[ \t]*\n?",
             lambda m: "" if int(m.group(1)) > last_examiner else m.group(0),
-            source,
+            header,
         )
-        included = re.findall(r"(?m)^[ \t]*examiner-(\d+)=\{", source)
+        included = re.findall(r"(?m)^[ \t]*examiner-(\d+)=\{", header)
+        source = header + begin_token + body
         expected = [str(n) for n in range(2, last_examiner + 1)]
         if included != expected:
             raise RuntimeError(
