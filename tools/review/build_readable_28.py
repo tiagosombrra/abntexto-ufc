@@ -104,6 +104,50 @@ def build_one(entry: dict, loc: str, out: Path, work: Path) -> dict:
         rendered = extracted.replace("’", "'").replace("‘", "'")
         if not all(name.replace("’", "'") in rendered for name in names):
             findings.append("distinct_figure_titles_missing")
+
+    # Validate the three defects reported on the printed Portuguese TCC,
+    # using extracted text from actual PDFs rather than only TeX predicates.
+    compact = re.sub(r"\s+", " ", extracted)
+    sample_titles = {
+        "pt": ("Exemplo de tabela com resultados calculados",
+               "Variáveis consideradas na construção das malhas",
+               "Fonte: Elaboração própria com dados ilustrativos, 2026"),
+        "en": ("Example table of calculated results",
+               "Variables used to construct the meshes",
+               "Source: Author-generated illustrative data, 2026"),
+        "es": ("Ejemplo de tabla con resultados calculados",
+               "Resumen de parámetros experimentales",
+               "Fuente: Elaboración propia con datos ilustrativos, 2026"),
+        "fr": ("Exemple de tableau de résultats calculés",
+               "Variables utilisées pour construire les maillages",
+               "Source: Élaboration originale avec données illustratives, 2026"),
+    }
+    table_title, cuadro_title, source_text = sample_titles[loc]
+    last_table = compact.rfind(table_title)
+    if last_table < 0:
+        findings.append("short_table_caption_disfigured_or_missing")
+    elif source_text not in compact[last_table:last_table + 340]:
+        findings.append("short_table_source_disfigured_or_missing")
+    if profile in {"undergraduate-capstone", "specialization-capstone",
+                   "masters-thesis", "doctoral-thesis"}:
+        last_quadro = compact.rfind(cuadro_title)
+        if last_quadro < 0:
+            findings.append("text_table_caption_disfigured_or_missing")
+        elif source_text not in compact[last_quadro:last_quadro + 340]:
+            findings.append("text_table_source_disfigured_or_missing")
+        institution = {
+            "pt": "Universidade Federal do Ceará",
+            "en": "Federal University of Ceara",
+            "es": "Universidad Federal de Ceará",
+            "fr": "Université fédérale du Ceará",
+        }[loc]
+        for member in ("Alex Ferreira", "Cris Almeida"):
+            # The PDF approval-page signature prints the institution directly
+            # after each name. A missing metadata key must fail this check.
+            if member + " " + institution not in compact:
+                findings.append("approval_institution_missing:" + member)
+    if re.search(r"(?<!\.)\.\.(?!\.)", compact):
+        findings.append("double_period_from_fixture")
     if profile not in {"scientific-article", "anonymized-research-project"}:
         if images_on_cover(final) < 1:
             findings.append("ufc_coat_of_arms_absent_on_cover")
