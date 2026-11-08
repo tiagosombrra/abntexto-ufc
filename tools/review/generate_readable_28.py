@@ -501,6 +501,267 @@ def quotation_section(locale: str) -> str:
     ]) + "\n"
 
 
+
+# A self-contained, analytically verifiable mesh study in all four locales.
+# It must not claim anisotropic adaptation, timings or unreported experiments.
+MESH_STUDY = {
+    "pt": {
+        "intro": ("Em computação gráfica, uma malha descreve a geometria por vértices, "
+                  "arestas e faces, permitindo representar superfícies, aproximar "
+                  "domínios e preparar operações numéricas. Neste exemplo, o domínio "
+                  "é o quadrado unitário e a conectividade é regular. A comparação "
+                  "usa malhas quadrilaterais e a triangulação obtida ao dividir "
+                  "cada quadrilátero por uma diagonal. Não se trata de um novo "
+                  "algoritmo de geração de malhas."),
+        "method": ("Considere uma grade com m colunas e n linhas de células. "
+                   "O número de vértices é (m+1)(n+1), e o total de arestas "
+                   "quadrilaterais é m(n+1)+n(m+1). O número de quadriláteros "
+                   "é mn. Ao introduzir uma diagonal por célula, obtêm-se 2mn "
+                   "triângulos e mn novas arestas, sem acrescentar vértices. "
+                   "As relações são exatas para a grade regular descrita."),
+        "result": ("Para a grade 4 por 4, os 25 vértices delimitam 40 arestas "
+                   "e 16 quadriláteros. A triangulação contém 56 arestas "
+                   "e 32 triângulos, preservando os mesmos 25 vértices. "
+                   "As duas representações satisfazem a relação de Euler "
+                   "V-E+F=1 para um domínio simplesmente conexo com fronteira. "
+                   "Essas contagens são analíticas, não medições de desempenho."),
+        "limits": ("A triangulação aumenta o número de faces, mas essa observação "
+                   "não determina, isoladamente, a qualidade geométrica ou o "
+                   "custo computacional. Ângulos, razão de aspecto, alinhamento "
+                   "com campos direcionais e qualidade da parametrização "
+                   "exigiriam experimentos adicionais. Os trabalhos sobre "
+                   "quadrangulação e refinamento de Delaunay contextualizam "
+                   "problemas mais complexos sem que seus algoritmos sejam "
+                   "considerados implementados neste exemplo."),
+        "appendix": ("O procedimento pode ser reproduzido sem bibliotecas externas. "
+                     "Defina um inteiro positivo n, gere os pares (i/n,j/n) "
+                     "para i e j entre zero e n e conecte vizinhos horizontais "
+                     "e verticais. Cada célula elementar contém quatro vértices. "
+                     "Se for necessária uma malha triangular, acrescente uma "
+                     "diagonal por célula e registre as duas faces correspondentes. "
+                     "Compare as listas de vértices, arestas e faces com as "
+                     "fórmulas do corpo do trabalho."),
+        "steps": ("Gerar a grade cartesiana", "Enumerar arestas sem duplicação",
+                  "Construir faces quadrilaterais",
+                  "Dividir cada célula em dois triângulos",
+                  "Conferir as contagens e a relação de Euler"),
+        "annex": ("Este anexo apresenta uma síntese de leitura, não a reprodução "
+                  "de figuras ou dados pertencentes a terceiros. Bommes, "
+                  "Zimmer e Kobbelt discutem a construção de malhas quadrilaterais "
+                  "por técnicas de quadrangulação. Shewchuk apresenta algoritmos "
+                  "de refinamento de Delaunay para malhas triangulares. Esses "
+                  "trabalhos permitem situar o exemplo regular em relação a "
+                  "técnicas gerais, mas não constituem evidência de que tais "
+                  "métodos tenham sido implementados aqui."),
+    },
+    "en": {
+        "intro": ("In computer graphics, a mesh describes geometry through vertices, "
+                  "edges and faces, supporting surface representation, domain "
+                  "approximation and numerical processing. This example uses the "
+                  "unit square with regular connectivity. It compares quadrilateral "
+                  "grids against triangulations made by inserting one diagonal "
+                  "in each cell. No new mesh-generation algorithm is claimed."),
+        "method": ("For a grid with m columns and n rows of cells, the number "
+                   "of vertices is (m+1)(n+1), and the quadrilateral edge "
+                   "count is m(n+1)+n(m+1). The grid contains mn quadrilaterals. "
+                   "Adding one diagonal per cell produces 2mn triangles and "
+                   "mn additional edges without introducing new vertices. "
+                   "These identities are exact for the stated regular grid."),
+        "result": ("A 4-by-4 grid has 25 vertices, 40 edges and 16 quadrilaterals. "
+                   "Its triangulation has 56 edges and 32 triangles while "
+                   "retaining the same 25 vertices. Both representations "
+                   "satisfy Euler's relation V-E+F=1 for a simply connected "
+                   "domain with boundary. These are analytically derived "
+                   "counts rather than performance measurements."),
+        "limits": ("A higher number of triangles alone does not establish "
+                   "geometric quality or runtime. Angles, aspect ratios, "
+                   "alignment with directional fields and parameterization "
+                   "would require additional experiments. Published studies "
+                   "on quadrangulation and Delaunay refinement offer broader "
+                   "context; those methods are not implemented here."),
+        "appendix": ("The construction can be reproduced without external "
+                     "libraries. Choose a positive integer n, generate the "
+                     "coordinate pairs (i/n,j/n) for i and j from zero to n, "
+                     "and connect horizontal and vertical neighbors. Each "
+                     "elementary cell has four corner vertices. To construct "
+                     "the triangular version, add one diagonal per cell "
+                     "and record the two resulting faces. Compare the resulting "
+                     "lists with the analytical formulas in the manuscript."),
+        "steps": ("Generate the Cartesian grid", "Enumerate unique edges",
+                  "Construct quadrilateral faces",
+                  "Split each cell into two triangles",
+                  "Check the counts and Euler's relation"),
+        "annex": ("This annex is a reading synthesis, not a reproduction of "
+                  "third-party figures or results. Bommes, Zimmer and Kobbelt "
+                  "discuss mixed-integer quadrangulation, whereas Shewchuk "
+                  "describes Delaunay-refinement methods for triangular meshes. "
+                  "Both references situate the simple regular example within "
+                  "a broader literature; their algorithms are not implemented "
+                  "in this demonstration."),
+    },
+    "es": {
+        "intro": ("En computación gráfica, una malla describe la geometría mediante "
+                  "vértices, aristas y caras, y sirve para representar superficies, "
+                  "aproximar dominios y realizar operaciones numéricas. El ejemplo "
+                  "usa el cuadrado unitario y una conectividad regular. Se comparan "
+                  "mallas cuadriláteras con la triangulación obtenida mediante "
+                  "una diagonal por celda, sin proponer un algoritmo nuevo."),
+        "method": ("Para una cuadrícula con m columnas y n filas de celdas, "
+                   "el número de vértices es (m+1)(n+1), y el de aristas "
+                   "cuadriláteras es m(n+1)+n(m+1). Existen mn cuadriláteros. "
+                   "Si cada celda se divide con una diagonal, resultan 2mn "
+                   "triángulos y mn aristas adicionales, sin vértices nuevos. "
+                   "Las identidades son exactas para la cuadrícula descrita."),
+        "result": ("Una cuadrícula de 4 por 4 tiene 25 vértices, 40 aristas "
+                   "y 16 cuadriláteros. La triangulación tiene 56 aristas "
+                   "y 32 triángulos, con los mismos 25 vértices. Ambas "
+                   "representaciones cumplen la relación de Euler V-E+F=1 "
+                   "para un dominio simplemente conexo con frontera. Son "
+                   "conteos analíticos y no mediciones de rendimiento."),
+        "limits": ("El aumento del número de caras no determina por sí solo "
+                   "la calidad geométrica ni el coste de ejecución. Los "
+                   "ángulos, las relaciones de aspecto, la alineación y la "
+                   "parametrización exigirían experimentos adicionales. "
+                   "Los estudios sobre cuadrangulación y refinamiento de "
+                   "Delaunay aportan contexto, pero sus técnicas no se "
+                   "implementan en este ejemplo."),
+        "appendix": ("El procedimiento puede repetirse sin bibliotecas externas. "
+                     "Seleccione un entero positivo n y genere los pares "
+                     "(i/n,j/n) para i y j entre cero y n. Conecte vecinos "
+                     "horizontales y verticales y forme celdas de cuatro "
+                     "vértices. Para obtener triángulos, añada una diagonal "
+                     "a cada celda y registre las dos caras resultantes. "
+                     "Confronte las listas con las fórmulas analíticas."),
+        "steps": ("Generar la cuadrícula cartesiana", "Enumerar aristas únicas",
+                  "Construir caras cuadriláteras",
+                  "Dividir las celdas en dos triángulos",
+                  "Comprobar los conteos y la relación de Euler"),
+        "annex": ("Este anexo contiene una síntesis de lectura, no figuras "
+                  "ni resultados reproducidos de terceros. Bommes, Zimmer "
+                  "y Kobbelt estudian la cuadrangulación de enteros mixtos, "
+                  "mientras Shewchuk analiza el refinamiento de Delaunay "
+                  "para mallas triangulares. Las obras contextualizan "
+                  "el ejemplo regular sin que se afirme haber aplicado "
+                  "sus algoritmos."),
+    },
+    "fr": {
+        "intro": ("En infographie, un maillage décrit la géométrie par des "
+                  "sommets, arêtes et faces, pour représenter des surfaces, "
+                  "approximer un domaine et effectuer des calculs. L'exemple "
+                  "porte sur le carré unité à connectivité régulière. "
+                  "Il compare une grille quadrilatérale à une triangulation "
+                  "obtenue par l'ajout d'une diagonale dans chaque cellule, "
+                  "sans proposer un nouvel algorithme."),
+        "method": ("Pour une grille de m colonnes et n lignes de cellules, "
+                   "le nombre de sommets vaut (m+1)(n+1), celui des arêtes "
+                   "quadrilatérales m(n+1)+n(m+1), et celui des quadrilatères "
+                   "mn. Une diagonale supplémentaire par cellule donne "
+                   "2mn triangles et mn arêtes de plus, sans nouveaux "
+                   "sommets. Ces relations sont exactes pour cette grille."),
+        "result": ("Une grille de 4 par 4 comporte 25 sommets, 40 arêtes "
+                   "et 16 quadrilatères. Sa triangulation comprend 56 arêtes "
+                   "et 32 triangles pour les mêmes 25 sommets. Les deux "
+                   "représentations vérifient la relation d'Euler V-E+F=1 "
+                   "pour un domaine simplement connexe avec frontière. "
+                   "Il s'agit de dénombrements analytiques, non de mesures "
+                   "de performance."),
+        "limits": ("Un plus grand nombre de faces ne démontre à lui seul "
+                   "ni la qualité géométrique ni la vitesse du calcul. "
+                   "L'étude des angles, de l'allongement des cellules, "
+                   "de l'alignement directionnel et de la paramétrisation "
+                   "exigerait des expériences complémentaires. Les travaux "
+                   "sur la quadrangulation et le raffinement de Delaunay "
+                   "fournissent un contexte sans être implémentés ici."),
+        "appendix": ("La procédure se reproduit sans bibliothèque externe. "
+                     "Choisir un entier positif n et créer les couples "
+                     "(i/n,j/n), pour i et j allant de zéro à n. Relier les "
+                     "voisins horizontaux et verticaux afin de former "
+                     "des cellules à quatre sommets. Pour la version "
+                     "triangulaire, tracer une diagonale par cellule "
+                     "et enregistrer les deux faces ainsi obtenues. "
+                     "Comparer les listes aux formules du manuscrit."),
+        "steps": ("Générer la grille cartésienne", "Énumérer les arêtes uniques",
+                  "Construire les faces quadrilatérales",
+                  "Diviser chaque cellule en deux triangles",
+                  "Vérifier les dénombrements et la relation d'Euler"),
+        "annex": ("Cette annexe présente une synthèse de lectures et ne "
+                  "reproduit pas de figures ni de résultats appartenant "
+                  "à des tiers. Bommes, Zimmer et Kobbelt traitent de "
+                  "la quadrangulation par nombres entiers mixtes, tandis "
+                  "que Shewchuk étudie le raffinement de Delaunay "
+                  "pour les maillages triangulaires. Ces travaux replacent "
+                  "l'exemple régulier dans la littérature sans que "
+                  "leurs algorithmes soient réalisés ici."),
+    },
+}
+
+PROFILE_PURPOSE = {
+    "undergraduate-capstone": {
+        "pt": "Como TCC, o objetivo é explicar e reproduzir as relações combinatórias de malhas elementares.",
+        "en": "As an undergraduate project, the goal is to explain and reproduce the combinatorial properties of elementary meshes.",
+        "es": "Como trabajo de grado, se pretende explicar y reproducir las propiedades combinatorias de mallas elementales.",
+        "fr": "Ce travail de licence vise à expliquer et reproduire les propriétés combinatoires des maillages élémentaires.",
+    },
+    "specialization-capstone": {
+        "pt": "Na especialização, a aplicação enfatiza a validação dos dados de entrada e a documentação do procedimento.",
+        "en": "For the specialization project, the applied focus is input validation and process documentation.",
+        "es": "En la especialización se destaca la validación de datos de entrada y la documentación del procedimiento.",
+        "fr": "Dans le travail de spécialisation, l'accent porte sur la validation des entrées et la documentation du procédé.",
+    },
+    "masters-thesis": {
+        "pt": "Como dissertação ilustrativa, a comparação analítica separa conectividade de critérios geométricos ainda não avaliados.",
+        "en": "As an illustrative master's dissertation, the analytical comparison separates connectivity from geometric criteria not yet evaluated.",
+        "es": "Como disertación ilustrativa, la comparación analítica separa conectividad y criterios geométricos todavía no evaluados.",
+        "fr": "Cette illustration de mémoire distingue la connectivité des critères géométriques encore non évalués.",
+    },
+    "doctoral-thesis": {
+        "pt": "Como tese demonstrativa, explicita-se que uma contribuição original exigiria hipóteses novas, avaliação experimental e confronto sistemático com a literatura.",
+        "en": "As a doctoral demonstration, original contributions would require new hypotheses, experimental evaluation and systematic literature comparisons.",
+        "es": "Como tesis demostrativa, una contribución original requeriría hipótesis nuevas, evaluación experimental y comparación sistemática con la literatura.",
+        "fr": "Comme démonstration doctorale, une contribution originale nécessiterait de nouvelles hypothèses, une évaluation et une comparaison systématique à la littérature.",
+    },
+    "research-project": {
+        "pt": "Como projeto, propõem-se etapas futuras de implementação, registro de configurações e avaliação de qualidade de elementos.",
+        "en": "As a proposal, future steps include implementation, configuration recording and evaluation of element quality.",
+        "es": "Como proyecto, se proponen futuras etapas de implementación, registro de configuraciones y evaluación de calidad.",
+        "fr": "Comme projet, les étapes futures prévoient une implémentation, le relevé des paramètres et l'évaluation de la qualité des éléments.",
+    },
+    "anonymized-research-project": {
+        "pt": "O projeto anonimizado conserva os objetivos e os critérios metodológicos sem revelar identidade institucional ou de autoria.",
+        "en": "The anonymized proposal retains its aims and methods without disclosing the proposer's identity or institutional affiliation.",
+        "es": "El proyecto anonimizado conserva los objetivos y el método sin revelar la identidad ni afiliación del proponente.",
+        "fr": "Le projet anonymisé conserve ses objectifs et sa méthode sans divulguer l'identité ni l'affiliation de son auteur.",
+    },
+    "scientific-article": {
+        "pt": "O artigo apresenta um estudo de caso curto, com fórmulas verificáveis e limites explícitos de generalização.",
+        "en": "The article offers a concise case study with verifiable formulas and explicit limits to generalization.",
+        "es": "El artículo presenta un caso breve con fórmulas verificables y límites explícitos de generalización.",
+        "fr": "L'article présente un cas concis, avec des formules vérifiables et des limites explicites de généralisation.",
+    },
+}
+
+
+def appendices_for_review(locale: str) -> tuple[str, str]:
+    """Provide real author-created procedures and a cited literature synopsis."""
+    entry = MESH_STUDY[locale]
+    steps = "\n".join(
+        rf"\item {step}." for step in entry["steps"]
+    )
+    appendix = "\n".join([
+        entry["appendix"],
+        r"\begin{enumerate}",
+        steps,
+        r"\end{enumerate}",
+        r"\begin{equation}\label{eq:r7-app-quad}V=(n+1)^2,\quad E=2n(n+1),\quad Q=n^2.\end{equation}",
+        r"\begin{equation}\label{eq:r7-app-tri}E_{\triangle}=E+Q,\quad T=2Q,\quad V-E_{\triangle}+T=1.\end{equation}",
+    ])
+    annex = "\n".join([
+        entry["annex"],
+        r"\par\autocite{meshBommes2009,meshShewchuk2002}.",
+    ])
+    return appendix, annex
+
+
 def replace_once(text: str, old: str, new: str, label: str) -> str:
     count = text.count(old)
     if count != 1:
@@ -770,6 +1031,38 @@ def readable_source(source: str, profile: str, loc: str) -> str:
     source = replace_once(
         source, first_results, quotation_section(loc) + first_results,
         "long-quotation section")
+
+    # A coherent worked mesh example supports all seven document genres.
+    study = MESH_STUDY[loc]
+    introduction_anchor = d["intro_text"]
+    source = replace_once(
+        source, introduction_anchor,
+        introduction_anchor + "\n" + study["intro"] + "\n"
+        + PROFILE_PURPOSE[profile][loc],
+        "reproducible academic context")
+    methods_anchor = rf"\section{{{d['methods']}}}"
+    source = replace_once(
+        source, methods_anchor,
+        methods_anchor + "\n" + study["method"] + "\n"
+        + r"\begin{equation}\label{eq:r7-counting}"
+        + r" V=(m+1)(n+1),\quad E=m(n+1)+n(m+1),\quad Q=mn,\quad T=2mn."
+        + r"\end{equation}",
+        "worked mesh methodology")
+    results_anchor = rf"\section{{{d['results']}}}"
+    source = replace_once(
+        source, results_anchor,
+        results_anchor + "\n" + study["result"] + "\n" + study["limits"],
+        "analytical mesh results")
+    if profile != "scientific-article":
+        appendix, annex = appendices_for_review(loc)
+        source = replace_once(
+            source, rf"\appendix{{{d['appendix']}}}" + "\n.",
+            rf"\appendix{{{d['appendix']}}}" + "\n" + appendix,
+            "non-empty reproducibility appendix")
+        source = replace_once(
+            source, rf"\annex{{{d['annex']}}}" + "\n.",
+            rf"\annex{{{d['annex']}}}" + "\n" + annex,
+            "non-empty cited literature annex")
 
     # Academic nature and front matter remain the class's own implementations.
     return source
