@@ -960,7 +960,9 @@ def readable_source(source: str, profile: str, loc: str) -> str:
         rf"\ufcListEntry{{{d['term']}}}{{{d['definition']}.}}",
         r"\end{ufcdefinitionlist}",
     ])
-    new_definition = rf"\noindent\textbf{{{d['term']}:}} {d['definition']}."
+    # End the definition paragraph explicitly, keeping the following
+    # bibliography sentence on its own line at the established left margin.
+    new_definition = rf"\noindent\textbf{{{d['term']}:}} {d['definition']}.\par\noindent"
     source = replace_once(
         source, old_definition, new_definition,
         "natural-flow editorial definition")
