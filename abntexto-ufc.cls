@@ -901,6 +901,32 @@
 \setlength{\parindent}{2cm}
 \AtBeginDocument{\onehalfsp}
 
+% Public long quotations: UFC's four-centimeter left indent, reduced 10 pt
+% text, single line spacing, and no additional first-line indent.
+% The extra named environment is an English API alias; the traditional
+% 'citacao' spelling is retained for compatibility with ABNT source examples.
+\NewDocumentEnvironment{ufcLongQuotation}{}
+  {
+    \par
+    \addvspace{\baselineskip}
+    \begingroup
+    \setlength{\leftskip}{4cm}
+    \setlength{\rightskip}{0pt}
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{0pt}
+    \fontsize{10}{12}\selectfont
+    \singlesp
+    \noindent
+  }
+  {
+    \par
+    \endgroup
+    \addvspace{\baselineskip}
+  }
+\NewDocumentEnvironment{citacao}{}
+  { \begin{ufcLongQuotation} }
+  { \end{ufcLongQuotation} }
+
 % Tagging-safe ABNT alíneas and subalíneas using LaTeX block-list keys.
 \NewDocumentEnvironment{ufclettereditems}{}
   {\begin{enumerate}[
