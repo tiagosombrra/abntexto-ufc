@@ -55,7 +55,7 @@ def find_layout_defects(pdf: Path, loc: str) -> tuple[list[str], float | None]:
         "pt": ("estruturada:", "Discretização"),
         "en": ("mesh:", "A"),
         "es": ("estructurada:", "Una"),
-        "fr": ("structuré:", "Discrétisation"),
+        "fr": (":", "Discrétisation"),
     }
     end_label, start_definition = anchors[loc]
     pairs: list[float] = []
@@ -82,15 +82,15 @@ def find_layout_defects(pdf: Path, loc: str) -> tuple[list[str], float | None]:
             if (len(words_in_line) == 1
                     and re.fullmatch(r"\(\d{4}[a-z]?\)\.?", words_in_line[0])):
                 faults.append("isolated_author_year_at_line_start")
-    if len(pairs) != 1:
-        faults.append(f"editorial_definition_pair_count:{len(pairs)}")
+    if not pairs:
+        faults.append("editorial_definition_pair_missing")
         return faults, None
-    gap = pairs[0]
-    # A normal inter-word space at 12pt is around 3pt. The previous 5cm
-    # description-list field yielded 51pt; this limit fails that regression.
-    if not 1.0 <= gap <= 9.0:
-        faults.append(f"definition_interword_gap_points:{gap}")
-    return faults, gap
+    # A doctoral glossary can add a second legitimate occurrence. Each
+    # detected pair must have a sane gap; a good pair may not mask a bad one.
+    bad_gaps = [gap for gap in pairs if not 1.0 <= gap <= 9.0]
+    if bad_gaps:
+        faults.append("definition_interword_gap_points:" + ",".join(map(str, bad_gaps)))
+    return faults, min(pairs)
 
 
 def selftest_geometry_guard() -> None:
