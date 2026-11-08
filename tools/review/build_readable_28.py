@@ -172,6 +172,43 @@ def build_one(entry: dict, loc: str, out: Path, work: Path) -> dict:
         if fragment not in compact:
             findings.append("missing_real_pdf_long_quote:" + field)
     raw_source = src.read_text(encoding="utf-8")
+
+    # A bibliographic synopsis written by this manuscript's author belongs
+    # in its appendix. A genuine externally published record belongs in
+    # the annex; its provenance is explicitly printed there.
+    if profile != "scientific-article":
+        if raw_source.count(r"\begin{verbatim}") != 1 \
+                or raw_source.count(r"\end{verbatim}") != 1:
+            findings.append("external_original_annex_document_missing")
+        if r"\par\autocite{meshBommes2009,meshShewchuk2002}" in raw_source:
+            findings.append("orphaned_bibliographic_citation_regression")
+        if r"\url{https://cgg.unibe.ch/publications/miq/}" not in raw_source:
+            findings.append("external_document_provenance_missing")
+        if "@article{Bommes:MIQ" not in compact \
+                or "10.1145/1576246.1531383" not in compact:
+            findings.append("external_bibliographic_record_missing_from_pdf")
+        title = {
+            "pt": "Registro bibliográfico externo sobre quadrangulação",
+            "en": "External bibliographic record on quadrangulation",
+            "es": "Registro bibliográfico externo sobre cuadrangulación",
+            "fr": "Notice bibliographique externe sur la quadrangulation",
+        }[loc]
+        if title.upper() not in compact.upper():
+            findings.append("external_annex_title_not_rendered")
+
+    # The original R4 source had a glossary term attached directly to its
+    # definition and an English conjunction in non-English manuscripts.
+    glued = {
+        "pt": "Malha estruturadaDiscretização",
+        "en": "Structured meshA geometric",
+        "es": "Malla estructuradaUna",
+        "fr": "Maillage structuréDiscrétisation",
+    }[loc]
+    if glued in compact:
+        findings.append("glossary_term_glued_to_definition")
+    if loc != "en" and "and Oliveira" in compact:
+        findings.append("untranslated_bibliographic_conjunction")
+
     if raw_source.count(r"\begin{citacao}") != 2 or \
             raw_source.count(r"\end{citacao}") != 2:
         findings.append("long_citation_environment_missing")
