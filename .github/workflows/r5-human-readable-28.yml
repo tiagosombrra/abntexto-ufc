@@ -1,0 +1,63 @@
+name: R5 human-readable complete 28 PDF editorial review
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths:
+      - tools/review/generate_readable_28.py
+      - tools/review/build_readable_28.py
+      - .github/workflows/r5-human-readable-28.yml
+      - abntexto-ufc.cls
+      - tests/integration/frontmatter/generate-comprehensive-corpus.py
+      - tests/integration/frontmatter/generate-integrated-locale.py
+      - examples/canonical-mesh-study/**
+permissions:
+  contents: read
+concurrency:
+  group: r5-readable-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  real-pdfs:
+    name: Human-readable complete PDF / ${{ matrix.locale }} (7 document types)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 65
+    strategy:
+      fail-fast: false
+      matrix:
+        locale: [pt, en, es, fr]
+    steps:
+      - name: Checkout exactly the pull-request SHA
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - name: Compile seven full, readable editorial PDFs in real TeX Live
+        uses: xu-cheng/texlive-action@22c04326a5d855880f9d39bb955138bf11c6df80 # v3
+        env:
+          SOURCE_COMMIT_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        with:
+          texlive_version: 2026
+          os: debian
+          run: |
+            export DEBIAN_FRONTEND=noninteractive
+            apt-get update -y
+            apt-get install -y --no-install-recommends poppler-utils mupdf-tools
+            git config --global --add safe.directory "$PWD"
+            python3 tools/review/build_readable_28.py --locale ${{ matrix.locale }}
+      - name: Retain editorial PDFs, rendered cover previews and evidence
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: readable-complete-${{ matrix.locale }}-${{ github.run_id }}
+          path: |
+            artifacts/human-readable-28/${{ matrix.locale }}/*.pdf
+            artifacts/human-readable-28/${{ matrix.locale }}/*-cover.png
+            artifacts/human-readable-28/${{ matrix.locale }}/review-pdfs.json
+            artifacts/human-readable-28/${{ matrix.locale }}/review-sources.json
+            artifacts/human-readable-28/${{ matrix.locale }}/*-receipt.json
+            artifacts/human-readable-28/${{ matrix.locale }}/*.log
+            artifacts/human-readable-28/${{ matrix.locale }}/*.tex
+            artifacts/comprehensive-7x4/${{ matrix.locale }}/texts/*.tex
+          if-no-files-found: warn
+          retention-days: 21
