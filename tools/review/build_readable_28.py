@@ -15,6 +15,7 @@ import re
 import runpy
 import subprocess
 import sys
+import xml.etree.ElementTree as ET
 
 ROOT = Path(__file__).resolve().parents[2]
 OUT = ROOT / "artifacts/human-readable-28"
@@ -40,6 +41,64 @@ def page_text(pdf: Path, *, first_only: bool = False) -> str:
         cmd += ["-f", "1", "-l", "1"]
     return subprocess.check_output([*cmd, str(pdf), "-"], text=True,
                                    cwd=ROOT, errors="replace")
+
+
+def find_layout_defects(pdf: Path, loc: str) -> tuple[list[str], float | None]:
+    """Measure real glyph positions, not textual adjacency in extracted PDF text."""
+    xml = subprocess.check_output(["pdftotext", "-bbox", str(pdf), "-"],
+                                  cwd=ROOT, text=True, errors="replace")
+    doc = ET.fromstring(xml)
+    word_name = "{http://www.w3.org/1999/xhtml}word"
+    line_name = "{http://www.w3.org/1999/xhtml}line"
+    page_name = "{http://www.w3.org/1999/xhtml}page"
+    anchors = {
+        "pt": ("estruturada:", "Discretização"),
+        "en": ("mesh:", "A"),
+        "es": ("estructurada:", "Una"),
+        "fr": ("structuré:", "Discrétisation"),
+    }
+    end_label, start_definition = anchors[loc]
+    pairs: list[float] = []
+    faults: list[str] = []
+    for page in doc.iter(page_name):
+        words = list(page.iter(word_name))
+        tails = [w for w in words if (w.text or "") == end_label]
+        starts = [w for w in words if (w.text or "") == start_definition]
+        for tail in tails:
+            y = float(tail.get("yMin", "-100"))
+            nearby = [
+                w for w in starts
+                if abs(float(w.get("yMin", "-100")) - y) <= 2.0
+                and float(w.get("xMin", "0")) >= float(tail.get("xMax", "0")) - 1.0
+            ]
+            if nearby:
+                head = min(nearby, key=lambda w: float(w.get("xMin", "0")))
+                pairs.append(round(float(head.get("xMin", "0")) -
+                                   float(tail.get("xMax", "0")), 3))
+        # Detect isolated author-year fragments, including the reported
+        # (2002). orphan, by inspecting physical PDF lines independently.
+        for line in page.iter(line_name):
+            words_in_line = [w.text or "" for w in line.iter(word_name)]
+            if (len(words_in_line) == 1
+                    and re.fullmatch(r"\(\d{4}[a-z]?\)\.?", words_in_line[0])):
+                faults.append("isolated_author_year_at_line_start")
+    if len(pairs) != 1:
+        faults.append(f"editorial_definition_pair_count:{len(pairs)}")
+        return faults, None
+    gap = pairs[0]
+    # A normal inter-word space at 12pt is around 3pt. The previous 5cm
+    # description-list field yielded 51pt; this limit fails that regression.
+    if not 1.0 <= gap <= 9.0:
+        faults.append(f"definition_interword_gap_points:{gap}")
+    return faults, gap
+
+
+def selftest_geometry_guard() -> None:
+    """Ensure the geometric acceptance threshold rejects the known R8 defect."""
+    normal_space = 3.2
+    r8_bad_space = 51.36
+    assert 1.0 <= normal_space <= 9.0
+    assert not (1.0 <= r8_bad_space <= 9.0)
 
 def images_on_cover(pdf: Path) -> int:
     output = subprocess.check_output(["pdfimages", "-list", str(pdf)],
@@ -75,11 +134,12 @@ def build_one(entry: dict, loc: str, out: Path, work: Path) -> dict:
     final.write_bytes(pdf.read_bytes())
     extracted = page_text(final)
     first = page_text(final, first_only=True)
+    layout_failures, definition_gap_pt = find_layout_defects(final, loc)
     leaked = [w for w in ("R4-", "R5-", "INTEGRATED-", "INTEGRATED TEST",
                           "R4LONG", "R4NATIVE", "SYNTHETIC-ANON",
                           "INTEGRATED MULTILINGUAL DOCUMENT")
               if w in extracted]
-    findings = []
+    findings = list(layout_failures)
     if leaked:
         findings.append("fixture_labels_visible:" + ",".join(leaked))
     if loc != "en":
@@ -215,8 +275,12 @@ def build_one(entry: dict, loc: str, out: Path, work: Path) -> dict:
     }[loc]
     if any(form in compact for form in glued_forms):
         findings.append("glossary_term_glued_to_definition")
-    if r"\begin{ufcdefinitionlist}[5cm]" not in raw_source:
-        findings.append("definition_label_width_not_corrected")
+    if r"\noindent\textbf{" not in raw_source:
+        findings.append("natural_flow_definition_not_used")
+    if r"\begin{ufcdefinitionlist}[5cm]" in raw_source:
+        findings.append("fixed_width_editorial_definition_regression")
+    if r"\mbox{\textcite{meshShewchuk2002}}" not in raw_source:
+        findings.append("author_year_pair_not_protected")
     if loc != "en" and "and Oliveira" in compact:
         findings.append("untranslated_bibliographic_conjunction")
 
@@ -308,6 +372,7 @@ def build_one(entry: dict, loc: str, out: Path, work: Path) -> dict:
               "source_sha256": entry["source_sha256"],
               "pdf_sha256": sha(final), "pdf": str(final.relative_to(ROOT)),
               "pages": int(p[1]) if p else 0,
+              "definition_gap_pt": definition_gap_pt,
               "coat_of_arms_embedded": (images_on_cover(final) > 0),
               "failures": findings, "human_visual_approval": "PENDING"}
     (out / f"{job}-receipt.json").write_text(
@@ -319,6 +384,7 @@ def build_one(entry: dict, loc: str, out: Path, work: Path) -> dict:
     return result
 
 def main() -> int:
+    selftest_geometry_guard()
     parser = argparse.ArgumentParser()
     parser.add_argument("--locale", required=True, choices=LOCALES)
     parser.add_argument("--preflight", action="store_true")
