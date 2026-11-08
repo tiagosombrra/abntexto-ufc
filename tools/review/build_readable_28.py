@@ -145,7 +145,10 @@ def build_one(entry: dict, loc: str, out: Path, work: Path) -> dict:
         for member in ("Alex Ferreira", "Cris Almeida"):
             # The PDF approval-page signature prints the institution directly
             # after each name. A missing metadata key must fail this check.
-            if member + " " + institution not in compact:
+            # The class now prints the localized advisor/coadvisor role
+            # between the person's name and their institution.
+            approval = re.escape(member) + r"\\s+\\([^)]{2,36}\\)\\s+" + re.escape(institution)
+            if not re.search(approval, compact):
                 findings.append("approval_institution_missing:" + member)
     if re.search(r"(?<!\.)\.\.(?!\.)", compact):
         findings.append("double_period_from_fixture")
@@ -157,7 +160,10 @@ def build_one(entry: dict, loc: str, out: Path, work: Path) -> dict:
     for field in ("heading", "foot_1", "foot_2", "foot_3", "author_note",
                   "source_tail"):
         fragment = quoted[field][:38]
-        if fragment not in compact:
+        # Primary headings render in capitals in the UFC profile, whereas
+        # explanatory footnote texts preserve their author-provided case.
+        if (fragment.casefold() not in compact.casefold()
+                if field == "heading" else fragment not in compact):
             findings.append("missing_real_pdf_quotation_or_footnote:" + field)
     for field in ("first", "second"):
         fragment = quoted[field][:40]
