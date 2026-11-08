@@ -109,6 +109,8 @@ def build_one(entry: dict, loc: str, out: Path, work: Path) -> dict:
     # Validate the three defects reported on the printed Portuguese TCC,
     # using extracted text from actual PDFs rather than only TeX predicates.
     compact = re.sub(r"\s+", " ", extracted)
+    # PDF fonts can replace apostrophes with typographic U+2019 glyphs.
+    compact = compact.replace("’", "'").replace("‘", "'")
     sample_titles = {
         "pt": ("Exemplo de tabela com resultados calculados",
                "Variáveis consideradas na construção das malhas",
@@ -147,7 +149,7 @@ def build_one(entry: dict, loc: str, out: Path, work: Path) -> dict:
             # after each name. A missing metadata key must fail this check.
             # The class now prints the localized advisor/coadvisor role
             # between the person's name and their institution.
-            approval = re.escape(member) + r"\\s+\\([^)]{2,36}\\)\\s+" + re.escape(institution)
+            approval = re.escape(member) + r"\s+\([^)]{2,36}\)\s+" + re.escape(institution)
             if not re.search(approval, compact):
                 findings.append("approval_institution_missing:" + member)
     if re.search(r"(?<!\.)\.\.(?!\.)", compact):
