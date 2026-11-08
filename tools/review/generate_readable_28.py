@@ -582,7 +582,7 @@ def readable_source(source: str, profile: str, loc: str) -> str:
     source = re.sub(r"R4-[A-Z0-9_-]+", "", source)
 
     # Replace punctuation duplicated by the original engineering sentinels.
-    source = re.sub(r"(?<!\\.)\\.\\.(?!\\.)", ".", source)
+    source = re.sub(r"(?<!\.)\.\.(?!\.)", ".", source)
 
     # Academic nature and front matter remain the class's own implementations.
     return source
