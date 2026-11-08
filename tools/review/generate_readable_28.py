@@ -427,6 +427,15 @@ def readable_source(source: str, profile: str, loc: str) -> str:
                     lambda m: f"examiner-{m[1]}={{{NAMES['examiners'][int(m[1])]}}}", source)
     source = re.sub(r"examiner-(\d+)-institution={(?:Integrated Institution \d+)}",
                     lambda m: f"examiner-{m[1]}-institution={{{d['institution']}}}", source)
+    # Both advisors must have their institutions on the approval page.
+    # These are existing public metadata keys, not new class behavior.
+    if profile in {"undergraduate-capstone", "specialization-capstone",
+                   "masters-thesis", "doctoral-thesis"}:
+        for role in ("advisor", "coadvisor"):
+            metadata = role + "={" + NAMES[role] + "},"
+            replacement = metadata + "\n  " + role + "-institution={" + d["institution"] + "},"
+            source = replace_once(source, metadata, replacement,
+                                  role + "-institution")
     source = source.replace("SYNTHETIC-ANON-001", "REVIEW-PROPOSAL-001")
 
     simple = {
@@ -517,11 +526,54 @@ def readable_source(source: str, profile: str, loc: str) -> str:
     # Replace rectangle-only placeholder figures with generated actual vector art.
     image_root = "artifacts/canonical-mesh-study"
     source = source.replace(r"\centering\rule{3cm}{1cm}",
-                            rf"\centering\includegraphics[width=.42\linewidth]{{{image_root}/uniform_quads.pdf}}")
+                            rf"\centering\includegraphics[width=.86\linewidth]{{{image_root}/uniform_quads.pdf}}")
     source = source.replace(r"\centering\rule{6cm}{2cm}",
-                            rf"\centering\includegraphics[width=.64\linewidth]{{{image_root}/uniform_triangles.pdf}}")
+                            rf"\centering\includegraphics[width=.86\linewidth]{{{image_root}/uniform_triangles.pdf}}")
     source = source.replace(r"\centering\rule{5cm}{1.5cm}",
-                            rf"\centering\includegraphics[width=.58\linewidth]{{{image_root}/anisotropic_quads.pdf}}")
+                            rf"\centering\includegraphics[width=.86\linewidth]{{{image_root}/anisotropic_quads.pdf}}")
+
+    # UFC formatting relates the title/source width to the actual illustration
+    # or table; avoid a two-number table with a tiny intrinsic width.
+    table_re = r"\\begin\{tabular\}\{rr\}.*?\\end\{tabular\}"
+    table_body = "\n".join([
+        r"\begin{tabular*}{.86\linewidth}{@{\extracolsep{\fill}}lr}",
+        rf"{d['header_case']} & {d['header_value']} \\",
+        rf"{d['row_case']} 1 & 3 \\",
+        rf"{d['row_case']} 2 & 4 \\",
+        r"\end{tabular*}",
+    ])
+    source, table_count = re.subn(table_re, lambda _: table_body,
+                                   source, flags=re.S)
+    if table_count != 1:
+        raise RuntimeError(f"Expected exactly one short table: {profile}/{loc}; "
+                           f"found {table_count}")
+
+    # Text tables (quadros) must contain textual information, not placeholder
+    # mesh graphics. Give both their captions and source a real readable width.
+    quadro_re = (
+        r"(\\legend\{quadro\}\{[^{}]*\}\s*"
+        r"\\ufcSource\{[^{}]*\}\s*"
+        r"\\begin\{ufcobject\}\[here\]\s*)"
+        r"\\centering\\includegraphics\[[^]]+\]\{[^{}]*\}"
+    )
+    quadro_body = "\n".join([
+        r"\centering",
+        r"\begin{tabular*}{.86\linewidth}{@{\extracolsep{\fill}}ll}",
+        rf"{d['header_case']} & {d['header_value']} \\",
+        rf"{d['row_case']} 1 & {d['subsection']} \\",
+        rf"{d['row_case']} 2 & {d['results']} \\",
+        r"\end{tabular*}",
+    ])
+    source, quadro_count = re.subn(
+        quadro_re, lambda m: m.group(1) + quadro_body, source, flags=re.S)
+    expected_quadro = 2 if profile in {
+        "undergraduate-capstone", "specialization-capstone",
+        "masters-thesis", "doctoral-thesis"
+    } else 0
+    if quadro_count != expected_quadro:
+        raise RuntimeError(f"Expected {expected_quadro} text tables: "
+                           f"{profile}/{loc}; found {quadro_count}")
+
     source = source.replace("R4-REPLICATION-" + loc.upper(), d["replication"])
 
     # The integrated article and appendix/annex also contain abbreviated labels.
