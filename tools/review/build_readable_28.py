@@ -58,7 +58,12 @@ def find_layout_defects(pdf: Path, loc: str) -> tuple[list[str], float | None]:
         "fr": (":", "Discrétisation"),
     }
     end_label, start_definition = anchors[loc]
+    citation_first = {
+        "pt": "Consulte", "en": "Consult",
+        "es": "Consúltense", "fr": "Consulter",
+    }[loc]
     pairs: list[float] = []
+    citation_separations: list[float] = []
     faults: list[str] = []
     for page in doc.iter(page_name):
         words = list(page.iter(word_name))
@@ -75,6 +80,19 @@ def find_layout_defects(pdf: Path, loc: str) -> tuple[list[str], float | None]:
                 head = min(nearby, key=lambda w: float(w.get("xMin", "0")))
                 pairs.append(round(float(head.get("xMin", "0")) -
                                    float(tail.get("xMax", "0")), 3))
+                # Text extraction can report adjacent paragraphs on one
+                # physical baseline. Reject the regression where the
+                # bibliography sentence was concatenated to the definition.
+                citation_words = [
+                    w for w in words if (w.text or "") == citation_first
+                    and -1.0 <= float(w.get("yMin", "-100")) - y <= 90.0
+                ]
+                if citation_words:
+                    vertical_gap = min(
+                        float(w.get("yMin", "-100")) - y
+                        for w in citation_words
+                    )
+                    citation_separations.append(round(vertical_gap, 3))
         # Detect isolated author-year fragments, including the reported
         # (2002). orphan, by inspecting physical PDF lines independently.
         for line in page.iter(line_name):
@@ -90,6 +108,12 @@ def find_layout_defects(pdf: Path, loc: str) -> tuple[list[str], float | None]:
     bad_gaps = [gap for gap in pairs if not 1.0 <= gap <= 9.0]
     if bad_gaps:
         faults.append("definition_interword_gap_points:" + ",".join(map(str, bad_gaps)))
+    if not citation_separations:
+        faults.append("following_bibliography_paragraph_not_found")
+    elif any(not 12.0 <= distance <= 70.0
+             for distance in citation_separations):
+        faults.append("definition_bibliography_vertical_gap_points:"
+                      + ",".join(map(str, citation_separations)))
     return faults, min(pairs)
 
 
