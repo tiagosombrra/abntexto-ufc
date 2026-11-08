@@ -198,14 +198,20 @@ def build_one(entry: dict, loc: str, out: Path, work: Path) -> dict:
 
     # The original R4 source had a glossary term attached directly to its
     # definition and an English conjunction in non-English manuscripts.
-    glued = {
-        "pt": "Malha estruturadaDiscretização",
-        "en": "Structured meshA geometric",
-        "es": "Malla estructuradaUna",
-        "fr": "Maillage structuréDiscrétisation",
+    glued_forms = {
+        "pt": ("Malha estruturadaDiscretização",
+               "Malha estruturada:Discretização"),
+        "en": ("Structured meshA geometric",
+               "Structured mesh:A geometric"),
+        "es": ("Malla estructuradaUna",
+               "Malla estructurada:Una"),
+        "fr": ("Maillage structuréDiscrétisation",
+               "Maillage structuré:Discrétisation"),
     }[loc]
-    if glued in compact:
+    if any(form in compact for form in glued_forms):
         findings.append("glossary_term_glued_to_definition")
+    if r"\begin{ufcdefinitionlist}[5cm]" not in raw_source:
+        findings.append("definition_label_width_not_corrected")
     if loc != "en" and "and Oliveira" in compact:
         findings.append("untranslated_bibliographic_conjunction")
 
