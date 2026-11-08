@@ -951,10 +951,15 @@ def readable_source(source: str, profile: str, loc: str) -> str:
     }
     for token, key in simple.items():
         source = source.replace(token + "-" + loc.upper(), d[key])
-    # The inherited definition-list API does not insert punctuation by itself.
-    # Supply an explicit separator in the authored example.
+    # The source's default 3 cm description label is too narrow for the
+    # translated mesh term, so label and definition physically collide.
+    # Widen the list label rather than hiding the defect with punctuation.
+    source = replace_once(
+        source, r"\begin{ufcdefinitionlist}[3cm]",
+        r"\begin{ufcdefinitionlist}[5cm]",
+        "definition-list label width for mesh terminology")
     glued = rf"\ufcListEntry{{{d['term']}}}{{{d['definition']}.}}"
-    separated = rf"\ufcListEntry{{{d['term']}:~}}{{{d['definition']}.}}"
+    separated = rf"\ufcListEntry{{{d['term']}:}}{{{d['definition']}.}}"
     source = replace_once(source, glued, separated,
                           "term and definition must not run together")
     # Preserve nested-list punctuation while using natural prose.
