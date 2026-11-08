@@ -12,6 +12,7 @@ import json
 import os
 from pathlib import Path
 import re
+import runpy
 import subprocess
 import sys
 
@@ -148,6 +149,40 @@ def build_one(entry: dict, loc: str, out: Path, work: Path) -> dict:
                 findings.append("approval_institution_missing:" + member)
     if re.search(r"(?<!\.)\.\.(?!\.)", compact):
         findings.append("double_period_from_fixture")
+
+    # Real-PDF checks for the editorial cases requested by the reviewers:
+    # original long quotation blocks (never fabricated external sources),
+    # correct footnote bodies, and approval signature role names.
+    quoted = runpy.run_path(str(ROOT / "tools/review/generate_readable_28.py"))["QUOTE_EXAMPLES"][loc]
+    for field in ("heading", "foot_1", "foot_2", "foot_3", "author_note",
+                  "source_tail"):
+        fragment = quoted[field][:38]
+        if fragment not in compact:
+            findings.append("missing_real_pdf_quotation_or_footnote:" + field)
+    for field in ("first", "second"):
+        fragment = quoted[field][:40]
+        if fragment not in compact:
+            findings.append("missing_real_pdf_long_quote:" + field)
+    raw_source = src.read_text(encoding="utf-8")
+    if raw_source.count(r"\begin{citacao}") != 2 or \
+            raw_source.count(r"\end{citacao}") != 2:
+        findings.append("long_citation_environment_missing")
+    if raw_source.count(r"\footnote{") < 4:
+        findings.append("explicit_footnote_examples_missing")
+    if profile in {"undergraduate-capstone", "specialization-capstone",
+                   "masters-thesis", "doctoral-thesis"}:
+        role_labels = {
+            "pt": ("Orientador", "Coorientador"),
+            "en": ("Advisor", "Coadvisor"),
+            "es": ("Director", "Codirector"),
+            "fr": ("Directeur", "Codirecteur"),
+        }
+        # Locale labels are controlled by the class; source metadata must
+        # remain independent of the locale's presentation strings.
+        approval_text = compact.split("BANCA EXAMINADORA")[-1]
+        if loc == "pt" and not all(label in approval_text
+                                   for label in role_labels["pt"]):
+            findings.append("advisor_roles_not_shown_on_approval")
     if profile not in {"scientific-article", "anonymized-research-project"}:
         if images_on_cover(final) < 1:
             findings.append("ufc_coat_of_arms_absent_on_cover")
