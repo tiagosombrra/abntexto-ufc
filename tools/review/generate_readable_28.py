@@ -545,8 +545,9 @@ MESH_STUDY = {
                   "Construir faces quadrilaterais",
                   "Dividir cada célula em dois triângulos",
                   "Conferir as contagens e a relação de Euler"),
-        "annex": ("Este anexo apresenta uma síntese de leitura, não a reprodução "
-                  "de figuras ou dados pertencentes a terceiros. Bommes, "
+        "literature_review": ("Esta análise bibliográfica, elaborada pelo autor "
+                  "para complementar este apêndice, não reproduz imagens nem "
+                  "dados pertencentes a terceiros. Bommes, "
                   "Zimmer e Kobbelt discutem a construção de malhas quadrilaterais "
                   "por técnicas de quadrangulação. Shewchuk apresenta algoritmos "
                   "de refinamento de Delaunay para malhas triangulares. Esses "
@@ -591,7 +592,8 @@ MESH_STUDY = {
                   "Construct quadrilateral faces",
                   "Split each cell into two triangles",
                   "Check the counts and Euler's relation"),
-        "annex": ("This annex is a reading synthesis, not a reproduction of "
+        "literature_review": ("This author-written literature discussion "
+                  "complements the appendix procedure without reproducing "
                   "third-party figures or results. Bommes, Zimmer and Kobbelt "
                   "discuss mixed-integer quadrangulation, whereas Shewchuk "
                   "describes Delaunay-refinement methods for triangular meshes. "
@@ -636,8 +638,9 @@ MESH_STUDY = {
                   "Construir caras cuadriláteras",
                   "Dividir las celdas en dos triángulos",
                   "Comprobar los conteos y la relación de Euler"),
-        "annex": ("Este anexo contiene una síntesis de lectura, no figuras "
-                  "ni resultados reproducidos de terceros. Bommes, Zimmer "
+        "literature_review": ("Esta discusión bibliográfica redactada por "
+                  "el autor complementa el apéndice sin reproducir figuras "
+                  "ni resultados de terceros. Bommes, Zimmer "
                   "y Kobbelt estudian la cuadrangulación de enteros mixtos, "
                   "mientras Shewchuk analiza el refinamiento de Delaunay "
                   "para mallas triangulares. Las obras contextualizan "
@@ -684,9 +687,10 @@ MESH_STUDY = {
                   "Construire les faces quadrilatérales",
                   "Diviser chaque cellule en deux triangles",
                   "Vérifier les dénombrements et la relation d'Euler"),
-        "annex": ("Cette annexe présente une synthèse de lectures et ne "
-                  "reproduit pas de figures ni de résultats appartenant "
-                  "à des tiers. Bommes, Zimmer et Kobbelt traitent de "
+        "literature_review": ("Cette discussion bibliographique rédigée "
+                  "par l'auteur complète l'appendice sans reproduire "
+                  "de figures ni de résultats appartenant à des tiers. "
+                  "Bommes, Zimmer et Kobbelt traitent de "
                   "la quadrangulation par nombres entiers mixtes, tandis "
                   "que Shewchuk étudie le raffinement de Delaunay "
                   "pour les maillages triangulaires. Ces travaux replacent "
@@ -797,7 +801,7 @@ def appendices_for_review(locale: str) -> tuple[str, str]:
     # The bibliography citation belongs to the end of the LAST sentence,
     # never to an independently indented paragraph beginning with \par.
     author_literature_review = (
-        entry["annex"].rstrip(".")
+        entry["literature_review"].rstrip(".")
         + r"~\autocite{meshBommes2009,meshShewchuk2002}."
     )
     appendix = "\n".join([
