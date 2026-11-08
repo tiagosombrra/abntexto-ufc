@@ -219,8 +219,8 @@ def build_one(entry: dict, loc: str, out: Path, work: Path) -> dict:
             findings.append("approval_page_missing_or_duplicated")
         else:
             page_index = approval_pages[0]
-            page_text = front.split("\f")[page_index]
-            after_heading = page_text.replace("’", "'").split(heading, 1)[1]
+            committee_page_text = front.split("\f")[page_index]
+            after_heading = committee_page_text.replace("’", "'").split(heading, 1)[1]
             institutional_lines = after_heading.count(university)
             if institutional_lines != expected_members:
                 findings.append(
