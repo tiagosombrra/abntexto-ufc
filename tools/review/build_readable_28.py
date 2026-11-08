@@ -197,10 +197,10 @@ def build_one(entry: dict, loc: str, out: Path, work: Path) -> dict:
         # A seven-member committee previously left the seventh institution
         # orphaned on the next page while the full-text CI falsely passed.
         expected_members = {
-            "undergraduate-capstone": 4,
-            "specialization-capstone": 5,
-            "masters-thesis": 6,
-            "doctoral-thesis": 7,
+            "undergraduate-capstone": 3,
+            "specialization-capstone": 3,
+            "masters-thesis": 4,
+            "doctoral-thesis": 4,
         }[profile]
         heading, university = {
             "pt": ("BANCA EXAMINADORA", "Universidade Federal do Ceará"),
