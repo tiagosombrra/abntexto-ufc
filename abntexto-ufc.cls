@@ -1563,14 +1563,16 @@
 
     % Allow the three-member committee more breathing room; adapt to larger
     % committees to avoid pushing the final signature off the approval page.
-    \dim_set:Nn \l_ufc_signature_gap_dim { .85\baselineskip }
+    % Four-signature approval pages follow the UFC specimen's compact rhythm.
+    % The separate header-to-first-signature offset is applied below.
+    \dim_set:Nn \l_ufc_signature_gap_dim { .25\baselineskip }
     \int_compare:nNnT { \l_ufc_committee_count_int } > {4}
       { \dim_set:Nn \l_ufc_signature_gap_dim { .25\baselineskip } }
     \int_compare:nNnT { \l_ufc_committee_count_int } > {5}
       { \dim_zero:N \l_ufc_signature_gap_dim }
   }
 
-\cs_new_protected:Npn \ufc_signature_from_keys:nn #1#2
+\cs_new_protected:Npn \ufc_signature_from_keys:nnn #1#2#3
   {
     \ufc_meta_if_blank:nF {#1}
       {
@@ -1579,9 +1581,13 @@
           % UFC approval-page guidance calls for 1.5 line spacing for
           % member names and their institutions, unlike the nature paragraph.
           \centering\onehalfsp
-          \rule{8cm}{0.4pt}\par
+          % Approximately half the A4 sheet width in the supplied UFC
+          % signature specimen, instead of the former short 8 cm rule.
+          \rule{10.5cm}{0.5pt}\par
           \vspace{.15\baselineskip}
-          \ufc_meta_use:n {#1}\par
+          \ufc_meta_use:n {#1}
+          \tl_if_blank:nF {#3} {~(#3)}
+          \par
           \ufc_meta_if_blank:nF {#2} { \ufc_meta_use:n {#2}\par }
         \endgroup
       }
@@ -1589,23 +1595,26 @@
 
 \cs_new_protected:Npn \ufc_advisor_signature:
   {
-    \ufc_signature_from_keys:nn
+    \ufc_signature_from_keys:nnn
       {advisor}
       {advisor-institution}
+      {\ufc_orientation_label:}
   }
 
 \cs_new_protected:Npn \ufc_coadvisor_signature:
   {
-    \ufc_signature_from_keys:nn
+    \ufc_signature_from_keys:nnn
       {coadvisor}
       {coadvisor-institution}
+      {\ufc_coorientation_label:}
   }
 
 \cs_new_protected:Npn \ufc_examiner_signature:n #1
   {
-    \ufc_signature_from_keys:nn
+    \ufc_signature_from_keys:nnn
       {examiner-#1}
       {examiner-#1-institution}
+      {}
   }
 
 \cs_new_protected:Npn \ufc_approval_page:
@@ -1632,6 +1641,12 @@
           \vspace{\baselineskip}
           \centering\bfseries \ufc_doc_text:n {examining-committee}\normalfont\par
           \ufc_setup_signature_spacing:
+          % Keep the first signature clearly below the committee heading.
+          % Reduce this extra leading space for large committees to keep
+          % every actual signature within the physical approval page.
+          \int_compare:nNnTF {\l_ufc_committee_count_int} > {4}
+            {\vspace{.5\baselineskip}}
+            {\vspace{1.5\baselineskip}}
           \ufc_advisor_signature:
           \ufc_coadvisor_signature:
           \ufc_examiner_signature:n {2}
