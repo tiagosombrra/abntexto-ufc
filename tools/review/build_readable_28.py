@@ -81,6 +81,26 @@ def build_one(entry: dict, loc: str, out: Path, work: Path) -> dict:
     findings = []
     if leaked:
         findings.append("fixture_labels_visible:" + ",".join(leaked))
+    if loc != "en":
+        for english_leak in ("Academic supervisor", "Co-supervisor",
+                             "Committee member", "See Equation"):
+            if english_leak in extracted:
+                findings.append("untranslated_english_label:" + english_leak)
+    if profile in {"undergraduate-capstone", "specialization-capstone",
+                   "masters-thesis", "doctoral-thesis"}:
+        # A genuine human-readable sample must show distinct figure/table names.
+        names = {
+            "pt": ("Malha quadrilateral no domínio unitário",
+                   "Configuração de uma malha estruturada"),
+            "en": ("Quadrilateral mesh on the unit square",
+                   "Structured mesh configuration"),
+            "es": ("Malla cuadrilateral en el dominio unitario",
+                   "Configuración de una malla estructurada"),
+            "fr": ("Maillage quadrilatéral du domaine unité",
+                   "Configuration d'un maillage structuré"),
+        }[loc]
+        if not all(name in extracted for name in names):
+            findings.append("distinct_figure_titles_missing")
     if profile not in {"scientific-article", "anonymized-research-project"}:
         if images_on_cover(final) < 1:
             findings.append("ufc_coat_of_arms_absent_on_cover")
