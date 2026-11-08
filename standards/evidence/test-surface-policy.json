@@ -97,6 +97,18 @@
       "owner_doc": "docs/R5-PDFA-EXTERNAL-VALIDATION.md",
       "purpose": "Require an external veraPDF PDF/A-2b validation against all 28 immutable E3 PDF binary artifacts with SHA-bound receipts, raw XML and complete rule results.",
       "reason": "The source-bound independent PDF/A diagnostic is a costly one-off artifact validation stage outside the permanent source-only Linux static and integration runners."
+    },
+    {
+      "path": "tools/review/generate_readable_28.py",
+      "owner_doc": "docs/R5-HUMAN-READABLE-28.md",
+      "purpose": "Create 28 authored, language-specific complete human-review TeX sources with real mesh data and physical UFC cover insignia.",
+      "reason": "This editorial presentation generator is independently owned by the dedicated R5 TeX Live 2026 workflow rather than routine static Linux tests; its sources are audited in real PDF CI."
+    },
+    {
+      "path": "tools/review/build_readable_28.py",
+      "owner_doc": "docs/R5-HUMAN-READABLE-28.md",
+      "purpose": "Compile each of the 28 full readable documents and reject visible engineering test markers or missing institutional crest in actual rendered PDFs.",
+      "reason": "Heavy four-language Biber/glossary/index PDF compilation is owned by the R5 dedicated workflow, which retains original binaries and PDF-side negative checks."
     }
   ]
 }
