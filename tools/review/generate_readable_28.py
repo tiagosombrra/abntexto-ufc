@@ -400,6 +400,9 @@ def rewrite_support(entry: dict, loc: str, d: dict) -> None:
 def readable_source(source: str, profile: str, loc: str) -> str:
     """Rewrite presentation only; keep class API calls and mathematical study."""
     d = {**STRINGS[loc], **DIFFERENT_CAPTIONS[loc]}
+    # The R4 module imports helpers relative to its own source directory.
+    if str(R4.parent) not in sys.path:
+        sys.path.insert(0, str(R4.parent))
     original_prose = runpy.run_path(str(R4))["PROSE"][loc]
     project = profile.endswith("research-project")
     anonymous = profile == "anonymized-research-project"
