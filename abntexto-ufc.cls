@@ -1590,10 +1590,16 @@
     \ufc_count_committee_key:n {examiner-5}
     \ufc_count_committee_key:n {examiner-6}
 
-    % This reference specimen contains three or four TOTAL signatures.
-    % The pen-signing space sits ABOVE the next member's line. The rule,
-    % member name and affiliation form one compact group with no blank lines.
+    % Editorial three/four-member specimens have handwriting space ABOVE
+    % each rule, with compact line/name/institution groups. Other public
+    % class users may have larger committees: retain adaptive compression.
     \dim_set:Nn \l_ufc_signature_gap_dim { 1.65\baselineskip }
+    \int_compare:nNnT { \l_ufc_committee_count_int } > {4}
+      { \dim_set:Nn \l_ufc_signature_gap_dim { .25\baselineskip } }
+    \int_compare:nNnT { \l_ufc_committee_count_int } > {5}
+      { \dim_zero:N \l_ufc_signature_gap_dim }
+    \int_compare:nNnT { \l_ufc_committee_count_int } > {6}
+      { \dim_set:Nn \l_ufc_signature_gap_dim { -.4\baselineskip } }
   }
 
 \cs_new_protected:Npn \ufc_signature_from_keys:nnn #1#2#3
