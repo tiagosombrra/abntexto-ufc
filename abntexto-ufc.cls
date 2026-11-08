@@ -38,6 +38,9 @@
 \IfFileExists{spanish.ldf}{\babelprovide[import]{spanish}}{}
 \IfFileExists{french.ldf}{\babelprovide[import]{french}}{}
 \RequirePackage{microtype}
+% On short (ragged-bottom) pages, keep notes at the bottom of the text
+% block instead of immediately below the preceding paragraph.
+\RequirePackage[bottom]{footmisc}
 
 \ExplSyntaxOn
 
@@ -1587,20 +1590,10 @@
     \ufc_count_committee_key:n {examiner-5}
     \ufc_count_committee_key:n {examiner-6}
 
-    % Allow the three-member committee more breathing room; adapt to larger
-    % committees to avoid pushing the final signature off the approval page.
-    % Four-signature approval pages follow the UFC specimen's compact rhythm.
-    % The separate header-to-first-signature offset is applied below.
-    \dim_set:Nn \l_ufc_signature_gap_dim { .25\baselineskip }
-    \int_compare:nNnT { \l_ufc_committee_count_int } > {4}
-      { \dim_set:Nn \l_ufc_signature_gap_dim { .25\baselineskip } }
-    \int_compare:nNnT { \l_ufc_committee_count_int } > {5}
-      { \dim_zero:N \l_ufc_signature_gap_dim }
-    % Seven-signature committees need a tighter inter-member rhythm to
-    % retain every institution on the same physical approval page.
-    % Preserve the 1.5-line name/institution spacing.
-    \int_compare:nNnT { \l_ufc_committee_count_int } > {6}
-      { \dim_set:Nn \l_ufc_signature_gap_dim { -.4\baselineskip } }
+    % This reference specimen contains three or four TOTAL signatures.
+    % The pen-signing space sits ABOVE the next member's line. The rule,
+    % member name and affiliation form one compact group with no blank lines.
+    \dim_set:Nn \l_ufc_signature_gap_dim { 1.65\baselineskip }
   }
 
 \cs_new_protected:Npn \ufc_signature_from_keys:nnn #1#2#3
@@ -1609,17 +1602,17 @@
       {
         \par\vspace{\l_ufc_signature_gap_dim}
         \begingroup
-          % UFC approval-page guidance calls for 1.5 line spacing for
-          % member names and their institutions, unlike the nature paragraph.
-          \centering\onehalfsp
+          % No inter-paragraph whitespace inside each signature group.
+          % Leave sufficient free space between groups for handwritten signing.
+          \centering\singlesp\setlength{\parskip}{0pt}
           % Approximately half the A4 sheet width in the supplied UFC
           % signature specimen, instead of the former short 8 cm rule.
-          \rule{10.5cm}{0.5pt}\par
-          \vspace{.15\baselineskip}
+          \rule{10.5cm}{0.5pt}\par\nobreak
           \ufc_meta_use:n {#1}
           \tl_if_blank:nF {#3} {~(#3)}
-          \par
-          \ufc_meta_if_blank:nF {#2} { \ufc_meta_use:n {#2}\par }
+          \par\nobreak
+          \ufc_meta_if_blank:nF {#2}
+            { \ufc_meta_use:n {#2}\par }
         \endgroup
       }
   }
@@ -1672,12 +1665,8 @@
           \vspace{\baselineskip}
           \centering\bfseries \ufc_doc_text:n {examining-committee}\normalfont\par
           \ufc_setup_signature_spacing:
-          % Keep the first signature clearly below the committee heading.
-          % Reduce this extra leading space for large committees to keep
-          % every actual signature within the physical approval page.
-          \int_compare:nNnTF {\l_ufc_committee_count_int} > {4}
-            {\vspace{.5\baselineskip}}
-            {\vspace{1.5\baselineskip}}
+          % The first block also provides a pen-signing area.
+          \vspace{.7\baselineskip}
           \ufc_advisor_signature:
           \ufc_coadvisor_signature:
           \ufc_examiner_signature:n {2}
