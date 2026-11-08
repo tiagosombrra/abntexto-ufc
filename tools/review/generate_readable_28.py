@@ -386,7 +386,8 @@ QUOTE_EXAMPLES = {
         "foot_2": "As contagens apresentadas são ilustrativas e não devem ser utilizadas como resultados de uma pesquisa empírica.",
         "foot_3": "Uma terceira nota permite inspecionar a continuidade da numeração e a formatação do separador.",
         "closing": "Esse conjunto mostra como a apresentação tipográfica diferencia a citação longa do corpo do texto e como as notas complementam a explicação.",
-        "short": "Uma citação curta demonstrativa, entre aspas, também deve permanecer no corpo do parágrafo.",
+        "short": "Uma malha reproduzível exige conectividade e parâmetros documentados.",
+        "short_intro": "Uma citação direta curta, produzida para este exemplo, permanece no parágrafo: ",
     },
     "en": {
         "heading": "Direct quotations and footnotes",
@@ -414,7 +415,8 @@ QUOTE_EXAMPLES = {
         "foot_2": "The reported counts are illustrative rather than empirical research findings.",
         "foot_3": "A third note allows reviewers to inspect numbering continuity and separator formatting.",
         "closing": "These examples also show the typographic distinction between long quotations and running text, while footnotes supplement the analysis.",
-        "short": "A short illustrative quotation in quotation marks belongs within the surrounding paragraph.",
+        "short": "A reproducible mesh requires documented connectivity and parameters.",
+        "short_intro": "A short direct quotation written for this example remains inline: ",
     },
     "es": {
         "heading": "Citas directas y notas a pie de página",
@@ -443,7 +445,8 @@ QUOTE_EXAMPLES = {
         "foot_2": "Los conteos mostrados son ilustrativos y no constituyen resultados de investigación empírica.",
         "foot_3": "Una tercera nota permite revisar la continuidad de numeración y el formato del separador.",
         "closing": "Los ejemplos también permiten distinguir tipográficamente las citas extensas del texto normal y muestran el uso complementario de las notas.",
-        "short": "Una cita breve demostrativa, entre comillas, permanece dentro del párrafo.",
+        "short": "Una malla reproducible requiere conectividad y parámetros documentados.",
+        "short_intro": "Una cita directa breve creada para este ejemplo permanece en el párrafo: ",
     },
     "fr": {
         "heading": "Citations directes et notes de bas de page",
@@ -473,7 +476,8 @@ QUOTE_EXAMPLES = {
         "foot_2": "Les dénombrements présentés sont illustratifs et ne constituent pas des résultats de recherche empirique.",
         "foot_3": "Une troisième note permet de contrôler la continuité de numérotation et la typographie du séparateur.",
         "closing": "Ces exemples permettent de distinguer les citations longues du texte courant et montrent comment les notes complètent l'analyse.",
-        "short": "Une courte citation illustrative entre guillemets reste intégrée au paragraphe.",
+        "short": "Un maillage reproductible exige des connexions et des paramètres documentés.",
+        "short_intro": "Une courte citation directe créée pour cet exemple reste dans le paragraphe : ",
     },
 }
 
@@ -491,7 +495,8 @@ def quotation_section(locale: str) -> str:
         r"\begin{citacao}",
         data["second"] + " " + data["source_tail"],
         r"\end{citacao}",
-        data["short"] + rf"\footnote{{{data['foot_2']}}}",
+        data["short_intro"] + "``" + data["short"] + "''"
+        + rf"\footnote{{{data['foot_2']}}}",
         data["closing"] + rf"\footnote{{{data['foot_3']}}}",
     ]) + "\n"
 
