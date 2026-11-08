@@ -506,6 +506,13 @@ def readable_source(source: str, profile: str, loc: str) -> str:
         r"\newglossaryentry{integratedterm}{name={integrated term},description={synthetic term for locale testing}}",
         rf"\newglossaryentry{{integratedterm}}{{name={{{d['term']}}},description={{{d['definition']}}}}}")
     source = source.replace(r"\index{integrated term}", rf"\index{{{d['term']}}}")
+    # Glossaries prints its own terminal full stop; the entry description
+    # must not include one, otherwise the PDF contains duplicate punctuation.
+    source = source.replace(
+        "description={" + d["definition"] + "}",
+        "description={" + d["definition"].rstrip(".") + "}",
+        1)
+
 
     for old, new_text in zip(original_prose, NEW_PROSE[loc]):
         if old not in source:
