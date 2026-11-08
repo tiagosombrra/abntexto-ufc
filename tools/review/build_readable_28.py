@@ -176,6 +176,11 @@ def build_one(entry: dict, loc: str, out: Path, work: Path) -> dict:
     # A bibliographic synopsis written by this manuscript's author belongs
     # in its appendix. A genuine externally published record belongs in
     # the annex; its provenance is explicitly printed there.
+    if loc == "fr" and profile != "scientific-article":
+        if "APPENDICE A" not in compact.upper():
+            findings.append("french_authored_appendix_not_distinct")
+        if "ANNEXE A" not in compact.upper():
+            findings.append("french_external_annex_not_distinct")
     if profile != "scientific-article":
         if raw_source.count(r"\begin{verbatim}") != 1 \
                 or raw_source.count(r"\end{verbatim}") != 1:
