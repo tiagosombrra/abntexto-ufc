@@ -729,8 +729,8 @@ def readable_source(source: str, profile: str, loc: str) -> str:
     source = re.sub(r"(?<!\.)\.\.(?!\.)", ".", source)
 
     # The introductory quotation tests deliberately use the inherited
-    # public 'citacao' environment: 4 cm indent, reduced font, single spacing.
-    first_results = rf"\\section{{{d['results']}}}"
+    # public long-quote environment with a 4 cm indent and single spacing.
+    first_results = rf"\section{{{d['results']}}}"
     source = replace_once(
         source, first_results, quotation_section(loc) + first_results,
         "long-quotation section")
