@@ -191,6 +191,47 @@ def build_one(entry: dict, loc: str, out: Path, work: Path) -> dict:
         if loc == "pt" and not all(label in approval_text
                                    for label in role_labels["pt"]):
             findings.append("advisor_roles_not_shown_on_approval")
+    if profile in {"undergraduate-capstone", "specialization-capstone",
+                   "masters-thesis", "doctoral-thesis"}:
+        # Audit the PHYSICAL approval page, never the concatenated PDF text.
+        # A seven-member committee previously left the seventh institution
+        # orphaned on the next page while the full-text CI falsely passed.
+        expected_members = {
+            "undergraduate-capstone": 4,
+            "specialization-capstone": 5,
+            "masters-thesis": 6,
+            "doctoral-thesis": 7,
+        }[profile]
+        heading, university = {
+            "pt": ("BANCA EXAMINADORA", "Universidade Federal do Ceará"),
+            "en": ("EXAMINING COMMITTEE", "Federal University of Ceara"),
+            "es": ("TRIBUNAL EXAMINADOR", "Universidad Federal de Ceará"),
+            "fr": ("JURY D'EXAMEN", "Université fédérale du Ceará"),
+        }[loc]
+        front = subprocess.check_output(
+            ["pdftotext", "-f", "1", "-l", "8", str(final), "-"],
+            text=True, cwd=ROOT, errors="replace")
+        approval_pages = [
+            i for i, page in enumerate(front.split("\f"))
+            if heading in page.replace("’", "'").replace("‘", "'")
+        ]
+        if len(approval_pages) != 1:
+            findings.append("approval_page_missing_or_duplicated")
+        else:
+            page_index = approval_pages[0]
+            page_text = front.split("\f")[page_index]
+            after_heading = page_text.replace("’", "'").split(heading, 1)[1]
+            institutional_lines = after_heading.count(university)
+            if institutional_lines != expected_members:
+                findings.append(
+                    "approval_affiliations_not_all_on_same_page:"
+                    + str(institutional_lines) + "/"
+                    + str(expected_members))
+            next_pages = front.split("\f")
+            if page_index + 1 < len(next_pages):
+                if next_pages[page_index + 1].strip().startswith(university):
+                    findings.append("approval_orphan_affiliation_next_page")
+
     if profile not in {"scientific-article", "anonymized-research-project"}:
         if images_on_cover(final) < 1:
             findings.append("ufc_coat_of_arms_absent_on_cover")
