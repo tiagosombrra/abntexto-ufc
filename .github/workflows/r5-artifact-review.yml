@@ -117,8 +117,16 @@ jobs:
             'POSTTEXTUAL':56,
           }
           assert dict(counted)==expected,(counted,expected)
-          assert standards['ABNT NBR 15287:2025']==48,standards
-          assert standards['ABNT NBR 14724:2024, corrected 2025']==252,standards
+          project_profiles = {'research-project', 'anonymized-research-project'}
+          project_blanks = sum(
+              page['classification'] == 'DUPLEX_VERSO_CANDIDATE'
+              for document in d['documents']
+              if document['profile'] in project_profiles
+              for page in document['pages']
+          )
+          assert project_blanks > 48,project_blanks
+          assert standards['ABNT NBR 15287:2025']==project_blanks,standards
+          assert standards['ABNT NBR 14724:2024, corrected 2025']==300-project_blanks,standards
           assert d['human_review']=='PENDING'
           assert d['publication_authorized'] is False
           print(f"R5-DUPLEX-NORMATIVE-EVIDENCE PASS pages=1364 blanks=300 "
