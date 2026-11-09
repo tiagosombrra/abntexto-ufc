@@ -1,0 +1,170 @@
+name: R4 twenty-eight comprehensive real PDF candidates
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths:
+      - abntexto-ufc.cls
+      - tests/integration/frontmatter/generate-integrated-locale.py
+      - tests/integration/frontmatter/generate-comprehensive-corpus.py
+      - tests/integration/frontmatter/run-comprehensive-corpus.py
+      - tests/fixtures/references.bib
+      - tests/fixtures/example.cpp
+      - .github/workflows/r4-comprehensive-corpus.yml
+      - examples/canonical-mesh-study/**
+      - tools/examples/generate_mesh_study.py
+  push:
+    branches: [main]
+    paths:
+      - abntexto-ufc.cls
+      - tests/integration/frontmatter/generate-integrated-locale.py
+      - tests/integration/frontmatter/generate-comprehensive-corpus.py
+      - tests/integration/frontmatter/run-comprehensive-corpus.py
+      - .github/workflows/r4-comprehensive-corpus.yml
+      - examples/canonical-mesh-study/**
+      - tools/examples/generate_mesh_study.py
+permissions:
+  contents: read
+concurrency:
+  group: r4-comprehensive-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  source-preflight:
+    name: Build and audit 28 baseline plus 4 supplementary doctoral TeX sources
+    runs-on: ubuntu-24.04
+    timeout-minutes: 4
+    steps:
+      - name: Checkout exact candidate source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - name: Generate all 7 profiles x 4 locales, without pretending PDFs exist
+        run: python3 tests/integration/frontmatter/generate-comprehensive-corpus.py
+      - name: Validate source-bound scientific figures and four manuscript languages
+        run: python3 tests/checks/examples/mesh_study.py --artifacts artifacts/canonical-mesh-study
+      - name: Prove physical-page accounting rejects discarded duplex leaves
+        run: python3 tests/integration/frontmatter/run-comprehensive-corpus.py --selftest
+      - name: Inspect 28 source files, manifest hashes, declared features
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import hashlib, json
+          root = Path('artifacts/comprehensive-7x4')
+          count = 0
+          for locale in ('pt','en','es','fr'):
+              m = json.loads((root / locale / 'source-index.json').read_text())
+              assert m['source_count'] == 7
+              assert not m['complete_pdf_certification']
+              for entry in m['entries']:
+                  source = Path(entry['source'])
+                  assert source.is_file()
+                  assert hashlib.sha256(source.read_bytes()).hexdigest() == entry['source_sha256']
+                  for key in ('multi_section','subsection','subsubsection','equations',
+                              'aligned_equations','footnotes','short_table',
+                              'tabularray_multipage','native_longtable','algorithm',
+                              'inline_code','external_code','bibliography','figure'):
+                      assert entry['features'][key] is True, (locale,entry['profile'],key)
+                  assert entry['canonical_study_id'] == 'unit-square-structured-mesh-v1'
+                  assert entry['scientific_content_state'] == 'verified_didactic_geometry_not_novel_research'
+                  assert entry['canonical_study_sha256'] == hashlib.sha256(
+                      Path('examples/canonical-mesh-study/study.json').read_bytes()
+                  ).hexdigest()
+                  assert entry['profile_context_sha256'] == hashlib.sha256(
+                      Path('examples/canonical-mesh-study/profile-contexts.json').read_bytes()
+                  ).hexdigest()
+                  assert entry['generated_asset_manifest_sha256'] == hashlib.sha256(
+                      Path('artifacts/canonical-mesh-study/manifest.json').read_bytes()
+                  ).hexdigest()
+                  assert source.read_text().count(
+                      r'\input{artifacts/canonical-mesh-study/body-' + locale + '.tex}'
+                  ) == 1
+                  count += 1
+          assert count == 28, count
+          variants = [v for locale in ('pt','en','es','fr')
+                      for e in json.loads((root / locale / 'source-index.json').read_text())['entries']
+                      for v in e.get('supplementary_variants', [])]
+          assert len(variants) == 4, len(variants)
+          for item in variants:
+              source = Path(item['source'])
+              assert source.is_file()
+              assert hashlib.sha256(source.read_bytes()).hexdigest() == item['source_sha256']
+              assert not item['glossary_enabled'] and item['code_algorithm_lists_printed']
+          print('R4-COMPREHENSIVE-PREFLIGHT status=PASS main_sources=28 variants=4 pdf_acceptance=NO')
+          PY
+  focused-draft-pdf:
+    name: R4 draft single-document mesh smoke (PT TCC)
+    runs-on: ubuntu-24.04
+    needs: source-preflight
+    timeout-minutes: 25
+    # One genuine PDF catches broken figure paths, bibliography and math
+    # before reviewers request the complete 32-PDF source-bound build.
+    if: github.event_name == 'pull_request' && github.event.pull_request.draft == true
+    steps:
+      - name: Checkout immutable candidate
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
+      - name: Compile and inspect exactly one real Portuguese TCC PDF
+        uses: xu-cheng/texlive-action@22c04326a5d855880f9d39bb955138bf11c6df80 # v3
+        env:
+          SOURCE_COMMIT_SHA: ${{ github.event.pull_request.head.sha }}
+        with:
+          texlive_version: 2026
+          os: debian
+          run: |
+            export DEBIAN_FRONTEND=noninteractive
+            apt-get update -y
+            apt-get install -y --no-install-recommends poppler-utils mupdf-tools
+            git config --global --add safe.directory "$PWD"
+            python3 tests/integration/frontmatter/run-comprehensive-corpus.py \
+              --locale pt --profile undergraduate-capstone
+      - name: Preserve focused PDF and its failure evidence
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: r4-focused-draft-pt-${{ github.run_id }}
+          path: artifacts/comprehensive-7x4/pt/**
+          retention-days: 14
+          if-no-files-found: warn
+  real-pdfs:
+    name: R4 full documents / ${{ matrix.locale }} (7 baseline + 1 variant)
+    runs-on: ubuntu-24.04
+    needs: source-preflight
+    # Draft PRs pay only for source/mathematical checks. Ready-for-review,
+    # manual and main-push runs still compile the ENTIRE 28+4 PDF matrix.
+    if: github.event_name != 'pull_request' || github.event.pull_request.draft == false
+    timeout-minutes: 65
+    strategy:
+      fail-fast: false
+      matrix:
+        locale: [pt, en, es, fr]
+    steps:
+      - name: Checkout immutable candidate
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - name: Compile complete source documents with TeX Live 2026
+        uses: xu-cheng/texlive-action@22c04326a5d855880f9d39bb955138bf11c6df80 # v3
+        env:
+          SOURCE_COMMIT_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        with:
+          texlive_version: 2026
+          os: debian
+          run: |
+            export DEBIAN_FRONTEND=noninteractive
+            apt-get update -y
+            apt-get install -y --no-install-recommends poppler-utils mupdf-tools
+            git config --global --add safe.directory "$PWD"
+            python3 tests/integration/frontmatter/run-comprehensive-corpus.py --locale ${{ matrix.locale }}
+      - name: Preserve sources, binaries, PDF/LOT evidence and failure logs
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: r4-full-corpus-${{ matrix.locale }}-${{ github.run_id }}
+          path: artifacts/comprehensive-7x4/${{ matrix.locale }}/**
+          retention-days: 21
+          if-no-files-found: warn
