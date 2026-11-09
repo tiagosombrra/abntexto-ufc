@@ -124,7 +124,10 @@ jobs:
               if document['profile'] in project_profiles
               for page in document['pages']
           )
-          assert project_blanks > 48,project_blanks
+          # The ordinary research project is single-sided in this R4 fixture.
+          # Both project profiles follow NBR 15287 even though only the
+          # anonymous project contributes duplex-verso blank candidates.
+          assert project_blanks == 48,project_blanks
           assert standards['ABNT NBR 15287:2025']==project_blanks,standards
           assert standards['ABNT NBR 14724:2024, corrected 2025']==300-project_blanks,standards
           assert d['human_review']=='PENDING'

@@ -47,9 +47,10 @@ coerente; **isso não prova que cada folha tenha de existir**.
 a **ABNT NBR 14724:2024**, com a versão corrigida em 2025, aplica-se
 aos trabalhos acadêmicos dos demais perfis. A execução de referência
 contabilizou **48 versos no projeto de pesquisa anonimizado**;
-não se pode atribuir automaticamente os **252 versos restantes** a
-dissertações, teses ou variantes doutorais sem separar os projetos
-de pesquisa comuns. O auditor recalcula a distribuição por perfil
+o projeto de pesquisa comum utiliza o modo `single-sided` neste corpus
+e portanto não contribui com versos duplex. Os **252 versos restantes**
+pertencem aos demais perfis desta execução, não alterando a aplicação da
+NBR 15287 ao projeto de pesquisa comum. O auditor recalcula a distribuição por perfil
 a partir de cada PDF/recibo original e compara as duas normas
 antes de produzir a evidência, mantendo a decisão humana por página.
 Nos 48 versos do projeto anonimizado, 16 antecedem pré-textuais,
