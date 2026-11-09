@@ -8,7 +8,7 @@ flags="-interaction=nonstopmode -halt-on-error -file-line-error"
 cleanup() {
   for scenario in unit-present required-missing not-applicable; do
     job="table-ibge-unit-$scenario"
-    rm -f "$job.aux" "$job.log" "$job.out" "$job.pdf" "$job.lot"
+    rm -f "$job.aux" "$job.log" "$job.out" "$job.stdout" "$job.pdf" "$job.lot"
   done
   rm -rf "$tmp_dir"
 }
@@ -53,8 +53,9 @@ for scenario in unit-present required-missing not-applicable; do
   esac
 
   for pass in 1 2; do
-    pdflatex -jobname="$job" $flags "$document" > "$job.out" 2>&1 || {
-      cat "$job.out"
+    # Keep the terminal transcript separate from hyperref's PDF outline .out file.
+    pdflatex -jobname="$job" $flags "$document" > "$job.stdout" 2>&1 || {
+      cat "$job.stdout"
       exit 1
     }
   done
