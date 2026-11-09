@@ -1782,6 +1782,15 @@
   {
     \bool_if:NT \g_ufc_document_language_explicit_bool
       {
+        % Babel re-applies its language-specific caption names after summary
+        % language switches. Its Spanish/French defaults ("Cuadro"/"Table")
+        % conflict with UFC's distinct table names ("Tabla"/"Tableau").
+        % Register the table label on each switch; retain \quadroname as
+        % the independent label for textual frames in the illustration list.
+        \cs_if_exist:NT \captionsspanish
+          { \addto\captionsspanish{\def\tablename{Tabla}} }
+        \cs_if_exist:NT \captionsfrench
+          { \addto\captionsfrench{\def\tablename{Tableau}} }
         \cs_if_exist:NT \appendixname
           { \cs_gset:Npn \appendixname { \ufc_doc_text:n {appendix} } }
         \cs_if_exist:NT \annexname
