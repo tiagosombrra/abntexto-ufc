@@ -970,12 +970,12 @@
   \def\ufcTocPosttextualTitle#1{#1}%
 }
 
-% UFC examples use spaced dotted leaders up to the right-aligned page number.
-% Preserve a compact visible leader when a primary entry nearly fills the line.
+% One continuous leader run preserves uniform dot pitch. The old forced
+% 1.1em leading box followed by a second \leaders run created a single
+% 17--20pt gap between the first two dots (regular pitch: 9pt).
 \def\ufctocdot{\hbox{$\mathsurround=0pt\mkern4.5mu\hbox{.}\mkern4.5mu$}}
 \def\extdotleaders{%
   \nobreak
-  \hbox to 1.1em{\leaders\ufctocdot\hfil}%
   \leaders\ufctocdot\hfil
 }
 \appto\hooktocsection{\let\extleaders=\extdotleaders}
@@ -1561,11 +1561,13 @@
     \ufc_count_committee_key:n {examiner-5}
     \ufc_count_committee_key:n {examiner-6}
 
-    \dim_set:Nn \l_ufc_signature_gap_dim { .65\baselineskip }
+    % Allow the three-member committee more breathing room; adapt to larger
+    % committees to avoid pushing the final signature off the approval page.
+    \dim_set:Nn \l_ufc_signature_gap_dim { .85\baselineskip }
     \int_compare:nNnT { \l_ufc_committee_count_int } > {4}
-      { \dim_set:Nn \l_ufc_signature_gap_dim { .35\baselineskip } }
+      { \dim_set:Nn \l_ufc_signature_gap_dim { .25\baselineskip } }
     \int_compare:nNnT { \l_ufc_committee_count_int } > {5}
-      { \dim_set:Nn \l_ufc_signature_gap_dim { .2\baselineskip } }
+      { \dim_zero:N \l_ufc_signature_gap_dim }
   }
 
 \cs_new_protected:Npn \ufc_signature_from_keys:nn #1#2
@@ -1574,8 +1576,11 @@
       {
         \par\vspace{\l_ufc_signature_gap_dim}
         \begingroup
-          \centering\singlesp
+          % UFC approval-page guidance calls for 1.5 line spacing for
+          % member names and their institutions, unlike the nature paragraph.
+          \centering\onehalfsp
           \rule{8cm}{0.4pt}\par
+          \vspace{.15\baselineskip}
           \ufc_meta_use:n {#1}\par
           \ufc_meta_if_blank:nF {#2} { \ufc_meta_use:n {#2}\par }
         \endgroup
