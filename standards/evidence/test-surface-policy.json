@@ -79,6 +79,12 @@
       "owner_doc": "docs/I18N-COMPLETION-MATRIX.md",
       "purpose": "Maintain a separately reviewable TeX Live 2026 four-locale actual-PDF Info, XMP, outline navigation and anonymized-author privacy evidence matrix for P0 R3 #558.",
       "reason": "Twelve source-bound PDF and XMP/attachment inspections are a dedicated time-consuming metadata regression, not a routine subset of each Linux integration or general frontmatter smoke."
+    },
+    {
+      "path": ".github/workflows/public-mesh-examples.yml",
+      "owner_doc": "examples/public-mesh-documents/README.md",
+      "purpose": "Generate 28 real-content editable LaTeX source candidates, enforce deterministic scientific source integrity, and compile one per-locale preview with original PDF evidence.",
+      "reason": "Dedicated public-example source and TeX CI is intentionally isolated from the exhaustive synthetic R4 stress matrix and the mandatory per-page R5 release audit."
     }
   ]
 }
