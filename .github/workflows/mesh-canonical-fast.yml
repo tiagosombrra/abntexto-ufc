@@ -1,0 +1,58 @@
+name: Canonical mesh example fast evidence
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths:
+      - examples/canonical-mesh-study/**
+      - tools/examples/**
+      - tests/checks/examples/mesh_study.py
+      - tests/integration_suites.py
+      - .github/workflows/mesh-canonical-fast.yml
+  push:
+    branches: [main]
+    paths:
+      - examples/canonical-mesh-study/**
+      - tools/examples/**
+      - tests/checks/examples/mesh_study.py
+      - tests/integration_suites.py
+      - .github/workflows/mesh-canonical-fast.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+concurrency:
+  group: mesh-canonical-fast-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  evidence:
+    name: Deterministic mesh study (PT EN ES FR)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Checkout immutable source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - name: Generate original figures and localized manuscript excerpts
+        run: |
+          python3 tools/examples/generate_mesh_study.py \
+            --output artifacts/canonical-mesh-study
+          python3 tools/examples/generate_mesh_study.py \
+            --check --output artifacts/canonical-mesh-study
+      - name: Independent mathematical and negative mutation controls
+        run: |
+          python3 tests/checks/examples/mesh_study.py \
+            --artifacts artifacts/canonical-mesh-study
+          python3 tests/integration_suites.py --self-test
+      - name: Preserve reproducibility material, not release PDFs
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: canonical-mesh-study-${{ github.run_id }}
+          path: artifacts/canonical-mesh-study/**
+          retention-days: 21
+          if-no-files-found: warn

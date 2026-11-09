@@ -61,6 +61,12 @@
 \bool_new:N \g_ufc_catalog_card_bool
 \bool_new:N \g_ufc_coat_of_arms_bool
 \prop_new:N \g_ufc_metadata_prop
+% Metadata can be changed with public \ufcsetup before the first PDF page.
+% Protect against late anonymity transitions after serialized pages exist.
+\bool_new:N \g_ufc_pdf_document_started_bool
+\bool_new:N \g_ufc_pdf_first_page_shipped_bool
+\tl_new:N \l_ufc_pdf_previous_type_tl
+
 \bool_new:N \g_ufc_institution_explicit_bool
 \bool_new:N \g_ufc_submission_entity_explicit_bool
 
@@ -599,7 +605,40 @@
   }
 
 \NewDocumentCommand \ufcsetup { +m }
-  { \keys_set:nn { ufc } { #1 } }
+  {
+    \tl_set:NV \l_ufc_pdf_previous_type_tl \g_ufc_document_type_tl
+    \keys_set:nn { ufc } { #1 }
+    \bool_if:NT \g_ufc_pdf_document_started_bool
+      {
+        \bool_if:NTF \g_ufc_pdf_first_page_shipped_bool
+          {
+            % A PDF cannot undo a previously shipped private/public identity.
+            % Authored metadata probes after the body remain allowed, but
+            % intentionally do not retroactively rewrite PDF Info/XMP.
+            \str_if_eq:VnTF \l_ufc_pdf_previous_type_tl
+              {anonymized-research-project}
+              {
+                \str_if_eq:VnF \g_ufc_document_type_tl
+                  {anonymized-research-project}
+                  {
+                    \ClassError{abntexto-ufc}
+                      {Cannot~change~anonymity~after~the~first~PDF~page}
+                      {Select~the~document~type~before~the~first~page.}
+                  }
+              }
+              {
+                \str_if_eq:VnT \g_ufc_document_type_tl
+                  {anonymized-research-project}
+                  {
+                    \ClassError{abntexto-ufc}
+                      {Cannot~change~anonymity~after~the~first~PDF~page}
+                      {Select~the~document~type~before~the~first~page.}
+                  }
+              }
+          }
+          { \ufc_pdf_apply_document_properties: }
+      }
+  }
 
 \NewExpandableDocumentCommand \ufcDocumentLanguage { }
   { \tl_use:N \g_ufc_document_language_tl }
@@ -922,7 +961,10 @@
 % Reserve the shared TOC label width without creating an empty eqbox label,
 % which previously produced a visible punctuation artifact.
 \DeclareRobustCommand{\ufcTocPosttextualTitle}[1]{%
-  \makebox[\toclabelwidth][l]{}#1%
+  % Uppercase only while typesetting the TOC. Never expand \MakeUppercase
+  % inside a moving \addcontentsline argument: hyperref can serialize its
+  % internal optional [] argument as literal "[ ]" in the PDF text.
+  \makebox[\toclabelwidth][l]{}\MakeUppercase{#1}%
 }
 \appto\pdfstringdefPreHook{%
   \def\ufcTocPosttextualTitle#1{#1}%
@@ -3288,12 +3330,12 @@
   }
 
 \cs_new_protected:Npn \ufc_posttextual_heading:n #1
-  { \ufc_posttextual_heading:nn { \MakeUppercase{#1} } {#1} }
+  { \ufc_posttextual_heading:nn { \ufcTocPosttextualTitle{#1} } {#1} }
 
 \cs_new_protected:Npn \ufc_aligned_posttextual_heading:n #1
   {
     \ufc_posttextual_heading:nn
-      { \ufcTocPosttextualTitle{\MakeUppercase{#1}} }
+      { \ufcTocPosttextualTitle{#1} }
       {#1}
   }
 
@@ -3358,5 +3400,45 @@
 
 \ExplSyntaxOff
 
+
+% PDF information and outline navigation
+% ============================================================================
+
+% Load hyperref only after all class modules, so its document-level section
+% destinations work without overriding the institution's printed typography.
+% A PDF/A declaration alone does not populate Title/Author metadata or outlines.
+\RequirePackage[unicode,hidelinks]{hyperref}
+
+\ExplSyntaxOn
+
+\cs_new_protected:Npn \ufc_pdf_apply_document_properties:
+  {
+    % Source-authored fields are finalized by \ufcsetup in the preamble.
+    % Keep presentation metadata independent of institution name translation.
+    \hypersetup
+      {
+        pdftitle={\ufc_meta_use:n {title}},
+        pdfsubject={\tl_use:N \g_ufc_document_type_tl}
+      }
+    \str_if_eq:VnTF \g_ufc_document_type_tl {anonymized-research-project}
+      {
+        % Never expand or copy the original authored name into PDF Info/XMP.
+        \hypersetup{pdfauthor={}}
+      }
+      {
+        \hypersetup{pdfauthor={\ufc_meta_use:n {author}}}
+      }
+  }
+
+\AddToHook{begindocument/end}
+  {
+    \ufc_pdf_apply_document_properties:
+    \bool_gset_true:N \g_ufc_pdf_document_started_bool
+  }
+
+\AddToHook{shipout/after}
+  { \bool_gset_true:N \g_ufc_pdf_first_page_shipped_bool }
+
+\ExplSyntaxOff
 
 \endinput
