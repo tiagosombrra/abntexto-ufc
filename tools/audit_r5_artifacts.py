@@ -110,7 +110,7 @@ def classify_next(text: str, before_textual: bool) -> str:
 
 def normative_bucket(profile: str, element: str) -> str:
     """Apply the correct ABNT standard to research proposals vs theses."""
-    proposal = profile == "anonymized-research-project"
+    proposal = profile in {"research-project", "anonymized-research-project"}
     if element == "PRIMARY_SECTION":
         return "NBR15287_2025_5_2_2" if proposal else "NBR14724_2024_5_2_2"
     if element in ("PRETEXTUAL_HEADING", "PRETEXTUAL_APPROVAL"):
@@ -223,7 +223,7 @@ def audit_zip(path: Path) -> dict:
                         source["profile"], element)
                     entry["applicable_standard"] = (
                         "ABNT NBR 15287:2025"
-                        if source["profile"] == "anonymized-research-project"
+                        if source["profile"] in {"research-project", "anonymized-research-project"}
                         else "ABNT NBR 14724:2024, corrected 2025")
                     entry["following_logical_side"] = logical_side(
                         physical + 1, external_cover)
@@ -322,8 +322,13 @@ def self_test() -> None:
             "Primary-section regex did not match a real PDF heading")
     require(classify_next("Author EXAMINING COMMITTEE name", True)
             == "PRETEXTUAL_APPROVAL", "Approval heading not classified")
-    require(normative_bucket("anonymized-research-project", "PRIMARY_SECTION")
-            == "NBR15287_2025_5_2_2", "Project normative scope wrong")
+    for project in ("research-project", "anonymized-research-project"):
+        require(normative_bucket(project, "PRIMARY_SECTION")
+                == "NBR15287_2025_5_2_2",
+                f"Project normative scope wrong: {project}")
+        require(normative_bucket(project, "POSTTEXTUAL")
+                == "NBR15287_2025_POSTTEXT_REVIEW",
+                f"Project posttextual scope wrong: {project}")
     doc[0].insert_text((72, 72), "123")
     require(physical_page(doc[0], 3, True)["classification"] == "NUMBER_ONLY",
             "Number-only page was not detected")

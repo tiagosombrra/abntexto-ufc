@@ -100,7 +100,7 @@ jobs:
     timeout-minutes: 25
     # One genuine PDF catches broken figure paths, bibliography and math
     # before reviewers request the complete 32-PDF source-bound build.
-    if: github.event_name == 'pull_request' && github.event.pull_request.draft == true && github.head_ref != 'test/555-r5-composed-main-readiness-20261107'
+    if: github.event_name == 'pull_request' && github.event.pull_request.draft == true
     steps:
       - name: Checkout immutable candidate
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -135,9 +135,7 @@ jobs:
     needs: source-preflight
     # Draft PRs pay only for source/mathematical checks. Ready-for-review,
     # manual and main-push runs still compile the ENTIRE 28+4 PDF matrix.
-    if: github.event_name != 'pull_request' || github.event.pull_request.draft == false || github.head_ref == 'test/555-r5-composed-main-readiness-20261107'
-    # This one diagnostic integration branch must compile the full PDF matrix
-    # without falsely marking the PR ready for human review.
+    if: github.event_name != 'pull_request' || github.event.pull_request.draft == false
     timeout-minutes: 65
     strategy:
       fail-fast: false

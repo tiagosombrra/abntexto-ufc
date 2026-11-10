@@ -29,7 +29,7 @@ LOCALES = {"pt": "pt-BR", "en": "en-US", "es": "es-ES", "fr": "fr-FR"}
 TABLE_NAMES = {"pt": "Tabela", "en": "Table", "es": "Tabla", "fr": "Tableau"}
 INSTITUTION_DISPLAY = {
     "pt": "Universidade Federal do Ceará",
-    "en": "Federal University of Ceara",
+    "en": "Federal University of Ceará",
     "es": "Universidad Federal de Ceará",
     "fr": "Université fédérale du Ceará",
 }
@@ -239,24 +239,57 @@ def posttextual_optional_bracket_leak(text: str) -> bool:
     ))
 
 
-def folded_pdf_text(text: str) -> str:
-    """Normalize actual PDF linewraps without accepting glued legal names."""
-    # Read the untouched Poppler output: premature line joining preserves a
-    # discretionary "-" and makes correct words impossible to recover.
-    text = re.sub(r"(?<=\w)[-\u2010\u00ad][ \t]*\r?\n[ \t]*(?=\w)", "", text)
-    # PDF text extractors may turn French ASCII apostrophes into curly glyphs.
+def folded_pdf_text(text: str, lexical_hyphens: frozenset[str] = frozenset()) -> str:
+    """Unwrap PDF text, preserving only source-authored lexical hyphens."""
+    # Normalize glyph variants before deciding whether a line-final hyphen
+    # belongs to an authored compound or is discretionary typesetting.
     text = text.translate(str.maketrans({"’": "'", "‘": "'", "ʼ": "'"}))
-    return re.sub(r"\s+", " ", "".join(
-        c for c in unicodedata.normalize("NFKD", text.casefold())
-        if not unicodedata.combining(c)
-    )).strip()
+    text = "".join(
+        char for char in unicodedata.normalize("NFKD", text.casefold())
+        if not unicodedata.combining(char)
+    )
+    wrapped = re.compile(r"(\w+)([-\u2010\u00ad])[ \t]*\r?\n[ \t]*(\w+)")
+
+    def unwrap(match: re.Match[str]) -> str:
+        left, marker, right = match.groups()
+        lexical = f"{left}-{right}"
+        if marker != "\u00ad" and lexical in lexical_hyphens:
+            return lexical
+        return left + right
+
+    # Revisit adjacent linewraps in long words; one substitution pass can
+    # consume a middle fragment and leave the next wrap unresolved.
+    while True:
+        unwrapped = wrapped.sub(unwrap, text)
+        if unwrapped == text:
+            break
+        text = unwrapped
+    return re.sub(r"\s+", " ", text).strip()
+
+
+def authored_lexical_hyphens(source_text: str) -> frozenset[str]:
+    """Read lexical compounds from source text, not guessed PDF line breaks."""
+    normalized = folded_pdf_text(source_text)
+    pairs = set()
+    for token in re.findall(r"\w+(?:-\w+)+", normalized):
+        components = token.split("-")
+        pairs.update(f"{left}-{right}" for left, right in
+                     zip(components, components[1:]))
+    return frozenset(pairs)
 
 
 
 def scientific_content_failures(extracted: str, locale: str, study: dict) -> list[str]:
     """Require fully rendered methodology, measured table rows and bibliography."""
     narrative = study["locales"][locale]
-    normalized = folded_pdf_text(extracted)
+    authored = [narrative[key] for key in (
+        "heading", "motivation", "method", "interpretation",
+        "limitations", "figure_title", "table_title"
+    )]
+    authored.extend(reference["title"] for reference in study["reference_sources"])
+    authored.extend(narrative["case_names"])
+    lexical_hyphens = authored_lexical_hyphens("\n".join(authored))
+    normalized = folded_pdf_text(extracted, lexical_hyphens)
     failures = []
     for key in ("heading", "motivation", "method", "interpretation",
                 "limitations", "figure_title", "table_title"):
@@ -301,7 +334,8 @@ def table_list_entry_failures(page: str, locale: str,
     for i, (entry, caption) in enumerate(zip(entries, expected_captions)):
         next_start = entries[i + 1].start() if i + 1 < len(entries) else len(page)
         rendered_entry = page[entry.end():next_start]
-        if folded_pdf_text(caption) not in folded_pdf_text(rendered_entry):
+        if folded_pdf_text(caption) not in folded_pdf_text(
+                rendered_entry, authored_lexical_hyphens(caption)):
             failures.append(f"pdf.table_list.caption_entry_invalid.{caption}")
     return failures
 
@@ -350,6 +384,20 @@ def assert_scientific_content_mutants() -> None:
         prematurely_glued = hyphenated.replace("-\n   ", "-", 1)
         if not scientific_content_failures(prematurely_glued, locale, study):
             raise AssertionError(f"Pre-normalized discretionary hyphen accepted: {locale}")
+        if locale == "en":
+            # Lexical hyphens at physical line endings must remain significant,
+            # even when discretionary hyphenation occurs in the same document.
+            for compound in ("cell-side", "meshing-method", "research-grade"):
+                if compound not in complete:
+                    raise AssertionError(f"Missing lexical fixture: {compound}")
+                lexical_wrap = hyphenated.replace(
+                    compound, compound.replace("-", "-\n   "), 1)
+                if scientific_content_failures(lexical_wrap, locale, study):
+                    raise AssertionError(f"Valid lexical wrap rejected: {compound}")
+                missing = complete.replace(
+                    compound, compound.replace("-", ""), 1)
+                if not scientific_content_failures(missing, locale, study):
+                    raise AssertionError(f"Missing authored hyphen accepted: {compound}")
         if locale == "fr":
             typographic = complete.replace("'", "’")
             if scientific_content_failures(typographic, locale, study):

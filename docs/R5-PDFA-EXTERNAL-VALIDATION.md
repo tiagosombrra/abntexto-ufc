@@ -6,12 +6,12 @@ nem autoriza a publicação da versão 3.1.0.
 ## Entradas imutáveis
 
 O workflow `.github/workflows/r5-pdfa-exact-e3.yml` recupera exatamente
-os quatro artefatos originais `public-full7-{pt,en,es,fr}-42387260385`
-produzidos pela [execução 42387260385](https://github.com/tiagosombrra/abntexto-ufc/actions/runs/42387260385)
-da [PR #575](https://github.com/tiagosombrra/abntexto-ufc/pull/575).
+os quatro artefatos originais `public-full7-{pt,en,es,fr}-42419218920`
+produzidos pela [execução 42419218920](https://github.com/tiagosombrra/abntexto-ufc/actions/runs/42419218920)
+da [PR #577](https://github.com/tiagosombrra/abntexto-ufc/pull/575).
 
 O commit exato esperado é
-`1ac95dd4bcdef08e3a469469b7fdcf8d0b8f8232`, que compila os
+`1886bf81bdce8c57e7e28f54e1f2dc9c0749adc7`, que compila os
 sete tipos acadêmicos em quatro idiomas com a composição diagnóstica
 das correções #563 (metadados/bookmarks), #565 (legendas ES/FR) e
 #566 (tipografia/sumário/banca).
@@ -64,3 +64,7 @@ ainda sem aprovação normativa.
 
 **Não mesclar automaticamente; publicação proibida.**
 `v3.1.0 UNRELEASED`; `publication_authorized=false`.
+
+## Histórico do controle externo
+
+A execução anterior do veraPDF no commit diagnóstico `1ac95dd4bcdef08e3a469469b7fdcf8d0b8f8232` da PR #575 comprovou 28/28 PDFs daquele lote, mas **não deve ser usada como prova dos PDFs regenerados**. A nova origem `1886bf81bdce8c57e7e28f54e1f2dc9c0749adc7` da PR #577 corrige campos de linguagem e as respectivas páginas foram recompiladas em [42419218920](https://github.com/tiagosombrra/abntexto-ufc/actions/runs/42419218920). A validação externa do novo conjunto requer novo relatório XML, novos hashes dos 28 PDF e status de execução próprio. A inspeção de 32 PDFs R4 é evidência independente e não participa deste gate E3.

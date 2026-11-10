@@ -42,13 +42,19 @@ coerente; **isso não prova que cada folha tenha de existir**.
 | Elementos pós-textuais (referências, anexos etc.) | 56 | UFC 2022 versus normas vigentes e modo digital |
 | **Total** | **300** | **300 decisões humanas pendentes** |
 
-**Escopo normativo correto:** 252 versos estão em dissertações/teses e
-variantes doutorais (NBR 14724:2024, errata incorporada em 2025);
-**48 versos** estão em projetos de pesquisa anonimizados, sujeitos à
-**ABNT NBR 15287:2025** (e às regras do edital). Desses 48, 16
-antecedem pré-textuais, 20 antecedem seções primárias e 12 pós-textuais.
-A norma de projetos de 2025 não deve ser substituída por analogia
-automática à norma de teses.
+**Escopo normativo por tipo de documento:** a **ABNT NBR 15287:2025**
+é aplicável a projetos de pesquisa **com e sem anonimização**;
+a **ABNT NBR 14724:2024**, com a versão corrigida em 2025, aplica-se
+aos trabalhos acadêmicos dos demais perfis. A execução de referência
+contabilizou **48 versos no projeto de pesquisa anonimizado**;
+o projeto de pesquisa comum utiliza o modo `single-sided` neste corpus
+e portanto não contribui com versos duplex. Os **252 versos restantes**
+pertencem aos demais perfis desta execução, não alterando a aplicação da
+NBR 15287 ao projeto de pesquisa comum. O auditor recalcula a distribuição por perfil
+a partir de cada PDF/recibo original e compara as duas normas
+antes de produzir a evidência, mantendo a decisão humana por página.
+Nos 48 versos do projeto anonimizado, 16 antecedem pré-textuais,
+20 antecedem seções primárias e 12 pós-textuais.
 
 ### Matriz de prioridade para decisão normativa
 
