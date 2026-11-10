@@ -135,13 +135,13 @@ if approval.count('(Orientador)') != 1 or any(
     )
 advisor_lines = [
     line.strip()
-    for page in raw.split('\\f')
+    for page in raw.split('\f')
     if 'BANCA EXAMINADORA' in page
     for line in page.splitlines()
     if 'Prof. Dr. Nome do Orientador' in line
 ]
 if len(advisor_lines) != 1 or not re.search(
-    r'Nome do Orientador\\s+\\(Orientador\\)', advisor_lines[0]
+    r'Nome do Orientador\s+\(Orientador\)', advisor_lines[0]
 ):
     raise SystemExit(
         'Reference document failed: advisor role must follow the advisor name on the same line.'
