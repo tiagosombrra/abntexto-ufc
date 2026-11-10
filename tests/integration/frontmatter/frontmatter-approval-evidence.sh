@@ -96,11 +96,11 @@ role_lines = {
     'UFCFRONTMATTERAPADVISOR': '(Orientador)',
     'UFCFRONTMATTERAPCOADVISOR': '(Coorientador)',
 }
-lines = [re.sub(r'\\s+', ' ', line).strip() for line in text.splitlines()]
+lines = [re.sub(r'\s+', ' ', line).strip() for line in text.splitlines()]
 for marker, role in role_lines.items():
     matched = [line for line in lines if marker in line]
     if len(matched) != 1 or not re.search(
-        re.escape(marker) + r'\\s+' + re.escape(role) + r'$',
+        re.escape(marker) + r'\s+' + re.escape(role) + r'$',
         matched[0] if matched else '',
     ):
         raise SystemExit(
