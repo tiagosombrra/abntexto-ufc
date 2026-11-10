@@ -90,16 +90,41 @@ for forbidden in (
             f'Approval page audit failed: committee unit/program marker leaked into output: {forbidden}'
         )
 
-for suffix in ('(Orientador)', '(Orientadora)', '(Coorientador)', '(Coorientadora)'):
-    if suffix in flat:
+# The R8.1 approval specimen requires a role beside each advisor name,
+# while ordinary examiners must retain name-and-institution-only lines.
+role_lines = {
+    'UFCFRONTMATTERAPADVISOR': '(Orientador)',
+    'UFCFRONTMATTERAPCOADVISOR': '(Coorientador)',
+}
+lines = [re.sub(r'\\s+', ' ', line).strip() for line in text.splitlines()]
+for marker, role in role_lines.items():
+    matched = [line for line in lines if marker in line]
+    if len(matched) != 1 or not re.search(
+        re.escape(marker) + r'\\s+' + re.escape(role) + r'$',
+        matched[0] if matched else '',
+    ):
         raise SystemExit(
-            f'Approval page audit failed: committee member line must contain name only, without role suffix: {suffix}'
+            f'Approval page audit failed: {role} must follow {marker} on the same line.'
         )
+
+for role in ('(Orientador)', '(Orientadora)', '(Coorientador)', '(Coorientadora)'):
+    expected_count = 1 if role in role_lines.values() else 0
+    if flat.count(role) != expected_count:
+        raise SystemExit(
+            f'Approval page audit failed: unexpected role occurrence for {role}: '
+            f'expected={expected_count}, actual={flat.count(role)}'
+        )
+
+examiner_lines = [line for line in lines if 'UFCFRONTMATTERAPMEMBER' in line]
+if len(examiner_lines) != 1 or any(role in examiner_lines[0] for role in role_lines.values()):
+    raise SystemExit(
+        'Approval page audit failed: examiner name must not carry advisor role suffixes.'
+    )
 
 print(
     'LIBRARIAN-REVIEW-EVIDENCE item=7 status=PASS '
     'context=approval-page institution-acronym-rendered=true '
-    'member-lines=name-plus-institution-only unit-lines=0 advisor-role-suffix=0 coadvisor-role-suffix=0'
+    'member-lines=role-labeled-advisors-and-name-only-examiners unit-lines=0 advisor-role-suffix=1 coadvisor-role-suffix=1'
 )
 PY
 
