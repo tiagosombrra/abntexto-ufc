@@ -468,7 +468,8 @@ def main() -> int:
     for item in items:
         results.append(build_one(item, loc, out, work))
     complete = {
-        "source_commit_sha": os.environ.get("SOURCE_COMMIT_SHA", ""),
+        "source_commit_sha": (os.environ.get("SOURCE_COMMIT_SHA") or subprocess.check_output(
+            ["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip()),
         "locale": loc, "pdf_count": len(results),
         "page_count": sum(x["pages"] for x in results),
         "failures": sum(len(x["failures"]) for x in results),
