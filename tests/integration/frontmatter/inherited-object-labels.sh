@@ -71,7 +71,7 @@ expect={
   "pt":("apêndice","anexo","fonte:","nota:"),
   "en":("appendix","annex","source:","note:"),
   "es":("apéndice","anexo","fuente:","nota:"),
-  "fr":("annexe","annexe","source:","note:"),
+  "fr":("appendice","annexe","source:","note:"),
 }
 for lang,(app,ann,source,note) in expect.items():
     data=(work/f"inherited-{lang}.txt").read_text(encoding="utf-8")
@@ -98,8 +98,13 @@ for lang,(app,ann,source,note) in expect.items():
         fail("normal_sub_number","(a) before caption")
     if not re.search(r"\b\d+\s*(?:—|---|–)\s*altsub"+lang,data):
         fail("alternative_sub_number","object number and separator before caption")
-    if lang=="fr" and len(re.findall(r"annexe\s+a\b",data))<2:
-        fail("fr_dual_annexe","two annex labels")
+    if lang == "fr":
+        # French appendix and annex are distinct public labels.
+        # Reject regressions that render both categories as Annexe.
+        if len(re.findall(r"appendice\\s+a\\b", data)) != 1:
+            fail("fr_appendix_label", "one Appendice A")
+        if len(re.findall(r"annexe\\s+a\\b", data)) != 1:
+            fail("fr_annex_label", "one Annexe A")
     if lang in ("en","es","fr") and "fonte:" in data:
         fail("pt_source_leak","fonte:")
     print(f"INHERITED-LOCALE-EVIDENCE status=PASS locale={lang} paths=plain,normal-sub,alternative-sub real_pdf=true")
