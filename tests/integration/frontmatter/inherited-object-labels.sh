@@ -101,9 +101,9 @@ for lang,(app,ann,source,note) in expect.items():
     if lang == "fr":
         # French appendix and annex are distinct public labels.
         # Reject regressions that render both categories as Annexe.
-        if len(re.findall(r"appendice\\s+a\\b", data)) != 1:
+        if len(re.findall(r"appendice\s+a\b", data)) != 1:
             fail("fr_appendix_label", "one Appendice A")
-        if len(re.findall(r"annexe\\s+a\\b", data)) != 1:
+        if len(re.findall(r"annexe\s+a\b", data)) != 1:
             fail("fr_annex_label", "one Annexe A")
     if lang in ("en","es","fr") and "fonte:" in data:
         fail("pt_source_leak","fonte:")
