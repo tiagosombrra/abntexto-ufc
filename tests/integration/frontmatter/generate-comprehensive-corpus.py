@@ -69,7 +69,7 @@ PROSE = {
 TABLE_SOURCE = {"pt": "Fonte", "en": "Source", "es": "Fuente", "fr": "Source"}
 INSTITUTION_DISPLAY = {
     "pt": "Universidade Federal do Ceará",
-    "en": "Federal University of Ceará",
+    "en": "Federal University of Ceara",
     "es": "Universidad Federal de Ceará",
     "fr": "Université fédérale du Ceará",
 }
@@ -213,6 +213,77 @@ def extra_body(profile: str, locale: str) -> str:
     return "\n".join(lines) + "\n"
 
 
+
+ACADEMIC_PROFILES_WITH_DEDICATION = {
+    "undergraduate-capstone", "specialization-capstone",
+    "masters-thesis", "doctoral-thesis",
+}
+DEDICATION_TEXT = {
+    "pt": "Dedico este documento de ensaio à verificação rigorosa da estrutura acadêmica.",
+    "en": "I dedicate this test document to rigorous verification of academic structure.",
+    "es": "Dedico este documento de prueba a la verificación rigurosa de la estructura académica.",
+    "fr": "Je dédie ce document de test à la vérification rigoureuse de la structure universitaire.",
+}
+EPIGRAPH_TEXT = {
+    "pt": "Uma afirmação só se sustenta quando suas evidências podem ser examinadas.",
+    "en": "A claim is only as reliable as the evidence that can be examined.",
+    "es": "Una afirmación solo es fiable cuando sus pruebas pueden examinarse.",
+    "fr": "Une affirmation n'est fiable que si ses preuves peuvent être examinées.",
+}
+
+
+def add_human_review_pretextual_elements(source: str, profile: str,
+                                          locale: str, folder: Path,
+                                          sources: list) -> str:
+    """Exercise dedication and epigraph in applicable academic document types.
+
+    The epigraph's long and short forms must be tested across the corpus
+    without adding two epigraphs to a single scholarly manuscript.
+    """
+    if profile not in ACADEMIC_PROFILES_WITH_DEDICATION:
+        return source
+
+    text_dir = folder / "texts"
+    text_dir.mkdir(parents=True, exist_ok=True)
+    stem = f"r5-review-{profile}-{locale}"
+    dedication = text_dir / f"{stem}-dedication.tex"
+    epigraph = text_dir / f"{stem}-epigraph.tex"
+    dedication.write_text(
+        f"R5-DEDICATION-{locale.upper()}-{profile.upper()}. "
+        + DEDICATION_TEXT[locale] + "\n", encoding="utf-8"
+    )
+    epigraph.write_text(
+        f"R5-EPIGRAPH-{locale.upper()}-{profile.upper()}. "
+        + EPIGRAPH_TEXT[locale] + "\n", encoding="utf-8"
+    )
+    sources.extend([str(dedication), str(epigraph)])
+
+    # Restore normative frontmatter order: errata, approval, dedication,
+    # acknowledgments, epigraph, followed by summaries.
+    lines = source.splitlines(keepends=True)
+    approval = r"\ufcPrintApprovalPage" + "\n"
+    approvals = [i for i, line in enumerate(lines) if line == approval]
+    if len(approvals) != 1:
+        raise ValueError(f"{profile}/{locale}: approval page anchor missing")
+    n = approvals[0]
+    if n < 2 or not lines[n-2].startswith(r"\ufcPrintAcknowledgments{") or \
+            not lines[n-1].startswith(r"\ufcPrintErrata{"):
+        raise ValueError(f"{profile}/{locale}: unexpected frontmatter order")
+    acknowledgment, errata = lines[n-2:n]
+    mode = "long" if profile == "doctoral-thesis" else "short"
+    replacement = [
+        errata, approval,
+        rf"\ufcPrintDedication{{{dedication.as_posix()}}}" + "\n",
+        acknowledgment,
+        rf"\ufcPrintEpigraph[{mode}]{{{epigraph.as_posix()}}}" + "\n",
+    ]
+    lines[n-2:n+1] = replacement
+    result = "".join(lines)
+    assert result.count(r"\ufcPrintDedication{") == 1
+    assert result.count(r"\ufcPrintEpigraph[") == 1
+    return result
+
+
 def generate(profile: str, locale: str, folder: Path) -> dict:
     """Expand one proven base specimen into a complete, independently hashed source."""
     name, sources = MAKE_BASE_DOC(profile, locale, folder)
@@ -223,7 +294,10 @@ def generate(profile: str, locale: str, folder: Path) -> dict:
         raise ValueError("R2 source omitted unique localized institution presentation")
     if original.count("submission-entity-display={" + INSTITUTION_DISPLAY[locale] + "}") != 1:
         raise ValueError("R2 source omitted unique localized project entity presentation")
-    source = original.replace(
+    source = add_human_review_pretextual_elements(
+        original, profile, locale, folder, sources
+    )
+    source = source.replace(
         "\\ufcsetup{\n",
         "\\ufcsetup{\n  tables=tabularray,\n  code=listings,\n"
         "  algorithms=algpseudocodex,\n",
@@ -336,6 +410,11 @@ def generate(profile: str, locale: str, folder: Path) -> dict:
                 "masters-thesis", "doctoral-thesis"},
             "article_specific_frontmatter": profile == "scientific-article",
             "anonymous_title": profile == "anonymized-research-project",
+            "dedication": profile in ACADEMIC_PROFILES_WITH_DEDICATION,
+            "epigraph_short": profile in ACADEMIC_PROFILES_WITH_DEDICATION
+            and profile != "doctoral-thesis",
+            "epigraph_long": profile == "doctoral-thesis",
+            "pretextual_order_repaired": profile in ACADEMIC_PROFILES_WITH_DEDICATION,
             "duplex": profile in DUPLEX_PROFILES,
         },
         "proof_state": "SOURCE_PREFLIGHT_ONLY",

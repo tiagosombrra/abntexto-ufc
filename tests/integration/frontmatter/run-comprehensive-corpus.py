@@ -35,6 +35,156 @@ INSTITUTION_DISPLAY = {
 }
 
 
+EXPECTED_LOCALIZED_COVER_VALUES = {
+    "pt": {
+        "undergraduate-capstone": "Ciência da Computação",
+        "specialization-capstone": "Ciência da Computação",
+        "masters-thesis": "Programa de Pós-Graduação em Ciência da Computação",
+        "doctoral-thesis": "Programa de Pós-Graduação em Ciência da Computação",
+        "research-project": "Pesquisa em Computação",
+        "anonymized-research-project": "Pesquisa em Computação",
+    },
+    "en": {
+        "undergraduate-capstone": "Computer Science",
+        "specialization-capstone": "Computer Science",
+        "masters-thesis": "Graduate Program in Computer Science",
+        "doctoral-thesis": "Graduate Program in Computer Science",
+        "research-project": "Research in Computing",
+        "anonymized-research-project": "Research in Computing",
+    },
+    "es": {
+        "undergraduate-capstone": "Ciencias de la Computación",
+        "specialization-capstone": "Ciencias de la Computación",
+        "masters-thesis": "Programa de Posgrado en Ciencias de la Computación",
+        "doctoral-thesis": "Programa de Posgrado en Ciencias de la Computación",
+        "research-project": "Investigación en Computación",
+        "anonymized-research-project": "Investigación en Computación",
+    },
+    "fr": {
+        "undergraduate-capstone": "Informatique",
+        "specialization-capstone": "Informatique",
+        "masters-thesis": "Programme de formation supérieure en informatique",
+        "doctoral-thesis": "Programme de formation supérieure en informatique",
+        "research-project": "Recherche en informatique",
+        "anonymized-research-project": "Recherche en informatique",
+    },
+}
+FORBIDDEN_UNTRANSLATED_R4_LABELS = (
+    "Graduate Program in Computing",
+    "Master of Computing",
+    "Doctoral Program in Computing",
+    "Graduate Selection",
+    "Specialization in Computing",
+)
+
+
+def folded_program_name(text: str) -> str:
+    """Match hyphenated university program names across TeX line breaks.
+
+    A PDF may break an authored compound such as Pós-Graduação as
+    "Pós-\nGraduação", while the extracted text no longer distinguishes the
+    discretionary break from an authored hyphen. Only hyphens between
+    letters are normalized; the full sequence of letters must still match.
+    """
+    normalized = folded_pdf_text(text)
+    return re.sub(r"(?<=\w)-(?=\w)", "", normalized)
+
+
+def localized_cover_failures(profile: str, locale: str,
+                             first_page: str, second_page: str) -> list[str]:
+    """Detect untranslated cover fields in real PDFs, not merely source declarations."""
+    if profile == "scientific-article":
+        return []
+    findings = []
+    first = folded_pdf_text(first_page)
+    second = folded_pdf_text(second_page)
+    expected = EXPECTED_LOCALIZED_COVER_VALUES[locale][profile]
+    if folded_program_name(expected) not in folded_program_name(first_page):
+        findings.append("pdf.cover.academic_program_not_localized")
+    for label in FORBIDDEN_UNTRANSLATED_R4_LABELS:
+        if folded_pdf_text(label) in first:
+            findings.append("pdf.cover.untranslated_fixture_label." +
+                            label.replace(" ", "_"))
+    if profile in {"masters-thesis", "doctoral-thesis"}:
+        field = {"pt": "Ciência da Computação", "en": "Computer Science",
+                 "es": "Ciencias de la Computación", "fr": "Informatique"}[locale]
+        if folded_pdf_text(field) not in second:
+            findings.append("pdf.title_page.degree_field_untranslated")
+        if folded_program_name(expected) not in folded_program_name(second_page):
+            findings.append("pdf.title_page.academic_program_untranslated")
+    return findings
+
+
+def assert_localized_cover_mutants() -> None:
+    """Require localized labels and reject all five observed English leaks."""
+    for locale in LOCALES:
+        for profile, expected in EXPECTED_LOCALIZED_COVER_VALUES[locale].items():
+            cover = "UNIVERSITY OF CEARA\n" + expected
+            title = expected + "\n" + (
+                {"pt": "Ciência da Computação", "en": "Computer Science",
+                 "es": "Ciencias de la Computación", "fr": "Informatique"}[locale]
+            )
+            if localized_cover_failures(profile, locale, cover, title):
+                raise AssertionError(f"Valid cover rejected: {locale}/{profile}")
+            for bad in FORBIDDEN_UNTRANSLATED_R4_LABELS:
+                errors = localized_cover_failures(
+                    profile, locale, cover + "\n" + bad, title
+                )
+                if not errors:
+                    raise AssertionError(f"Untranslated R4 label passed: {locale}/{bad}")
+            if localized_cover_failures(profile, locale, cover, title) != []:
+                raise AssertionError("Positive locale control mutated unexpectedly")
+    # A real Portuguese masters PDF wraps Pós-Graduação across two lines.
+    intact = ("Programa de Pós-Graduação em Ciência da Computação")
+    extracted = "Programa de Pós-\nGraduação em Ciência da Computação"
+    valid = localized_cover_failures(
+        "masters-thesis", "pt", intact,
+        extracted + "\nCiência da Computação"
+    )
+    if valid:
+        raise AssertionError(f"PT discretionary compound was falsely rejected: {valid}")
+    corrupted = extracted.replace("Graduação", "Doutorado")
+    if not localized_cover_failures(
+        "masters-thesis", "pt", intact,
+        corrupted + "\nCiência da Computação"
+    ):
+        raise AssertionError("Substantively altered postgraduate program escaped")
+
+
+
+
+
+
+def nature_grammar_failures(profile: str, locale: str, extracted_pages: list[str]) -> list[str]:
+    """Reject missing articles in university nature paragraphs on real title pages."""
+    if profile == "scientific-article" or len(extracted_pages) < 2:
+        return []
+    # The R4 corpus includes a physical cover before the title page.
+    folded = folded_pdf_text(extracted_pages[1])
+    forbidden = {
+        "en": (" at federal university",),
+        "es": (" de universidad federal", " a universidad federal"),
+        "fr": (" de universite federale", " a universite federale"),
+    }.get(locale, ())
+    return ["pdf.nature.missing_institution_article" for value in forbidden
+            if value in folded]
+
+
+def assert_nature_grammar_mutants() -> None:
+    """Prove that actual EN/ES/FR missing-article strings fail closed."""
+    bad = {"en": "submitted at Federal University of Ceara",
+           "es": "presentada de Universidad Federal de Ceará",
+           "fr": "présenté de Université fédérale du Ceará"}
+    good = {"en": "submitted at the Federal University of Ceara",
+            "es": "presentada de la Universidad Federal de Ceará",
+            "fr": "présenté de l'Université fédérale du Ceará"}
+    for loc in ("en", "es", "fr"):
+        if not nature_grammar_failures("masters-thesis", loc, ["Cover", bad[loc]]):
+            raise AssertionError(f"Missing university article was accepted: {loc}")
+        if nature_grammar_failures("masters-thesis", loc, ["Cover", good[loc]]):
+            raise AssertionError(f"Correct university article was rejected: {loc}")
+
+
 def sha(path: Path) -> str:
     """Hash the actual retained PDF or source file."""
     return hashlib.sha256(path.read_bytes()).hexdigest()
@@ -362,6 +512,11 @@ def inspect(profile: str, locale: str, tex: str, pdf: Path,
     findings.extend(missing_science)
     if not cover_name_verified:
         findings.append("pdf.cover.localized_institution_name_missing")
+    findings.extend(localized_cover_failures(
+        profile, locale, raw_pages[0] if raw_pages else "",
+        raw_pages[1] if len(raw_pages) > 1 else ""
+    ))
+    findings.extend(nature_grammar_failures(profile, locale, raw_pages))
     if posttextual_optional_bracket_leak(aggregate):
         findings.append("pdf.toc.posttextual_literal_optional_brackets")
     # Verify rendered implementation bodies, not only captions or list entries.
@@ -544,6 +699,8 @@ def main() -> int:
     args = parser.parse_args()
     assert_page_accounting_mutants()
     assert_scientific_content_mutants()
+    assert_localized_cover_mutants()
+    assert_nature_grammar_mutants()
     if args.selftest:
         print("R4-PHYSICAL-PAGE-MUTANTS status=PASS cases=17")
         print("R4-SCIENCE-AND-LOT-MUTANTS status=PASS locales=4 science_mutants=20 lot_mutants=4")

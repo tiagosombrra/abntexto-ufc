@@ -38,6 +38,9 @@
 \IfFileExists{spanish.ldf}{\babelprovide[import]{spanish}}{}
 \IfFileExists{french.ldf}{\babelprovide[import]{french}}{}
 \RequirePackage{microtype}
+% On short (ragged-bottom) pages, keep notes at the bottom of the text
+% block instead of immediately below the preceding paragraph.
+\RequirePackage[bottom]{footmisc}
 
 \ExplSyntaxOn
 
@@ -204,7 +207,7 @@
     pt/appendix = {Apêndice},
     en/appendix = {Appendix},
     es/appendix = {Apéndice},
-    fr/appendix = {Annexe},
+    fr/appendix = {Appendice},
     pt/annex = {Anexo},
     en/annex = {Annex},
     es/annex = {Anexo},
@@ -215,25 +218,25 @@
     fr/index = {Index}
   }
 \prop_gput:Nnn \g_ufc_document_text_prop {pt/nature-undergraduate} {Trabalho~de~Conclusão~de~Curso~apresentado~ao~Curso~de~Graduação~em~\ufc_meta_use:n {undergraduate-program}~da~\ufc_institution_display:,~como~requisito~parcial~à~obtenção~do~grau~de~\ufc_meta_use:n {undergraduate-degree}~em~\ufc_meta_use:n {undergraduate-program}.}
-\prop_gput:Nnn \g_ufc_document_text_prop {en/nature-undergraduate} {Undergraduate~capstone~submitted~to~the~\ufc_meta_use:n {undergraduate-program}~program~at~\ufc_institution_display:\space in~partial~fulfillment~of~the~requirements~for~the~degree~of~\ufc_meta_use:n {undergraduate-degree}~in~\ufc_meta_use:n {undergraduate-program}.}
-\prop_gput:Nnn \g_ufc_document_text_prop {es/nature-undergraduate} {Trabajo~de~fin~de~grado~presentado~al~programa~de~\ufc_meta_use:n {undergraduate-program}~de~\ufc_institution_display:\space como~requisito~parcial~para~obtener~el~título~de~\ufc_meta_use:n {undergraduate-degree}~en~\ufc_meta_use:n {undergraduate-program}.}
-\prop_gput:Nnn \g_ufc_document_text_prop {fr/nature-undergraduate} {Mémoire~de~fin~de~licence~présenté~au~programme~de~\ufc_meta_use:n {undergraduate-program}~de~\ufc_institution_display:\space en~vue~de~l'obtention~du~diplôme~de~\ufc_meta_use:n {undergraduate-degree}~en~\ufc_meta_use:n {undergraduate-program}.}
+\prop_gput:Nnn \g_ufc_document_text_prop {en/nature-undergraduate} {Undergraduate~capstone~submitted~to~the~\ufc_meta_use:n {undergraduate-program}~program~at~the~\ufc_institution_display:\space in~partial~fulfillment~of~the~requirements~for~the~degree~of~\ufc_meta_use:n {undergraduate-degree}~in~\ufc_meta_use:n {undergraduate-program}.}
+\prop_gput:Nnn \g_ufc_document_text_prop {es/nature-undergraduate} {Trabajo~de~fin~de~grado~presentado~al~programa~de~\ufc_meta_use:n {undergraduate-program}~de~la~\ufc_institution_display:\space como~requisito~parcial~para~obtener~el~título~de~\ufc_meta_use:n {undergraduate-degree}~en~\ufc_meta_use:n {undergraduate-program}.}
+\prop_gput:Nnn \g_ufc_document_text_prop {fr/nature-undergraduate} {Mémoire~de~fin~de~licence~présenté~au~programme~de~\ufc_meta_use:n {undergraduate-program}~de~l'\ufc_institution_display:\space en~vue~de~l'obtention~du~diplôme~de~\ufc_meta_use:n {undergraduate-degree}~en~\ufc_meta_use:n {undergraduate-program}.}
 \prop_gput:Nnn \g_ufc_document_text_prop {pt/nature-specialization} {Trabalho~de~Conclusão~de~Curso~apresentado~ao~Curso~de~Especialização~em~\ufc_meta_use:n {specialization-program}~da~\ufc_institution_display:,~como~requisito~parcial~à~obtenção~do~título~de~especialista~em~\ufc_meta_use:n {specialization-program}.}
-\prop_gput:Nnn \g_ufc_document_text_prop {en/nature-specialization} {Specialization~capstone~submitted~to~the~\ufc_meta_use:n {specialization-program}~program~at~\ufc_institution_display:\space in~partial~fulfillment~of~the~requirements~for~the~specialist~qualification~in~\ufc_meta_use:n {specialization-program}.}
-\prop_gput:Nnn \g_ufc_document_text_prop {es/nature-specialization} {Trabajo~final~de~especialización~presentado~al~programa~de~\ufc_meta_use:n {specialization-program}~de~\ufc_institution_display:\space como~requisito~parcial~para~obtener~la~especialización~en~\ufc_meta_use:n {specialization-program}.}
-\prop_gput:Nnn \g_ufc_document_text_prop {fr/nature-specialization} {Mémoire~de~spécialisation~présenté~au~programme~de~\ufc_meta_use:n {specialization-program}~de~\ufc_institution_display:\space en~vue~de~l'obtention~du~titre~de~spécialiste~en~\ufc_meta_use:n {specialization-program}.}
+\prop_gput:Nnn \g_ufc_document_text_prop {en/nature-specialization} {Specialization~capstone~submitted~to~the~\ufc_meta_use:n {specialization-program}~program~at~the~\ufc_institution_display:\space in~partial~fulfillment~of~the~requirements~for~the~specialist~qualification~in~\ufc_meta_use:n {specialization-program}.}
+\prop_gput:Nnn \g_ufc_document_text_prop {es/nature-specialization} {Trabajo~final~de~especialización~presentado~al~programa~de~\ufc_meta_use:n {specialization-program}~de~la~\ufc_institution_display:\space como~requisito~parcial~para~obtener~la~especialización~en~\ufc_meta_use:n {specialization-program}.}
+\prop_gput:Nnn \g_ufc_document_text_prop {fr/nature-specialization} {Mémoire~de~spécialisation~présenté~au~programme~de~\ufc_meta_use:n {specialization-program}~de~l'\ufc_institution_display:\space en~vue~de~l'obtention~du~titre~de~spécialiste~en~\ufc_meta_use:n {specialization-program}.}
 \prop_gput:Nnn \g_ufc_document_text_prop {pt/nature-masters} {Dissertação~apresentada~ao~\ufc_meta_use:n {masters-graduate-program}~da~\ufc_institution_display:,~como~requisito~parcial~à~obtenção~do~título~de~mestre~em~\ufc_meta_use:n {masters-degree-field}.\ufc_meta_if_blank:nF {masters-concentration}{~Área~de~concentração:~\ufc_meta_use:n {masters-concentration}.}}
-\prop_gput:Nnn \g_ufc_document_text_prop {en/nature-masters} {Master's~dissertation~submitted~to~the~\ufc_meta_use:n {masters-graduate-program}~at~\ufc_institution_display:\space in~partial~fulfillment~of~the~requirements~for~the~degree~of~Master~in~\ufc_meta_use:n {masters-degree-field}.\ufc_meta_if_blank:nF {masters-concentration}{~Area~of~concentration:~\ufc_meta_use:n {masters-concentration}.}}
-\prop_gput:Nnn \g_ufc_document_text_prop {es/nature-masters} {Disertación~presentada~al~\ufc_meta_use:n {masters-graduate-program}~de~\ufc_institution_display:\space como~requisito~parcial~para~obtener~el~grado~de~Máster~en~\ufc_meta_use:n {masters-degree-field}.\ufc_meta_if_blank:nF {masters-concentration}{~Área~de~concentración:~\ufc_meta_use:n {masters-concentration}.}}
-\prop_gput:Nnn \g_ufc_document_text_prop {fr/nature-masters} {Mémoire~présenté~au~\ufc_meta_use:n {masters-graduate-program}~de~\ufc_institution_display:\space en~vue~de~l'obtention~du~grade~de~master~en~\ufc_meta_use:n {masters-degree-field}.\ufc_meta_if_blank:nF {masters-concentration}{~Domaine~de~spécialisation:~\ufc_meta_use:n {masters-concentration}.}}
+\prop_gput:Nnn \g_ufc_document_text_prop {en/nature-masters} {Master's~dissertation~submitted~to~the~\ufc_meta_use:n {masters-graduate-program}~at~the~\ufc_institution_display:\space in~partial~fulfillment~of~the~requirements~for~the~degree~of~Master~in~\ufc_meta_use:n {masters-degree-field}.\ufc_meta_if_blank:nF {masters-concentration}{~Area~of~concentration:~\ufc_meta_use:n {masters-concentration}.}}
+\prop_gput:Nnn \g_ufc_document_text_prop {es/nature-masters} {Disertación~presentada~al~\ufc_meta_use:n {masters-graduate-program}~de~la~\ufc_institution_display:\space como~requisito~parcial~para~obtener~el~grado~de~Máster~en~\ufc_meta_use:n {masters-degree-field}.\ufc_meta_if_blank:nF {masters-concentration}{~Área~de~concentración:~\ufc_meta_use:n {masters-concentration}.}}
+\prop_gput:Nnn \g_ufc_document_text_prop {fr/nature-masters} {Mémoire~présenté~au~\ufc_meta_use:n {masters-graduate-program}~de~l'\ufc_institution_display:\space en~vue~de~l'obtention~du~grade~de~master~en~\ufc_meta_use:n {masters-degree-field}.\ufc_meta_if_blank:nF {masters-concentration}{~Domaine~de~spécialisation:~\ufc_meta_use:n {masters-concentration}.}}
 \prop_gput:Nnn \g_ufc_document_text_prop {pt/nature-doctoral} {Tese~apresentada~ao~\ufc_meta_use:n {doctoral-graduate-program}~da~\ufc_institution_display:,~como~requisito~parcial~à~obtenção~do~título~de~doutor~em~\ufc_meta_use:n {doctoral-degree-field}.\ufc_meta_if_blank:nF {doctoral-concentration}{~Área~de~concentração:~\ufc_meta_use:n {doctoral-concentration}.}}
-\prop_gput:Nnn \g_ufc_document_text_prop {en/nature-doctoral} {Doctoral~thesis~submitted~to~the~\ufc_meta_use:n {doctoral-graduate-program}~at~\ufc_institution_display:\space in~partial~fulfillment~of~the~requirements~for~the~degree~of~Doctor~in~\ufc_meta_use:n {doctoral-degree-field}.\ufc_meta_if_blank:nF {doctoral-concentration}{~Area~of~concentration:~\ufc_meta_use:n {doctoral-concentration}.}}
-\prop_gput:Nnn \g_ufc_document_text_prop {es/nature-doctoral} {Tesis~presentada~al~\ufc_meta_use:n {doctoral-graduate-program}~de~\ufc_institution_display:\space como~requisito~parcial~para~obtener~el~grado~de~doctor~en~\ufc_meta_use:n {doctoral-degree-field}.\ufc_meta_if_blank:nF {doctoral-concentration}{~Área~de~concentración:~\ufc_meta_use:n {doctoral-concentration}.}}
-\prop_gput:Nnn \g_ufc_document_text_prop {fr/nature-doctoral} {Thèse~présentée~au~\ufc_meta_use:n {doctoral-graduate-program}~de~\ufc_institution_display:\space en~vue~de~l'obtention~du~grade~de~docteur~en~\ufc_meta_use:n {doctoral-degree-field}.\ufc_meta_if_blank:nF {doctoral-concentration}{~Domaine~de~spécialisation:~\ufc_meta_use:n {doctoral-concentration}.}}
+\prop_gput:Nnn \g_ufc_document_text_prop {en/nature-doctoral} {Doctoral~thesis~submitted~to~the~\ufc_meta_use:n {doctoral-graduate-program}~at~the~\ufc_institution_display:\space in~partial~fulfillment~of~the~requirements~for~the~degree~of~Doctor~in~\ufc_meta_use:n {doctoral-degree-field}.\ufc_meta_if_blank:nF {doctoral-concentration}{~Area~of~concentration:~\ufc_meta_use:n {doctoral-concentration}.}}
+\prop_gput:Nnn \g_ufc_document_text_prop {es/nature-doctoral} {Tesis~presentada~al~\ufc_meta_use:n {doctoral-graduate-program}~de~la~\ufc_institution_display:\space como~requisito~parcial~para~obtener~el~grado~de~doctor~en~\ufc_meta_use:n {doctoral-degree-field}.\ufc_meta_if_blank:nF {doctoral-concentration}{~Área~de~concentración:~\ufc_meta_use:n {doctoral-concentration}.}}
+\prop_gput:Nnn \g_ufc_document_text_prop {fr/nature-doctoral} {Thèse~présentée~au~\ufc_meta_use:n {doctoral-graduate-program}~de~l'\ufc_institution_display:\space en~vue~de~l'obtention~du~grade~de~docteur~en~\ufc_meta_use:n {doctoral-degree-field}.\ufc_meta_if_blank:nF {doctoral-concentration}{~Domaine~de~spécialisation:~\ufc_meta_use:n {doctoral-concentration}.}}
 \prop_gput:Nnn \g_ufc_document_text_prop {pt/nature-project} {\ufc_project_type_text:\space apresentado~à~\ufc_submission_entity_display:.}
 \prop_gput:Nnn \g_ufc_document_text_prop {en/nature-project} {\ufc_project_type_text:\space submitted~to~\ufc_submission_entity_display:.}
-\prop_gput:Nnn \g_ufc_document_text_prop {es/nature-project} {\ufc_project_type_text:\space presentado~a~\ufc_submission_entity_display:.}
-\prop_gput:Nnn \g_ufc_document_text_prop {fr/nature-project} {\ufc_project_type_text:\space soumis~à~\ufc_submission_entity_display:.}
+\prop_gput:Nnn \g_ufc_document_text_prop {es/nature-project} {\ufc_project_type_text:\space presentado~a~la~\ufc_submission_entity_display:.}
+\prop_gput:Nnn \g_ufc_document_text_prop {fr/nature-project} {\ufc_project_type_text:\space soumis~à~l'\ufc_submission_entity_display:.}
 \prop_gput:Nnn \g_ufc_document_text_prop {pt/caption-text-table} {Quadro}
 \prop_gput:Nnn \g_ufc_document_text_prop {en/caption-text-table} {Text~Table}
 \prop_gput:Nnn \g_ufc_document_text_prop {es/caption-text-table} {Cuadro}
@@ -901,6 +904,32 @@
 \setlength{\parindent}{2cm}
 \AtBeginDocument{\onehalfsp}
 
+% Public long quotations: UFC's four-centimeter left indent, reduced 10 pt
+% text, single line spacing, and no additional first-line indent.
+% The extra named environment is an English API alias; the traditional
+% 'citacao' spelling is retained for compatibility with ABNT source examples.
+\NewDocumentEnvironment{ufcLongQuotation}{}
+  {
+    \par
+    \addvspace{\baselineskip}
+    \begingroup
+    \setlength{\leftskip}{4cm}
+    \setlength{\rightskip}{0pt}
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{0pt}
+    \fontsize{10}{12}\selectfont
+    \singlesp
+    \noindent
+  }
+  {
+    \par
+    \endgroup
+    \addvspace{\baselineskip}
+  }
+\NewDocumentEnvironment{citacao}{}
+  { \begin{ufcLongQuotation} }
+  { \end{ufcLongQuotation} }
+
 % Tagging-safe ABNT alíneas and subalíneas using LaTeX block-list keys.
 \NewDocumentEnvironment{ufclettereditems}{}
   {\begin{enumerate}[
@@ -1561,51 +1590,61 @@
     \ufc_count_committee_key:n {examiner-5}
     \ufc_count_committee_key:n {examiner-6}
 
-    % Allow the three-member committee more breathing room; adapt to larger
-    % committees to avoid pushing the final signature off the approval page.
-    \dim_set:Nn \l_ufc_signature_gap_dim { .85\baselineskip }
+    % Editorial three/four-member specimens have handwriting space ABOVE
+    % each rule, with compact line/name/institution groups. Other public
+    % class users may have larger committees: retain adaptive compression.
+    \dim_set:Nn \l_ufc_signature_gap_dim { 1.65\baselineskip }
     \int_compare:nNnT { \l_ufc_committee_count_int } > {4}
       { \dim_set:Nn \l_ufc_signature_gap_dim { .25\baselineskip } }
     \int_compare:nNnT { \l_ufc_committee_count_int } > {5}
       { \dim_zero:N \l_ufc_signature_gap_dim }
+    \int_compare:nNnT { \l_ufc_committee_count_int } > {6}
+      { \dim_set:Nn \l_ufc_signature_gap_dim { -.4\baselineskip } }
   }
 
-\cs_new_protected:Npn \ufc_signature_from_keys:nn #1#2
+\cs_new_protected:Npn \ufc_signature_from_keys:nnn #1#2#3
   {
     \ufc_meta_if_blank:nF {#1}
       {
         \par\vspace{\l_ufc_signature_gap_dim}
         \begingroup
-          % UFC approval-page guidance calls for 1.5 line spacing for
-          % member names and their institutions, unlike the nature paragraph.
-          \centering\onehalfsp
-          \rule{8cm}{0.4pt}\par
-          \vspace{.15\baselineskip}
-          \ufc_meta_use:n {#1}\par
-          \ufc_meta_if_blank:nF {#2} { \ufc_meta_use:n {#2}\par }
+          % No inter-paragraph whitespace inside each signature group.
+          % Leave sufficient free space between groups for handwritten signing.
+          \centering\singlesp\setlength{\parskip}{0pt}
+          % Approximately half the A4 sheet width in the supplied UFC
+          % signature specimen, instead of the former short 8 cm rule.
+          \rule{10.5cm}{0.5pt}\par\nobreak
+          \ufc_meta_use:n {#1}
+          \tl_if_blank:nF {#3} {~(#3)}
+          \par\nobreak
+          \ufc_meta_if_blank:nF {#2}
+            { \ufc_meta_use:n {#2}\par }
         \endgroup
       }
   }
 
 \cs_new_protected:Npn \ufc_advisor_signature:
   {
-    \ufc_signature_from_keys:nn
+    \ufc_signature_from_keys:nnn
       {advisor}
       {advisor-institution}
+      {\ufc_orientation_label:}
   }
 
 \cs_new_protected:Npn \ufc_coadvisor_signature:
   {
-    \ufc_signature_from_keys:nn
+    \ufc_signature_from_keys:nnn
       {coadvisor}
       {coadvisor-institution}
+      {\ufc_coorientation_label:}
   }
 
 \cs_new_protected:Npn \ufc_examiner_signature:n #1
   {
-    \ufc_signature_from_keys:nn
+    \ufc_signature_from_keys:nnn
       {examiner-#1}
       {examiner-#1-institution}
+      {}
   }
 
 \cs_new_protected:Npn \ufc_approval_page:
@@ -1632,6 +1671,8 @@
           \vspace{\baselineskip}
           \centering\bfseries \ufc_doc_text:n {examining-committee}\normalfont\par
           \ufc_setup_signature_spacing:
+          % The first block also provides a pen-signing area.
+          \vspace{.7\baselineskip}
           \ufc_advisor_signature:
           \ufc_coadvisor_signature:
           \ufc_examiner_signature:n {2}
@@ -1782,11 +1823,8 @@
   {
     \bool_if:NT \g_ufc_document_language_explicit_bool
       {
-        % Babel re-applies its language-specific caption names after summary
-        % language switches. Its Spanish/French defaults ("Cuadro"/"Table")
-        % conflict with UFC's distinct table names ("Tabla"/"Tableau").
-        % Register the table label on each switch; retain \quadroname as
-        % the independent label for textual frames in the illustration list.
+        % Babel restores language-specific caption names after summary switches.
+        % Preserve Tabla/Tableau for numeric tables and keep cuadro separate.
         \cs_if_exist:NT \captionsspanish
           { \addto\captionsspanish{\def\tablename{Tabla}} }
         \cs_if_exist:NT \captionsfrench
