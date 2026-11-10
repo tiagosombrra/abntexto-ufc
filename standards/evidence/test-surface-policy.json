@@ -115,6 +115,12 @@
       "owner_doc": "docs/R5-HUMAN-READABLE-28.md",
       "purpose": "Compile each of the 28 full readable documents and reject visible engineering test markers or missing institutional crest in actual rendered PDFs.",
       "reason": "Heavy four-language Biber/glossary/index PDF compilation is owned by the R5 dedicated workflow, which retains original binaries and PDF-side negative checks."
+    },
+    {
+      "path": "tools/review/verify_final_pdfa_28.py",
+      "owner_doc": "docs/R5-HUMAN-READABLE-28.md",
+      "purpose": "Fail-closed SHA-bound independent veraPDF/A-2b inspection of exactly 28 final readable PDFs, their 984 physical pages, TeX/PDF hashes and original compiler receipts.",
+      "reason": "The dedicated R5 human-readable four-locale PDF workflow owns this external validation after real PDF matrix completion; it retains the original 28 binaries, raw veraPDF reports, image digest and no false human-release acceptance."
     }
   ]
 }
