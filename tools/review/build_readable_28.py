@@ -43,13 +43,30 @@ def page_text(pdf: Path, *, first_only: bool = False) -> str:
                                    cwd=ROOT, errors="replace")
 
 
+
+def isolated_author_year_line_faults(page: ET.Element) -> list[str]:
+    """Reject single-word author-year fragments on actual PDF line boxes."""
+    word_tag = "{http://www.w3.org/1999/xhtml}word"
+    line_tag = "{http://www.w3.org/1999/xhtml}line"
+    lines = list(page.iter(line_tag))
+    # A nonempty word-only page proves that the extraction omitted line boxes.
+    if not lines and any(page.iter(word_tag)):
+        return ["bbox_layout_line_boxes_missing"]
+    faults: list[str] = []
+    for line in lines:
+        words = [(w.text or "").strip() for w in line.iter(word_tag)
+                 if (w.text or "").strip()]
+        if len(words) == 1 and re.fullmatch(r"\(\d{4}[a-z]?\)\.?", words[0]):
+            faults.append("isolated_author_year_at_line_start")
+    return faults
+
+
 def find_layout_defects(pdf: Path, loc: str) -> tuple[list[str], float | None]:
     """Measure real glyph positions, not textual adjacency in extracted PDF text."""
-    xml = subprocess.check_output(["pdftotext", "-bbox", str(pdf), "-"],
+    xml = subprocess.check_output(["pdftotext", "-bbox-layout", str(pdf), "-"],
                                   cwd=ROOT, text=True, errors="replace")
     doc = ET.fromstring(xml)
     word_name = "{http://www.w3.org/1999/xhtml}word"
-    line_name = "{http://www.w3.org/1999/xhtml}line"
     page_name = "{http://www.w3.org/1999/xhtml}page"
     anchors = {
         "pt": ("estruturada:", "Discretização"),
@@ -93,13 +110,8 @@ def find_layout_defects(pdf: Path, loc: str) -> tuple[list[str], float | None]:
                         for w in citation_words
                     )
                     citation_separations.append(round(vertical_gap, 3))
-        # Detect isolated author-year fragments, including the reported
-        # (2002). orphan, by inspecting physical PDF lines independently.
-        for line in page.iter(line_name):
-            words_in_line = [w.text or "" for w in line.iter(word_name)]
-            if (len(words_in_line) == 1
-                    and re.fullmatch(r"\(\d{4}[a-z]?\)\.?", words_in_line[0])):
-                faults.append("isolated_author_year_at_line_start")
+        # Inspect real line boxes; a word-only bbox extract is a hard failure.
+        faults.extend(isolated_author_year_line_faults(page))
     if not pairs:
         faults.append("editorial_definition_pair_missing")
         return faults, None
@@ -123,6 +135,27 @@ def selftest_geometry_guard() -> None:
     r8_bad_space = 51.36
     assert 1.0 <= normal_space <= 9.0
     assert not (1.0 <= r8_bad_space <= 9.0)
+
+    # Exercise the exact XHTML line traversal used for real PDF pages.
+    namespace = 'xmlns="http://www.w3.org/1999/xhtml"'
+    good = ET.fromstring(
+        f'<page {namespace}><line><word>Smith</word>'
+        '<word>(2002).</word></line></page>'
+    )
+    bad = ET.fromstring(
+        f'<page {namespace}><line><word>(2002).</word></line></page>'
+    )
+    word_only = ET.fromstring(
+        f'<page {namespace}><word>(2002).</word></page>'
+    )
+    if isolated_author_year_line_faults(good):
+        raise AssertionError("Valid multiword citation was rejected")
+    if isolated_author_year_line_faults(bad) != [
+            "isolated_author_year_at_line_start"]:
+        raise AssertionError("Isolated author-year line escaped detection")
+    if isolated_author_year_line_faults(word_only) != [
+            "bbox_layout_line_boxes_missing"]:
+        raise AssertionError("Word-only bbox XML falsely passed as layout XML")
 
 def images_on_cover(pdf: Path) -> int:
     output = subprocess.check_output(["pdfimages", "-list", str(pdf)],

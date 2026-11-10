@@ -154,13 +154,16 @@ for forbidden in (
     'Nome do Centro ou Unidade',
     'Departamento ou Unidade Acadêmica',
     'Programa de Pós-Graduação ou Unidade Acadêmica',
-    '(Orientador)',
-    '(Orientadora)',
 ):
     if forbidden in committee:
         raise SystemExit(
             f'Corpus failed: retired canonical committee content remains: {forbidden}'
         )
+
+if committee.count('(Orientador)') != 1 or '(Orientadora)' in committee:
+    raise SystemExit(
+        'Corpus failed: advisor role label must occur once, beside the canonical advisor.'
+    )
 
 list_blocks = (
     (
@@ -307,7 +310,7 @@ def validate_uniform_dotted_leaders():
 
 
 def validate_signature_geometry():
-    """Check the actual UFC three-person approval lines at 1.5 spacing."""
+    """Check the approved R8.1 single-spaced committee text and handwritten gaps."""
     lines = []
     for line in (node for node in bbox_pages[2].iter()
                  if local(node.tag) == 'line'):
@@ -322,12 +325,14 @@ def validate_signature_geometry():
         if len(found) != 1:
             raise SystemExit(f'Corpus failed: approval member not unique: {name}')
         index, top = found[0]
+        if name == 'Nome do Orientador' and '(Orientador)' not in lines[index][0]:
+            raise SystemExit('Corpus failed: advisor role must follow the name on the same line')
         institutions = [(i, y) for i, (txt, y) in enumerate(lines)
                         if i > index and 'Universidade Federal do Ceará (UFC)' in txt]
         if not institutions:
             raise SystemExit(f'Corpus failed: missing institution after {name}')
         institution_top = institutions[0][1]
-        if not 17 <= institution_top - top <= 27:
+        if not 11 <= institution_top - top <= 17:
             raise SystemExit(
                 f'Corpus failed: committee name/institution spacing '
                 f'for {name}: {institution_top - top:.2f}pt'
@@ -419,7 +424,7 @@ for marker in ('REFERÊNCIAS', 'GLOSSÁRIO'):
         )
 
 print(f'VISUAL-PDF-GEOMETRY-EVIDENCE status=PASS leader_rows={uniform_dotted_rows} '
-      f'committee_members={committee_members} name_institution_line_spacing=1.5 '
+      f'committee_members={committee_members} name_institution_line_spacing=single '
       f'folio_right_margin_pt={folio_right_pt:.2f} folio_top_glyph_pt={folio_top_pt:.2f}')
 
 print(

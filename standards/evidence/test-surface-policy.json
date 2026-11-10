@@ -99,6 +99,12 @@
       "reason": "The source-bound independent PDF/A diagnostic is a costly one-off artifact validation stage outside the permanent source-only Linux static and integration runners."
     },
     {
+      "path": ".github/workflows/r5-pdfa-r4-original-32.yml",
+      "owner_doc": "docs/R5-PDFA-R4-ORIGINAL-32.md",
+      "purpose": "Externally certify 32 exact source-bound synthetic R4 PDFs against PDF/A-2b with veraPDF and preserve every nonconforming rule and binary source hash.",
+      "reason": "Dedicated expensive independent PDF/A validation is intentionally separate from ordinary static or Linux CI and never replaces human review or normative approval."
+    },
+    {
       "path": "tools/review/generate_readable_28.py",
       "owner_doc": "docs/R5-HUMAN-READABLE-28.md",
       "purpose": "Create 28 authored, language-specific complete human-review TeX sources with real mesh data and physical UFC cover insignia.",
