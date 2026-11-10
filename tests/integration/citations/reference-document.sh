@@ -119,13 +119,33 @@ for forbidden_detail in (
     'Nome do Centro ou Unidade',
     'Departamento ou Unidade Acadêmica',
     'Programa de Pós-Graduação ou Unidade Acadêmica',
-    '(Orientador)',
-    '(Orientadora)',
 ):
     if forbidden_detail in approval:
         raise SystemExit(
             f'Reference document failed: committee must render only name and institution; found: {forbidden_detail}'
         )
+
+# The approved R8.1 committee displays the advisor role beside the name.
+# Other role suffixes must not be introduced into this three-member specimen.
+if approval.count('(Orientador)') != 1 or any(
+    role in approval for role in ('(Orientadora)', '(Coorientador)', '(Coorientadora)')
+):
+    raise SystemExit(
+        'Reference document failed: the advisor role must occur exactly once on the approval page.'
+    )
+advisor_lines = [
+    line.strip()
+    for page in raw.split('\\f')
+    if 'BANCA EXAMINADORA' in page
+    for line in page.splitlines()
+    if 'Prof. Dr. Nome do Orientador' in line
+]
+if len(advisor_lines) != 1 or not re.search(
+    r'Nome do Orientador\\s+\\(Orientador\\)', advisor_lines[0]
+):
+    raise SystemExit(
+        'Reference document failed: advisor role must follow the advisor name on the same line.'
+    )
 
 if 'dia de mês de 2026' in flat:
     raise SystemExit('Reference document failed: placeholder approval date remains in canonical output.')
