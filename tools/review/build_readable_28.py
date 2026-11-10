@@ -50,7 +50,7 @@ def isolated_author_year_line_faults(page: ET.Element) -> list[str]:
     line_tag = "{http://www.w3.org/1999/xhtml}line"
     lines = list(page.iter(line_tag))
     # A nonempty word-only page proves that the extraction omitted line boxes.
-    if not lines and any(page.iter(word_tag)):
+    if not lines and next(page.iter(word_tag), None) is not None:
         return ["bbox_layout_line_boxes_missing"]
     faults: list[str] = []
     for line in lines:
