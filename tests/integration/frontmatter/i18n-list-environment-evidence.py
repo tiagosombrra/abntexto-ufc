@@ -39,8 +39,8 @@ CONTENTS = {
     ),
     "ufcdefinitionlist": (
         r"\begin{ufcdefinitionlist}",
-        r"\ufcListEntry{LISTDEFINITIONKEYA}{LISTDEFINITIONVALUEA}",
-        r"\ufcListEntry{LISTDEFINITIONKEYB}{LISTDEFINITIONVALUEB}",
+        r"\ufcListEntry{LISTKEYA}{LISTDEFINITIONVALUEA}",
+        r"\ufcListEntry{LISTKEYB}{LISTDEFINITIONVALUEB}",
         r"\end{ufcdefinitionlist}",
     ),
 }
@@ -48,8 +48,8 @@ MARKERS = {
     "ufclettereditems": ("LISTLETTEREDA", "LISTLETTEREDB"),
     "ufcdashedsubitems": ("LISTDASHEDA", "LISTDASHEDB"),
     "ufcdefinitionlist": (
-        "LISTDEFINITIONKEYA", "LISTDEFINITIONVALUEA",
-        "LISTDEFINITIONKEYB", "LISTDEFINITIONVALUEB",
+        "LISTKEYA", "LISTDEFINITIONVALUEA",
+        "LISTKEYB", "LISTDEFINITIONVALUEB",
     ),
 }
 
@@ -149,6 +149,16 @@ def validate_output(locale: str, environment: str, log: str,
     else:
         if len(markers) != 4:
             raise ValueError("invalid definition list contract")
+        for label, definition in ((markers[0], markers[1]),
+                                  (markers[2], markers[3])):
+            rows = [line for line in pdf_text.splitlines()
+                    if label in line or definition in line]
+            if len(rows) != 1 or label not in rows[0] or definition not in rows[0]:
+                raise ValueError("definition label and body must share one baseline")
+            separation = rows[0].index(definition) - (
+                rows[0].index(label) + len(label))
+            if separation < 2:
+                raise ValueError("definition list label and body have no safe gap")
 
 
 def negative_controls() -> int:
@@ -189,6 +199,21 @@ def negative_controls() -> int:
             count += 1
         else:
             raise ValueError("PDF/log mutation was accepted")
+    definition_good = "LISTKEYA   LISTDEFINITIONVALUEA\nLISTKEYB   LISTDEFINITIONVALUEB"
+    validate_output(locale, "ufcdefinitionlist", good_log, definition_good, "en-US")
+    definition_bad = (
+        definition_good.replace("LISTKEYA   LISTDEFINITIONVALUEA",
+                                "LISTKEYA\nLISTDEFINITIONVALUEA"),
+        definition_good.replace("LISTKEYA   LISTDEFINITIONVALUEA",
+                                "LISTKEYALISTDEFINITIONVALUEA"),
+    )
+    for damaged in definition_bad:
+        try:
+            validate_output(locale, "ufcdefinitionlist", good_log, damaged, "en-US")
+        except ValueError:
+            count += 1
+        else:
+            raise ValueError("definition list alignment mutation was accepted")
     sample = {"qpdf": [{"jsonversion": 2}, {
         "trailer": {"value": {"/Root": "1 0 R"}},
         "obj:1 0 R": {"value": {"/Type": "/Catalog", "/Lang": "u:en-US"}},
@@ -202,7 +227,7 @@ def negative_controls() -> int:
         count += 1
     else:
         raise ValueError("missing qpdf catalog language was accepted")
-    if count != 13:
+    if count != 15:
         raise ValueError(f"negative control count drift: {count}")
     for loc in LOCALES:
         for name in ENVIRONMENTS:
