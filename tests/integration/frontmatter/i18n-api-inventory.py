@@ -7,10 +7,19 @@ from __future__ import annotations
 import copy
 import json
 from pathlib import Path
+import re
 
 ROOT = Path(__file__).resolve().parents[3]
 API = ROOT / "standards/api/public-api.json"
 I18N = ROOT / "standards/api/i18n-coverage-inventory.json"
+DOCS = ROOT / "docs/I18N-COMPLETION-MATRIX.md"
+ORIGIN_COUNTS = {
+    "option_identifier": 17,
+    "user_supplied_value": 48,
+    "default_or_user_value": 4,
+    "localized_default_or_user_presentation": 2,
+    "external_asset_path": 1,
+}
 
 
 def validate(api: dict, ledger: dict) -> tuple[int, int, int, int]:
@@ -39,6 +48,12 @@ def validate(api: dict, ledger: dict) -> tuple[int, int, int, int]:
             if group == "setup_keys" and not entry.get("requirement"):
                 raise ValueError(f"{group}/{identifier} lacks value/translation boundary")
         result.append(len(expected))
+    origins = {}
+    for entry in ledger["setup_keys"].values():
+        origin = entry["origin"]
+        origins[origin] = origins.get(origin, 0) + 1
+    if origins != ORIGIN_COUNTS or sum(origins.values()) != result[0]:
+        raise ValueError(f"unreviewed authored/option/presentation boundary: {origins}")
     return tuple(result)
 
 
@@ -46,6 +61,11 @@ def main() -> None:
     api = json.loads(API.read_text(encoding="utf-8"))
     inventory = json.loads(I18N.read_text(encoding="utf-8"))
     counts = validate(api, inventory)
+    documentation = DOCS.read_text(encoding="utf-8")
+    if f"**{counts[0]} chaves de configuração**" not in documentation:
+        raise ValueError("documented public setup count differs from canonical API")
+    if re.search(r"\\b70 chaves\\b", documentation):
+        raise ValueError("stale historical count remains in current acceptance matrix")
     # A public API addition that is not mapped must fail before a lengthy
     # matrix test. A phantom name in the ledger must also fail.
     negative = copy.deepcopy(inventory)
@@ -65,6 +85,14 @@ def main() -> None:
         pass
     else:
         raise ValueError("phantom setup tag was accepted")
+    negative = copy.deepcopy(inventory)
+    negative["setup_keys"]["institution-display"]["origin"] = "default_or_user_value"
+    try:
+        validate(api, negative)
+    except ValueError:
+        pass
+    else:
+        raise ValueError("localized institutional presentation recategorization accepted")
     print("I18N-API-INVENTORY status=PASS setup_keys=%d commands=%d "
           "environments=%d upstream_identifiers=%d locales=4 negatives=PASS"
           % counts)
