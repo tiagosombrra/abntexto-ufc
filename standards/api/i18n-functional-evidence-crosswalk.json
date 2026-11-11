@@ -104,6 +104,11 @@
       "path": "tests/integration/frontmatter/i18n-list-environment-evidence.py",
       "suite": "core-lists-12",
       "scope": "four-locale 3 isolated public list environment PDFs; rendered item labels, values, PDF catalog and source/raw hash receipts; human review pending"
+    },
+    {
+      "path": "tests/integration/frontmatter/i18n-optional-environment-evidence.py",
+      "suite": "optional-env-12",
+      "scope": "4 locales x 3 isolated optional public environments in real PDFs, with visible caption/source, rendered body, /Root/Lang, Babel and exact source/PDF/log hashes; no linguistic or normative certification"
     }
   ],
   "entries": {
@@ -429,18 +434,18 @@
       },
       "ufcobject": {
         "proof_state": "SOURCE_REFERENCE_ONLY",
-        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
-        "candidate_suite": "integrated-28"
+        "candidate_test_file": "tests/integration/frontmatter/i18n-optional-environment-evidence.py",
+        "candidate_suite": "optional-env-12"
       },
       "ufclisting": {
         "proof_state": "SOURCE_REFERENCE_ONLY",
-        "candidate_test_file": "tests/integration/objects/optional-locale-evidence.py",
-        "candidate_suite": "optional-12"
+        "candidate_test_file": "tests/integration/frontmatter/i18n-optional-environment-evidence.py",
+        "candidate_suite": "optional-env-12"
       },
       "ufcalgorithm": {
         "proof_state": "SOURCE_REFERENCE_ONLY",
-        "candidate_test_file": "tests/integration/objects/optional-locale-evidence.py",
-        "candidate_suite": "optional-12"
+        "candidate_test_file": "tests/integration/frontmatter/i18n-optional-environment-evidence.py",
+        "candidate_suite": "optional-env-12"
       }
     },
     "retained_upstream_identifiers": {
