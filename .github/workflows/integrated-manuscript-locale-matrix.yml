@@ -96,7 +96,8 @@ jobs:
       - name: Verify 48 institutional fallback sources and 18 negative controls
         run: python3 tests/integration/frontmatter/institution-display-fallback-evidence.py --preflight
   manuscripts:
-    name: Integrated documents / ${{ matrix.locale }} (7 manuscripts + 12 institutional PDF cases)
+    # Preserve the established CI status context; this job also verifies 12 fallback PDFs.
+    name: Integrated documents / ${{ matrix.locale }} (7 real PDFs)
     runs-on: ubuntu-24.04
     needs: preflight
     timeout-minutes: 42
