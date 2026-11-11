@@ -282,7 +282,8 @@ def main() -> None:
             count = page_count(run(["pdfinfo", str(pdf)]))
             pages = [run(["pdftotext", "-layout", "-f", str(index), "-l", str(index),
                           str(pdf), "-"]) for index in (1, 2)]
-            log = (folder / f"{name}.log").read_text(encoding="utf-8", errors="replace")
+            log_bytes = (folder / f"{name}.log").read_bytes()
+            log = log_bytes.decode("utf-8", errors="replace")
             validate_output(args.locale, profile, case, log, pages, catalog)
             receipts.append({
                 "profile": profile, "locale": args.locale, "case": case, "job": name,
@@ -294,7 +295,7 @@ def main() -> None:
                 "pdf_catalog_lang": catalog,
                 "tex_sha256": hashlib.sha256(content.encode()).hexdigest(),
                 "pdf_sha256": hashlib.sha256(pdf.read_bytes()).hexdigest(),
-                "log_sha256": hashlib.sha256(log.encode()).hexdigest(),
+                "log_sha256": hashlib.sha256(log_bytes).hexdigest(),
                 "predicate": "page-1-cover-and-page-2-title-log-and-PDF-catalog",
                 "verified": True, "human_institutional_approval": "PENDING",
             })
@@ -307,6 +308,7 @@ def main() -> None:
         "source_sha": source_sha, "status": "BOUNDED_REAL_PDF_FALLBACK_PASS",
         "locale": args.locale, "profiles": len(PROFILES), "cases": len(CASES),
         "real_pdfs": len(receipts), "negative_controls": negatives,
+        "log_sha256_scope": "raw_original_file_bytes",
         "proof_boundary": "actual cover/title PDF and legal metadata; institutional wording requires human review",
         "human_linguistic_institutional_review": "PENDING",
         "receipts": receipts,
