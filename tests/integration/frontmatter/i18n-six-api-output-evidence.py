@@ -15,6 +15,14 @@ import re
 import subprocess
 import unicodedata
 
+from integrated_metadata_probe import (
+    METADATA_KEYS,
+    check_log as check_metadata_log,
+    check_source as check_metadata_source,
+    expected_receipt as expected_metadata_receipt,
+    negative_controls as metadata_negative_controls,
+)
+
 ROOT = Path(__file__).resolve().parents[3]
 ARTIFACTS = ROOT / "artifacts/integrated-i18n"
 LOCALES = {
@@ -132,6 +140,36 @@ def validate_output(locale: str, profile: str, source: str, log: str,
     return observations
 
 
+
+def verify_metadata_case(locale: str, profile: str, source: str,
+                         log: str) -> list[dict]:
+    """Prove metadata round-trip in real TeX logs, not visibility in the PDF."""
+    if locale not in LOCALES or profile not in PROFILES:
+        raise ValueError("invalid metadata profile/locale pair")
+    if check_metadata_source(source) != len(METADATA_KEYS):
+        raise ValueError("incomplete metadata source probe")
+    if check_metadata_log(log) != len(METADATA_KEYS):
+        raise ValueError("incomplete or mutated metadata log receipts")
+    lines = log.splitlines()
+    receipts = []
+    for identifier in METADATA_KEYS:
+        marker = expected_metadata_receipt(identifier)
+        if lines.count(marker) != 1:
+            raise ValueError(f"non-unique metadata round-trip: {identifier}")
+        receipts.append({
+            "identifier": identifier,
+            "profile": profile,
+            "locale": locale,
+            "observed_receipt": marker,
+            "public_writer": r"\ufcsetup",
+            "public_reader": r"\ufcMeta",
+            "predicate": "exact-TeX-log-line-after-final-render",
+            "pdf_visibility_certified": False,
+            "verified": True,
+        })
+    return receipts
+
+
 def catalog_language(payload: dict) -> str:
     blocks = payload.get("qpdf")
     if not isinstance(blocks, list) or len(blocks) != 2:
@@ -234,8 +272,12 @@ def main() -> None:
     parser.add_argument("--self-test", action="store_true")
     args = parser.parse_args()
     negatives = negative_controls()
+    metadata_negatives = metadata_negative_controls()
+    if metadata_negatives != 9:
+        raise ValueError("metadata mutation controls changed")
     if args.self_test:
         print(f"I18N-SIX-API-PREFLIGHT status=PASS probes=6 negative_controls={negatives}"
+              f" metadata_identifiers={len(METADATA_KEYS)} metadata_negative_controls={metadata_negatives}"
               " actual_pdf_certification=PENDING")
         return
     if not args.locale:
@@ -260,6 +302,7 @@ def main() -> None:
     if set(source_by_profile) != set(PROFILES):
         raise ValueError("source fixture matrix omitted a profile")
     observations = []
+    metadata_records = []
     cases = []
     for row in rows:
         profile = row["profile"]
@@ -294,8 +337,15 @@ def main() -> None:
         bcp = catalog_language(pdf_info)
         if bcp != row["pdf_catalog_lang"] or row["babel"] != LOCALES[locale][1]:
             raise ValueError("existing PDF evidence manifest contradicts actual output")
-        receipts = validate_output(locale, profile, source.decode("utf-8"),
+        source_text = source.decode("utf-8")
+        receipts = validate_output(locale, profile, source_text,
                                    log, text_actual, bcp)
+        authored_receipts = verify_metadata_case(locale, profile, source_text, log)
+        for item in authored_receipts:
+            item["pdf_sha256"] = row["pdf_sha256"]
+            item["source_sha256"] = row["source_sha256"]
+            item["job"] = row["job"]
+        metadata_records.extend(authored_receipts)
         for receipt in receipts:
             receipt["pdf_sha256"] = row["pdf_sha256"]
             receipt["source_sha256"] = row["source_sha256"]
@@ -307,6 +357,10 @@ def main() -> None:
               " qpdf_catalog=PASS", flush=True)
     if len(set(cases)) != 7 or len(observations) != TOTAL:
         raise ValueError("incomplete per-locale six-API real-PDF audit")
+    if len(metadata_records) != len(PROFILES) * len(METADATA_KEYS):
+        raise ValueError("incomplete per-locale authored metadata round-trip evidence")
+    if {item["identifier"] for item in metadata_records} != set(METADATA_KEYS):
+        raise ValueError("metadata receipt inventory differs from canonical 52 keys")
     report = {
         "status": "BOUNDED_REAL_PDF_BEHAVIOR_PASS",
         "source_sha": source_sha, "locale": locale,
@@ -317,6 +371,16 @@ def main() -> None:
         "remaining_public_api_identifiers": "PENDING_INDIVIDUAL_RECONCILIATION",
         "human_linguistic_visual_review": "PENDING",
         "records": observations,
+        "authored_metadata": {
+            "status": "REAL_TEX_LOG_ROUNDTRIP_PASS",
+            "identifiers": list(METADATA_KEYS),
+            "identifiers_checked": len(METADATA_KEYS),
+            "profile_locale_cases": len(PROFILES),
+            "observations": len(metadata_records),
+            "negative_controls": metadata_negatives,
+            "proof_boundary": "values preserved by public setup/getter after pages rendered; no PDF visibility claim",
+            "records": metadata_records,
+        },
     }
     (folder / "six-api-behavior-receipts.json").write_text(
         json.dumps(report, ensure_ascii=False, indent=2) + "\n",
@@ -325,6 +389,11 @@ def main() -> None:
           f" identifiers=6 observations={len(observations)}"
           f" negative_controls={negatives} qpdf_catalog=PASS"
           " PDF_and_log=PASS human_review=PENDING", flush=True)
+    print(f"I18N-METADATA-ROUNDTRIP status=PASS locale={locale}"
+          f" keys={len(METADATA_KEYS)} real_tex_cases={len(PROFILES)}"
+          f" observations={len(metadata_records)}"
+          f" negative_controls={metadata_negatives}"
+          " pdf_visibility=PENDING human_review=PENDING", flush=True)
 
 
 if __name__ == "__main__":
