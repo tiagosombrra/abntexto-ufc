@@ -71,6 +71,7 @@ FORCE_COMPLETE_EXACT = {
     # Public API evidence must not bypass full Linux regression on PRs.
     "tests/integration/frontmatter/i18n-api-inventory.py",
     "tests/integration/frontmatter/i18n-six-api-output-evidence.py",
+    "tests/integration/frontmatter/institution-display-fallback-evidence.py",
     ".github/workflows/linux-integration.yml",
     "Makefile",
     "abntexto-ufc.cls",
@@ -180,6 +181,9 @@ def self_test() -> None:
         ("abntexto-ufc.cls",): ("complete",),
         ("tests/integration/frontmatter/i18n-api-inventory.py",): ("complete",),
         ("tests/integration/frontmatter/i18n-six-api-output-evidence.py",): ("complete",),
+        ("tests/integration/frontmatter/institution-display-fallback-evidence.py",): ("complete",),
+        ("tests/integration/frontmatter/institution-display-fallback-evidence.py",
+         ".github/workflows/integrated-manuscript-locale-matrix.yml"): ("complete",),
         ("tests/integration/frontmatter/i18n-six-api-output-evidence.py",
          ".github/workflows/linux-release-check.yml"): ("complete",),
         ("tests/run.py",): ("smoke",),
