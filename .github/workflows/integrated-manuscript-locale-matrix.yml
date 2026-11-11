@@ -93,7 +93,7 @@ jobs:
         run: python3 tests/integration/frontmatter/coat-of-arms-evidence.py --preflight
       - name: Verify mixed primary and display language cases and 13 negative controls
         run: python3 tests/integration/frontmatter/dual-language-evidence.py --preflight
-      - name: Verify 48 institutional fallback sources and 17 negative controls
+      - name: Verify 48 institutional fallback sources and 18 negative controls
         run: python3 tests/integration/frontmatter/institution-display-fallback-evidence.py --preflight
   manuscripts:
     name: Integrated documents / ${{ matrix.locale }} (7 manuscripts + 12 institutional PDF cases)
