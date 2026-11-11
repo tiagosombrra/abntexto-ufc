@@ -216,7 +216,28 @@ def negative_controls() -> int:
         count += 1
     else:
         raise ValueError("missing catalog language accepted")
-    if count != 16:
+    # Test both remaining public environments against independent output mutations.
+    for other_env in ("ufclisting", "ufcalgorithm"):
+        other_log = "\n".join(("OPTIONAL-ENV-BABEL=english",
+                               "OPTIONAL-ENV-LANGUAGE=en",
+                               f"OPTIONAL-ENV-SELECTED={other_env}"))
+        other_text = " ".join((
+            CAPTIONS[other_env], "Source:", SOURCES[other_env],
+            *MARKERS[other_env]))
+        validate_output(loc, other_env, other_log, other_text, "en-US")
+        wrong_output = (
+            other_text.replace(CAPTIONS[other_env], "REMOVED"),
+            other_text.replace(MARKERS[other_env][0], "REMOVED"),
+            other_text + " OBJECTVISIBLEALPHA",
+        )
+        for altered in wrong_output:
+            try:
+                validate_output(loc, other_env, other_log, altered, "en-US")
+            except ValueError:
+                count += 1
+            else:
+                raise ValueError("optional environment PDF mutation escaped")
+    if count != 22:
         raise ValueError(f"negative coverage drift: {count}")
     if len(LOCALES) * len(ENVIRONMENTS) != 12:
         raise ValueError("public environment cross-product drift")
