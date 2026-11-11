@@ -99,6 +99,11 @@
       "path": "tests/integration/layout/font-config.sh",
       "suite": "layout-font-integration",
       "scope": "real PDFs for pdfLaTeX/LuaLaTeX times/arial, strict reject or literal-font success; Linux 42-case integration gate"
+    },
+    {
+      "path": "tests/integration/frontmatter/i18n-list-environment-evidence.py",
+      "suite": "core-lists-12",
+      "scope": "four-locale 3 isolated public list environment PDFs; rendered item labels, values, PDF catalog and source/raw hash receipts; human review pending"
     }
   ],
   "entries": {
@@ -409,18 +414,18 @@
     "public_environments": {
       "ufclettereditems": {
         "proof_state": "SOURCE_REFERENCE_ONLY",
-        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
-        "candidate_suite": "integrated-28"
+        "candidate_test_file": "tests/integration/frontmatter/i18n-list-environment-evidence.py",
+        "candidate_suite": "core-lists-12"
       },
       "ufcdashedsubitems": {
         "proof_state": "SOURCE_REFERENCE_ONLY",
-        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
-        "candidate_suite": "integrated-28"
+        "candidate_test_file": "tests/integration/frontmatter/i18n-list-environment-evidence.py",
+        "candidate_suite": "core-lists-12"
       },
       "ufcdefinitionlist": {
         "proof_state": "SOURCE_REFERENCE_ONLY",
-        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
-        "candidate_suite": "integrated-28"
+        "candidate_test_file": "tests/integration/frontmatter/i18n-list-environment-evidence.py",
+        "candidate_suite": "core-lists-12"
       },
       "ufcobject": {
         "proof_state": "SOURCE_REFERENCE_ONLY",
