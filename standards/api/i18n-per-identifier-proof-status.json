@@ -1,0 +1,633 @@
+{
+  "schema_version": 1,
+  "description": "Bounded per-identifier P0.8 functional evidence status; not a global internationalization certification",
+  "api_source": "standards/api/public-api.json",
+  "source_crosswalk": "standards/api/i18n-functional-evidence-crosswalk.json",
+  "created_from_main_sha": "b2001b0f979f76d1e30f11afbf03f6a10becd325",
+  "same_runtime_blob": "a73ef656de71d38ad30d7029ac3d86f852339950",
+  "global_acceptance": "PENDING",
+  "publication_authorized": false,
+  "human_normative_linguistic_review": "PENDING",
+  "validation_policy": "PASS requires independently inspected real PDF artifact tied to the original code SHA and unchanged LaTeX class blob. PENDING includes identifiers with only source or test fixture links. NA is permitted only with explicit positive rationale. PASS here is bounded scenario evidence, not full surface acceptance.",
+  "evidence": {
+    "core-lists-12": {
+      "source_sha": "33895971db46cad90ded218d6e777394913fe18f",
+      "workflow_run_id": 43047799765,
+      "artifact_ids": {
+        "pt": 13866994671,
+        "en": 13869270700,
+        "es": 13867558030,
+        "fr": 13867452973
+      },
+      "runner": "tests/integration/frontmatter/i18n-list-environment-evidence.py",
+      "negative_controls": 15,
+      "scope": "ONE_ISOLATED_PDF_PER_ENVIRONMENT_AND_LOCALE",
+      "qualification": "Proof of generated labels, content and placement in bounded synthetic PDFs; human normative and linguistic acceptance pending."
+    },
+    "optional-env-12": {
+      "source_sha": "8aa467f1adb729483b0aaa49539fdf5a9a422c2b",
+      "workflow_run_id": 43064254638,
+      "artifact_ids": {
+        "pt": 13874314489,
+        "en": 13874738207,
+        "es": 13876275360,
+        "fr": 13874274553
+      },
+      "runner": "tests/integration/frontmatter/i18n-optional-environment-evidence.py",
+      "negative_controls": 22,
+      "scope": "ONE_ISOLATED_PDF_PER_ENVIRONMENT_AND_LOCALE",
+      "qualification": "Proof of isolated optional environment PDF body, captions, source labels and language; human normative and linguistic acceptance pending."
+    }
+  },
+  "summary": {
+    "PASS": 6,
+    "PENDING": 66,
+    "NA": 0
+  },
+  "entries": {
+    "setup_option_identifiers": {
+      "type": {
+        "result": "PENDING",
+        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
+        "evidence_id": null,
+        "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "document-language": {
+        "result": "PENDING",
+        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
+        "evidence_id": null,
+        "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "labels-language": {
+        "result": "PENDING",
+        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
+        "evidence_id": null,
+        "candidate_source": "tests/integration/frontmatter/primary-document-locale-matrix.sh",
+        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "print-mode": {
+        "result": "PENDING",
+        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
+        "evidence_id": null,
+        "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "cover": {
+        "result": "PENDING",
+        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
+        "evidence_id": null,
+        "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "catalog-card": {
+        "result": "PENDING",
+        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
+        "evidence_id": null,
+        "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "coat-of-arms": {
+        "result": "PENDING",
+        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
+        "evidence_id": null,
+        "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "advisor-feminine-label": {
+        "result": "PENDING",
+        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
+        "evidence_id": null,
+        "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "coadvisor-feminine-label": {
+        "result": "PENDING",
+        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
+        "evidence_id": null,
+        "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "font": {
+        "result": "PENDING",
+        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
+        "evidence_id": null,
+        "candidate_source": "tests/integration/frontmatter/frontmatter-summary-languages.sh",
+        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "strict-font": {
+        "result": "PENDING",
+        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
+        "evidence_id": null,
+        "candidate_source": "tests/integration/layout/font-config.sh",
+        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "tables": {
+        "result": "PENDING",
+        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
+        "evidence_id": null,
+        "candidate_source": "tests/integration/objects/optional-locale-evidence.py",
+        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "code": {
+        "result": "PENDING",
+        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
+        "evidence_id": null,
+        "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "algorithms": {
+        "result": "PENDING",
+        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
+        "evidence_id": null,
+        "candidate_source": "tests/integration/objects/optional-locale-evidence.py",
+        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "glossary": {
+        "result": "PENDING",
+        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
+        "evidence_id": null,
+        "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "index": {
+        "result": "PENDING",
+        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
+        "evidence_id": null,
+        "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "initial-page": {
+        "result": "PENDING",
+        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
+        "evidence_id": null,
+        "candidate_source": "tests/integration/profiles/multivolume.sh",
+        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "human_normative_linguistic_review": "PENDING"
+      }
+    },
+    "public_commands": {
+      "\\ufcsetup": {
+        "result": "PENDING",
+        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
+        "evidence_id": null,
+        "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "\\ufcDocumentType": {
+        "result": "PENDING",
+        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
+        "evidence_id": null,
+        "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "\\ufcPrintMode": {
+        "result": "PENDING",
+        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
+        "evidence_id": null,
+        "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "\\ufcMeta": {
+        "result": "PENDING",
+        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
+        "evidence_id": null,
+        "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "\\ufcIfProjectTF": {
+        "result": "PENDING",
+        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
+        "evidence_id": null,
+        "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "\\ufcIfAnonymizedProjectTF": {
+        "result": "PENDING",
+        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
+        "evidence_id": null,
+        "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "\\ufcMathFontPolicy": {
+        "result": "PENDING",
+        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
+        "evidence_id": null,
+        "candidate_source": "tests/documents/mathematics.tex",
+        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "\\ufcPrintCover": {
+        "result": "PENDING",
+        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
+        "evidence_id": null,
+        "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "\\ufcPrintTitlePage": {
+        "result": "PENDING",
+        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
+        "evidence_id": null,
+        "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "\\ufcPrintApprovalPage": {
+        "result": "PENDING",
+        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
+        "evidence_id": null,
+        "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "\\ufcPrintCatalogCard": {
+        "result": "PENDING",
+        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
+        "evidence_id": null,
+        "candidate_source": "tests/documents/catalog-card.tex",
+        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "\\ufcPrintDedication": {
+        "result": "PENDING",
+        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
+        "evidence_id": null,
+        "candidate_source": "tests/documents/frontmatter-academic-work.tex",
+        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "\\ufcPrintAcknowledgments": {
+        "result": "PENDING",
+        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
+        "evidence_id": null,
+        "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "\\ufcPrintEpigraph": {
+        "result": "PENDING",
+        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
+        "evidence_id": null,
+        "candidate_source": "tests/documents/frontmatter-academic-work.tex",
+        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "\\ufcPrintErrata": {
+        "result": "PENDING",
+        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
+        "evidence_id": null,
+        "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "\\ufcDocumentLanguage": {
+        "result": "PENDING",
+        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
+        "evidence_id": null,
+        "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "\\ufcSummaryKeywordsInLanguage": {
+        "result": "PENDING",
+        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
+        "evidence_id": null,
+        "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "\\ufcPrintSummaryInLanguage": {
+        "result": "PENDING",
+        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
+        "evidence_id": null,
+        "candidate_source": "tests/integration/frontmatter/summary-legacy-context.sh",
+        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "\\ufcPrintRequiredSummaries": {
+        "result": "PENDING",
+        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
+        "evidence_id": null,
+        "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "\\ufcPrintOptionalEnglishSummary": {
+        "result": "PENDING",
+        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
+        "evidence_id": null,
+        "candidate_source": "tests/integration/frontmatter/frontmatter-summary-languages.sh",
+        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "\\ufcPrintArticleTranslatedSummary": {
+        "result": "PENDING",
+        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
+        "evidence_id": null,
+        "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "\\ufcSummaryKeywords": {
+        "result": "PENDING",
+        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
+        "evidence_id": null,
+        "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "\\ufcPrintSummary": {
+        "result": "PENDING",
+        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
+        "evidence_id": null,
+        "candidate_source": "tests/integration/frontmatter/summary-legacy-context.sh",
+        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "\\ufcPrintAbstract": {
+        "result": "PENDING",
+        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
+        "evidence_id": null,
+        "candidate_source": "tests/integration/frontmatter/summary-legacy-context.sh",
+        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "\\ufcPrintListOfIllustrations": {
+        "result": "PENDING",
+        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
+        "evidence_id": null,
+        "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "\\ufcPrintListOfFigures": {
+        "result": "PENDING",
+        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
+        "evidence_id": null,
+        "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "\\ufcPrintListOfTables": {
+        "result": "PENDING",
+        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
+        "evidence_id": null,
+        "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "\\ufcPrintListOfTextTables": {
+        "result": "PENDING",
+        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
+        "evidence_id": null,
+        "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "\\ufcPrintListOfCharts": {
+        "result": "PENDING",
+        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
+        "evidence_id": null,
+        "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "\\ufcPrintListOfCodeListings": {
+        "result": "PENDING",
+        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
+        "evidence_id": null,
+        "candidate_source": "tests/integration/objects/optional-locale-evidence.py",
+        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "\\ufcPrintListOfAlgorithms": {
+        "result": "PENDING",
+        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
+        "evidence_id": null,
+        "candidate_source": "tests/integration/objects/optional-locale-evidence.py",
+        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "\\ufcPrintListOfAbbreviationsAndAcronyms": {
+        "result": "PENDING",
+        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
+        "evidence_id": null,
+        "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "\\ufcPrintListOfSymbols": {
+        "result": "PENDING",
+        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
+        "evidence_id": null,
+        "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "\\ufcListEntry": {
+        "result": "PENDING",
+        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
+        "evidence_id": null,
+        "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "\\ufcPrintTableOfContents": {
+        "result": "PENDING",
+        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
+        "evidence_id": null,
+        "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "\\ufcSource": {
+        "result": "PENDING",
+        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
+        "evidence_id": null,
+        "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "\\ufcNote": {
+        "result": "PENDING",
+        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
+        "evidence_id": null,
+        "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "\\ufcAddBibliographyResource": {
+        "result": "PENDING",
+        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
+        "evidence_id": null,
+        "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "\\ufcPrintReferences": {
+        "result": "PENDING",
+        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
+        "evidence_id": null,
+        "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "\\ufcPrintGlossary": {
+        "result": "PENDING",
+        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
+        "evidence_id": null,
+        "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "\\ufcPrintIndex": {
+        "result": "PENDING",
+        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
+        "evidence_id": null,
+        "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "\\ufcInputListing": {
+        "result": "PENDING",
+        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
+        "evidence_id": null,
+        "candidate_source": "tests/documents/advanced-objects.tex",
+        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "\\ufcInputMinted": {
+        "result": "PENDING",
+        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
+        "evidence_id": null,
+        "candidate_source": "tests/integration/objects/optional-locale-evidence.py",
+        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "human_normative_linguistic_review": "PENDING"
+      }
+    },
+    "public_environments": {
+      "ufclettereditems": {
+        "result": "PASS",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "core-lists-12",
+        "candidate_source": "tests/integration/frontmatter/i18n-list-environment-evidence.py",
+        "reason": "Four isolated real PDF cases audited from original GitHub Actions artifacts, with raw source/PDF/log hashes; does not cover all document combinations.",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "ufcdashedsubitems": {
+        "result": "PASS",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "core-lists-12",
+        "candidate_source": "tests/integration/frontmatter/i18n-list-environment-evidence.py",
+        "reason": "Four isolated real PDF cases audited from original GitHub Actions artifacts, with raw source/PDF/log hashes; does not cover all document combinations.",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "ufcdefinitionlist": {
+        "result": "PASS",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "core-lists-12",
+        "candidate_source": "tests/integration/frontmatter/i18n-list-environment-evidence.py",
+        "reason": "Four isolated real PDF cases audited from original GitHub Actions artifacts, with raw source/PDF/log hashes; does not cover all document combinations.",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "ufcobject": {
+        "result": "PASS",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "optional-env-12",
+        "candidate_source": "tests/integration/frontmatter/i18n-optional-environment-evidence.py",
+        "reason": "Four isolated real PDF cases audited from original GitHub Actions artifacts, with raw source/PDF/log hashes; does not cover all document combinations.",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "ufclisting": {
+        "result": "PASS",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "optional-env-12",
+        "candidate_source": "tests/integration/frontmatter/i18n-optional-environment-evidence.py",
+        "reason": "Four isolated real PDF cases audited from original GitHub Actions artifacts, with raw source/PDF/log hashes; does not cover all document combinations.",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "ufcalgorithm": {
+        "result": "PASS",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "optional-env-12",
+        "candidate_source": "tests/integration/frontmatter/i18n-optional-environment-evidence.py",
+        "reason": "Four isolated real PDF cases audited from original GitHub Actions artifacts, with raw source/PDF/log hashes; does not cover all document combinations.",
+        "human_normative_linguistic_review": "PENDING"
+      }
+    },
+    "retained_upstream_identifiers": {
+      "\\legend": {
+        "result": "PENDING",
+        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
+        "evidence_id": null,
+        "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "\\keywords": {
+        "result": "PENDING",
+        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
+        "evidence_id": null,
+        "candidate_source": "tests/integration/frontmatter/summary-legacy-context.sh",
+        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "\\appendix": {
+        "result": "PENDING",
+        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
+        "evidence_id": null,
+        "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "\\annex": {
+        "result": "PENDING",
+        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
+        "evidence_id": null,
+        "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "\\pretextual": {
+        "result": "PENDING",
+        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
+        "evidence_id": null,
+        "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "\\textual": {
+        "result": "PENDING",
+        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
+        "evidence_id": null,
+        "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "human_normative_linguistic_review": "PENDING"
+      }
+    }
+  }
+}
