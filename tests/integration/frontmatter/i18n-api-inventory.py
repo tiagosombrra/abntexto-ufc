@@ -64,7 +64,7 @@ def main() -> None:
     documentation = DOCS.read_text(encoding="utf-8")
     if f"**{counts[0]} chaves de configuração**" not in documentation:
         raise ValueError("documented public setup count differs from canonical API")
-    if re.search(r"\\b70 chaves\\b", documentation):
+    if re.search(r"\b70 chaves\b", documentation):
         raise ValueError("stale historical count remains in current acceptance matrix")
     # A public API addition that is not mapped must fail before a lengthy
     # matrix test. A phantom name in the ledger must also fail.
