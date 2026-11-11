@@ -131,7 +131,7 @@ def validate_output(locale: str, profile: str, case: str, log: str,
     # Academic profiles display the institution; projects display the submission entity.
     display = display_sub if profile == "research-project" else display_inst
     for page, label in zip(pages[:2], ("cover", "title page")):
-        if not contains(page, display) or not contains(page, AUTHOR):
+        if not contains(page, display) or not contains(page, AUTHOR) or not contains(page, TITLE):
             raise ValueError(f"wrong institution or author on {label}: {locale}/{profile}/{case}")
         for forbidden in ({LEGAL_INST, DISPLAY_INST, LEGAL_SUB, DISPLAY_SUB} - {display}):
             if contains(page, forbidden):
@@ -186,7 +186,7 @@ def negative_controls() -> int:
     good_log = "\n".join(("INSTITUTION-PROBE-BABEL=english", "INSTITUTION-PROBE-LANGUAGE=en",
                           f"INSTITUTION-PROBE-LEGAL-INST={inst}",
                           f"INSTITUTION-PROBE-LEGAL-SUB={sub}"))
-    pages = [f"{submission} {AUTHOR}", f"{submission} {AUTHOR}"]
+    pages = [f"{submission} {AUTHOR} {TITLE}", f"{submission} {AUTHOR} {TITLE}"]
     validate_output(locale, profile, case, good_log, pages, "en-US")
     bad = (
         (good_log.replace(f"LEGAL-INST={inst}", "LEGAL-INST=CORRUPTED"), pages, "en-US"),
@@ -199,6 +199,7 @@ def negative_controls() -> int:
         (good_log, [pages[0] + " " + DISPLAY_INST, pages[1]], "en-US"),
         (good_log, [pages[0], pages[1] + " " + DISPLAY_INST], "en-US"),
         (good_log, [pages[0].replace(AUTHOR, ""), pages[1]], "en-US"),
+        (good_log, [pages[0], pages[1].replace(TITLE, "")], "en-US"),
         (good_log, pages, "pt-BR"),
         (good_log, [pages[0]], "en-US"),
     )
@@ -209,8 +210,10 @@ def negative_controls() -> int:
             count += 1
         else:
             raise ValueError("invalid PDF/log output passed negative control")
-    if count != 16:
+    if count != 17:
         raise ValueError(f"unexpected negative control count: {count}")
+    if len(LOCALES) * len(PROFILES) * len(CASES) != 48:
+        raise ValueError("unexpected institutional coverage dimensions")
     for loc in LOCALES:
         for profile in PROFILES:
             for case in CASES:
@@ -227,7 +230,7 @@ def negative_controls() -> int:
         count += 1
     else:
         raise ValueError("missing qpdf /Root/Lang passed negative control")
-    if count != 17:
+    if count != 18:
         raise ValueError("PDF catalog negative control count drift")
     return count
 
