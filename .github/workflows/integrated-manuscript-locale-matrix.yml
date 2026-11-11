@@ -101,7 +101,7 @@ jobs:
         run: python3 tests/integration/frontmatter/institution-display-fallback-evidence.py --preflight
       - name: Verify 12 core-list environment sources and 15 negative controls
         run: python3 tests/integration/frontmatter/i18n-list-environment-evidence.py --preflight
-      - name: Verify 12 optional environment sources and 16 negative controls
+      - name: Verify 12 optional environment sources and 22 negative controls
         run: python3 tests/integration/frontmatter/i18n-optional-environment-evidence.py --preflight
   manuscripts:
     # Preserve the established CI status context; this job also verifies 12 fallback PDFs.
