@@ -33,6 +33,7 @@ on:
       - tests/integration/frontmatter/i18n-six-api-output-evidence.py
       - tests/integration/frontmatter/institution-display-fallback-evidence.py
       - tests/integration/frontmatter/i18n-list-environment-evidence.py
+      - tests/integration/frontmatter/i18n-optional-environment-evidence.py
       - tests/integration/frontmatter/integrated_metadata_probe.py
   workflow_dispatch:
 
