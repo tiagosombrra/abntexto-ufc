@@ -119,6 +119,11 @@
       "path": "tests/integration/frontmatter/i18n-b2-family-evidence.py",
       "suite": "b2-family-12",
       "scope": "supplemental SHA-bound audit of 9 commands in original integrated 7-profile PDFs plus 3 in prior pretextual real PDFs (4 locales); 4 remaining commands explicitly pending; no automatic normative or per-identifier PASS"
+    },
+    {
+      "path": "tests/integration/frontmatter/i18n-b2-remaining-summary-evidence.py",
+      "suite": "b2-summary-remaining",
+      "scope": "real direct summary (4 locales), combined legacy summary+abstract (4 locales), optional EN summary (ES/FR only): 10 real PDFs, 30 fail-closed mutants and source SHA receipts; human review pending"
     }
   ],
   "entries": {
