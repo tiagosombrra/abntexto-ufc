@@ -139,6 +139,11 @@
       "path": "tests/integration/objects/i18n-b1-optional-config-evidence.py",
       "suite": "b1-optional-config-3",
       "scope": "source-bound 3 optional module PDFs in each PT/EN/ES/FR locale, proving B1 tables/code/algorithms setup options in positive and negative scenarios; no automatic ledger PASS"
+    },
+    {
+      "path": "tests/integration/frontmatter/i18n-b1-final-five-evidence.py",
+      "suite": "b1-final-five",
+      "scope": "five B1 API options/catalog-card, font, strict-font, initial-page and math font getter; original catalog PDF plus positive/negative real PDFs in 4 locales, pdffonts, qpdf, TeX logs and verified hashes; no automatic ledger promotion"
     }
   ],
   "entries": {
