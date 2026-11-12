@@ -97,7 +97,7 @@ jobs:
         env:
           SOURCE_COMMIT_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
         run: python3 tests/integration/frontmatter/i18n-evidence-crosswalk.py --report
-      - name: Audit 72 per-identifier proof results and 42 fail-closed mutations
+      - name: Audit 72 bounded per-identifier proofs and 54 fail-closed mutations
         env:
           SOURCE_COMMIT_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
         run: python3 tests/integration/frontmatter/i18n-per-identifier-proof-status.py --report
