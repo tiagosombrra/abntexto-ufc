@@ -379,7 +379,7 @@ def verify_remaining(locale: str, sha: str) -> list[dict]:
         for key, original_hash in record["input_sha256"].items():
             ensure(re.fullmatch(r"[a-z]+", key) is not None,
                    "invalid B2 summary input name")
-            read_original(folder / f"b2-{locale}-{key}.tex", original_hash, folder)
+            read_original(folder / f"b2-{locale}-{case}-input-{key}.tex", original_hash, folder)
         pages = shown_pages(pdf)
         ensure(fold("B2TITLEMARKER") in fold(pages[0])
                and fold("B2BODYMARKER") in fold(pages[-1]),
