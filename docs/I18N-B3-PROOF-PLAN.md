@@ -27,10 +27,10 @@ against its own immutable source commit.
   entry is present **on that same list page**, and caption appears
   **on a later textual-body page**, never on a different pretextual list.
   Reject unexpected list in nonapplicable profiles. Verify the public
-  \`\ufcListEntry\` term and definition on one body page. 23 negative
+  \`\ufcListEntry\` term and definition on one body page. 24 negative
   source/heading/entry/body and duplication mutations.
 - \`tests/integration/objects/i18n-b3-optional-list-evidence.py\`:
-  three optional-module PDFs per locale, two list public APIs, 12 negative
+  three optional-module PDFs per locale, two list public APIs, 14 negative
   mutations, list and following body caption, exact original byte SHA256,
   original seven-API receipts and scoped profile-applicability.
 - Exploratory preaudit against original B1 source
@@ -52,7 +52,7 @@ against its own immutable source commit.
    workflow triggers and steps; add full Linux/Release path triggers and
    \`tests/integration_suites.py\` classification. Never create hosted
    workflows prohibited by AGENTS.md.
-4. Execute fail-closed preflights (23 + 12 mutants) and original real
+4. Execute fail-closed preflights (24 + 14 mutants) and original real
    PDF jobs for four languages, inspect original ZIP artifacts outside
    the runner, require physical-page positions, original SHA and BCP47
    locale catalog. Fix regressions without weakening the predicates.
@@ -77,4 +77,9 @@ separate normative assessment, not implicit acceptance by this proof.
 
 ### Independent PDF catalog and BCP47 audit
 
-Each B3 verifier executes `qpdf --json=2 --json-key=qpdf` on the **actual compiled PDF** and checks the root catalog reference, `/Type`, Unicode `/Lang`, BCP47 locale and original manifest receipt. Two new wrong-locale mutations per suite yield **23 integrated plus 12 optional fail-closed controls, 35 total**. These are executable candidate checks, **not yet passed in hosted CI**, and do not authorize B3 ledger promotion.
+Each B3 verifier executes `qpdf --json=2 --json-key=qpdf` on the **actual compiled PDF** and checks the root catalog reference, `/Type`, Unicode `/Lang`, BCP47 locale and original manifest receipt. Two new wrong-locale mutations per suite yield **24 integrated plus 14 optional fail-closed controls, 38 total**. These are executable candidate checks, **not yet passed in hosted CI**, and do not authorize B3 ledger promotion.
+
+
+### Unicidade de legendas (evidência exploratória)
+
+A auditoria local dos ZIPs originais do lote anterior confirmou **120 observações de legendas integradas** e **12 observações de legendas opcionais**, todas com exatamente uma ocorrência no corpo físico do documento. Os dois verificadores B3 agora exigem cardinalidade igual a um e incluem mutantes que duplicam a legenda depois do corpo (um controle no integrado e dois controles no opcional). Isso é um refinamento preliminar, não uma execução do CI B3 nem uma homologação normativa.
