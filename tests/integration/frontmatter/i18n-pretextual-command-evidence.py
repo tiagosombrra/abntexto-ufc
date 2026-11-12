@@ -134,7 +134,7 @@ def catalog_language(data: dict) -> str:
 def marker_word_equals(pdf_word: str, token: str) -> bool:
     # Poppler can attach an opening quote to the first epigraph word.
     # Strip only typographic quote punctuation at word boundaries.
-    return pdf_word.strip().strip("\\"'“”„‟«»‹›‘’") == token
+    return pdf_word.strip().strip(chr(34) + chr(39) + "“”„‟«»‹›‘’") == token
 
 
 def locate_marker_bbox(bbox_xml: str, token: str) -> tuple[int, float, float]:
