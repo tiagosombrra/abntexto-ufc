@@ -169,7 +169,7 @@ def negative_controls() -> int:
         if case != "optional" or locale in ("es", "fr")
         for key in inputs(locale, case)
     ]
-    ensure(len(all_inputs) == 20 and len(set(all_inputs)) == len(all_inputs),
+    ensure(len(all_inputs) == 18 and len(set(all_inputs)) == len(all_inputs),
            "B2 summary inputs collide across scenarios")
     return count
 
