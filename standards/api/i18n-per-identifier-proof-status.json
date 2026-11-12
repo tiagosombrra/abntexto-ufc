@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "description": "Bounded 72-identifier functional evidence ledger: six public environments, 16 B2 commands, 25 B1 setup/core and eleven B3 list/contents commands in original PDF/TeX receipts. Fourteen remaining pending; global normative/linguistic acceptance not claimed.",
+  "description": "Complete inventory of 72 bounded functional scenario receipts (6 public environments, 16 B2, 25 B1, 11 B3, 14 B4). PASS is not universal cross-product or human normative/linguistic/visual acceptance. B4 InputListing nested ufcobject still fails under TeX Live 2026, separately tracked issue #590. Global acceptance and 3.1.0 publication remain pending.",
   "api_source": "standards/api/public-api.json",
   "source_crosswalk": "standards/api/i18n-functional-evidence-crosswalk.json",
   "created_from_main_sha": "b2001b0f979f76d1e30f11afbf03f6a10becd325",
@@ -147,11 +147,53 @@
       "negative_controls": 14,
       "scope": "TWO_B3_OPTIONAL_LISTS_FOUR_LOCALE_THREE_PROFILE_REAL_PDFS",
       "qualification": "Code/algorithm list APIs across three optional-module real PDFs per locale: original SHA256 12 positives, 12 not-exercised observations, valid list physical page and unique body caption, PDF /Root/Lang and 14 negative controls. Only exercised fixture/locale paths; human normative/linguistic/visual review pending."
+    },
+    "b4-integrated-11": {
+      "source_sha": "f5ca6036c7c4a1c976465a2f152a2aec9ab318e0",
+      "workflow_run_id": 43317424521,
+      "artifact_ids": {
+        "pt": 13987629952,
+        "en": 13989382024,
+        "es": 13987729501,
+        "fr": 13987894257
+      },
+      "runner": "tests/integration/frontmatter/i18n-b4-integrated-backmatter-evidence.py",
+      "negative_controls": 15,
+      "scope": "ELEVEN_B4_BACKMATTER_SOURCE_AND_LEGACY_APIS_FOUR_LOCALE_SEVEN_PROFILE_REAL_PDFS",
+      "qualification": "Original seven-profile/four-locale Biber-integrated TeX/PDF: original files SHA256, two bibliography resources, localized references, visible source/note/legend and physical glossary/index/appendix/annex pages, pretextual/textual phase ordering; 15 preflight and 85 real-PDF/source mutants per locale. Glossary and index applicable only in doctoral profile; no global profile combination, normative, visual or linguistic human approval; human review pending."
+    },
+    "b4-inputminted-1": {
+      "source_sha": "f5ca6036c7c4a1c976465a2f152a2aec9ab318e0",
+      "workflow_run_id": 43317424194,
+      "artifact_ids": {
+        "pt": 13989391429,
+        "en": 13988368111,
+        "es": 13987814035,
+        "fr": 13989850288
+      },
+      "runner": "tests/integration/objects/i18n-b4-inputminted-evidence.py",
+      "negative_controls": 9,
+      "scope": "ONE_B4_MINTED_IMPORTED_PYTHON_FOUR_LOCALE_THREE_OPTIONAL_REAL_PDFS",
+      "qualification": "One actual minted Python import per locale in four-locale three-optional-fixture PDFs, source/PDF original SHA, genuine latexminted log and imported Python source, list/body page and source attribution; eight intentionally inapplicable combinations plus nine negative mutants. No unrestricted backend or human normative/linguistic/visual approval; human review pending."
+    },
+    "b4-isolated-2": {
+      "source_sha": "f5ca6036c7c4a1c976465a2f152a2aec9ab318e0",
+      "workflow_run_id": 43317424521,
+      "artifact_ids": {
+        "pt": 13987629952,
+        "en": 13989382024,
+        "es": 13987729501,
+        "fr": 13987894257
+      },
+      "runner": "tests/integration/frontmatter/i18n-b4-isolated-public-api-evidence.py",
+      "negative_controls": 18,
+      "scope": "TWO_B4_ISOLATED_DIRECT_INPUTLISTING_AND_LEGACY_KEYWORDS_FOUR_LOCALE_REAL_PDFS",
+      "qualification": "Eight independent pdfLaTeX real PDFs in four locales: direct stand-alone InputListing importing original C++ source and localized legacy keywords inside explicit summary. Source/PDF SHA256, BCP47 PDF catalog and extracted content; 18 source/output negative controls. The nested InputListing inside ufcobject reproducibly fails under TeX Live 2026, unresolved issue #590, explicitly EXCLUDED from this bounded PASS. No global API/context, normative, visual or linguistic acceptance; human review pending."
     }
   },
   "summary": {
-    "PASS": 58,
-    "PENDING": 14,
+    "PASS": 72,
+    "PENDING": 0,
     "NA": 0
   },
   "entries": {
@@ -575,67 +617,67 @@
         "human_normative_linguistic_review": "PENDING"
       },
       "\\ufcSource": {
-        "result": "PENDING",
-        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
-        "evidence_id": null,
+        "result": "PASS",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b4-integrated-11",
         "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
-        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "reason": "Bounded functional proof for \\ufcSource: b4-integrated-11, exact original source SHA f5ca6036c7c4a1c976465a2f152a2aec9ab318e0, workflow 43317424521, four independent GitHub Actions PDF/TeX ZIPs, hashes, physical pages and deliberate negative controls. Original seven-profile/four-locale Biber-integrated TeX/PDF: original files SHA256, two bibliography resources, localized references, visible source/note/legend and physical glossary/index/appendix/annex pages, pretextual/textual phase ordering; 15 preflight and 85 real-PDF/source mutants per locale. Glossary and index applicable only in doctoral profile; no global profile combination, normative, visual or linguistic human approval; human review pending.",
         "human_normative_linguistic_review": "PENDING"
       },
       "\\ufcNote": {
-        "result": "PENDING",
-        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
-        "evidence_id": null,
+        "result": "PASS",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b4-integrated-11",
         "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
-        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "reason": "Bounded functional proof for \\ufcNote: b4-integrated-11, exact original source SHA f5ca6036c7c4a1c976465a2f152a2aec9ab318e0, workflow 43317424521, four independent GitHub Actions PDF/TeX ZIPs, hashes, physical pages and deliberate negative controls. Original seven-profile/four-locale Biber-integrated TeX/PDF: original files SHA256, two bibliography resources, localized references, visible source/note/legend and physical glossary/index/appendix/annex pages, pretextual/textual phase ordering; 15 preflight and 85 real-PDF/source mutants per locale. Glossary and index applicable only in doctoral profile; no global profile combination, normative, visual or linguistic human approval; human review pending.",
         "human_normative_linguistic_review": "PENDING"
       },
       "\\ufcAddBibliographyResource": {
-        "result": "PENDING",
-        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
-        "evidence_id": null,
+        "result": "PASS",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b4-integrated-11",
         "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
-        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "reason": "Bounded functional proof for \\ufcAddBibliographyResource: b4-integrated-11, exact original source SHA f5ca6036c7c4a1c976465a2f152a2aec9ab318e0, workflow 43317424521, four independent GitHub Actions PDF/TeX ZIPs, hashes, physical pages and deliberate negative controls. Original seven-profile/four-locale Biber-integrated TeX/PDF: original files SHA256, two bibliography resources, localized references, visible source/note/legend and physical glossary/index/appendix/annex pages, pretextual/textual phase ordering; 15 preflight and 85 real-PDF/source mutants per locale. Glossary and index applicable only in doctoral profile; no global profile combination, normative, visual or linguistic human approval; human review pending.",
         "human_normative_linguistic_review": "PENDING"
       },
       "\\ufcPrintReferences": {
-        "result": "PENDING",
-        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
-        "evidence_id": null,
+        "result": "PASS",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b4-integrated-11",
         "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
-        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "reason": "Bounded functional proof for \\ufcPrintReferences: b4-integrated-11, exact original source SHA f5ca6036c7c4a1c976465a2f152a2aec9ab318e0, workflow 43317424521, four independent GitHub Actions PDF/TeX ZIPs, hashes, physical pages and deliberate negative controls. Original seven-profile/four-locale Biber-integrated TeX/PDF: original files SHA256, two bibliography resources, localized references, visible source/note/legend and physical glossary/index/appendix/annex pages, pretextual/textual phase ordering; 15 preflight and 85 real-PDF/source mutants per locale. Glossary and index applicable only in doctoral profile; no global profile combination, normative, visual or linguistic human approval; human review pending.",
         "human_normative_linguistic_review": "PENDING"
       },
       "\\ufcPrintGlossary": {
-        "result": "PENDING",
-        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
-        "evidence_id": null,
+        "result": "PASS",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b4-integrated-11",
         "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
-        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "reason": "Bounded functional proof for \\ufcPrintGlossary: b4-integrated-11, exact original source SHA f5ca6036c7c4a1c976465a2f152a2aec9ab318e0, workflow 43317424521, four independent GitHub Actions PDF/TeX ZIPs, hashes, physical pages and deliberate negative controls. Original seven-profile/four-locale Biber-integrated TeX/PDF: original files SHA256, two bibliography resources, localized references, visible source/note/legend and physical glossary/index/appendix/annex pages, pretextual/textual phase ordering; 15 preflight and 85 real-PDF/source mutants per locale. Glossary and index applicable only in doctoral profile; no global profile combination, normative, visual or linguistic human approval; human review pending.",
         "human_normative_linguistic_review": "PENDING"
       },
       "\\ufcPrintIndex": {
-        "result": "PENDING",
-        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
-        "evidence_id": null,
+        "result": "PASS",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b4-integrated-11",
         "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
-        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "reason": "Bounded functional proof for \\ufcPrintIndex: b4-integrated-11, exact original source SHA f5ca6036c7c4a1c976465a2f152a2aec9ab318e0, workflow 43317424521, four independent GitHub Actions PDF/TeX ZIPs, hashes, physical pages and deliberate negative controls. Original seven-profile/four-locale Biber-integrated TeX/PDF: original files SHA256, two bibliography resources, localized references, visible source/note/legend and physical glossary/index/appendix/annex pages, pretextual/textual phase ordering; 15 preflight and 85 real-PDF/source mutants per locale. Glossary and index applicable only in doctoral profile; no global profile combination, normative, visual or linguistic human approval; human review pending.",
         "human_normative_linguistic_review": "PENDING"
       },
       "\\ufcInputListing": {
-        "result": "PENDING",
-        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
-        "evidence_id": null,
+        "result": "PASS",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b4-isolated-2",
         "candidate_source": "tests/documents/advanced-objects.tex",
-        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "reason": "Bounded functional proof for \\ufcInputListing: b4-isolated-2, exact original source SHA f5ca6036c7c4a1c976465a2f152a2aec9ab318e0, workflow 43317424521, four independent GitHub Actions PDF/TeX ZIPs, hashes, physical pages and deliberate negative controls. Eight independent pdfLaTeX real PDFs in four locales: direct stand-alone InputListing importing original C++ source and localized legacy keywords inside explicit summary. Source/PDF SHA256, BCP47 PDF catalog and extracted content; 18 source/output negative controls. The nested InputListing inside ufcobject reproducibly fails under TeX Live 2026, unresolved issue #590, explicitly EXCLUDED from this bounded PASS. No global API/context, normative, visual or linguistic acceptance; human review pending.",
         "human_normative_linguistic_review": "PENDING"
       },
       "\\ufcInputMinted": {
-        "result": "PENDING",
-        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
-        "evidence_id": null,
+        "result": "PASS",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b4-inputminted-1",
         "candidate_source": "tests/integration/objects/optional-locale-evidence.py",
-        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "reason": "Bounded functional proof for \\ufcInputMinted: b4-inputminted-1, exact original source SHA f5ca6036c7c4a1c976465a2f152a2aec9ab318e0, workflow 43317424194, four independent GitHub Actions PDF/TeX ZIPs, hashes, physical pages and deliberate negative controls. One actual minted Python import per locale in four-locale three-optional-fixture PDFs, source/PDF original SHA, genuine latexminted log and imported Python source, list/body page and source attribution; eight intentionally inapplicable combinations plus nine negative mutants. No unrestricted backend or human normative/linguistic/visual approval; human review pending.",
         "human_normative_linguistic_review": "PENDING"
       }
     },
@@ -691,51 +733,51 @@
     },
     "retained_upstream_identifiers": {
       "\\legend": {
-        "result": "PENDING",
-        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
-        "evidence_id": null,
+        "result": "PASS",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b4-integrated-11",
         "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
-        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "reason": "Bounded functional proof for \\legend: b4-integrated-11, exact original source SHA f5ca6036c7c4a1c976465a2f152a2aec9ab318e0, workflow 43317424521, four independent GitHub Actions PDF/TeX ZIPs, hashes, physical pages and deliberate negative controls. Original seven-profile/four-locale Biber-integrated TeX/PDF: original files SHA256, two bibliography resources, localized references, visible source/note/legend and physical glossary/index/appendix/annex pages, pretextual/textual phase ordering; 15 preflight and 85 real-PDF/source mutants per locale. Glossary and index applicable only in doctoral profile; no global profile combination, normative, visual or linguistic human approval; human review pending.",
         "human_normative_linguistic_review": "PENDING"
       },
       "\\keywords": {
-        "result": "PENDING",
-        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
-        "evidence_id": null,
+        "result": "PASS",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b4-isolated-2",
         "candidate_source": "tests/integration/frontmatter/summary-legacy-context.sh",
-        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "reason": "Bounded functional proof for \\keywords: b4-isolated-2, exact original source SHA f5ca6036c7c4a1c976465a2f152a2aec9ab318e0, workflow 43317424521, four independent GitHub Actions PDF/TeX ZIPs, hashes, physical pages and deliberate negative controls. Eight independent pdfLaTeX real PDFs in four locales: direct stand-alone InputListing importing original C++ source and localized legacy keywords inside explicit summary. Source/PDF SHA256, BCP47 PDF catalog and extracted content; 18 source/output negative controls. The nested InputListing inside ufcobject reproducibly fails under TeX Live 2026, unresolved issue #590, explicitly EXCLUDED from this bounded PASS. No global API/context, normative, visual or linguistic acceptance; human review pending.",
         "human_normative_linguistic_review": "PENDING"
       },
       "\\appendix": {
-        "result": "PENDING",
-        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
-        "evidence_id": null,
+        "result": "PASS",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b4-integrated-11",
         "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
-        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "reason": "Bounded functional proof for \\appendix: b4-integrated-11, exact original source SHA f5ca6036c7c4a1c976465a2f152a2aec9ab318e0, workflow 43317424521, four independent GitHub Actions PDF/TeX ZIPs, hashes, physical pages and deliberate negative controls. Original seven-profile/four-locale Biber-integrated TeX/PDF: original files SHA256, two bibliography resources, localized references, visible source/note/legend and physical glossary/index/appendix/annex pages, pretextual/textual phase ordering; 15 preflight and 85 real-PDF/source mutants per locale. Glossary and index applicable only in doctoral profile; no global profile combination, normative, visual or linguistic human approval; human review pending.",
         "human_normative_linguistic_review": "PENDING"
       },
       "\\annex": {
-        "result": "PENDING",
-        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
-        "evidence_id": null,
+        "result": "PASS",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b4-integrated-11",
         "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
-        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "reason": "Bounded functional proof for \\annex: b4-integrated-11, exact original source SHA f5ca6036c7c4a1c976465a2f152a2aec9ab318e0, workflow 43317424521, four independent GitHub Actions PDF/TeX ZIPs, hashes, physical pages and deliberate negative controls. Original seven-profile/four-locale Biber-integrated TeX/PDF: original files SHA256, two bibliography resources, localized references, visible source/note/legend and physical glossary/index/appendix/annex pages, pretextual/textual phase ordering; 15 preflight and 85 real-PDF/source mutants per locale. Glossary and index applicable only in doctoral profile; no global profile combination, normative, visual or linguistic human approval; human review pending.",
         "human_normative_linguistic_review": "PENDING"
       },
       "\\pretextual": {
-        "result": "PENDING",
-        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
-        "evidence_id": null,
+        "result": "PASS",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b4-integrated-11",
         "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
-        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "reason": "Bounded functional proof for \\pretextual: b4-integrated-11, exact original source SHA f5ca6036c7c4a1c976465a2f152a2aec9ab318e0, workflow 43317424521, four independent GitHub Actions PDF/TeX ZIPs, hashes, physical pages and deliberate negative controls. Original seven-profile/four-locale Biber-integrated TeX/PDF: original files SHA256, two bibliography resources, localized references, visible source/note/legend and physical glossary/index/appendix/annex pages, pretextual/textual phase ordering; 15 preflight and 85 real-PDF/source mutants per locale. Glossary and index applicable only in doctoral profile; no global profile combination, normative, visual or linguistic human approval; human review pending.",
         "human_normative_linguistic_review": "PENDING"
       },
       "\\textual": {
-        "result": "PENDING",
-        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
-        "evidence_id": null,
+        "result": "PASS",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b4-integrated-11",
         "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
-        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "reason": "Bounded functional proof for \\textual: b4-integrated-11, exact original source SHA f5ca6036c7c4a1c976465a2f152a2aec9ab318e0, workflow 43317424521, four independent GitHub Actions PDF/TeX ZIPs, hashes, physical pages and deliberate negative controls. Original seven-profile/four-locale Biber-integrated TeX/PDF: original files SHA256, two bibliography resources, localized references, visible source/note/legend and physical glossary/index/appendix/annex pages, pretextual/textual phase ordering; 15 preflight and 85 real-PDF/source mutants per locale. Glossary and index applicable only in doctoral profile; no global profile combination, normative, visual or linguistic human approval; human review pending.",
         "human_normative_linguistic_review": "PENDING"
       }
     }
