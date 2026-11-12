@@ -129,6 +129,11 @@
       "path": "tests/integration/frontmatter/i18n-b1-family-evidence.py",
       "suite": "b1-family-25",
       "scope": "25 public setup/core IDs inventoried, 13 scenario candidates tied to original seven-profile four-locale PDFs and existing six-API/52-key receipts, 12 explicitly pending extra route evidence; no automatic ledger PASS"
+    },
+    {
+      "path": "tests/integration/frontmatter/i18n-b1-auxiliary-pdf-evidence.py",
+      "suite": "b1-auxiliary-2",
+      "scope": "supplemental real-PDF re-audit of 32 primary/display-language pairs and 32 coat-of-arms image routes; 2 B1 option candidate receipts; no automatic ledger promotion"
     }
   ],
   "entries": {
