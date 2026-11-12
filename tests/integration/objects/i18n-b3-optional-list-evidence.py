@@ -40,6 +40,26 @@ APPLIES = {
 }
 
 
+CATALOG_LANG = {"pt": "pt-BR", "en": "en-US", "es": "es-ES", "fr": "fr-FR"}
+
+
+def validate_catalog(payload: dict, locale: str) -> str:
+    # Verify the actual PDF catalog, rather than trusting the TeX locale.
+    objects = payload.get("qpdf")
+    require(isinstance(objects, list) and len(objects) == 2
+            and objects[0].get("jsonversion") == 2,
+            "B3 optional invalid qpdf JSON catalog")
+    catalog_ref = objects[1]["trailer"]["value"]["/Root"]
+    require(isinstance(catalog_ref, str) and re.fullmatch(
+        r"[1-9][0-9]* [0-9]+ R", catalog_ref) is not None,
+        "B3 optional malformed /Root reference")
+    catalog = objects[1]["obj:" + catalog_ref]["value"]
+    require(catalog.get("/Type") == "/Catalog"
+            and catalog.get("/Lang") == "u:" + CATALOG_LANG[locale],
+            "B3 optional PDF /Root/Lang does not match locale")
+    return CATALOG_LANG[locale]
+
+
 def require(ok: bool, message: str) -> None:
     if not ok:
         raise ValueError(message)
@@ -167,7 +187,22 @@ def negatives() -> int:
             count += 1
         else:
             raise ValueError("B3 optional wrong applicability mutant escaped")
-    require(count == 10 and len(set(COMMANDS)) == 2,
+    sample = {
+        "qpdf": [{"jsonversion": 2},
+                 {"trailer": {"value": {"/Root": "1 0 R"}},
+                  "obj:1 0 R": {"value": {
+                      "/Type": "/Catalog", "/Lang": "u:en-US"}}}],
+    }
+    require(validate_catalog(sample, "en") == "en-US",
+            "B3 optional catalog positive guard invalid")
+    for wrong in ("fr", "es"):
+        try:
+            validate_catalog(sample, wrong)
+        except ValueError:
+            count += 1
+        else:
+            raise ValueError("B3 optional wrong catalog language was accepted")
+    require(count == 12 and len(set(COMMANDS)) == 2,
             "B3 optional command negative coverage drift")
     return count
 
@@ -216,6 +251,12 @@ def run(locale: str) -> None:
                                        cwd=ROOT, text=True)
         number = re.search(r"(?m)^Pages:\s*(\d+)\s*$", info)
         require(number is not None, "optional B3 physical page count absent")
+        catalog_json = json.loads(subprocess.check_output(
+            ["qpdf", "--json=2", "--json-key=qpdf", str(pdf)],
+            cwd=ROOT, text=True))
+        catalog_lang = validate_catalog(catalog_json, locale)
+        require(catalog_lang == entry["pdf_catalog_lang"],
+                "B3 optional original PDF /Lang differs from manifest")
         text = subprocess.check_output(["pdftotext", "-layout", str(pdf), "-"],
                                        cwd=ROOT, text=True)
         outputs = check_case(locale, scenario, raw_src.decode("utf-8"),
@@ -235,6 +276,7 @@ def run(locale: str) -> None:
             "pdf_sha256": entry["pdf_sha256"],
             "observations": outputs,
             "physical_pages": int(number.group(1)),
+            "pdf_catalog_lang": catalog_lang,
         })
     require(seen == set(SCENARIOS)
             and sum(x["status"] == "BOUNDED_REAL_PDF_PASS"
@@ -244,7 +286,7 @@ def run(locale: str) -> None:
         "status": "BOUNDED_B3_TWO_COMMAND_PDF_PASS",
         "source_sha": sha, "locale": locale, "real_pdfs": 3,
         "identifiers": list(COMMANDS), "applicable_observations": 3,
-        "not_exercised_observations": 3, "negative_controls": 10,
+        "not_exercised_observations": 3, "negative_controls": 12,
         "records": report, "ledger_promotion": "NOT_AUTOMATIC",
         "human_normative_linguistic_review": "PENDING",
         "publication_authorized": False,
@@ -253,7 +295,7 @@ def run(locale: str) -> None:
         json.dumps(result, ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8")
     print(f"I18N-B3-OPTIONAL status=PASS locale={locale} ids=2"
-          " actual_pdfs=3 positives=3 negatives=10 physical_pages=PASS"
+          " actual_pdfs=3 positives=3 negatives=12 physical_pages=PASS"
           " original_sha256=PASS human_review=PENDING")
 
 
