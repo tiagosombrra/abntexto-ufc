@@ -89,6 +89,15 @@ def option(source: str, name: str) -> str:
     return matches[0].strip()
 
 
+def physical_pages(extracted: str) -> list[str]:
+    # Preserve blank duplex pages; page indices must refer to real PDF pages.
+    pages = extracted.split("\f")
+    if pages and not pages[-1].strip():
+        pages.pop()
+    require(len(pages) >= 2, "real PDF has fewer than two physical pages")
+    return pages
+
+
 def inspect_case(locale: str, profile: str, source: str,
                  pdf_text: str, checks: dict,
                  receipts: dict[str, dict], metadata: list[dict]) -> dict:
@@ -137,8 +146,7 @@ def inspect_case(locale: str, profile: str, source: str,
             "existing integrated generator changed disabled option controls")
     # Positive and negative render paths are separate; source truth alone
     # never certifies a non-rendering feature.
-    pages = [x for x in pdf_text.split("\f") if x.strip()]
-    require(len(pages) >= 2, "real integrated PDF is missing physical pages")
+    pages = physical_pages(pdf_text)
     if profile in ACADEMIC:
         require("integrated multilingual document" in fold(pages[0])
                 and "integrated test author" in fold(pages[0]),
@@ -214,6 +222,10 @@ def negatives() -> int:
             for key in METADATA_KEYS]
     pdf = ("Integrated Multilingual Document Integrated Test Author\n\f"
            "Title Page\n\fBODY")
+    # Physical-page numbering must not discard intentionally empty duplex pages.
+    require(physical_pages("COVER\f\fGLOSSARY\f") ==
+            ["COVER", "", "GLOSSARY"],
+            "blank duplex page was removed from physical numbering")
     # Positive control checks the same predicates as original PDF evaluation.
     inspect_case("pt", "undergraduate-capstone", source, pdf, sample, six, keys)
     mutants = [
@@ -309,6 +321,12 @@ def audit(locale: str) -> None:
         read_verified(pdf, row["pdf_sha256"], folder)
         text = subprocess.check_output(["pdftotext", "-layout", str(pdf), "-"],
                                        cwd=ROOT, text=True)
+        pdf_info = subprocess.check_output(["pdfinfo", str(pdf)],
+                                            cwd=ROOT, text=True)
+        physical_count = re.search(r"(?m)^Pages:\s*(\d+)\s*$", pdf_info)
+        require(physical_count is not None
+                and int(physical_count.group(1)) == len(physical_pages(text)),
+                "B1 actual PDF page count differs from unfiltered Poppler pages")
         result = inspect_case(locale, profile, src.decode("utf-8"), text,
                               row["checks"],
                               {id: receipt_map.get((profile, id))
