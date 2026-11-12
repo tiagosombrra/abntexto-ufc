@@ -81,8 +81,8 @@ def compile_tex(locale: str, job: str, content: str,
     if expected_error:
         # TeX may split one class-error word across lines (e.g. "Roma\\nn").
         # Match the complete error after removing whitespace, not arbitrary fragments.
-        error_text = re.sub(r"\\s+", "", stdout + log.read_text(errors="replace"))
-        error_expected = re.sub(r"\\s+", "", expected_error)
+        error_text = re.sub(r"\s+", "", stdout + log.read_text(errors="replace"))
+        error_expected = re.sub(r"\s+", "", expected_error)
         require(rc != 0
                 and "Classabntexto-ufcError:" in error_text
                 and error_expected.lower() in error_text.lower(),
