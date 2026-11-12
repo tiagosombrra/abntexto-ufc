@@ -429,3 +429,10 @@ A auditoria da família B1 foi ampliada com dois validadores suplementares **sem
 **Candidatos após esses testes, ainda condicionados ao CI completo:** 13 originais da matriz integrada + 2 (labels-language e coat-of-arms) + 3 (tables, code, algorithms) = **18 de 25 identificadores**. Os **sete remanescentes sem evidência adicional suficiente** são catalog-card, font, strict-font, glossary, index, initial-page e \ufcMathFontPolicy. A prova original de 13, as duas auxiliares e as três opções devem ser auditadas em seus próprios artefatos antes de qualquer promoção no ledger; nenhum progresso de 22/72 na main deve ser inferido desta lista de candidatos.
 
 A suíte adicional de módulos opcionais usa o workflow existente de quatro idiomas, com gatilho por alteração do próprio auditor. A classe LaTeX permanece intocada. v3.1.0 não publicada; revisão humana editorial e linguística pendente.
+
+
+### B1: novos testes de glossário e índice em PDFs (a certificar)
+
+A família integrada testa glossary=glossaries e index=imakeidx no doutorado em quatro idiomas: invocação real, títulos e presença de verbete na mesma página física; nos outros perfis, verifica ausência da ativação explícita indevida. Isso acrescenta dois IDs à rota candidata.
+
+**Total candidato atual, condicionado ao CI e auditoria independente:** 15 IDs na matriz integrada (incluindo glossary/index) + 2 nos 64 PDFs auxiliares (labels-language/coat-of-arms) + 3 nos módulos opcionais (tables/code/algorithms) = **20 de 25 B1 IDs**. Permanecem sem evidência suficiente: catalog-card, font, strict-font, initial-page e \ufcMathFontPolicy. Não alterar o registro de 22 PASS/50 PENDING na main por mera expectativa: cada promoção exige arquivos originais SHA-bound, controles negativos e os gates no HEAD exato.
