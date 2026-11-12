@@ -116,6 +116,36 @@ EXPECTED_EVIDENCE = {
         "runner": "tests/integration/objects/i18n-b3-optional-list-evidence.py",
         "negative_controls": 14,
     },
+    "b4-integrated-11": {
+        "source_sha": "f5ca6036c7c4a1c976465a2f152a2aec9ab318e0",
+        "workflow_run_id": 43317424521,
+        "artifact_ids": {
+            "pt": 13987629952, "en": 13989382024,
+            "es": 13987729501, "fr": 13987894257,
+        },
+        "runner": "tests/integration/frontmatter/i18n-b4-integrated-backmatter-evidence.py",
+        "negative_controls": 15,
+    },
+    "b4-inputminted-1": {
+        "source_sha": "f5ca6036c7c4a1c976465a2f152a2aec9ab318e0",
+        "workflow_run_id": 43317424194,
+        "artifact_ids": {
+            "pt": 13989391429, "en": 13988368111,
+            "es": 13987814035, "fr": 13989850288,
+        },
+        "runner": "tests/integration/objects/i18n-b4-inputminted-evidence.py",
+        "negative_controls": 9,
+    },
+    "b4-isolated-2": {
+        "source_sha": "f5ca6036c7c4a1c976465a2f152a2aec9ab318e0",
+        "workflow_run_id": 43317424521,
+        "artifact_ids": {
+            "pt": 13987629952, "en": 13989382024,
+            "es": 13987729501, "fr": 13987894257,
+        },
+        "runner": "tests/integration/frontmatter/i18n-b4-isolated-public-api-evidence.py",
+        "negative_controls": 18,
+    },
 }
 EXPECTED_PASS_ENV = {
     "ufclettereditems": "core-lists-12",
@@ -186,6 +216,23 @@ EXPECTED_PASS_B3 = {
     r"\ufcPrintListOfAlgorithms": "b3-optional-2",
 }
 
+EXPECTED_PASS_B4 = {
+    ("public_commands", r"\ufcSource"): "b4-integrated-11",
+    ("public_commands", r"\ufcNote"): "b4-integrated-11",
+    ("public_commands", r"\ufcAddBibliographyResource"): "b4-integrated-11",
+    ("public_commands", r"\ufcPrintReferences"): "b4-integrated-11",
+    ("public_commands", r"\ufcPrintGlossary"): "b4-integrated-11",
+    ("public_commands", r"\ufcPrintIndex"): "b4-integrated-11",
+    ("retained_upstream_identifiers", r"\legend"): "b4-integrated-11",
+    ("retained_upstream_identifiers", r"\appendix"): "b4-integrated-11",
+    ("retained_upstream_identifiers", r"\annex"): "b4-integrated-11",
+    ("retained_upstream_identifiers", r"\pretextual"): "b4-integrated-11",
+    ("retained_upstream_identifiers", r"\textual"): "b4-integrated-11",
+    ("public_commands", r"\ufcInputMinted"): "b4-inputminted-1",
+    ("public_commands", r"\ufcInputListing"): "b4-isolated-2",
+    ("retained_upstream_identifiers", r"\keywords"): "b4-isolated-2",
+}
+
 EXPECTED_PROOF_SCOPES = {
     "core-lists-12": "ONE_ISOLATED_PDF_PER_ENVIRONMENT_AND_LOCALE",
     "optional-env-12": "ONE_ISOLATED_PDF_PER_ENVIRONMENT_AND_LOCALE",
@@ -197,6 +244,9 @@ EXPECTED_PROOF_SCOPES = {
     "b1-final-five": "FIVE_B1_CORE_OPTIONS_FOUR_LOCALE_PDFTEX_LUATEX_RECEIPTS",
     "b3-integrated-9": "NINE_B3_PRETEXTUAL_LISTS_FOUR_LOCALE_SEVEN_PROFILE_REAL_PDFS",
     "b3-optional-2": "TWO_B3_OPTIONAL_LISTS_FOUR_LOCALE_THREE_PROFILE_REAL_PDFS",
+    "b4-integrated-11": "ELEVEN_B4_BACKMATTER_SOURCE_AND_LEGACY_APIS_FOUR_LOCALE_SEVEN_PROFILE_REAL_PDFS",
+    "b4-inputminted-1": "ONE_B4_MINTED_IMPORTED_PYTHON_FOUR_LOCALE_THREE_OPTIONAL_REAL_PDFS",
+    "b4-isolated-2": "TWO_B4_ISOLATED_DIRECT_INPUTLISTING_AND_LEGACY_KEYWORDS_FOUR_LOCALE_REAL_PDFS",
 }
 GROUPS = ("setup_option_identifiers", "public_commands",
           "public_environments", "retained_upstream_identifiers")
@@ -327,10 +377,24 @@ def validate(data: dict, api: dict, cross: dict) -> dict[str, int]:
                            and source.get("path") == EXPECTED_EVIDENCE[b3_suite]["runner"]
                            for source in cross["sources"]):
                     raise ValueError(f"B3 source-to-suite relation missing: {name}")
+            elif (group, name) in EXPECTED_PASS_B4:
+                b4_suite = EXPECTED_PASS_B4[(group, name)]
+                if (result != "PASS" or row["evidence_id"] != b4_suite
+                        or row["scope"] != "BOUNDED_REAL_PDF_4_LOCALES"):
+                    raise ValueError(f"B4 bounded real-PDF proof misclassified: {group}/{name}")
+                if EXPECTED_EVIDENCE[b4_suite]["source_sha"] not in row["reason"]:
+                    raise ValueError(f"B4 original source SHA not linked per API: {name}")
+                if not any(source.get("suite") == b4_suite
+                           and source.get("path") == EXPECTED_EVIDENCE[b4_suite]["runner"]
+                           for source in cross["sources"]):
+                    raise ValueError(f"B4 original runner/source relationship absent: {name}")
+                if name == r"\ufcInputListing" and (
+                        "#590" not in row["reason"] or "EXCLUDED" not in row["reason"]):
+                    raise ValueError("nested InputListing 2026 failure was improperly claimed")
             elif (result != "PENDING" or row["evidence_id"] is not None
                   or row["scope"] != "NOT_YET_CERTIFIED_PER_IDENTIFIER"):
                 raise ValueError(f"unproven identifier promoted or wrongly classified: {name}")
-    if counts != {"PASS": 58, "PENDING": 14, "NA": 0}:
+    if counts != {"PASS": 72, "PENDING": 0, "NA": 0}:
         raise ValueError("72-ID evidence classification totals drift")
     if data.get("summary") != counts:
         raise ValueError("evidence summary differs from individual records")
@@ -470,6 +534,42 @@ def negative_controls(data: dict, api: dict, cross: dict) -> int:
     x = edited()
     x["evidence"]["b3-integrated-9"]["workflow_run_id"] += 1
     tests.append(x)
+    x = edited()
+    x["entries"]["public_commands"][r"\ufcSource"]["result"] = "PENDING"
+    tests.append(x)
+    x = edited()
+    x["entries"]["retained_upstream_identifiers"][r"\legend"]["evidence_id"] = "b4-isolated-2"
+    tests.append(x)
+    x = edited()
+    x["entries"]["public_commands"][r"\ufcPrintGlossary"]["scope"] = "ALL_PROFILES"
+    tests.append(x)
+    x = edited()
+    x["entries"]["retained_upstream_identifiers"][r"\textual"]["human_normative_linguistic_review"] = "ACCEPT"
+    tests.append(x)
+    x = edited()
+    x["entries"]["public_commands"][r"\ufcInputMinted"]["evidence_id"] = "b4-integrated-11"
+    tests.append(x)
+    x = edited()
+    x["entries"]["retained_upstream_identifiers"][r"\keywords"]["result"] = "NA"
+    tests.append(x)
+    x = edited()
+    x["entries"]["public_commands"][r"\ufcInputListing"]["reason"] = "Original source f5ca6036c7c4a1c976465a2f152a2aec9ab318e0; standalone only, issue not considered."
+    tests.append(x)
+    x = edited()
+    x["evidence"]["b4-integrated-11"]["artifact_ids"]["en"] += 1
+    tests.append(x)
+    x = edited()
+    x["evidence"]["b4-inputminted-1"]["source_sha"] = "1" * 40
+    tests.append(x)
+    x = edited()
+    x["evidence"]["b4-isolated-2"]["runner"] = "tests/not-the-actual-proof.py"
+    tests.append(x)
+    x = edited()
+    x["evidence"]["b4-inputminted-1"]["workflow_run_id"] += 1
+    tests.append(x)
+    x = edited()
+    x["evidence"]["b4-integrated-11"]["negative_controls"] = 0
+    tests.append(x)
     for i, mutation in enumerate(tests, start=1):
         try:
             validate(mutation, api, cross)
@@ -504,7 +604,7 @@ def main() -> None:
         "counts": counts,
         "negative_controls": negative_count,
         "historical_source_bound_proofs": data["evidence"],
-        "proof_boundary": "Six public environments, sixteen bounded B2 APIs, twenty-five bounded B1 setup/core APIs and eleven bounded B3 list/contents APIs, each with independently audited original PDF receipts; 14 identifiers remain PENDING, and global normative/linguistic acceptance is not claimed",
+        "proof_boundary": "All 72 named public identifiers have individually scoped positive real-PDF functional receipts across B1/B2/B3/B4, not universal combinations, standard-conformance review or language signoff. The InputListing inside ufcobject TeX Live 2026 defect #590 is expressly excluded from its standalone PASS. Global UFC/ABNT normative, visual and linguistic human acceptance and v3.1.0 publication remain PENDING",
     }
     if args.report:
         REPORT_PATH.parent.mkdir(parents=True, exist_ok=True)
