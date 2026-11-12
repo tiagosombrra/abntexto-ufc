@@ -114,6 +114,11 @@
       "path": "tests/integration/frontmatter/i18n-pretextual-command-evidence.py",
       "suite": "pretextual-command-16",
       "scope": "4 locale x catalog card / dedication / short epigraph / long epigraph isolated PDFs; external input provenance, output placement and exact raw hashes; no normative or linguistic signoff"
+    },
+    {
+      "path": "tests/integration/frontmatter/i18n-b2-family-evidence.py",
+      "suite": "b2-family-12",
+      "scope": "supplemental SHA-bound audit of 9 commands in original integrated 7-profile PDFs plus 3 in prior pretextual real PDFs (4 locales); 4 remaining commands explicitly pending; no automatic normative or per-identifier PASS"
     }
   ],
   "entries": {
