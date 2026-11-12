@@ -114,7 +114,7 @@ jobs:
         run: python3 tests/integration/frontmatter/i18n-list-environment-evidence.py --preflight
       - name: Verify 12 optional environment sources and 22 negative controls
         run: python3 tests/integration/frontmatter/i18n-optional-environment-evidence.py --preflight
-      - name: Verify 16 pretextual-command source fixtures and 16 negative controls
+      - name: Verify 16 pretextual-command sources and 18 negative controls
         run: python3 tests/integration/frontmatter/i18n-pretextual-command-evidence.py --preflight
   manuscripts:
     # Preserve the established CI status context; this job also verifies 12 fallback PDFs.
