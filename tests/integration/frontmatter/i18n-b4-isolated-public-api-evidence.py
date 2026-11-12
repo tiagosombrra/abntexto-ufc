@@ -41,8 +41,10 @@ def sha(raw: bytes) -> str:
 def fold(value: str) -> str:
     value = unicodedata.normalize(
         "NFKD", value.casefold().replace("’", "'").replace("ʼ", "'"))
-    return re.sub(r"\s+", " ", "".join(
+    folded = re.sub(r"\s+", " ", "".join(
         c for c in value if not unicodedata.combining(c)))
+    # Listings captions can wrap after a hyphen on real PDF pages.
+    return re.sub(r"-(?=\s+\w)\s+", "-", folded)
 
 
 def pages(text: str, count: int | None = None) -> list[str]:
@@ -85,7 +87,9 @@ def source_for_listing(locale: str) -> str:
         rf"\section{{B4-LISTING-BODY-{locale.upper()}}}",
         rf"\legend{{code}}{{B4-LISTING-CAPTION-{locale.upper()}}}",
         rf"\ufcSource{{B4-LISTING-SOURCE-{locale.upper()}}}",
+        r"\begin{ufcobject}[here]",
         rf"\ufcInputListing[language=C++]{{{CPP}}}",
+        r"\end{ufcobject}",
         r"\end{document}",
         "",
     ))
@@ -117,7 +121,9 @@ def validate_source(api: str, source: str, body: str, locale: str) -> None:
         require(source.count(r"\ufcInputListing[language=C++]{") == 1
                 and CPP in source and "code=listings" in source,
                 "B4 InputListing actual external C++ import missing")
-        require(r"\legend{code}{B4-LISTING-CAPTION-" in source,
+        require(r"\legend{code}{B4-LISTING-CAPTION-" in source
+                and r"\begin{ufcobject}[here]" in source
+                and r"\end{ufcobject}" in source,
                 "B4 InputListing synthetic caption absent")
     elif api == KEYWORDS_API:
         require(body.count(r"\keywords{") == 1
