@@ -43,8 +43,9 @@ def folder(locale: str) -> Path:
     return OUTPUT / locale / "b2-summary-remaining"
 
 
-def support(locale: str, key: str) -> Path:
-    return folder(locale) / f"b2-{locale}-{key}.tex"
+def support(locale: str, case: str, key: str) -> Path:
+    # Keep inputs separate across cases so optional summaries cannot mutate earlier SHA receipts.
+    return folder(locale) / f"b2-{locale}-{case}-input-{key}.tex"
 
 
 def doc(locale: str, case: str) -> Path:
@@ -72,16 +73,16 @@ def make_source(locale: str, case: str) -> str:
         raise ValueError("unrecognized summary locale or scenario")
     lang = LANGS[locale][0]
     if case == "direct":
-        commands = rf"\ufcPrintSummaryInLanguage{{{locale}}}{{{support(locale, locale).relative_to(ROOT).as_posix()}}}"
+        commands = rf"\ufcPrintSummaryInLanguage{{{locale}}}{{{support(locale, case, locale).relative_to(ROOT).as_posix()}}}"
     elif case == "legacy":
         commands = "\n".join((
-            rf"\ufcPrintSummary{{{support(locale, 'legacypt').relative_to(ROOT).as_posix()}}}",
-            rf"\ufcPrintAbstract{{{support(locale, 'legacyen').relative_to(ROOT).as_posix()}}}",
+            rf"\ufcPrintSummary{{{support(locale, case, 'legacypt').relative_to(ROOT).as_posix()}}}",
+            rf"\ufcPrintAbstract{{{support(locale, case, 'legacyen').relative_to(ROOT).as_posix()}}}",
         ))
     elif case == "optional" and locale in ("es", "fr"):
         commands = "\n".join((
-            rf"\ufcPrintRequiredSummaries{{{support(locale, locale).relative_to(ROOT).as_posix()}}}{{{support(locale, 'pt').relative_to(ROOT).as_posix()}}}",
-            rf"\ufcPrintOptionalEnglishSummary{{{support(locale, 'en').relative_to(ROOT).as_posix()}}}",
+            rf"\ufcPrintRequiredSummaries{{{support(locale, case, locale).relative_to(ROOT).as_posix()}}}{{{support(locale, case, 'pt').relative_to(ROOT).as_posix()}}}",
+            rf"\ufcPrintOptionalEnglishSummary{{{support(locale, case, 'en').relative_to(ROOT).as_posix()}}}",
         ))
     else:
         raise ValueError("optional summary only applies to Spanish/French")
@@ -160,6 +161,16 @@ def negative_controls() -> int:
                 else:
                     raise ValueError(f"B2 remaining negative escaped {locale}/{case}")
     ensure(count == 30, "B2 remaining negative count drift")
+    # Every distinct case/input key must resolve to a unique source path.
+    all_inputs = [
+        support(locale, case, key)
+        for locale in LANGS
+        for case in CASES
+        if case != "optional" or locale in ("es", "fr")
+        for key in inputs(locale, case)
+    ]
+    ensure(len(all_inputs) == 20 and len(set(all_inputs)) == len(all_inputs),
+           "B2 summary inputs collide across scenarios")
     return count
 
 
@@ -206,7 +217,7 @@ def main() -> None:
             continue
         inp = inputs(locale, case)
         for key, value in inp.items():
-            support(locale, key).write_text(value + "\n", encoding="utf-8")
+            support(locale, case, key).write_text(value + "\n", encoding="utf-8")
         source = make_source(locale, case)
         tex = doc(locale, case)
         tex.write_text(source, encoding="utf-8")
@@ -232,7 +243,7 @@ def main() -> None:
             })[case],
             "tex_sha256": checksum(tex), "pdf_sha256": checksum(pdf),
             "log_sha256": checksum(log),
-            "input_sha256": {key: checksum(support(locale, key)) for key in inp},
+            "input_sha256": {key: checksum(support(locale, case, key)) for key in inp},
             "pdf_pages": len(pages), "markers": observations,
             "catalog_lang": LANGS[locale][0],
         })
