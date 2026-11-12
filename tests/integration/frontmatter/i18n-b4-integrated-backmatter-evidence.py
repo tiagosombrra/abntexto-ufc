@@ -247,6 +247,53 @@ def negatives() -> int:
     return count
 
 
+def runtime_negative_mutations(source: str, physical: list[str],
+                               profile: str, locale: str, biber: str) -> int:
+    # Run the full source/PDF predicates on mutated copies of original bytes;
+    # no mutated output may qualify for a positive source-bound receipt.
+    proof(source, physical, profile, locale, biber)
+    count = 0
+    for command, applicable in COMMANDS.items():
+        if profile not in applicable:
+            continue
+        mutated = source.replace(command, r"\B4MUTATED", 1)
+        require(mutated != source, "B4 source mutation was not applied")
+        try:
+            proof(mutated, physical, profile, locale, biber)
+        except ValueError:
+            count += 1
+        else:
+            raise ValueError(f"B4 real source deletion accepted: {command}")
+
+    for pattern in (r"Synthetic\s+original", r"Synthetic\s+object\s+note",
+                    r"Anais\s+do\s+simpósio\s+de\s+teste"):
+        changed = [re.sub(pattern, "B4-DELETED-EVIDENCE", page, flags=re.I)
+                   for page in physical]
+        require(changed != physical,
+                f"B4 negative PDF text mutation could not find target: {pattern}")
+        try:
+            proof(source, changed, profile, locale, biber)
+        except ValueError:
+            count += 1
+        else:
+            raise ValueError(f"B4 missing PDF evidence accepted: {pattern}")
+
+    if profile == "doctoral-thesis":
+        for heading in ("gloss", "index"):
+            index = unique_heading_page(
+                physical, HEADINGS[locale][heading])
+            changed = list(physical)
+            changed[index] = "B4-REMOVED-DOCTORAL-BACKMATTER"
+            try:
+                proof(source, changed, profile, locale, biber)
+            except ValueError:
+                count += 1
+            else:
+                raise ValueError(f"B4 absent doctoral {heading} accepted")
+
+    return count
+
+
 def checked(path: Path, digest: str, folder: Path) -> bytes:
     require(path.resolve().is_relative_to(folder.resolve()) and path.is_file(),
             "B4 original source/PDF file missing or outside locale artifact")
@@ -286,7 +333,7 @@ def run(locale: str) -> None:
     require(manifest.get("source_sha") == commit and manifest.get("locale") == locale
             and len(manifest.get("entries", [])) == 7,
             "B4 original integrated PDF provenance or corpus mismatch")
-    seen, receipts = set(), []
+    seen, receipts, runtime_negatives = set(), [], 0
     for row in manifest["entries"]:
         profile = row["profile"]
         require(profile in PROFILES and profile not in seen
@@ -308,6 +355,8 @@ def run(locale: str) -> None:
         require(row["pdf_catalog_lang"] == lang and row["pdf_pages"] == count,
                 "B4 original PDF page/catalog manifest mismatch")
         observed = proof(source, originals, profile, locale, row["biber"])
+        runtime_negatives += runtime_negative_mutations(
+            source, originals, profile, locale, row["biber"])
         receipts.append({
             "locale": locale, "profile": profile, "physical_pages": count,
             "pdf_catalog_lang": lang, "source_sha256": row["source_sha256"],
@@ -322,6 +371,7 @@ def run(locale: str) -> None:
         "source_sha": commit, "locale": locale, "real_pdfs": len(receipts),
         "identifiers": list(COMMANDS), "positive_observations": 62,
         "inapplicable_observations": 15, "negative_controls": 15,
+        "runtime_negative_mutations": runtime_negatives,
         "receipts": receipts, "human_normative_linguistic_review": "PENDING",
         "ledger_promotion": "NOT_AUTOMATIC", "publication_authorized": False,
     }
@@ -329,7 +379,8 @@ def run(locale: str) -> None:
         json.dumps(report, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     print(f"I18N-B4-INTEGRATED status=PASS locale={locale} IDs=11"
           " profiles=7 positives=62 negatives=15 physical_pages=PASS"
-          " source_PDF_SHA256=PASS human_review=PENDING")
+          f" source_PDF_SHA256=PASS runtime_negative={runtime_negatives}"
+          " human_review=PENDING")
 
 
 def main() -> None:
