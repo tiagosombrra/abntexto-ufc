@@ -7,6 +7,7 @@ on:
       - abntexto-ufc.cls
       - tests/integration/objects/optional-locale-evidence.py
       - tests/integration/objects/i18n-optional-api-output-evidence.py
+      - tests/integration/objects/i18n-b1-optional-config-evidence.py
       - tests/integration/frontmatter/run-integrated-locale.py
       - standards/evidence/test-surface-policy.json
       - .github/workflows/i18n-optional-modules-matrix.yml
@@ -16,6 +17,7 @@ on:
       - abntexto-ufc.cls
       - tests/integration/objects/optional-locale-evidence.py
       - tests/integration/objects/i18n-optional-api-output-evidence.py
+      - tests/integration/objects/i18n-b1-optional-config-evidence.py
       - tests/integration/frontmatter/run-integrated-locale.py
       - .github/workflows/i18n-optional-modules-matrix.yml
 permissions:
@@ -39,6 +41,7 @@ jobs:
             python3 tests/integration/objects/optional-locale-evidence.py --locale "$locale" --preflight
           done
           python3 tests/integration/objects/i18n-optional-api-output-evidence.py --self-test
+          python3 tests/integration/objects/i18n-b1-optional-config-evidence.py --self-test
   optional-locales:
     name: Code + minted + algorithm comments + long tables / ${{ matrix.locale }}
     needs: preflight
@@ -66,6 +69,7 @@ jobs:
             command -v latexminted >/dev/null || { echo 'minted processor missing'; exit 1; }
             git config --global --add safe.directory "$PWD"
             python3 tests/integration/objects/optional-locale-evidence.py --locale ${{ matrix.locale }}
+            python3 tests/integration/objects/i18n-b1-optional-config-evidence.py --locale ${{ matrix.locale }}
       - name: Upload source-bound PDFs and hashes
         if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2

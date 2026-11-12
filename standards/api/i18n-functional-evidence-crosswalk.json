@@ -124,6 +124,26 @@
       "path": "tests/integration/frontmatter/i18n-b2-remaining-summary-evidence.py",
       "suite": "b2-summary-remaining",
       "scope": "real direct summary (4 locales), combined legacy summary+abstract (4 locales), optional EN summary (ES/FR only): 10 real PDFs, 30 fail-closed mutants and source SHA receipts; human review pending"
+    },
+    {
+      "path": "tests/integration/frontmatter/i18n-b1-family-evidence.py",
+      "suite": "b1-integrated-15",
+      "scope": "15 bounded B1 setup/core API identifiers over seven real PDF profiles in PT/EN/ES/FR; 52 authored metadata roundtrips and physical pages including populated doctoral glossary/index; 14 negative controls; no global human normative or linguistic approval"
+    },
+    {
+      "path": "tests/integration/frontmatter/i18n-b1-auxiliary-pdf-evidence.py",
+      "suite": "b1-auxiliary-2",
+      "scope": "supplemental real-PDF re-audit of 32 primary/display-language pairs and 32 coat-of-arms image routes; 2 B1 option candidate receipts; no automatic ledger promotion"
+    },
+    {
+      "path": "tests/integration/objects/i18n-b1-optional-config-evidence.py",
+      "suite": "b1-optional-config-3",
+      "scope": "source-bound 3 optional module PDFs in each PT/EN/ES/FR locale, proving B1 tables/code/algorithms setup options in positive and negative scenarios; no automatic ledger PASS"
+    },
+    {
+      "path": "tests/integration/frontmatter/i18n-b1-final-five-evidence.py",
+      "suite": "b1-final-five",
+      "scope": "five B1 API options/catalog-card, font, strict-font, initial-page and math font getter; original catalog PDF plus positive/negative real PDFs in 4 locales, pdffonts, qpdf, TeX logs and verified hashes; no automatic ledger promotion"
     }
   ],
   "entries": {

@@ -407,3 +407,50 @@ Há **18 controles negativos** para fonte alterada, comando trocado ou duplicado
 **Novo ledger candidato na PR:** standards/api/i18n-per-identifier-proof-status.json passa de 6 PASS/66 PENDING para **22 PASS limitados / 50 PENDING / 0 NA globais**, mantendo seis ambientes anteriores e promovendo exatamente 16 comandos B2 a PASS apenas nos cenários comprovados. A evidência b2-family-12 contém 12 comandos nas fontes integradas/pré-textuais; b2-summary-remaining contém quatro comandos em dez novos PDFs (resumo direto, legado e opção ES/FR). Cada entrada tem evidence_id, escopo limitado e motivo explícito, sem alterar candidate_source original. O verificador fail-closed exige SHA original, run, IDs dos quatro ZIPs, runners existentes, blob Git da classe a73ef656de71d38ad30d7029ac3d86f852339950 e **22 controles negativos**, além de impedir PASS global, revisão humana inventada ou publicação.
 
 **Governança:** este PASS é funcional e limitado; não é aceitação de traduções oficiais, homologação normativa UFC/ABNT, prova de todos os perfis ou aprovação visual final. A PR depende do CI exato do HEAD contendo o ledger, revisão SHA-bound, zero threads e squash protegido com certificação pós-merge. **v3.1.0 UNRELEASED / publication_authorized=false**; a fonte publicada v3.0.5 permanece imutável.
+
+
+## P0.8 B1 — Auditoria de família única de 25 IDs (12/11/2026)
+
+O B2 foi integrado na main SHA 12714f82e9616f9cd3c88ed5e305e7b65762f691 (PR #586), com **22 PASS limitados / 50 PENDING / 0 NA**, sem alterar a classe LaTeX. A certificação pós-merge precisa produzir suas próprias provas no SHA exato; B1 parte da main sem herdar autorização de publicação.
+
+**Uma única família:** a nova suíte i18n-b1-family-evidence.py cadastra 25 IDs (17 opções e oito comandos públicos) e reaproveita sete PDFs por idioma (quatro idiomas), os manifests SHA256 de fontes/PDFs, seis recibos individuais de i18n-six-api-output-evidence.py e 52 round-trips reais de metadados por \ufcsetup/\ufcMeta. Confere efeitos renderizados de capa, idioma, ramos de projeto/anonimização e rótulos de gênero do orientador/coorientador. O preflight contém 14 mutações de fonte e saída e valida a cardinalidade do inventário.
+
+**13 identificadores candidatos a prova:** opções type, document-language, print-mode, cover, advisor-feminine-label, coadvisor-feminine-label; comandos \ufcsetup, \ufcDocumentType, \ufcPrintMode, \ufcMeta, \ufcIfProjectTF, \ufcIfAnonymizedProjectTF, \ufcDocumentLanguage.
+
+**12 IDs ainda exigem provas específicas na mesma PR**, sem receber PASS por associação lexical: opções labels-language, catalog-card, coat-of-arms, font, strict-font, tables, code, algorithms, glossary, index, initial-page; comando \ufcMathFontPolicy. Fontes candidatas incluem PDFs de idioma duplo, 32 documentos de brasão, catálogo B2, opções de tabelas/código/algoritmos, glossário/índice, numeração inicial e configuração matemática. Cada opção precisa de ramo positivo e negativo no PDF/log, com hash; cenários ausentes permanecem PENDING.
+
+**Governança:** validar no CI a matriz PT/EN/ES/FR, gerar manifest por ID/locale/perfil, controles negativos e auditoria independente dos ZIPs originais, promover apenas evidências realmente certificadas, cumprir gates Static/Matrix/Linux/Release, revisão SHA-bound e merge protegido, seguido de recertificação da main. v3.0.5 publicado imutável; v3.1.0 UNRELEASED/publication_authorized=false; homologação humana UFC/ABNT e linguística pendente.
+
+
+### Ampliação B1 em uma única PR: opções visuais e módulos (em certificação)
+
+A auditoria da família B1 foi ampliada com dois validadores suplementares **sem novas compilações redundantes**: i18n-b1-auxiliary-pdf-evidence.py revalida em bytes originais os 32 PDFs de document-language/labels-language (4x4x2, inclusive ordem de configuração) e 32 PDFs de coat-of-arms (dois perfis x quatro idiomas x quatro ramos: imagens distintas, ausente e desabilitado). i18n-b1-optional-config-evidence.py reusa os 12 PDFs da matriz opcional (três por idioma) e revalida source/TEX/PDF SHA256, catálogo, Babel, tabelas longas, códigos Listings/Minted e algoritmos, sob os controles negativos próprios.
+
+**Candidatos após esses testes, ainda condicionados ao CI completo:** 13 originais da matriz integrada + 2 (labels-language e coat-of-arms) + 3 (tables, code, algorithms) = **18 de 25 identificadores**. Os **sete remanescentes sem evidência adicional suficiente** são catalog-card, font, strict-font, glossary, index, initial-page e \ufcMathFontPolicy. A prova original de 13, as duas auxiliares e as três opções devem ser auditadas em seus próprios artefatos antes de qualquer promoção no ledger; nenhum progresso de 22/72 na main deve ser inferido desta lista de candidatos.
+
+A suíte adicional de módulos opcionais usa o workflow existente de quatro idiomas, com gatilho por alteração do próprio auditor. A classe LaTeX permanece intocada. v3.1.0 não publicada; revisão humana editorial e linguística pendente.
+
+
+### B1: novos testes de glossário e índice em PDFs (a certificar)
+
+A família integrada testa glossary=glossaries e index=imakeidx no doutorado em quatro idiomas: invocação real, títulos e presença de verbete na mesma página física; nos outros perfis, verifica ausência da ativação explícita indevida. Isso acrescenta dois IDs à rota candidata.
+
+**Total candidato atual, condicionado ao CI e auditoria independente:** 15 IDs na matriz integrada (incluindo glossary/index) + 2 nos 64 PDFs auxiliares (labels-language/coat-of-arms) + 3 nos módulos opcionais (tables/code/algorithms) = **20 de 25 B1 IDs**. Permanecem sem evidência suficiente: catalog-card, font, strict-font, initial-page e \ufcMathFontPolicy. Não alterar o registro de 22 PASS/50 PENDING na main por mera expectativa: cada promoção exige arquivos originais SHA-bound, controles negativos e os gates no HEAD exato.
+
+
+## P0.8/B1 — 25 identificadores promovidos a PASS funcional limitado (PR #587)
+
+**Este estado é exclusivamente da branch da PR #587, ainda não integrado à main.** A base da main antes desta PR conserva 22 PASS / 50 PENDING, com B2 integrado e 5/5 gates pós-merge aprovados. O ledger candidato da PR #587 contém **47 PASS limitados, 25 PENDING e 0 NA globais** (6 ambientes + 16 comandos B2 + 25 opções/comandos B1), sem alterar a classe e sem homologar qualquer tradução oficial.
+
+**Evidência original, auditada fora do runner:** source_sha=e3f0ebcab9321aaa4c3341c9c79c1e11511d07ce. Matriz integrada [#43253526935](https://github.com/tiagosombrra/abntexto-ufc/actions/runs/43253526935) **7/7 SUCCESS** e matriz de módulos opcionais [#43253527259](https://github.com/tiagosombrra/abntexto-ufc/actions/runs/43253527259) **5/5 SUCCESS**. Foram baixados dez ZIPs originais: integrados PT 13960622165, EN 13959738580, ES 13959643566, FR 13960872122; auxiliares idiomas mistos 13961625458 e brasão 13959908069; opcionais PT 13960227057, EN 13959204409, ES 13961605439, FR 13959299308. Uma auditoria Python independente de todas as fontes, recibos e PDFs comprovou **10 CRCs de ZIP**, **296 SHA256 de bytes originais**, **128 arquivos PDF**, **844 páginas físicas**, **160 condições de páginas/idiomas**, 28 recibos B1 integrados, 32 PDFs idiomas mistos, 32 de brasão, 12 opcionais, 12 rejeições negativas de compilação, oito verificações de fontes PDF e quatro políticas matemáticas LuaLaTeX. Os casos estritos falharam deliberadamente apenas quando a fonte literal faltava, mediante ClassError reconhecido no log. A auditoria reconhece os limites de corpus e não é aceite visual/normativo.
+
+**Quatro suítes com recibos históricos e escopos delimitados:**
+
+- b1-integrated-15: 15 IDs sob sete perfis por idioma, 52 metadados autorais por perfil, seis getters/branches, capa e gênero, glossário e índice na página física correta, 14 negativos.
+- b1-auxiliary-2: labels-language em 32 combinações de idioma principal/idioma dos rótulos/ordem de configuração; coat-of-arms em 32 PDFs com dois perfis e imagens distintas/ausente/desabilitado, quatro negativos suplementares.
+- b1-optional-config-3: tables/code/algorithms em 12 PDFs com longtable/listings/minted/algoritmos nos quatro idiomas, dez negativos suplementares e recibos das sete APIs opcionais.
+- b1-final-five: catalog-card ativado/desativado e páginas físicas, font Times/Arial, strict-font fallback ou ClassError esperado, initial-page 101 e rejeição de 0, getter ufcMathFontPolicy em pdfLaTeX e LuaLaTeX, quatro negativos suplementares.
+
+**Garantia do ledger:** o verificador de 72 IDs confere os quatro source SHAs, os workflows, os IDs originais dos dez ZIPs, os quatro arquivos de runner existentes, o blob de classe a73ef656de71d38ad30d7029ac3d86f852339950, relações exatas de crosswalk e o vínculo individual de 25 IDs com evidência e escopo limitado. Inclui **32 mutantes fail-closed** para impedir fabricação de PASS, mudança de SHA, perda de prova negativa ou alegação global. Os 25 IDs remanescentes não mudam de PENDING; precisam dos lotes B3 (11 IDs) e B4 (14 IDs).
+
+**Governança antes da integração:** executar novamente todos os workflows obrigatórios **no novo HEAD do ledger**, revisão técnica vinculada a esse SHA, zero threads, squash protegido e certificação pós-merge da nova main. A PR #587 não deve ser integrada se algum gate falhar. **Versão v3.1.0 UNRELEASED / publication_authorized=false.** Todos os 47 PASS são funcionais, por cenário, e não atestam totalidade dos perfis, revisão ABNT/UFC, tradução oficial ou aprovação editorial humana.

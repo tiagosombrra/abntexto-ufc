@@ -58,6 +58,44 @@ EXPECTED_EVIDENCE = {
         "runner": "tests/integration/frontmatter/i18n-b2-remaining-summary-evidence.py",
         "negative_controls": 30,
     },
+
+    "b1-integrated-15": {
+        "source_sha": "e3f0ebcab9321aaa4c3341c9c79c1e11511d07ce",
+        "workflow_run_id": 43253526935,
+        "artifact_ids": {
+            "pt": 13960622165, "en": 13959738580,
+            "es": 13959643566, "fr": 13960872122,
+        },
+        "runner": "tests/integration/frontmatter/i18n-b1-family-evidence.py",
+        "negative_controls": 14,
+    },
+    "b1-auxiliary-2": {
+        "source_sha": "e3f0ebcab9321aaa4c3341c9c79c1e11511d07ce",
+        "workflow_run_id": 43253526935,
+        "artifact_ids": {"mixed": 13961625458, "coat": 13959908069},
+        "runner": "tests/integration/frontmatter/i18n-b1-auxiliary-pdf-evidence.py",
+        "negative_controls": 4,
+    },
+    "b1-optional-config-3": {
+        "source_sha": "e3f0ebcab9321aaa4c3341c9c79c1e11511d07ce",
+        "workflow_run_id": 43253527259,
+        "artifact_ids": {
+            "pt": 13960227057, "en": 13959204409,
+            "es": 13961605439, "fr": 13959299308,
+        },
+        "runner": "tests/integration/objects/i18n-b1-optional-config-evidence.py",
+        "negative_controls": 10,
+    },
+    "b1-final-five": {
+        "source_sha": "e3f0ebcab9321aaa4c3341c9c79c1e11511d07ce",
+        "workflow_run_id": 43253526935,
+        "artifact_ids": {
+            "pt": 13960622165, "en": 13959738580,
+            "es": 13959643566, "fr": 13960872122,
+        },
+        "runner": "tests/integration/frontmatter/i18n-b1-final-five-evidence.py",
+        "negative_controls": 4,
+    },
 }
 EXPECTED_PASS_ENV = {
     "ufclettereditems": "core-lists-12",
@@ -86,11 +124,43 @@ EXPECTED_PASS_B2 = {
     r"\ufcPrintSummary": "b2-summary-remaining",
     r"\ufcPrintAbstract": "b2-summary-remaining",
 }
+
+EXPECTED_PASS_B1 = {
+    ("setup_option_identifiers", "type"): "b1-integrated-15",
+    ("setup_option_identifiers", "document-language"): "b1-integrated-15",
+    ("setup_option_identifiers", "print-mode"): "b1-integrated-15",
+    ("setup_option_identifiers", "cover"): "b1-integrated-15",
+    ("setup_option_identifiers", "advisor-feminine-label"): "b1-integrated-15",
+    ("setup_option_identifiers", "coadvisor-feminine-label"): "b1-integrated-15",
+    ("setup_option_identifiers", "glossary"): "b1-integrated-15",
+    ("setup_option_identifiers", "index"): "b1-integrated-15",
+    ("public_commands", r"\ufcsetup"): "b1-integrated-15",
+    ("public_commands", r"\ufcDocumentType"): "b1-integrated-15",
+    ("public_commands", r"\ufcPrintMode"): "b1-integrated-15",
+    ("public_commands", r"\ufcMeta"): "b1-integrated-15",
+    ("public_commands", r"\ufcIfProjectTF"): "b1-integrated-15",
+    ("public_commands", r"\ufcIfAnonymizedProjectTF"): "b1-integrated-15",
+    ("public_commands", r"\ufcDocumentLanguage"): "b1-integrated-15",
+    ("setup_option_identifiers", "labels-language"): "b1-auxiliary-2",
+    ("setup_option_identifiers", "coat-of-arms"): "b1-auxiliary-2",
+    ("setup_option_identifiers", "tables"): "b1-optional-config-3",
+    ("setup_option_identifiers", "code"): "b1-optional-config-3",
+    ("setup_option_identifiers", "algorithms"): "b1-optional-config-3",
+    ("setup_option_identifiers", "catalog-card"): "b1-final-five",
+    ("setup_option_identifiers", "font"): "b1-final-five",
+    ("setup_option_identifiers", "strict-font"): "b1-final-five",
+    ("setup_option_identifiers", "initial-page"): "b1-final-five",
+    ("public_commands", r"\ufcMathFontPolicy"): "b1-final-five",
+}
 EXPECTED_PROOF_SCOPES = {
     "core-lists-12": "ONE_ISOLATED_PDF_PER_ENVIRONMENT_AND_LOCALE",
     "optional-env-12": "ONE_ISOLATED_PDF_PER_ENVIRONMENT_AND_LOCALE",
     "b2-family-12": "TWELVE_PRETEXTUAL_COMMANDS_FOUR_LOCALE_REAL_PDFS",
     "b2-summary-remaining": "FOUR_SUMMARY_COMMANDS_APPLICABLE_LOCALE_REAL_PDFS",
+    "b1-integrated-15": "FIFTEEN_B1_PUBLIC_SETUP_CORE_FOUR_LOCALE_SEVEN_PROFILE_PDFS",
+    "b1-auxiliary-2": "TWO_B1_CONFIG_OPTIONS_SIXTY_FOUR_REAL_PDFS",
+    "b1-optional-config-3": "THREE_B1_OPTIONAL_CONFIG_FOUR_LOCALE_TWELVE_REAL_PDFS",
+    "b1-final-five": "FIVE_B1_CORE_OPTIONS_FOUR_LOCALE_PDFTEX_LUATEX_RECEIPTS",
 }
 GROUPS = ("setup_option_identifiers", "public_commands",
           "public_environments", "retained_upstream_identifiers")
@@ -199,10 +269,21 @@ def validate(data: dict, api: dict, cross: dict) -> dict[str, int]:
                            and source.get("path") == EXPECTED_EVIDENCE[b2_suite]["runner"]
                            for source in cross["sources"]):
                     raise ValueError(f"B2 original source-to-suite relation absent: {name}")
+            elif (group, name) in EXPECTED_PASS_B1:
+                b1_suite = EXPECTED_PASS_B1[(group, name)]
+                if (result != "PASS" or row["evidence_id"] != b1_suite
+                        or row["scope"] != "BOUNDED_REAL_PDF_4_LOCALES"):
+                    raise ValueError(f"B1 real-PDF proof incorrectly classified: {group}/{name}")
+                if EXPECTED_EVIDENCE[b1_suite]["source_sha"] not in row["reason"]:
+                    raise ValueError(f"B1 row not linked to exact source SHA: {name}")
+                if not any(source.get("suite") == b1_suite
+                           and source.get("path") == EXPECTED_EVIDENCE[b1_suite]["runner"]
+                           for source in cross["sources"]):
+                    raise ValueError(f"B1 original source-to-suite link missing: {name}")
             elif (result != "PENDING" or row["evidence_id"] is not None
                   or row["scope"] != "NOT_YET_CERTIFIED_PER_IDENTIFIER"):
                 raise ValueError(f"unproven identifier promoted or wrongly classified: {name}")
-    if counts != {"PASS": 22, "PENDING": 50, "NA": 0}:
+    if counts != {"PASS": 47, "PENDING": 25, "NA": 0}:
         raise ValueError("72-ID evidence classification totals drift")
     if data.get("summary") != counts:
         raise ValueError("evidence summary differs from individual records")
@@ -227,7 +308,7 @@ def negative_controls(data: dict, api: dict, cross: dict) -> int:
     x["same_runtime_blob"] = "0" * 40
     tests.append(x)
     x = edited()
-    x["entries"]["public_commands"]["\\ufcsetup"]["result"] = "PASS"
+    x["entries"]["public_commands"]["\\ufcsetup"]["result"] = "PENDING"
     tests.append(x)
     x = edited()
     x["entries"]["public_environments"]["ufcobject"]["evidence_id"] = "core-lists-12"
@@ -282,6 +363,36 @@ def negative_controls(data: dict, api: dict, cross: dict) -> int:
     x = edited()
     x["evidence"]["b2-summary-remaining"]["runner"] = "tests/not-a-real-file.py"
     tests.append(x)
+    x = edited()
+    x["entries"]["setup_option_identifiers"]["type"]["result"] = "PENDING"
+    tests.append(x)
+    x = edited()
+    x["entries"]["setup_option_identifiers"]["labels-language"]["evidence_id"] = "b1-integrated-15"
+    tests.append(x)
+    x = edited()
+    x["entries"]["setup_option_identifiers"]["coat-of-arms"]["scope"] = "ALL_PROFILES"
+    tests.append(x)
+    x = edited()
+    x["entries"]["setup_option_identifiers"]["font"]["evidence_id"] = "b1-optional-config-3"
+    tests.append(x)
+    x = edited()
+    x["entries"]["setup_option_identifiers"]["initial-page"]["result"] = "NA"
+    tests.append(x)
+    x = edited()
+    x["entries"]["public_commands"][r"\ufcMathFontPolicy"]["human_normative_linguistic_review"] = "ACCEPT"
+    tests.append(x)
+    x = edited()
+    x["evidence"]["b1-integrated-15"]["source_sha"] = "a" * 40
+    tests.append(x)
+    x = edited()
+    x["evidence"]["b1-auxiliary-2"]["artifact_ids"]["coat"] += 1
+    tests.append(x)
+    x = edited()
+    x["evidence"]["b1-optional-config-3"]["workflow_run_id"] += 1
+    tests.append(x)
+    x = edited()
+    x["evidence"]["b1-final-five"]["runner"] = "tests/not-a-real-file.py"
+    tests.append(x)
     for i, mutation in enumerate(tests, start=1):
         try:
             validate(mutation, api, cross)
@@ -316,7 +427,7 @@ def main() -> None:
         "counts": counts,
         "negative_controls": negative_count,
         "historical_source_bound_proofs": data["evidence"],
-        "proof_boundary": "Six public environments and sixteen bounded B2 APIs with independently inspected original PDF evidence; 50 identifiers remain pending; global normative/linguistic acceptance not claimed",
+        "proof_boundary": "Six public environments, sixteen bounded B2 APIs, twenty-five bounded B1 setup/core APIs with independently inspected original PDFs; 25 identifiers remain pending and global normative/linguistic acceptance is not claimed",
     }
     if args.report:
         REPORT_PATH.parent.mkdir(parents=True, exist_ok=True)
