@@ -126,6 +126,8 @@ def observe(source: str, pages: list[str], profile: str, locale: str) -> list[di
             ensure(len(heading_pages) == 1,
                    f"B3 dedicated list heading missing or duplicated: {key}/{profile}/{locale}")
             index = heading_pages[0]
+            ensure(index < body_index,
+                   f"B3 pretextual list is inside/after the manuscript body: {key}")
             ensure(marker_text in normalized(pages[index]),
                    f"B3 list entry absent from heading physical page: {key}/{profile}/{locale}")
             body_page = None
@@ -149,15 +151,16 @@ def observe(source: str, pages: list[str], profile: str, locale: str) -> list[di
                 "reason": "This profile does not invoke this public pretextual list",
             })
     entry_source = f"\\ufcListEntry{{INTEGRATED-TERM-{locale.upper()}}}"
-    ensure(entry_source in source,
-           "B3 public ListEntry usage missing from manuscript body")
+    ensure(source.count(entry_source) == 1,
+           "B3 public ListEntry source missing or duplicated")
     term = normalized(f"INTEGRATED-TERM-{locale.upper()}")
     definition = normalized(f"INTEGRATED-DEFINITION-{locale.upper()}")
     matches = [
         idx for idx, page in enumerate(pages)
         if term in normalized(page) and definition in normalized(page)
     ]
-    ensure(len(matches) == 1, "B3 public ListEntry term and definition not on one body page")
+    ensure(len(matches) == 1 and matches[0] >= body_index,
+           "B3 ListEntry term/definition missing, duplicated or outside textual body")
     report.append({
         "identifier": ENTRY, "applicability": "BOUNDED_REAL_PDF_PASS",
         "term_physical_page": matches[0] + 1,
@@ -228,7 +231,27 @@ def negative_controls() -> int:
         count += 1
     else:
         raise ValueError("B3 body caption missing after source list was accepted")
-    ensure(count == 19 and len(IDENTIFIERS) == len(set(IDENTIFIERS)) == 9,
+    # Pretextual headings and public definitions must never be accepted on
+    # the textual body or an unrelated prelim page.
+    misplaced_heading = list(pages)
+    misplaced_heading[6] = misplaced_heading[6].replace(
+        "List of Abbreviations and Acronyms\n", "")
+    misplaced_heading[-1] += (
+        "\nList of Abbreviations and Acronyms\n"
+        "INTEGRATED-ABBREVIATION-EN")
+    misplaced_entry = list(pages)
+    misplaced_entry[-1] = misplaced_entry[-1].replace(
+        "INTEGRATED-TERM-EN INTEGRATED-DEFINITION-EN", "")
+    misplaced_entry[0] += (
+        " INTEGRATED-TERM-EN INTEGRATED-DEFINITION-EN")
+    for mutated in (misplaced_heading, misplaced_entry):
+        try:
+            observe(source, mutated, "doctoral-thesis", "en")
+        except ValueError:
+            count += 1
+        else:
+            raise ValueError("B3 wrong pretextual/textual physical position escaped")
+    ensure(count == 21 and len(IDENTIFIERS) == len(set(IDENTIFIERS)) == 9,
            "B3 nine-command negative coverage drift")
     return count
 
@@ -290,7 +313,7 @@ def run(locale: str) -> None:
         "source_sha": sha, "locale": locale, "real_pdfs": 7,
         "identifiers": list(IDENTIFIERS),
         "positive_observations": 45, "not_exercised_in_profile": 18,
-        "negative_controls": 19, "records": receipts,
+        "negative_controls": 21, "records": receipts,
         "ledger_promotion": "NOT_AUTOMATIC",
         "human_normative_linguistic_review": "PENDING",
         "publication_authorized": False,
@@ -299,7 +322,7 @@ def run(locale: str) -> None:
         json.dumps(report, ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8")
     print(f"I18N-B3-INTEGRATED status=PASS locale={locale} IDs=9"
-          " real_pdfs=7 positive=45 not_exercised=18 negatives=19"
+          " real_pdfs=7 positive=45 not_exercised=18 negatives=21"
           " physical_pages=PASS sha256=PASS human_review=PENDING")
 
 
