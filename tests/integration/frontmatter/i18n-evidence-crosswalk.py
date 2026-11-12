@@ -26,7 +26,7 @@ SOURCE_STATES = {"SOURCE_REFERENCE_ONLY", "UNMAPPED"}
 SOURCES = {"integrated-28", "optional-12", "coat-32", "inherited-pdf",
            "legacy-summary-pdf", "profile-28", "display-labels-pdf",
            "summary-language-pdf", "multivolume-pdf", "layout-font-integration",
-           "core-lists-12", "optional-env-12", "pretextual-command-16", "b2-family-12", "b2-summary-remaining", "b1-family-25", "fixture"}
+           "core-lists-12", "optional-env-12", "pretextual-command-16", "b2-family-12", "b2-summary-remaining", "b1-family-25", "b1-auxiliary-2", "fixture"}
 
 
 def expected_groups(api: dict, inventory: dict) -> dict[str, set[str]]:
