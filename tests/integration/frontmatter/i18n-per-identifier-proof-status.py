@@ -43,6 +43,21 @@ EXPECTED_EVIDENCE = {
         "runner": "tests/integration/frontmatter/i18n-optional-environment-evidence.py",
         "negative_controls": 22,
     },
+
+    "b2-family-12": {
+        "source_sha": "96b395ed47591c948af2d6a9bc60c9f1fb63f63b",
+        "workflow_run_id": 43195021431,
+        "artifact_ids": {"pt": 13932771946, "en": 13932782130, "es": 13931829747, "fr": 13933076465},
+        "runner": "tests/integration/frontmatter/i18n-b2-family-evidence.py",
+        "negative_controls": 26,
+    },
+    "b2-summary-remaining": {
+        "source_sha": "96b395ed47591c948af2d6a9bc60c9f1fb63f63b",
+        "workflow_run_id": 43195021431,
+        "artifact_ids": {"pt": 13932771946, "en": 13932782130, "es": 13931829747, "fr": 13933076465},
+        "runner": "tests/integration/frontmatter/i18n-b2-remaining-summary-evidence.py",
+        "negative_controls": 30,
+    },
 }
 EXPECTED_PASS_ENV = {
     "ufclettereditems": "core-lists-12",
@@ -51,6 +66,31 @@ EXPECTED_PASS_ENV = {
     "ufcobject": "optional-env-12",
     "ufclisting": "optional-env-12",
     "ufcalgorithm": "optional-env-12",
+}
+
+EXPECTED_PASS_B2 = {
+    r"\ufcPrintCover": "b2-family-12",
+    r"\ufcPrintTitlePage": "b2-family-12",
+    r"\ufcPrintApprovalPage": "b2-family-12",
+    r"\ufcPrintCatalogCard": "b2-family-12",
+    r"\ufcPrintDedication": "b2-family-12",
+    r"\ufcPrintAcknowledgments": "b2-family-12",
+    r"\ufcPrintEpigraph": "b2-family-12",
+    r"\ufcPrintErrata": "b2-family-12",
+    r"\ufcPrintRequiredSummaries": "b2-family-12",
+    r"\ufcSummaryKeywords": "b2-family-12",
+    r"\ufcSummaryKeywordsInLanguage": "b2-family-12",
+    r"\ufcPrintArticleTranslatedSummary": "b2-family-12",
+    r"\ufcPrintSummaryInLanguage": "b2-summary-remaining",
+    r"\ufcPrintOptionalEnglishSummary": "b2-summary-remaining",
+    r"\ufcPrintSummary": "b2-summary-remaining",
+    r"\ufcPrintAbstract": "b2-summary-remaining",
+}
+EXPECTED_PROOF_SCOPES = {
+    "core-lists-12": "ONE_ISOLATED_PDF_PER_ENVIRONMENT_AND_LOCALE",
+    "optional-env-12": "ONE_ISOLATED_PDF_PER_ENVIRONMENT_AND_LOCALE",
+    "b2-family-12": "TWELVE_PRETEXTUAL_COMMANDS_FOUR_LOCALE_REAL_PDFS",
+    "b2-summary-remaining": "FOUR_SUMMARY_COMMANDS_APPLICABLE_LOCALE_REAL_PDFS",
 }
 GROUPS = ("setup_option_identifiers", "public_commands",
           "public_environments", "retained_upstream_identifiers")
@@ -114,8 +154,8 @@ def validate(data: dict, api: dict, cross: dict) -> dict[str, int]:
         for key, value in expected.items():
             if evidence.get(key) != value:
                 raise ValueError(f"proof provenance drift: {suite}/{key}")
-        if evidence["scope"] != "ONE_ISOLATED_PDF_PER_ENVIRONMENT_AND_LOCALE":
-            raise ValueError("PDF proof no longer bounded by locale and environment")
+        if evidence["scope"] != EXPECTED_PROOF_SCOPES[suite]:
+            raise ValueError(f"PDF proof scope drift: {suite}")
         if not evidence["qualification"] or "pending" not in evidence["qualification"].lower():
             raise ValueError("scope's human review limitations omitted")
         if not (ROOT / evidence["runner"]).is_file():
@@ -147,10 +187,22 @@ def validate(data: dict, api: dict, cross: dict) -> dict[str, int]:
                     raise ValueError(f"PDF-proven environment incorrectly classified: {name}")
                 if cross["entries"][group][name]["candidate_suite"] != suite:
                     raise ValueError(f"candidate suite mismatch: {name}")
+            elif group == "public_commands" and name in EXPECTED_PASS_B2:
+                b2_suite = EXPECTED_PASS_B2[name]
+                b2_scope = ("BOUNDED_REAL_PDF_ES_FR_ONLY"
+                            if name == r"\ufcPrintOptionalEnglishSummary"
+                            else "BOUNDED_REAL_PDF_4_LOCALES")
+                if (result != "PASS" or row["evidence_id"] != b2_suite
+                        or row["scope"] != b2_scope):
+                    raise ValueError(f"B2 real-PDF proof incorrectly classified: {name}")
+                if not any(source.get("suite") == b2_suite
+                           and source.get("path") == EXPECTED_EVIDENCE[b2_suite]["runner"]
+                           for source in cross["sources"]):
+                    raise ValueError(f"B2 original source-to-suite relation absent: {name}")
             elif (result != "PENDING" or row["evidence_id"] is not None
                   or row["scope"] != "NOT_YET_CERTIFIED_PER_IDENTIFIER"):
                 raise ValueError(f"unproven identifier promoted or wrongly classified: {name}")
-    if counts != {"PASS": 6, "PENDING": 66, "NA": 0}:
+    if counts != {"PASS": 22, "PENDING": 50, "NA": 0}:
         raise ValueError("72-ID evidence classification totals drift")
     if data.get("summary") != counts:
         raise ValueError("evidence summary differs from individual records")
@@ -211,6 +263,25 @@ def negative_controls(data: dict, api: dict, cross: dict) -> int:
     x = edited()
     x["entries"]["public_environments"]["ufcobject"]["human_normative_linguistic_review"] = "ACCEPT"
     tests.append(x)
+
+    x = edited()
+    x["entries"]["public_commands"][r"\ufcPrintCover"]["result"] = "PENDING"
+    tests.append(x)
+    x = edited()
+    x["entries"]["public_commands"][r"\ufcPrintEpigraph"]["evidence_id"] = "b2-summary-remaining"
+    tests.append(x)
+    x = edited()
+    x["entries"]["public_commands"][r"\ufcPrintOptionalEnglishSummary"]["scope"] = "GLOBAL_FOUR_LOCALES"
+    tests.append(x)
+    x = edited()
+    x["evidence"]["b2-family-12"]["source_sha"] = "e" * 40
+    tests.append(x)
+    x = edited()
+    x["evidence"]["b2-summary-remaining"]["artifact_ids"]["es"] += 1
+    tests.append(x)
+    x = edited()
+    x["evidence"]["b2-summary-remaining"]["runner"] = "tests/not-a-real-file.py"
+    tests.append(x)
     for i, mutation in enumerate(tests, start=1):
         try:
             validate(mutation, api, cross)
@@ -245,7 +316,7 @@ def main() -> None:
         "counts": counts,
         "negative_controls": negative_count,
         "historical_source_bound_proofs": data["evidence"],
-        "proof_boundary": "Six public environments with four-locale PDF proof; other 66 identifiers pending individual evidence",
+        "proof_boundary": "Six public environments and sixteen bounded B2 APIs with independently inspected original PDF evidence; 50 identifiers remain pending; global normative/linguistic acceptance not claimed",
     }
     if args.report:
         REPORT_PATH.parent.mkdir(parents=True, exist_ok=True)
