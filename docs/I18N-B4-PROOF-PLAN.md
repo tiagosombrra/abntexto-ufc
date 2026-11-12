@@ -124,3 +124,9 @@ no premature 72/72 PASS. If an isolated fixture fails, correct the
 *actual evidence* without weakening its technical predicates, and retain
 any unproved ID as PENDING. Human ABNT/UFC and linguistic acceptance
 remain separate from this functional evidence.
+
+## TeX Live 2026 nested InputListing regression — issue #590
+
+**Observed, not presumed:** Source SHA `18a92730de4c54102b27f693a1e2dcd1b3d9865e`, original integrated matrix #43315556196, fails in **all four** locales when `\ufcInputListing` is nested within a minimal `ufcobject` in `scientific-article` under TeX Live 2026. Fatal TeX `File ended while scanning use of \__math_grab_dollar_delim:w`, no PDF. Original FR ZIP artifact 13987528952 contains the exact failing `.tex` and `.log` (PT/ES/EN have equivalent failures). Root cause **unresolved**, tracked in [#590](https://github.com/tiagosombrra/abntexto-ufc/issues/590). Existing standalone InputListing four-locale fixture is known to work; the documented advanced-objects nested fixture also contains other setup and differs materially.
+
+**Conservative scope adjustment in PR #589:** Isolated B4 positive PDF source now tests `\ufcInputListing` standalone in a textual section importing real C++ code, without claiming caption/source or nested-`ufcobject` support. The object source/note/legend commands are separately exercised in the seven-profile integrated PDFs. Certifying the standalone API does **not** certify the nested context in #590. Do not suppress the error or change the class without causal reproduction, complete CI regression and separate approval.
