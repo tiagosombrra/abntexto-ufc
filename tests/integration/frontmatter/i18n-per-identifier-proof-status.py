@@ -96,6 +96,26 @@ EXPECTED_EVIDENCE = {
         "runner": "tests/integration/frontmatter/i18n-b1-final-five-evidence.py",
         "negative_controls": 4,
     },
+    "b3-integrated-9": {
+        "source_sha": "851d16bb131a1b88ad93a5ff4830b2286297dea3",
+        "workflow_run_id": 43271021807,
+        "artifact_ids": {
+            "pt": 13967553724, "en": 13967129601,
+            "es": 13969081744, "fr": 13967509371,
+        },
+        "runner": "tests/integration/frontmatter/i18n-b3-integrated-list-evidence.py",
+        "negative_controls": 24,
+    },
+    "b3-optional-2": {
+        "source_sha": "851d16bb131a1b88ad93a5ff4830b2286297dea3",
+        "workflow_run_id": 43271021778,
+        "artifact_ids": {
+            "pt": 13969011260, "en": 13968662366,
+            "es": 13968561852, "fr": 13968691920,
+        },
+        "runner": "tests/integration/objects/i18n-b3-optional-list-evidence.py",
+        "negative_controls": 14,
+    },
 }
 EXPECTED_PASS_ENV = {
     "ufclettereditems": "core-lists-12",
@@ -152,6 +172,20 @@ EXPECTED_PASS_B1 = {
     ("setup_option_identifiers", "initial-page"): "b1-final-five",
     ("public_commands", r"\ufcMathFontPolicy"): "b1-final-five",
 }
+EXPECTED_PASS_B3 = {
+    r"\ufcPrintListOfFigures": "b3-integrated-9",
+    r"\ufcPrintListOfTables": "b3-integrated-9",
+    r"\ufcPrintListOfIllustrations": "b3-integrated-9",
+    r"\ufcPrintListOfTextTables": "b3-integrated-9",
+    r"\ufcPrintListOfCharts": "b3-integrated-9",
+    r"\ufcPrintListOfAbbreviationsAndAcronyms": "b3-integrated-9",
+    r"\ufcPrintListOfSymbols": "b3-integrated-9",
+    r"\ufcPrintTableOfContents": "b3-integrated-9",
+    r"\ufcListEntry": "b3-integrated-9",
+    r"\ufcPrintListOfCodeListings": "b3-optional-2",
+    r"\ufcPrintListOfAlgorithms": "b3-optional-2",
+}
+
 EXPECTED_PROOF_SCOPES = {
     "core-lists-12": "ONE_ISOLATED_PDF_PER_ENVIRONMENT_AND_LOCALE",
     "optional-env-12": "ONE_ISOLATED_PDF_PER_ENVIRONMENT_AND_LOCALE",
@@ -161,6 +195,8 @@ EXPECTED_PROOF_SCOPES = {
     "b1-auxiliary-2": "TWO_B1_CONFIG_OPTIONS_SIXTY_FOUR_REAL_PDFS",
     "b1-optional-config-3": "THREE_B1_OPTIONAL_CONFIG_FOUR_LOCALE_TWELVE_REAL_PDFS",
     "b1-final-five": "FIVE_B1_CORE_OPTIONS_FOUR_LOCALE_PDFTEX_LUATEX_RECEIPTS",
+    "b3-integrated-9": "NINE_B3_PRETEXTUAL_LISTS_FOUR_LOCALE_SEVEN_PROFILE_REAL_PDFS",
+    "b3-optional-2": "TWO_B3_OPTIONAL_LISTS_FOUR_LOCALE_THREE_PROFILE_REAL_PDFS",
 }
 GROUPS = ("setup_option_identifiers", "public_commands",
           "public_environments", "retained_upstream_identifiers")
@@ -280,10 +316,21 @@ def validate(data: dict, api: dict, cross: dict) -> dict[str, int]:
                            and source.get("path") == EXPECTED_EVIDENCE[b1_suite]["runner"]
                            for source in cross["sources"]):
                     raise ValueError(f"B1 original source-to-suite link missing: {name}")
+            elif group == "public_commands" and name in EXPECTED_PASS_B3:
+                b3_suite = EXPECTED_PASS_B3[name]
+                if (result != "PASS" or row["evidence_id"] != b3_suite
+                        or row["scope"] != "BOUNDED_REAL_PDF_4_LOCALES"):
+                    raise ValueError(f"B3 real-PDF proof incorrectly classified: {name}")
+                if EXPECTED_EVIDENCE[b3_suite]["source_sha"] not in row["reason"]:
+                    raise ValueError(f"B3 proof not linked to exact source SHA: {name}")
+                if not any(source.get("suite") == b3_suite
+                           and source.get("path") == EXPECTED_EVIDENCE[b3_suite]["runner"]
+                           for source in cross["sources"]):
+                    raise ValueError(f"B3 source-to-suite relation missing: {name}")
             elif (result != "PENDING" or row["evidence_id"] is not None
                   or row["scope"] != "NOT_YET_CERTIFIED_PER_IDENTIFIER"):
                 raise ValueError(f"unproven identifier promoted or wrongly classified: {name}")
-    if counts != {"PASS": 47, "PENDING": 25, "NA": 0}:
+    if counts != {"PASS": 58, "PENDING": 14, "NA": 0}:
         raise ValueError("72-ID evidence classification totals drift")
     if data.get("summary") != counts:
         raise ValueError("evidence summary differs from individual records")
@@ -393,6 +440,36 @@ def negative_controls(data: dict, api: dict, cross: dict) -> int:
     x = edited()
     x["evidence"]["b1-final-five"]["runner"] = "tests/not-a-real-file.py"
     tests.append(x)
+    x = edited()
+    x["entries"]["public_commands"][r"\ufcPrintListOfFigures"]["result"] = "PENDING"
+    tests.append(x)
+    x = edited()
+    x["entries"]["public_commands"][r"\ufcPrintListOfTables"]["evidence_id"] = "b3-optional-2"
+    tests.append(x)
+    x = edited()
+    x["entries"]["public_commands"][r"\ufcPrintListOfCharts"]["scope"] = "ALL_PROFILES"
+    tests.append(x)
+    x = edited()
+    x["entries"]["public_commands"][r"\ufcPrintListOfAbbreviationsAndAcronyms"]["human_normative_linguistic_review"] = "ACCEPT"
+    tests.append(x)
+    x = edited()
+    x["entries"]["public_commands"][r"\ufcPrintListOfCodeListings"]["evidence_id"] = "b3-integrated-9"
+    tests.append(x)
+    x = edited()
+    x["entries"]["public_commands"][r"\ufcPrintListOfAlgorithms"]["result"] = "NA"
+    tests.append(x)
+    x = edited()
+    x["evidence"]["b3-integrated-9"]["artifact_ids"]["fr"] += 1
+    tests.append(x)
+    x = edited()
+    x["evidence"]["b3-optional-2"]["runner"] = "tests/does-not-exist.py"
+    tests.append(x)
+    x = edited()
+    x["evidence"]["b3-optional-2"]["source_sha"] = "f" * 40
+    tests.append(x)
+    x = edited()
+    x["evidence"]["b3-integrated-9"]["workflow_run_id"] += 1
+    tests.append(x)
     for i, mutation in enumerate(tests, start=1):
         try:
             validate(mutation, api, cross)
@@ -427,7 +504,7 @@ def main() -> None:
         "counts": counts,
         "negative_controls": negative_count,
         "historical_source_bound_proofs": data["evidence"],
-        "proof_boundary": "Six public environments, sixteen bounded B2 APIs, twenty-five bounded B1 setup/core APIs with independently inspected original PDFs; 25 identifiers remain pending and global normative/linguistic acceptance is not claimed",
+        "proof_boundary": "Six public environments, sixteen bounded B2 APIs, twenty-five bounded B1 setup/core APIs and eleven bounded B3 list/contents APIs, each with independently audited original PDF receipts; 14 identifiers remain PENDING, and global normative/linguistic acceptance is not claimed",
     }
     if args.report:
         REPORT_PATH.parent.mkdir(parents=True, exist_ok=True)

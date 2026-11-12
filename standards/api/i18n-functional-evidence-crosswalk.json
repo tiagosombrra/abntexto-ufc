@@ -144,6 +144,16 @@
       "path": "tests/integration/frontmatter/i18n-b1-final-five-evidence.py",
       "suite": "b1-final-five",
       "scope": "five B1 API options/catalog-card, font, strict-font, initial-page and math font getter; original catalog PDF plus positive/negative real PDFs in 4 locales, pdffonts, qpdf, TeX logs and verified hashes; no automatic ledger promotion"
+    },
+    {
+      "path": "tests/integration/frontmatter/i18n-b3-integrated-list-evidence.py",
+      "suite": "b3-integrated-9",
+      "scope": "Nine B3 public lists/contents commands in seven integrated PDF profiles across PT/EN/ES/FR; 24 fail-closed mutants, correct pretextual physical list page, unique textual body marker, SHA256 original source/PDF, qpdf BCP47 catalog. Source registry only: ledger remains PENDING until original artifacts audited and accepted."
+    },
+    {
+      "path": "tests/integration/objects/i18n-b3-optional-list-evidence.py",
+      "suite": "b3-optional-2",
+      "scope": "Two B3 code/algorithm list commands over three optional-module PDF fixtures in four locales; 14 negative controls, original seven-API receipts, unique body caption, qpdf BCP47 and SHA256 original PDFs. Source registry only: ledger remains PENDING until original artifacts audited and accepted."
     }
   ],
   "entries": {

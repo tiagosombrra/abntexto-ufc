@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "description": "Bounded 72-identifier functional evidence ledger: six environments, 16 B2 commands and 25 B1 setup/core identifiers verified in original PDF/TeX scenario receipts; 25 identifiers remain pending; not global i18n, normative or linguistic certification.",
+  "description": "Bounded 72-identifier functional evidence ledger: six public environments, 16 B2 commands, 25 B1 setup/core and eleven B3 list/contents commands in original PDF/TeX receipts. Fourteen remaining pending; global normative/linguistic acceptance not claimed.",
   "api_source": "standards/api/public-api.json",
   "source_crosswalk": "standards/api/i18n-functional-evidence-crosswalk.json",
   "created_from_main_sha": "b2001b0f979f76d1e30f11afbf03f6a10becd325",
@@ -119,11 +119,39 @@
       "negative_controls": 4,
       "scope": "FIVE_B1_CORE_OPTIONS_FOUR_LOCALE_PDFTEX_LUATEX_RECEIPTS",
       "qualification": "Original positive catalog PDF plus newly compiled disabled case; Times/Arial portable or strict class-error proof, initial-page 101 vs 0, and public math font policy and embedded fonts for pdfLaTeX/LuaLaTeX; cross-locale original SHA and PDF physical pages verified. Environment-specific font fallback not a global font guarantee; human review pending."
+    },
+    "b3-integrated-9": {
+      "source_sha": "851d16bb131a1b88ad93a5ff4830b2286297dea3",
+      "workflow_run_id": 43271021807,
+      "artifact_ids": {
+        "pt": 13967553724,
+        "en": 13967129601,
+        "es": 13969081744,
+        "fr": 13967509371
+      },
+      "runner": "tests/integration/frontmatter/i18n-b3-integrated-list-evidence.py",
+      "negative_controls": 24,
+      "scope": "NINE_B3_PRETEXTUAL_LISTS_FOUR_LOCALE_SEVEN_PROFILE_REAL_PDFS",
+      "qualification": "Nine public lists/contents/entry APIs across seven real PDF profiles and four locales; original SHA256, 180 positive and 72 inapplicable bounded observations, heading on physical pretextual page, unique entry/caption in textual body where relevant, BCP47 PDF catalog and 24 negatives. Only exercised profile/locale paths; human ABNT/UFC visual, linguistic and normative acceptance pending."
+    },
+    "b3-optional-2": {
+      "source_sha": "851d16bb131a1b88ad93a5ff4830b2286297dea3",
+      "workflow_run_id": 43271021778,
+      "artifact_ids": {
+        "pt": 13969011260,
+        "en": 13968662366,
+        "es": 13968561852,
+        "fr": 13968691920
+      },
+      "runner": "tests/integration/objects/i18n-b3-optional-list-evidence.py",
+      "negative_controls": 14,
+      "scope": "TWO_B3_OPTIONAL_LISTS_FOUR_LOCALE_THREE_PROFILE_REAL_PDFS",
+      "qualification": "Code/algorithm list APIs across three optional-module real PDFs per locale: original SHA256 12 positives, 12 not-exercised observations, valid list physical page and unique body caption, PDF /Root/Lang and 14 negative controls. Only exercised fixture/locale paths; human normative/linguistic/visual review pending."
     }
   },
   "summary": {
-    "PASS": 47,
-    "PENDING": 25,
+    "PASS": 58,
+    "PENDING": 14,
     "NA": 0
   },
   "entries": {
@@ -459,91 +487,91 @@
         "human_normative_linguistic_review": "PENDING"
       },
       "\\ufcPrintListOfIllustrations": {
-        "result": "PENDING",
-        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
-        "evidence_id": null,
+        "result": "PASS",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b3-integrated-9",
         "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
-        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "reason": "Functional bounded proof of \\ufcPrintListOfIllustrations in b3-integrated-9; source SHA 851d16bb131a1b88ad93a5ff4830b2286297dea3, CI run 43271021807, original hashed PDF/TeX ZIPs, observable heading/list/body page invariants and negative controls; limited to tested profiles/locales, with human ABNT/UFC normative/visual and linguistic acceptance pending.",
         "human_normative_linguistic_review": "PENDING"
       },
       "\\ufcPrintListOfFigures": {
-        "result": "PENDING",
-        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
-        "evidence_id": null,
+        "result": "PASS",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b3-integrated-9",
         "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
-        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "reason": "Functional bounded proof of \\ufcPrintListOfFigures in b3-integrated-9; source SHA 851d16bb131a1b88ad93a5ff4830b2286297dea3, CI run 43271021807, original hashed PDF/TeX ZIPs, observable heading/list/body page invariants and negative controls; limited to tested profiles/locales, with human ABNT/UFC normative/visual and linguistic acceptance pending.",
         "human_normative_linguistic_review": "PENDING"
       },
       "\\ufcPrintListOfTables": {
-        "result": "PENDING",
-        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
-        "evidence_id": null,
+        "result": "PASS",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b3-integrated-9",
         "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
-        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "reason": "Functional bounded proof of \\ufcPrintListOfTables in b3-integrated-9; source SHA 851d16bb131a1b88ad93a5ff4830b2286297dea3, CI run 43271021807, original hashed PDF/TeX ZIPs, observable heading/list/body page invariants and negative controls; limited to tested profiles/locales, with human ABNT/UFC normative/visual and linguistic acceptance pending.",
         "human_normative_linguistic_review": "PENDING"
       },
       "\\ufcPrintListOfTextTables": {
-        "result": "PENDING",
-        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
-        "evidence_id": null,
+        "result": "PASS",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b3-integrated-9",
         "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
-        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "reason": "Functional bounded proof of \\ufcPrintListOfTextTables in b3-integrated-9; source SHA 851d16bb131a1b88ad93a5ff4830b2286297dea3, CI run 43271021807, original hashed PDF/TeX ZIPs, observable heading/list/body page invariants and negative controls; limited to tested profiles/locales, with human ABNT/UFC normative/visual and linguistic acceptance pending.",
         "human_normative_linguistic_review": "PENDING"
       },
       "\\ufcPrintListOfCharts": {
-        "result": "PENDING",
-        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
-        "evidence_id": null,
+        "result": "PASS",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b3-integrated-9",
         "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
-        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "reason": "Functional bounded proof of \\ufcPrintListOfCharts in b3-integrated-9; source SHA 851d16bb131a1b88ad93a5ff4830b2286297dea3, CI run 43271021807, original hashed PDF/TeX ZIPs, observable heading/list/body page invariants and negative controls; limited to tested profiles/locales, with human ABNT/UFC normative/visual and linguistic acceptance pending.",
         "human_normative_linguistic_review": "PENDING"
       },
       "\\ufcPrintListOfCodeListings": {
-        "result": "PENDING",
-        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
-        "evidence_id": null,
+        "result": "PASS",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b3-optional-2",
         "candidate_source": "tests/integration/objects/optional-locale-evidence.py",
-        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "reason": "Functional bounded proof of \\ufcPrintListOfCodeListings in b3-optional-2; source SHA 851d16bb131a1b88ad93a5ff4830b2286297dea3, CI run 43271021778, original hashed PDF/TeX ZIPs, observable heading/list/body page invariants and negative controls; limited to tested profiles/locales, with human ABNT/UFC normative/visual and linguistic acceptance pending.",
         "human_normative_linguistic_review": "PENDING"
       },
       "\\ufcPrintListOfAlgorithms": {
-        "result": "PENDING",
-        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
-        "evidence_id": null,
+        "result": "PASS",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b3-optional-2",
         "candidate_source": "tests/integration/objects/optional-locale-evidence.py",
-        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "reason": "Functional bounded proof of \\ufcPrintListOfAlgorithms in b3-optional-2; source SHA 851d16bb131a1b88ad93a5ff4830b2286297dea3, CI run 43271021778, original hashed PDF/TeX ZIPs, observable heading/list/body page invariants and negative controls; limited to tested profiles/locales, with human ABNT/UFC normative/visual and linguistic acceptance pending.",
         "human_normative_linguistic_review": "PENDING"
       },
       "\\ufcPrintListOfAbbreviationsAndAcronyms": {
-        "result": "PENDING",
-        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
-        "evidence_id": null,
+        "result": "PASS",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b3-integrated-9",
         "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
-        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "reason": "Functional bounded proof of \\ufcPrintListOfAbbreviationsAndAcronyms in b3-integrated-9; source SHA 851d16bb131a1b88ad93a5ff4830b2286297dea3, CI run 43271021807, original hashed PDF/TeX ZIPs, observable heading/list/body page invariants and negative controls; limited to tested profiles/locales, with human ABNT/UFC normative/visual and linguistic acceptance pending.",
         "human_normative_linguistic_review": "PENDING"
       },
       "\\ufcPrintListOfSymbols": {
-        "result": "PENDING",
-        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
-        "evidence_id": null,
+        "result": "PASS",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b3-integrated-9",
         "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
-        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "reason": "Functional bounded proof of \\ufcPrintListOfSymbols in b3-integrated-9; source SHA 851d16bb131a1b88ad93a5ff4830b2286297dea3, CI run 43271021807, original hashed PDF/TeX ZIPs, observable heading/list/body page invariants and negative controls; limited to tested profiles/locales, with human ABNT/UFC normative/visual and linguistic acceptance pending.",
         "human_normative_linguistic_review": "PENDING"
       },
       "\\ufcListEntry": {
-        "result": "PENDING",
-        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
-        "evidence_id": null,
+        "result": "PASS",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b3-integrated-9",
         "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
-        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "reason": "Functional bounded proof of \\ufcListEntry in b3-integrated-9; source SHA 851d16bb131a1b88ad93a5ff4830b2286297dea3, CI run 43271021807, original hashed PDF/TeX ZIPs, observable heading/list/body page invariants and negative controls; limited to tested profiles/locales, with human ABNT/UFC normative/visual and linguistic acceptance pending.",
         "human_normative_linguistic_review": "PENDING"
       },
       "\\ufcPrintTableOfContents": {
-        "result": "PENDING",
-        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
-        "evidence_id": null,
+        "result": "PASS",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b3-integrated-9",
         "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
-        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "reason": "Functional bounded proof of \\ufcPrintTableOfContents in b3-integrated-9; source SHA 851d16bb131a1b88ad93a5ff4830b2286297dea3, CI run 43271021807, original hashed PDF/TeX ZIPs, observable heading/list/body page invariants and negative controls; limited to tested profiles/locales, with human ABNT/UFC normative/visual and linguistic acceptance pending.",
         "human_normative_linguistic_review": "PENDING"
       },
       "\\ufcSource": {

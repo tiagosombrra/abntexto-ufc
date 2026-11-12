@@ -17,6 +17,7 @@ on:
       - tests/integration/frontmatter/i18n-b2-family-evidence.py
       - tests/integration/frontmatter/i18n-b1-family-evidence.py
       - tests/integration/frontmatter/i18n-b1-final-five-evidence.py
+      - tests/integration/frontmatter/i18n-b3-integrated-list-evidence.py
       - tests/integration/frontmatter/i18n-b1-auxiliary-pdf-evidence.py
       - tests/integration/layout/font-config.sh
       - tests/integration/frontmatter/i18n-api-inventory.py
@@ -52,6 +53,7 @@ on:
       - tests/integration/frontmatter/i18n-b2-family-evidence.py
       - tests/integration/frontmatter/i18n-b1-family-evidence.py
       - tests/integration/frontmatter/i18n-b1-final-five-evidence.py
+      - tests/integration/frontmatter/i18n-b3-integrated-list-evidence.py
       - tests/integration/frontmatter/i18n-b1-auxiliary-pdf-evidence.py
       - tests/integration/layout/font-config.sh
       - tests/integration/frontmatter/i18n-api-inventory.py
@@ -91,7 +93,7 @@ jobs:
         env:
           SOURCE_COMMIT_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
         run: python3 tests/integration/frontmatter/i18n-evidence-crosswalk.py --report
-      - name: Audit 72 per-identifier proof results and 32 fail-closed mutations
+      - name: Audit 72 per-identifier proof results and 42 fail-closed mutations
         env:
           SOURCE_COMMIT_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
         run: python3 tests/integration/frontmatter/i18n-per-identifier-proof-status.py --report
@@ -136,6 +138,8 @@ jobs:
         run: python3 tests/integration/frontmatter/i18n-b1-auxiliary-pdf-evidence.py --preflight
       - name: Audit five remaining B1 public options and missing-PDF mutations
         run: python3 tests/integration/frontmatter/i18n-b1-final-five-evidence.py --preflight
+      - name: Audit B3 lists and contents source/output in 24 negative controls
+        run: python3 tests/integration/frontmatter/i18n-b3-integrated-list-evidence.py --preflight
   manuscripts:
     # Preserve the established CI status context; this job also verifies 12 fallback PDFs.
     name: Integrated documents / ${{ matrix.locale }} (7 real PDFs)
@@ -173,6 +177,7 @@ jobs:
             python3 tests/integration/frontmatter/i18n-b2-family-evidence.py --locale ${{ matrix.locale }}
             python3 tests/integration/frontmatter/i18n-b1-family-evidence.py --locale ${{ matrix.locale }}
             python3 tests/integration/frontmatter/i18n-b1-final-five-evidence.py --locale ${{ matrix.locale }}
+            python3 tests/integration/frontmatter/i18n-b3-integrated-list-evidence.py --locale ${{ matrix.locale }}
       - name: Upload source-bound PDF and manifest evidence
         if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
