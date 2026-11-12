@@ -104,6 +104,12 @@ def actual_pages(raw: str, expected: int | None = None) -> list[str]:
 def observe(source: str, pages: list[str], profile: str, locale: str) -> list[dict]:
     ensure(profile in PROFILES and locale in LANGS and len(pages) >= 1,
            "unsupported B3 integrated PDF case")
+    body_marker = normalized(f"INTEGRATED-MANUSCRIPT-{locale}")
+    body_pages = [idx for idx, pg in enumerate(pages)
+                  if body_marker in normalized(pg)]
+    ensure(len(body_pages) == 1,
+           "real manuscript body marker absent or duplicated")
+    body_index = body_pages[0]
     report = []
     for key, (command, applicable, labels, marker, body_required) in LISTS.items():
         applies = profile in applicable
@@ -125,7 +131,8 @@ def observe(source: str, pages: list[str], profile: str, locale: str) -> list[di
             body_page = None
             if body_required:
                 later = [i for i, page in enumerate(pages)
-                         if i > index and marker_text in normalized(page)]
+                         if i >= body_index and i > index
+                         and marker_text in normalized(page)]
                 ensure(bool(later),
                        f"B3 entry missing after list: {key}/{profile}/{locale}")
                 body_page = later[0] + 1
@@ -180,7 +187,8 @@ def negative_controls() -> int:
         "List of Abbreviations and Acronyms\nINTEGRATED-ABBREVIATION-EN",
         "List of Symbols\nINTEGRATED-SYMBOL-EN",
         "Contents\nINTEGRATED-SECTION-EN",
-        ("INTEGRATED-OBJECT-EN INTEGRATED-TABLE-EN "
+        ("INTEGRATED-MANUSCRIPT-EN-DOCTORALTHESIS "
+         "INTEGRATED-OBJECT-EN INTEGRATED-TABLE-EN "
          "INTEGRATED-TEXTTABLE-EN INTEGRATED-CHART-EN "
          "INTEGRATED-SECTION-EN INTEGRATED-TERM-EN "
          "INTEGRATED-DEFINITION-EN"),
@@ -211,7 +219,16 @@ def negative_controls() -> int:
             count += 1
         else:
             raise ValueError("B3 ListEntry missing-value mutant escaped")
-    ensure(count == 18 and len(IDENTIFIERS) == len(set(IDENTIFIERS)) == 9,
+    # An entry in another pretextual list must not masquerade as a body caption.
+    wrong_body = list(pages)
+    wrong_body[-1] = wrong_body[-1].replace("INTEGRATED-OBJECT-EN", "")
+    try:
+        observe(source, wrong_body, "doctoral-thesis", "en")
+    except ValueError:
+        count += 1
+    else:
+        raise ValueError("B3 body caption missing after source list was accepted")
+    ensure(count == 19 and len(IDENTIFIERS) == len(set(IDENTIFIERS)) == 9,
            "B3 nine-command negative coverage drift")
     return count
 
@@ -273,7 +290,7 @@ def run(locale: str) -> None:
         "source_sha": sha, "locale": locale, "real_pdfs": 7,
         "identifiers": list(IDENTIFIERS),
         "positive_observations": 45, "not_exercised_in_profile": 18,
-        "negative_controls": 18, "records": receipts,
+        "negative_controls": 19, "records": receipts,
         "ledger_promotion": "NOT_AUTOMATIC",
         "human_normative_linguistic_review": "PENDING",
         "publication_authorized": False,
@@ -282,7 +299,7 @@ def run(locale: str) -> None:
         json.dumps(report, ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8")
     print(f"I18N-B3-INTEGRATED status=PASS locale={locale} IDs=9"
-          " real_pdfs=7 positive=45 not_exercised=18 negatives=18"
+          " real_pdfs=7 positive=45 not_exercised=18 negatives=19"
           " physical_pages=PASS sha256=PASS human_review=PENDING")
 
 
