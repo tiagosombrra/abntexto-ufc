@@ -198,6 +198,7 @@ def self_test() -> None:
         ("tests/integration/frontmatter/i18n-b2-family-evidence.py",): ("complete",),
         ("tests/integration/frontmatter/i18n-b1-family-evidence.py",): ("complete",),
         ("tests/integration/frontmatter/i18n-b1-auxiliary-pdf-evidence.py",): ("complete",),
+        ("tests/integration/objects/i18n-b1-optional-config-evidence.py",): ("complete",),
         ("tests/integration/frontmatter/i18n-per-identifier-proof-status.py",): ("complete",),
         ("tests/integration/frontmatter/institution-display-fallback-evidence.py",
          ".github/workflows/integrated-manuscript-locale-matrix.yml"): ("complete",),
