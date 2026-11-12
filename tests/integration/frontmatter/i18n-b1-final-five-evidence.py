@@ -79,9 +79,14 @@ def compile_tex(locale: str, job: str, content: str,
     log = folder / f"{job}.log"
     require(log.is_file(), "B1 font/page log missing")
     if expected_error:
-        require(rc != 0 and expected_error.lower() in
-                (stdout + log.read_text(errors="replace")).lower(),
-                "expected strict-font/initial-page rejection not observed")
+        # TeX may split one class-error word across lines (e.g. "Roma\\nn").
+        # Match the complete error after removing whitespace, not arbitrary fragments.
+        error_text = re.sub(r"\\s+", "", stdout + log.read_text(errors="replace"))
+        error_expected = re.sub(r"\\s+", "", expected_error)
+        require(rc != 0
+                and "Classabntexto-ufcError:" in error_text
+                and error_expected.lower() in error_text.lower(),
+                "expected strict-font/initial-page class rejection not observed")
         return {"job": job, "source_sha256": digest(tex),
                 "log_sha256": digest(log),
                 "expected_rejection": expected_error, "verified": True}
