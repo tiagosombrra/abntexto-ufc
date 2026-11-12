@@ -257,13 +257,13 @@
       },
       "\\ufcPrintCatalogCard": {
         "proof_state": "SOURCE_REFERENCE_ONLY",
-        "candidate_test_file": "tests/integration/frontmatter/i18n-pretextual-command-evidence.py",
-        "candidate_suite": "pretextual-command-16"
+        "candidate_test_file": "tests/documents/catalog-card.tex",
+        "candidate_suite": "fixture"
       },
       "\\ufcPrintDedication": {
         "proof_state": "SOURCE_REFERENCE_ONLY",
-        "candidate_test_file": "tests/integration/frontmatter/i18n-pretextual-command-evidence.py",
-        "candidate_suite": "pretextual-command-16"
+        "candidate_test_file": "tests/documents/frontmatter-academic-work.tex",
+        "candidate_suite": "fixture"
       },
       "\\ufcPrintAcknowledgments": {
         "proof_state": "SOURCE_REFERENCE_ONLY",
@@ -272,8 +272,8 @@
       },
       "\\ufcPrintEpigraph": {
         "proof_state": "SOURCE_REFERENCE_ONLY",
-        "candidate_test_file": "tests/integration/frontmatter/i18n-pretextual-command-evidence.py",
-        "candidate_suite": "pretextual-command-16"
+        "candidate_test_file": "tests/documents/frontmatter-academic-work.tex",
+        "candidate_suite": "fixture"
       },
       "\\ufcPrintErrata": {
         "proof_state": "SOURCE_REFERENCE_ONLY",
