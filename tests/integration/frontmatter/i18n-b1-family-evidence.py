@@ -36,6 +36,10 @@ GENDER = {
     "research-project": (True, True),
 }
 LANGS = {"pt": "pt-BR", "en": "en-US", "es": "es-ES", "fr": "fr-FR"}
+GLOSSARY_LABELS = {"pt": "Glossário", "en": "Glossary",
+                   "es": "Glosario", "fr": "Glossaire"}
+INDEX_LABELS = {"pt": "Índice remissivo", "en": "Index",
+                "es": "Índice alfabético", "fr": "Index"}
 SETUP = (
     "type", "document-language", "labels-language", "print-mode",
     "cover", "catalog-card", "coat-of-arms",
@@ -56,6 +60,7 @@ EXISTING_SIX = {
 CONFIG_PROVEN = {
     "type", "document-language", "print-mode", "cover",
     "advisor-feminine-label", "coadvisor-feminine-label",
+    "glossary", "index",
 }
 CANDIDATES = CONFIG_PROVEN | EXISTING_SIX | {r"\ufcsetup"}
 ALL = SETUP + CORE
@@ -141,6 +146,28 @@ def inspect_case(locale: str, profile: str, source: str,
     if profile == "scientific-article":
         require("integrated-article-primary-" + locale in fold(pdf_text),
                 "article no-cover path lacks article-specific body")
+    if profile == "doctoral-thesis":
+        require(option(source, "glossary") == "glossaries"
+                and option(source, "index") == "imakeidx"
+                and r"\ufcPrintGlossary" in source
+                and r"\ufcPrintIndex" in source
+                and r"\gls{integratedterm}\index{integrated term}" in source,
+                "doctoral glossary/index public configuration incomplete")
+        for key, heading in (("glossary", GLOSSARY_LABELS[locale]),
+                             ("index", INDEX_LABELS[locale])):
+            matching = [
+                i for i, page in enumerate(pages)
+                if any(fold(line).strip() == fold(heading)
+                       for line in page.splitlines())
+                and fold("integrated term") in fold(page)
+            ]
+            require(len(matching) == 1 and matching[0] > 1,
+                    "doctoral " + key + " missing real populated output page")
+            observed[key] = {"module": "glossaries" if key == "glossary"
+                             else "imakeidx", "physical_page": matching[0] + 1}
+    else:
+        require(not re.search(r"(?m)^\s*(glossary|index)\s*=", source),
+                "B1 unrelated profile unexpectedly enables glossary/index")
     role = checks.get("role_title_page")
     if profile in GENDER:
         require(isinstance(role, dict)
@@ -226,7 +253,7 @@ def negatives() -> int:
         else:
             raise ValueError(f"B1 mutant escaped: {n}")
     require(len(SETUP) == 17 and len(CORE) == 8
-            and len(set(ALL)) == 25 and len(CANDIDATES) == 13,
+            and len(set(ALL)) == 25 and len(CANDIDATES) == 15,
             "B1 public family inventory drifted")
     require(passed == 14, "B1 negative predicate coverage drift")
     return passed
@@ -294,12 +321,12 @@ def audit(locale: str) -> None:
         report.append(result)
     require(seen == PROFILE_SET, "B1 incomplete seven-profile set")
     output = {
-        "status": "BOUNDED_B1_13_CANDIDATE_PDF_PASS",
+        "status": "BOUNDED_B1_15_CANDIDATE_PDF_PASS",
         "source_sha": checkout, "locale": locale, "profiles": len(report),
         "target_identifiers": list(ALL),
         "candidate_identifiers": sorted(CANDIDATES),
         "still_pending_individual_identifiers": sorted(set(ALL) - CANDIDATES),
-        "candidate_count": 13, "pending_count": 12,
+        "candidate_count": 15, "pending_count": 10,
         "negative_controls": 14, "records": report,
         "ledger_promotion": "NOT_AUTOMATIC",
         "human_normative_linguistic_review": "PENDING",
@@ -308,8 +335,8 @@ def audit(locale: str) -> None:
     (folder / "b1-family-proof.json").write_text(
         json.dumps(output, ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8")
-    print(f"I18N-B1 status=PASS locale={locale} candidates=13"
-          " pending=12 profiles=7 mutants=14 original_sha256=PASS"
+    print(f"I18N-B1 status=PASS locale={locale} candidates=15"
+          " pending=10 profiles=7 mutants=14 original_sha256=PASS"
           " ledger_promotion=NOT_AUTOMATIC human_review=PENDING")
 
 
@@ -321,7 +348,7 @@ def main() -> None:
     n = negatives()
     if args.preflight:
         print(f"I18N-B1-PREFLIGHT status=PASS identifiers=25"
-              f" candidates=13 pending=12 negatives={n} PDF=PENDING")
+              f" candidates=15 pending=10 negatives={n} PDF=PENDING")
         return
     if not args.locale:
         raise ValueError("choose --preflight or --locale")
