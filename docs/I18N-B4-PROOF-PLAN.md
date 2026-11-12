@@ -86,3 +86,41 @@ reconciled with the eventually certified B3 main before opening **one B4 PR**.
 **Possible eventual total:** 72/72 bounded functional proofs if and only if
 all fourteen B4 IDs independently pass. This is a scientific test target,
 **not** the present repository state.
+
+
+## 2026-11-12 — Implemented preparatory executables (NOT YET CI-CERTIFIED)
+
+Three executable source-bound Python validators now exist **only on this
+preparatory branch**, without modifying the existing class, workflows or
+ledger:
+
+1. \`tests/integration/frontmatter/i18n-b4-integrated-backmatter-evidence.py\`
+   (11 IDs): reuses four-locale/seven-profile source/PDF manifest records,
+   exact SHA256, biber receipt, original PDF catalog BCP47 and physical page
+   boundaries; requires matching visible object source and note, source and
+   bibliography entries from both bibliographic resources, unique localized
+   references/glossary/index headings, populated doctoral glossary/index,
+   caption text, and appendix/annex/body ordering. \`--preflight\` contains
+   15 initial lexical/PDF-heading controls; more real mutation guards may
+   be added after the first test iteration.
+2. \`tests/integration/objects/i18n-b4-inputminted-evidence.py\` (one ID):
+   reuses the 3 × 4 optional-module PDFs plus original seven-API receipts
+   and checks actual imported Python source, compiled syntax-highlighted
+   content, minted processor execution, list and textual body physical
+   pages, source attribution, original SHA256 and /Root/Lang; 9 candidate
+   negative controls.
+3. \`tests/integration/frontmatter/i18n-b4-isolated-public-api-evidence.py\`
+   (two IDs): compiles one **new real InputListing** PDF and one **new real
+   legacy keywords-in-localized-summary** PDF per locale, preserving
+   original source and full PDF bytes, BCP47 catalog and real language/
+   code markers. Includes 18 preflight source/PDF mutations and generated
+   manifest. Isolated negative compilation and legacy PT/EN baseline must
+   be verified in later CI before either ID can be classified PASS.
+
+All three scripts must be **audited and run in CI** after B3 development
+squash and six exact-SHA postmerge gates, and integrated into existing
+four-locale workflows only. No new hosted workflows, no branch merge yet,
+no premature 72/72 PASS. If an isolated fixture fails, correct the
+*actual evidence* without weakening its technical predicates, and retain
+any unproved ID as PENDING. Human ABNT/UFC and linguistic acceptance
+remain separate from this functional evidence.
