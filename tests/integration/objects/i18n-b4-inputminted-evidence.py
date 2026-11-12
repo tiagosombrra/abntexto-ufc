@@ -110,7 +110,7 @@ def negatives() -> int:
         (src.replace("SYNTHETIC-MINTED-SOURCE", "FORGED"), pages, log),
         (src, [pages[0], pages[1].replace("def saudacao", "def missing")], log),
         (src, [pages[0], pages[1].replace("print(saudacao", "print(missing")], log),
-        (src, [pages[0], pages[1].replace("synthetic-minted-source",
+        (src, [pages[0], pages[1].replace("SYNTHETIC-MINTED-SOURCE",
                                            "MISSING-SOURCE")], log),
         (src, [pages[1], pages[0]], log),
         (src, pages, "minted.sty only"),
