@@ -79,6 +79,7 @@ FORCE_COMPLETE_EXACT = {
     "tests/integration/frontmatter/i18n-b2-family-evidence.py",
     "tests/integration/frontmatter/i18n-b1-family-evidence.py",
     "tests/integration/frontmatter/i18n-b1-auxiliary-pdf-evidence.py",
+    "tests/integration/objects/i18n-b1-optional-config-evidence.py",
     "tests/integration/frontmatter/i18n-per-identifier-proof-status.py",
     ".github/workflows/linux-integration.yml",
     "Makefile",
