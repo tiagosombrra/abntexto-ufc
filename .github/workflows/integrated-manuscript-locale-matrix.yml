@@ -15,6 +15,8 @@ on:
       - tests/integration/layout/font-config.sh
       - tests/integration/frontmatter/i18n-api-inventory.py
       - tests/integration/frontmatter/i18n-evidence-crosswalk.py
+      - tests/integration/frontmatter/i18n-per-identifier-proof-status.py
+      - standards/api/i18n-per-identifier-proof-status.json
       - tests/integration/frontmatter/i18n-executable-driver-evidence.py
       - tests/integration/frontmatter/i18n-executable-driver-evidence.json
       - tests/run.py
@@ -42,6 +44,8 @@ on:
       - tests/integration/layout/font-config.sh
       - tests/integration/frontmatter/i18n-api-inventory.py
       - tests/integration/frontmatter/i18n-evidence-crosswalk.py
+      - tests/integration/frontmatter/i18n-per-identifier-proof-status.py
+      - standards/api/i18n-per-identifier-proof-status.json
       - tests/integration/frontmatter/i18n-executable-driver-evidence.py
       - tests/integration/frontmatter/i18n-executable-driver-evidence.json
       - tests/run.py
@@ -75,6 +79,10 @@ jobs:
         env:
           SOURCE_COMMIT_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
         run: python3 tests/integration/frontmatter/i18n-evidence-crosswalk.py --report
+      - name: Audit 72 per-identifier proof results and 16 fail-closed mutations
+        env:
+          SOURCE_COMMIT_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: python3 tests/integration/frontmatter/i18n-per-identifier-proof-status.py --report
       - name: Verify six executable test relationships against actual runner registration
         env:
           SOURCE_COMMIT_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
@@ -88,6 +96,7 @@ jobs:
           name: i18n-api-crosswalk-${{ github.run_id }}
           path: |
             artifacts/validation/i18n-public-evidence-crosswalk.json
+            artifacts/validation/i18n-per-identifier-proof-status.json
             artifacts/validation/i18n-executable-driver-evidence.json
           retention-days: 21
           if-no-files-found: warn
