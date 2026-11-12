@@ -124,6 +124,11 @@
       "path": "tests/integration/frontmatter/i18n-b2-remaining-summary-evidence.py",
       "suite": "b2-summary-remaining",
       "scope": "real direct summary (4 locales), combined legacy summary+abstract (4 locales), optional EN summary (ES/FR only): 10 real PDFs, 30 fail-closed mutants and source SHA receipts; human review pending"
+    },
+    {
+      "path": "tests/integration/frontmatter/i18n-b1-family-evidence.py",
+      "suite": "b1-family-25",
+      "scope": "25 public setup/core IDs inventoried, 13 scenario candidates tied to original seven-profile four-locale PDFs and existing six-API/52-key receipts, 12 explicitly pending extra route evidence; no automatic ledger PASS"
     }
   ],
   "entries": {
