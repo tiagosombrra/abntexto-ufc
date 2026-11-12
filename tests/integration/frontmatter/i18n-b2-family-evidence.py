@@ -53,8 +53,8 @@ PRETEXT = {
     r"\ufcPrintDedication": ("dedication",),
     r"\ufcPrintEpigraph": ("epigraph-short", "epigraph-long"),
 }
-# Do not silently award credit for unexamined commands.
-REMAINING = (
+# The legacy/optional summary cases are checked in the companion real-PDF suite.
+SUMMARY_COMMANDS = (
     r"\ufcPrintSummaryInLanguage",
     r"\ufcPrintOptionalEnglishSummary",
     r"\ufcPrintSummary",
@@ -258,9 +258,9 @@ def negative_controls() -> int:
                     raise ValueError(f"negative pretext control escaped: {case}")
     if count != 26:
         raise ValueError(f"B2 negative control total drift: {count}")
-    if len(INTEGRATED) + len(PRETEXT) + len(REMAINING) != TOTAL_FAMILY:
+    if len(INTEGRATED) + len(PRETEXT) + len(SUMMARY_COMMANDS) != TOTAL_FAMILY:
         raise ValueError("B2 command family cardinality drift")
-    if len(set(INTEGRATED) | set(PRETEXT) | set(REMAINING)) != TOTAL_FAMILY:
+    if len(set(INTEGRATED) | set(PRETEXT) | set(SUMMARY_COMMANDS)) != TOTAL_FAMILY:
         raise ValueError("duplicate B2 public command")
     return count
 
@@ -335,6 +335,76 @@ def verify_pretext(locale: str, sha: str) -> list[dict]:
     return observations
 
 
+def verify_remaining(locale: str, sha: str) -> list[dict]:
+    folder = BASE / locale / "b2-summary-remaining"
+    manifest = json.loads((folder / "manifest.json").read_text(encoding="utf-8"))
+    ensure(manifest.get("source_sha") == sha and manifest.get("locale") == locale
+           and manifest.get("negative_controls") == 30
+           and manifest.get("status") == "BOUNDED_REAL_PDF_PASS",
+           "remaining B2 real-PDF provenance mismatch")
+    rows = {r["case"]: r for r in manifest["records"]}
+    expected_cases = {"direct", "legacy"}
+    if locale in ("es", "fr"):
+        expected_cases.add("optional")
+    ensure(set(rows) == expected_cases, "B2 remaining summary cases incomplete")
+    mapping = {
+        r"\ufcPrintSummaryInLanguage": ("direct", r"\ufcPrintSummaryInLanguage"),
+        r"\ufcPrintSummary": ("legacy", r"\ufcPrintSummary{"),
+        r"\ufcPrintAbstract": ("legacy", r"\ufcPrintAbstract{"),
+        r"\ufcPrintOptionalEnglishSummary": ("optional", r"\ufcPrintOptionalEnglishSummary"),
+    }
+    receipts = []
+    for identifier in SUMMARY_COMMANDS:
+        case, source_token = mapping[identifier]
+        if case == "optional" and locale not in ("es", "fr"):
+            receipts.append({
+                "identifier": identifier, "locale": locale,
+                "status": "NOT_APPLICABLE_IN_LOCALE",
+                "reason": "English optional summary is only defined for ES/FR documents",
+                "verified": True,
+            })
+            continue
+        record = rows[case]
+        ensure(record["verified"] is True
+               and record.get("catalog_lang") == LOCALES[locale],
+               "remaining B2 output not verified for locale")
+        job = f"b2-{locale}-{case}"
+        tex, pdf, log = (folder / (job + "." + ext)
+                         for ext in ("tex", "pdf", "log"))
+        source = read_original(tex, record["tex_sha256"], folder).decode("utf-8")
+        read_original(log, record["log_sha256"], folder)
+        read_original(pdf, record["pdf_sha256"], folder)
+        ensure(source_token in source,
+               f"missing public command in original remaining source: {identifier}")
+        for key, original_hash in record["input_sha256"].items():
+            ensure(re.fullmatch(r"[a-z]+", key) is not None,
+                   "invalid B2 summary input name")
+            read_original(folder / f"b2-{locale}-{key}.tex", original_hash, folder)
+        pages = shown_pages(pdf)
+        ensure(fold("B2TITLEMARKER") in fold(pages[0])
+               and fold("B2BODYMARKER") in fold(pages[-1]),
+               "remaining B2 PDF lacks title/body physical-page bracket")
+        markers = record["markers"]
+        ensure(isinstance(markers, dict) and markers,
+               "remaining B2 case missing positive PDF markers")
+        for marker, visual in markers.items():
+            page = visual.get("page_number")
+            ensure(isinstance(page, int) and 1 < page < len(pages)
+                   and fold(marker) in fold(pages[page - 1])
+                   and fold(visual["heading"]) in fold(pages[page - 1]),
+                   "remaining B2 marker/heading not found on original PDF page")
+        receipts.append({
+            "identifier": identifier, "locale": locale,
+            "status": "BOUNDED_REAL_PDF_PASS", "verified": True,
+            "real_pdf_case": case,
+            "tex_sha256": record["tex_sha256"],
+            "pdf_sha256": record["pdf_sha256"],
+            "log_sha256": record["log_sha256"],
+            "markers": list(markers),
+        })
+    return receipts
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--preflight", action="store_true")
@@ -342,8 +412,8 @@ def main() -> None:
     args = parser.parse_args()
     negatives = negative_controls()
     if args.preflight:
-        print(f"I18N-B2-PREFLIGHT status=PASS candidate_commands=12"
-              f" remaining=4 negatives={negatives} real_pdf=PENDING")
+        print(f"I18N-B2-PREFLIGHT status=PASS candidate_commands=16"
+              f" negatives={negatives} real_pdf=PENDING")
         return
     if not args.locale:
         raise ValueError("locale required")
@@ -351,14 +421,18 @@ def main() -> None:
                                   cwd=ROOT, text=True).strip()
     ensure(os.getenv("SOURCE_COMMIT_SHA") in (None, sha),
            "evidence checkout differs from expected CI SHA")
-    observations = verify_integrated(args.locale, sha) + verify_pretext(args.locale, sha)
-    ensure(len(observations) == 12
-           and len({x["identifier"] for x in observations}) == 12,
-           "B2 PDF evidence does not cover 12 distinct public commands")
+    observations = (verify_integrated(args.locale, sha)
+                    + verify_pretext(args.locale, sha)
+                    + verify_remaining(args.locale, sha))
+    ensure(len(observations) == 16
+           and len({x["identifier"] for x in observations}) == 16,
+           "B2 PDF evidence does not cover 16 distinct public commands")
     report = {
         "status": "BOUNDED_B2_CANDIDATE_EVIDENCE_PASS",
         "source_sha": sha, "locale": args.locale,
-        "individual_candidate_commands": 12, "pending_commands": list(REMAINING),
+        "individual_candidate_commands": 16,
+        "scoped_non_applicable_locale_receipts": sum(
+            1 for row in observations if row.get("status") == "NOT_APPLICABLE_IN_LOCALE"),
         "negative_controls": negatives, "observations": observations,
         "global_acceptance": "PENDING",
         "human_normative_linguistic_review": "PENDING",
@@ -369,8 +443,8 @@ def main() -> None:
     target = BASE / args.locale / "b2-family-proof.json"
     target.write_text(json.dumps(report, indent=2, ensure_ascii=False) + "\n",
                       encoding="utf-8")
-    print(f"I18N-B2 status=PASS locale={args.locale} candidate_commands=12"
-          f" remaining=4 negatives={negatives} original_PDF_sha256=PASS"
+    print(f"I18N-B2 status=PASS locale={args.locale} candidate_commands=16"
+          f" negatives={negatives} original_PDF_sha256=PASS"
           " global_i18n=PENDING human_review=PENDING", flush=True)
 
 
