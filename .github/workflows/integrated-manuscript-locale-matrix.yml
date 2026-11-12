@@ -18,6 +18,8 @@ on:
       - tests/integration/frontmatter/i18n-b1-family-evidence.py
       - tests/integration/frontmatter/i18n-b1-final-five-evidence.py
       - tests/integration/frontmatter/i18n-b3-integrated-list-evidence.py
+      - tests/integration/frontmatter/i18n-b4-integrated-backmatter-evidence.py
+      - tests/integration/frontmatter/i18n-b4-isolated-public-api-evidence.py
       - tests/integration/frontmatter/i18n-b1-auxiliary-pdf-evidence.py
       - tests/integration/layout/font-config.sh
       - tests/integration/frontmatter/i18n-api-inventory.py
@@ -54,6 +56,8 @@ on:
       - tests/integration/frontmatter/i18n-b1-family-evidence.py
       - tests/integration/frontmatter/i18n-b1-final-five-evidence.py
       - tests/integration/frontmatter/i18n-b3-integrated-list-evidence.py
+      - tests/integration/frontmatter/i18n-b4-integrated-backmatter-evidence.py
+      - tests/integration/frontmatter/i18n-b4-isolated-public-api-evidence.py
       - tests/integration/frontmatter/i18n-b1-auxiliary-pdf-evidence.py
       - tests/integration/layout/font-config.sh
       - tests/integration/frontmatter/i18n-api-inventory.py
@@ -140,6 +144,10 @@ jobs:
         run: python3 tests/integration/frontmatter/i18n-b1-final-five-evidence.py --preflight
       - name: Audit B3 lists and contents source/output in 24 negative controls
         run: python3 tests/integration/frontmatter/i18n-b3-integrated-list-evidence.py --preflight
+      - name: Validate B4 integrated and isolated source and PDF negative controls
+        run: |
+          python3 tests/integration/frontmatter/i18n-b4-integrated-backmatter-evidence.py --preflight
+          python3 tests/integration/frontmatter/i18n-b4-isolated-public-api-evidence.py --preflight
   manuscripts:
     # Preserve the established CI status context; this job also verifies 12 fallback PDFs.
     name: Integrated documents / ${{ matrix.locale }} (7 real PDFs)
@@ -178,6 +186,8 @@ jobs:
             python3 tests/integration/frontmatter/i18n-b1-family-evidence.py --locale ${{ matrix.locale }}
             python3 tests/integration/frontmatter/i18n-b1-final-five-evidence.py --locale ${{ matrix.locale }}
             python3 tests/integration/frontmatter/i18n-b3-integrated-list-evidence.py --locale ${{ matrix.locale }}
+            python3 tests/integration/frontmatter/i18n-b4-integrated-backmatter-evidence.py --locale ${{ matrix.locale }}
+            python3 tests/integration/frontmatter/i18n-b4-isolated-public-api-evidence.py --locale ${{ matrix.locale }}
       - name: Upload source-bound PDF and manifest evidence
         if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
