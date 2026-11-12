@@ -83,3 +83,12 @@ Each B3 verifier executes `qpdf --json=2 --json-key=qpdf` on the **actual compil
 ### Unicidade de legendas (evidência exploratória)
 
 A auditoria local dos ZIPs originais do lote anterior confirmou **120 observações de legendas integradas** e **12 observações de legendas opcionais**, todas com exatamente uma ocorrência no corpo físico do documento. Os dois verificadores B3 agora exigem cardinalidade igual a um e incluem mutantes que duplicam a legenda depois do corpo (um controle no integrado e dois controles no opcional). Isso é um refinamento preliminar, não uma execução do CI B3 nem uma homologação normativa.
+
+
+## 2026-11-12 — B1 integrated; B3 branch reconciled to main
+
+PR #587 was squash merged into `main@9a2348e6fba9517f735ad64ad818ceb54ee52f59` after all six exact-head workflows passed. The main ledger now contains **47 bounded PASS / 25 PENDING / 0 NA**, `global_acceptance=PENDING`, `publication_authorized=false`, and an unchanged runtime class blob. Independent **postmerge** Linux, Release, integrated PDF, optional PDF and static/canonical workflows were started; certification of that exact main is still required before B3 may proceed to an active PR/merge.
+
+A clean B3 branch `test/489-p08-b3-list-pdf-evidence` was created directly from that merged main SHA and contains both eleven-ID scripts, fail-closed 24 integrated + 14 optional mutation guards, actual PDF qpdf /Root/Lang BCP47 checks, unique body captions, and physical page/SHA256 predicates. The existing four-locale integrated and optional workflows and Linux Release path triggers were updated, as was the complete regression selector and the source crosswalk. **No B3 ledger promotion, formal CI pass, human acceptance or publication is claimed.**
+
+The earlier preparatory branch is superseded for integration; it must not be merged because its base predates PR #587. Once postmerge main certification is green, open **one** B3 PR as draft, record real CI results, inspect original ZIPs and only then promote individually proven B3 commands with exact evidence SHA and artifact IDs (target 58/72 bounded, not guaranteed).
