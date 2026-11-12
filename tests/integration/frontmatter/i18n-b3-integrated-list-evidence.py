@@ -78,6 +78,27 @@ ENTRY = r"\ufcListEntry"
 IDENTIFIERS = tuple(value[0] for value in LISTS.values()) + (ENTRY,)
 
 
+CATALOG_LANG = {"pt": "pt-BR", "en": "en-US", "es": "es-ES", "fr": "fr-FR"}
+
+
+def validate_catalog(payload: dict, locale: str) -> str:
+    # Inspect the real PDF catalog; a source locale alone is not PDF evidence.
+    objects = payload.get("qpdf")
+    ensure(isinstance(objects, list) and len(objects) == 2
+           and objects[0].get("jsonversion") == 2,
+           "B3 untrusted or incomplete qpdf catalog JSON")
+    item = objects[1]
+    root = item["trailer"]["value"]["/Root"]
+    ensure(isinstance(root, str)
+           and re.fullmatch(r"[1-9][0-9]* [0-9]+ R", root) is not None,
+           "B3 invalid PDF root reference")
+    catalog = item["obj:" + root]["value"]
+    ensure(catalog.get("/Type") == "/Catalog"
+           and catalog.get("/Lang") == "u:" + CATALOG_LANG[locale],
+           "B3 actual PDF /Root/Lang does not match locale")
+    return CATALOG_LANG[locale]
+
+
 def ensure(ok: bool, message: str) -> None:
     if not ok:
         raise ValueError(message)
@@ -251,7 +272,22 @@ def negative_controls() -> int:
             count += 1
         else:
             raise ValueError("B3 wrong pretextual/textual physical position escaped")
-    ensure(count == 21 and len(IDENTIFIERS) == len(set(IDENTIFIERS)) == 9,
+    valid_catalog = {
+        "qpdf": [{"jsonversion": 2},
+                 {"trailer": {"value": {"/Root": "1 0 R"}},
+                  "obj:1 0 R": {"value": {
+                      "/Type": "/Catalog", "/Lang": "u:en-US"}}}],
+    }
+    ensure(validate_catalog(valid_catalog, "en") == "en-US",
+           "B3 catalog control missing positive")
+    for wrong in ("pt", "fr"):
+        try:
+            validate_catalog(valid_catalog, wrong)
+        except ValueError:
+            count += 1
+        else:
+            raise ValueError("B3 wrong catalog language mutant escaped")
+    ensure(count == 23 and len(IDENTIFIERS) == len(set(IDENTIFIERS)) == 9,
            "B3 nine-command negative coverage drift")
     return count
 
@@ -292,6 +328,12 @@ def run(locale: str) -> None:
                                        cwd=ROOT, text=True)
         number = re.search(r"(?m)^Pages:\s*(\d+)\s*$", info)
         ensure(number is not None, "B3 missing physical PDF pages")
+        catalog_json = json.loads(subprocess.check_output(
+            ["qpdf", "--json=2", "--json-key=qpdf", str(pdf_path)],
+            cwd=ROOT, text=True))
+        catalog = validate_catalog(catalog_json, locale)
+        ensure(row["pdf_catalog_lang"] == catalog,
+               "B3 original manifest does not match actual PDF catalog")
         extracted = subprocess.check_output(
             ["pdftotext", "-layout", str(pdf_path), "-"],
             cwd=ROOT, text=True)
@@ -302,6 +344,7 @@ def run(locale: str) -> None:
             "source_sha256": row["source_sha256"],
             "pdf_sha256": row["pdf_sha256"],
             "physical_pages": int(number.group(1)),
+            "pdf_catalog_lang": catalog,
             "observations": observed,
         })
     ensure(seen == set(PROFILES) and
@@ -313,7 +356,7 @@ def run(locale: str) -> None:
         "source_sha": sha, "locale": locale, "real_pdfs": 7,
         "identifiers": list(IDENTIFIERS),
         "positive_observations": 45, "not_exercised_in_profile": 18,
-        "negative_controls": 21, "records": receipts,
+        "negative_controls": 23, "records": receipts,
         "ledger_promotion": "NOT_AUTOMATIC",
         "human_normative_linguistic_review": "PENDING",
         "publication_authorized": False,
@@ -322,7 +365,7 @@ def run(locale: str) -> None:
         json.dumps(report, ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8")
     print(f"I18N-B3-INTEGRATED status=PASS locale={locale} IDs=9"
-          " real_pdfs=7 positive=45 not_exercised=18 negatives=21"
+          " real_pdfs=7 positive=45 not_exercised=18 negatives=23"
           " physical_pages=PASS sha256=PASS human_review=PENDING")
 
 
