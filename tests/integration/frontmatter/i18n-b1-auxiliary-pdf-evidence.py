@@ -174,7 +174,7 @@ def negatives() -> int:
                        "B1 auxiliary mutant hash falsely accepted"),
         lambda: ensure(set(LOCALES) == {"pt", "en", "fr"},
                        "B1 auxiliary mutant missing locale accepted"),
-        lambda: ensure(len({("pt", "en", "labels-first")} * 2) == 2,
+        lambda: ensure(len(set([("pt", "en", "labels-first")] * 2)) == 2,
                        "B1 auxiliary duplicate scenario accepted"),
         lambda: ensure("missing" not in CASES,
                        "B1 auxiliary missing-asset branch not covered"),
