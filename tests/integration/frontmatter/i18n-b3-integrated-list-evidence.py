@@ -287,7 +287,16 @@ def negative_controls() -> int:
             count += 1
         else:
             raise ValueError("B3 wrong catalog language mutant escaped")
-    ensure(count == 23 and len(IDENTIFIERS) == len(set(IDENTIFIERS)) == 9,
+    duplicate_body = list(pages)
+    duplicate_body.append("INTEGRATED-OBJECT-EN")
+    # A duplicated marker on an extra body leaf must not satisfy the one-caption contract.
+    try:
+        observe(source, duplicate_body, "doctoral-thesis", "en")
+    except ValueError:
+        count += 1
+    else:
+        raise ValueError("B3 duplicated textual body caption escaped")
+    ensure(count == 24 and len(IDENTIFIERS) == len(set(IDENTIFIERS)) == 9,
            "B3 nine-command negative coverage drift")
     return count
 
@@ -356,7 +365,7 @@ def run(locale: str) -> None:
         "source_sha": sha, "locale": locale, "real_pdfs": 7,
         "identifiers": list(IDENTIFIERS),
         "positive_observations": 45, "not_exercised_in_profile": 18,
-        "negative_controls": 23, "records": receipts,
+        "negative_controls": 24, "records": receipts,
         "ledger_promotion": "NOT_AUTOMATIC",
         "human_normative_linguistic_review": "PENDING",
         "publication_authorized": False,
@@ -365,7 +374,7 @@ def run(locale: str) -> None:
         json.dumps(report, ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8")
     print(f"I18N-B3-INTEGRATED status=PASS locale={locale} IDs=9"
-          " real_pdfs=7 positive=45 not_exercised=18 negatives=23"
+          " real_pdfs=7 positive=45 not_exercised=18 negatives=24"
           " physical_pages=PASS sha256=PASS human_review=PENDING")
 
 
