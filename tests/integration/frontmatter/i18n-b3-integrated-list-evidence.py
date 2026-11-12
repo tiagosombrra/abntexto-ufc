@@ -156,8 +156,8 @@ def observe(source: str, pages: list[str], profile: str, locale: str) -> list[di
                 later = [i for i, page in enumerate(pages)
                          if i >= body_index and i > index
                          and marker_text in normalized(page)]
-                ensure(bool(later),
-                       f"B3 entry missing after list: {key}/{profile}/{locale}")
+                ensure(len(later) == 1,
+                       f"B3 body entry absent or repeated: {key}/{profile}/{locale}")
                 body_page = later[0] + 1
             report.append({
                 "identifier": command, "applicability": "BOUNDED_REAL_PDF_PASS",
