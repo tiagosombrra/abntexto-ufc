@@ -69,9 +69,10 @@ def validate_case(source: str, pages: list[str], log: str, locale: str,
                 'print(saudacao("ufc"))', "synthetic-minted-source")
     require(all(fold(token) in body for token in requires),
             "B4 imported Python program or author attribution absent from actual PDF")
+    localized_listing = "codigo 1" if locale in ("pt", "es") else "code 1"
     list_page = [
         i for i, page in enumerate(pages)
-        if mark in fold(page) and "code 1" in fold(page)
+        if mark in fold(page) and localized_listing in fold(page)
         and i < len(pages) - 1
     ]
     body_page = [
@@ -125,6 +126,21 @@ def negatives() -> int:
             count += 1
         else:
             raise ValueError("B4 InputMinted negative source/output control escaped")
+    # The same list-heading predicate must follow the actual translated label.
+    for target in ("pt", "es", "fr"):
+        localized = (
+            "Código 1" if target in ("pt", "es") else "Code 1"
+        )
+        local_pages = [
+            f"LIST OF CODE LISTINGS\n{localized} — OPTIONAL-MINTED-{target.upper()}",
+            pages[1].replace("OPTIONAL-MINTED-EN",
+                             "OPTIONAL-MINTED-" + target.upper()),
+        ]
+        local_src = src.replace("OPTIONAL-MINTED-EN",
+                                "OPTIONAL-MINTED-" + target.upper())
+        require(validate_case(local_src, local_pages, log, target,
+                              "optional-minted")["status"] == "BOUNDED_REAL_PDF_PASS",
+                "B4 minted translated code list heading regression")
     require(count == len(mutation_set) == 9,
             "B4 minted negative mutation count drift")
     return count
