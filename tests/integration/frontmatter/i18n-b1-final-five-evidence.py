@@ -128,8 +128,12 @@ def font_effect(font: str, log: str, listing: str) -> dict:
         literal = "Using literal Arial with pdfLaTeX"
         compat = "Arial not prepared for pdfLaTeX; using TeX Gyre Heros compatibility fallback"
         expected = ("Arial", "TeXGyreHeros")
-    is_literal = literal in log
-    require(is_literal or compat in log, "font policy branch absent from actual TeX log")
+    # TeX can wrap a class info line at column 79 without changing its meaning.
+    normalized_log = re.sub(r"\s+", " ", log)
+    is_literal = ("Class abntexto-ufc Info: " + literal) in normalized_log
+    is_compat = ("Class abntexto-ufc Info: " + compat) in normalized_log
+    require(is_literal != is_compat,
+            "missing, ambiguous, or forged actual class font-policy branch")
     name = expected[0] if is_literal else expected[1]
     require(name in listing, "actual PDF does not embed chosen text font family")
     require(POLICY + "NEW-TX-MATH" in log,
