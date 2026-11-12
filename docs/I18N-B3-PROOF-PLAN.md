@@ -27,7 +27,7 @@ against its own immutable source commit.
   entry is present **on that same list page**, and caption appears
   **on a later textual-body page**, never on a different pretextual list.
   Reject unexpected list in nonapplicable profiles. Verify the public
-  \`\ufcListEntry\` term and definition on one body page. 19 negative
+  \`\ufcListEntry\` term and definition on one body page. 21 negative
   source/heading/entry/body and duplication mutations.
 - \`tests/integration/objects/i18n-b3-optional-list-evidence.py\`:
   three optional-module PDFs per locale, two list public APIs, 10 negative
@@ -52,7 +52,7 @@ against its own immutable source commit.
    workflow triggers and steps; add full Linux/Release path triggers and
    \`tests/integration_suites.py\` classification. Never create hosted
    workflows prohibited by AGENTS.md.
-4. Execute fail-closed preflights (19 + 10 mutants) and original real
+4. Execute fail-closed preflights (21 + 10 mutants) and original real
    PDF jobs for four languages, inspect original ZIP artifacts outside
    the runner, require physical-page positions, original SHA and BCP47
    locale catalog. Fix regressions without weakening the predicates.
