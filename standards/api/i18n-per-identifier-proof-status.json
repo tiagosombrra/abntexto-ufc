@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "description": "Bounded per-identifier P0.8 functional evidence status; not a global internationalization certification",
+  "description": "Bounded 72-identifier functional evidence ledger: 6 previously proven environments plus 16 B2 pretextual/summary commands; not global i18n or normative certification",
   "api_source": "standards/api/public-api.json",
   "source_crosswalk": "standards/api/i18n-functional-evidence-crosswalk.json",
   "created_from_main_sha": "b2001b0f979f76d1e30f11afbf03f6a10becd325",
@@ -37,11 +37,39 @@
       "negative_controls": 22,
       "scope": "ONE_ISOLATED_PDF_PER_ENVIRONMENT_AND_LOCALE",
       "qualification": "Proof of isolated optional environment PDF body, captions, source labels and language; human normative and linguistic acceptance pending."
+    },
+    "b2-family-12": {
+      "source_sha": "96b395ed47591c948af2d6a9bc60c9f1fb63f63b",
+      "workflow_run_id": 43195021431,
+      "artifact_ids": {
+        "pt": 13932771946,
+        "en": 13932782130,
+        "es": 13931829747,
+        "fr": 13933076465
+      },
+      "runner": "tests/integration/frontmatter/i18n-b2-family-evidence.py",
+      "negative_controls": 26,
+      "scope": "TWELVE_PRETEXTUAL_COMMANDS_FOUR_LOCALE_REAL_PDFS",
+      "qualification": "12 bounded public-command scenarios across original integrated and pretextual PDFs, PDF physical pages and SHA256 authenticated from original ZIPs; human normative and linguistic review pending."
+    },
+    "b2-summary-remaining": {
+      "source_sha": "96b395ed47591c948af2d6a9bc60c9f1fb63f63b",
+      "workflow_run_id": 43195021431,
+      "artifact_ids": {
+        "pt": 13932771946,
+        "en": 13932782130,
+        "es": 13931829747,
+        "fr": 13933076465
+      },
+      "runner": "tests/integration/frontmatter/i18n-b2-remaining-summary-evidence.py",
+      "negative_controls": 30,
+      "scope": "FOUR_SUMMARY_COMMANDS_APPLICABLE_LOCALE_REAL_PDFS",
+      "qualification": "10 actual PDFs: 4 locale-direct summaries, 4 legacy PT/EN pairs, 2 optional English ES/FR; PT/EN optional is locale-inapplicable; human normative and linguistic review pending."
     }
   },
   "summary": {
-    "PASS": 6,
-    "PENDING": 66,
+    "PASS": 22,
+    "PENDING": 50,
     "NA": 0
   },
   "entries": {
@@ -241,67 +269,67 @@
         "human_normative_linguistic_review": "PENDING"
       },
       "\\ufcPrintCover": {
-        "result": "PENDING",
-        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
-        "evidence_id": null,
+        "result": "PASS",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b2-family-12",
         "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
-        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "reason": "Real-PDF scenario for \\ufcPrintCover verified in four locale artifacts with original source/PDF/log/input hashes and physical-page predicates; evidence b2-family-12 at source SHA 96b395ed47591c948af2d6a9bc60c9f1fb63f63b; all-profile generalization and human normative/linguistic review pending.",
         "human_normative_linguistic_review": "PENDING"
       },
       "\\ufcPrintTitlePage": {
-        "result": "PENDING",
-        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
-        "evidence_id": null,
+        "result": "PASS",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b2-family-12",
         "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
-        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "reason": "Real-PDF scenario for \\ufcPrintTitlePage verified in four locale artifacts with original source/PDF/log/input hashes and physical-page predicates; evidence b2-family-12 at source SHA 96b395ed47591c948af2d6a9bc60c9f1fb63f63b; all-profile generalization and human normative/linguistic review pending.",
         "human_normative_linguistic_review": "PENDING"
       },
       "\\ufcPrintApprovalPage": {
-        "result": "PENDING",
-        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
-        "evidence_id": null,
+        "result": "PASS",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b2-family-12",
         "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
-        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "reason": "Real-PDF scenario for \\ufcPrintApprovalPage verified in four locale artifacts with original source/PDF/log/input hashes and physical-page predicates; evidence b2-family-12 at source SHA 96b395ed47591c948af2d6a9bc60c9f1fb63f63b; all-profile generalization and human normative/linguistic review pending.",
         "human_normative_linguistic_review": "PENDING"
       },
       "\\ufcPrintCatalogCard": {
-        "result": "PENDING",
-        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
-        "evidence_id": null,
+        "result": "PASS",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b2-family-12",
         "candidate_source": "tests/documents/catalog-card.tex",
-        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "reason": "Real-PDF scenario for \\ufcPrintCatalogCard verified in four locale artifacts with original source/PDF/log/input hashes and physical-page predicates; evidence b2-family-12 at source SHA 96b395ed47591c948af2d6a9bc60c9f1fb63f63b; all-profile generalization and human normative/linguistic review pending.",
         "human_normative_linguistic_review": "PENDING"
       },
       "\\ufcPrintDedication": {
-        "result": "PENDING",
-        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
-        "evidence_id": null,
+        "result": "PASS",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b2-family-12",
         "candidate_source": "tests/documents/frontmatter-academic-work.tex",
-        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "reason": "Real-PDF scenario for \\ufcPrintDedication verified in four locale artifacts with original source/PDF/log/input hashes and physical-page predicates; evidence b2-family-12 at source SHA 96b395ed47591c948af2d6a9bc60c9f1fb63f63b; all-profile generalization and human normative/linguistic review pending.",
         "human_normative_linguistic_review": "PENDING"
       },
       "\\ufcPrintAcknowledgments": {
-        "result": "PENDING",
-        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
-        "evidence_id": null,
+        "result": "PASS",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b2-family-12",
         "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
-        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "reason": "Real-PDF scenario for \\ufcPrintAcknowledgments verified in four locale artifacts with original source/PDF/log/input hashes and physical-page predicates; evidence b2-family-12 at source SHA 96b395ed47591c948af2d6a9bc60c9f1fb63f63b; all-profile generalization and human normative/linguistic review pending.",
         "human_normative_linguistic_review": "PENDING"
       },
       "\\ufcPrintEpigraph": {
-        "result": "PENDING",
-        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
-        "evidence_id": null,
+        "result": "PASS",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b2-family-12",
         "candidate_source": "tests/documents/frontmatter-academic-work.tex",
-        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "reason": "Real-PDF scenario for \\ufcPrintEpigraph verified in four locale artifacts with original source/PDF/log/input hashes and physical-page predicates; evidence b2-family-12 at source SHA 96b395ed47591c948af2d6a9bc60c9f1fb63f63b; all-profile generalization and human normative/linguistic review pending.",
         "human_normative_linguistic_review": "PENDING"
       },
       "\\ufcPrintErrata": {
-        "result": "PENDING",
-        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
-        "evidence_id": null,
+        "result": "PASS",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b2-family-12",
         "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
-        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "reason": "Real-PDF scenario for \\ufcPrintErrata verified in four locale artifacts with original source/PDF/log/input hashes and physical-page predicates; evidence b2-family-12 at source SHA 96b395ed47591c948af2d6a9bc60c9f1fb63f63b; all-profile generalization and human normative/linguistic review pending.",
         "human_normative_linguistic_review": "PENDING"
       },
       "\\ufcDocumentLanguage": {
@@ -313,67 +341,67 @@
         "human_normative_linguistic_review": "PENDING"
       },
       "\\ufcSummaryKeywordsInLanguage": {
-        "result": "PENDING",
-        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
-        "evidence_id": null,
+        "result": "PASS",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b2-family-12",
         "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
-        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "reason": "Real-PDF scenario for \\ufcSummaryKeywordsInLanguage verified in four locale artifacts with original source/PDF/log/input hashes and physical-page predicates; evidence b2-family-12 at source SHA 96b395ed47591c948af2d6a9bc60c9f1fb63f63b; all-profile generalization and human normative/linguistic review pending.",
         "human_normative_linguistic_review": "PENDING"
       },
       "\\ufcPrintSummaryInLanguage": {
-        "result": "PENDING",
-        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
-        "evidence_id": null,
+        "result": "PASS",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b2-summary-remaining",
         "candidate_source": "tests/integration/frontmatter/summary-legacy-context.sh",
-        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "reason": "Real-PDF scenario for \\ufcPrintSummaryInLanguage verified in four locale artifacts with original source/PDF/log/input hashes and physical-page predicates; evidence b2-summary-remaining at source SHA 96b395ed47591c948af2d6a9bc60c9f1fb63f63b; all-profile generalization and human normative/linguistic review pending.",
         "human_normative_linguistic_review": "PENDING"
       },
       "\\ufcPrintRequiredSummaries": {
-        "result": "PENDING",
-        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
-        "evidence_id": null,
+        "result": "PASS",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b2-family-12",
         "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
-        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "reason": "Real-PDF scenario for \\ufcPrintRequiredSummaries verified in four locale artifacts with original source/PDF/log/input hashes and physical-page predicates; evidence b2-family-12 at source SHA 96b395ed47591c948af2d6a9bc60c9f1fb63f63b; all-profile generalization and human normative/linguistic review pending.",
         "human_normative_linguistic_review": "PENDING"
       },
       "\\ufcPrintOptionalEnglishSummary": {
-        "result": "PENDING",
-        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
-        "evidence_id": null,
+        "result": "PASS",
+        "scope": "BOUNDED_REAL_PDF_ES_FR_ONLY",
+        "evidence_id": "b2-summary-remaining",
         "candidate_source": "tests/integration/frontmatter/frontmatter-summary-languages.sh",
-        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "reason": "Positive real-PDF optional English summary verified for ES/FR only; explicit PT/EN nonapplicability is not a global NA. Original ZIPs/source SHA and real PDF pages independently checked; broader profiles and human normative/linguistic review pending.",
         "human_normative_linguistic_review": "PENDING"
       },
       "\\ufcPrintArticleTranslatedSummary": {
-        "result": "PENDING",
-        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
-        "evidence_id": null,
+        "result": "PASS",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b2-family-12",
         "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
-        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "reason": "Real-PDF scenario for \\ufcPrintArticleTranslatedSummary verified in four locale artifacts with original source/PDF/log/input hashes and physical-page predicates; evidence b2-family-12 at source SHA 96b395ed47591c948af2d6a9bc60c9f1fb63f63b; all-profile generalization and human normative/linguistic review pending.",
         "human_normative_linguistic_review": "PENDING"
       },
       "\\ufcSummaryKeywords": {
-        "result": "PENDING",
-        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
-        "evidence_id": null,
+        "result": "PASS",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b2-family-12",
         "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
-        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "reason": "Real-PDF scenario for \\ufcSummaryKeywords verified in four locale artifacts with original source/PDF/log/input hashes and physical-page predicates; evidence b2-family-12 at source SHA 96b395ed47591c948af2d6a9bc60c9f1fb63f63b; all-profile generalization and human normative/linguistic review pending.",
         "human_normative_linguistic_review": "PENDING"
       },
       "\\ufcPrintSummary": {
-        "result": "PENDING",
-        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
-        "evidence_id": null,
+        "result": "PASS",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b2-summary-remaining",
         "candidate_source": "tests/integration/frontmatter/summary-legacy-context.sh",
-        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "reason": "Real-PDF scenario for \\ufcPrintSummary verified in four locale artifacts with original source/PDF/log/input hashes and physical-page predicates; evidence b2-summary-remaining at source SHA 96b395ed47591c948af2d6a9bc60c9f1fb63f63b; all-profile generalization and human normative/linguistic review pending.",
         "human_normative_linguistic_review": "PENDING"
       },
       "\\ufcPrintAbstract": {
-        "result": "PENDING",
-        "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
-        "evidence_id": null,
+        "result": "PASS",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b2-summary-remaining",
         "candidate_source": "tests/integration/frontmatter/summary-legacy-context.sh",
-        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "reason": "Real-PDF scenario for \\ufcPrintAbstract verified in four locale artifacts with original source/PDF/log/input hashes and physical-page predicates; evidence b2-summary-remaining at source SHA 96b395ed47591c948af2d6a9bc60c9f1fb63f63b; all-profile generalization and human normative/linguistic review pending.",
         "human_normative_linguistic_review": "PENDING"
       },
       "\\ufcPrintListOfIllustrations": {
