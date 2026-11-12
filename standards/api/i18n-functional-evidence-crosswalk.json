@@ -109,6 +109,11 @@
       "path": "tests/integration/frontmatter/i18n-optional-environment-evidence.py",
       "suite": "optional-env-12",
       "scope": "4 locales x 3 isolated optional public environments in real PDFs, with visible caption/source, rendered body, /Root/Lang, Babel and exact source/PDF/log hashes; no linguistic or normative certification"
+    },
+    {
+      "path": "tests/integration/frontmatter/i18n-pretextual-command-evidence.py",
+      "suite": "pretextual-command-16",
+      "scope": "4 locale x catalog card / dedication / short epigraph / long epigraph isolated PDFs; external input provenance, output placement and exact raw hashes; no normative or linguistic signoff"
     }
   ],
   "entries": {
@@ -252,13 +257,13 @@
       },
       "\\ufcPrintCatalogCard": {
         "proof_state": "SOURCE_REFERENCE_ONLY",
-        "candidate_test_file": "tests/documents/catalog-card.tex",
-        "candidate_suite": "fixture"
+        "candidate_test_file": "tests/integration/frontmatter/i18n-pretextual-command-evidence.py",
+        "candidate_suite": "pretextual-command-16"
       },
       "\\ufcPrintDedication": {
         "proof_state": "SOURCE_REFERENCE_ONLY",
-        "candidate_test_file": "tests/documents/frontmatter-academic-work.tex",
-        "candidate_suite": "fixture"
+        "candidate_test_file": "tests/integration/frontmatter/i18n-pretextual-command-evidence.py",
+        "candidate_suite": "pretextual-command-16"
       },
       "\\ufcPrintAcknowledgments": {
         "proof_state": "SOURCE_REFERENCE_ONLY",
@@ -267,8 +272,8 @@
       },
       "\\ufcPrintEpigraph": {
         "proof_state": "SOURCE_REFERENCE_ONLY",
-        "candidate_test_file": "tests/documents/frontmatter-academic-work.tex",
-        "candidate_suite": "fixture"
+        "candidate_test_file": "tests/integration/frontmatter/i18n-pretextual-command-evidence.py",
+        "candidate_suite": "pretextual-command-16"
       },
       "\\ufcPrintErrata": {
         "proof_state": "SOURCE_REFERENCE_ONLY",
