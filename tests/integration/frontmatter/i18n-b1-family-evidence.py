@@ -16,6 +16,8 @@ import re
 import subprocess
 import unicodedata
 
+from integrated_metadata_probe import METADATA_KEYS
+
 ROOT = Path(__file__).resolve().parents[3]
 ARTIFACTS = ROOT / "artifacts/integrated-i18n"
 PROFILE_SET = {
@@ -90,8 +92,7 @@ def inspect_case(locale: str, profile: str, source: str,
     require(r"\ufcsetup{" in source,
             "missing public setup writer")
     require(len(metadata) == 52
-            and {r["identifier"] for r in metadata}
-            == {r["identifier"] for r in metadata},
+            and {r["identifier"] for r in metadata} == set(METADATA_KEYS),
             "incomplete metadata round-trip records")
     for item in metadata:
         require(item["verified"] is True
@@ -181,9 +182,9 @@ def negatives() -> int:
                   "profile": "undergraduate-capstone",
                   "pdf_catalog_lang": "pt-BR", "verified": True}
            for name in EXISTING_SIX}
-    keys = [{"identifier": f"key-{i}", "verified": True,
+    keys = [{"identifier": key, "verified": True,
              "public_writer": r"\ufcsetup", "public_reader": r"\ufcMeta"}
-            for i in range(52)]
+            for key in METADATA_KEYS]
     pdf = ("Integrated Multilingual Document Integrated Test Author\n\f"
            "Title Page\n\fBODY")
     # Positive control checks the same predicates as original PDF evaluation.
