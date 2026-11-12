@@ -131,6 +131,12 @@ def catalog_language(data: dict) -> str:
     return lang[2:]
 
 
+def marker_word_equals(pdf_word: str, token: str) -> bool:
+    # Poppler can attach an opening quote to the first epigraph word.
+    # Strip only typographic quote punctuation at word boundaries.
+    return pdf_word.strip().strip("\\"'“”„‟«»‹›‘’") == token
+
+
 def locate_marker_bbox(bbox_xml: str, token: str) -> tuple[int, float, float]:
     pages = list(ET.fromstring(bbox_xml).iter())
     actual_pages = [p for p in pages if p.tag.rsplit("}", 1)[-1] == "page"]
@@ -140,7 +146,7 @@ def locate_marker_bbox(bbox_xml: str, token: str) -> tuple[int, float, float]:
         for word in page.iter():
             if word.tag.rsplit("}", 1)[-1] != "word":
                 continue
-            if "".join(word.itertext()).strip() == token:
+            if marker_word_equals("".join(word.itertext()), token):
                 found.append((page_index, float(word.attrib["yMin"]), height))
     if len(found) != 1:
         raise ValueError("expected exactly one marker with PDF bounding box")
@@ -230,7 +236,14 @@ def negative_controls() -> int:
             count += 1
         else:
             raise ValueError("invalid PDF/log/geometry accepted")
-    if count != 16:
+    # A genuine quotation mark must not be mistaken for an altered token.
+    if not marker_word_equals("“" + TOKENS["epigraph-short"], TOKENS["epigraph-short"]):
+        raise ValueError("real epigraph quotation was rejected")
+    for invalid in ("X" + TOKENS["epigraph-short"], TOKENS["epigraph-short"] + "X"):
+        if marker_word_equals(invalid, TOKENS["epigraph-short"]):
+            raise ValueError("alphabetic collision escaped PDF word test")
+        count += 1
+    if count != 18:
         raise ValueError(f"negative control count drift: {count}")
     for loc in LOCALES:
         for item in CASES:
