@@ -154,6 +154,21 @@
       "path": "tests/integration/objects/i18n-b3-optional-list-evidence.py",
       "suite": "b3-optional-2",
       "scope": "Two B3 code/algorithm list commands over three optional-module PDF fixtures in four locales; 14 negative controls, original seven-API receipts, unique body caption, qpdf BCP47 and SHA256 original PDFs. Source registry only: ledger remains PENDING until original artifacts audited and accepted."
+    },
+    {
+      "path": "tests/integration/frontmatter/i18n-b4-integrated-backmatter-evidence.py",
+      "suite": "b4-integrated-11",
+      "scope": "ELEVEN_B4_CANDIDATE_ONLY: real integrated four-language seven-profile Biber bibliography, visible source, note, legend, references, doctoral glossary/index, appendix/annex and legacy phase routes; original TeX/PDF SHA256, physical pages and actual PDF catalog; no ledger promotion without original independent ZIP audit and negative mutants"
+    },
+    {
+      "path": "tests/integration/objects/i18n-b4-inputminted-evidence.py",
+      "suite": "b4-inputminted-1",
+      "scope": "ONE_B4_CANDIDATE_ONLY: real four-locale optional minted Python import and rendered code, original 7-API optional receipts, 9 source/PDF mutants and exact original source/PDF SHA256; no ledger promotion before audit"
+    },
+    {
+      "path": "tests/integration/frontmatter/i18n-b4-isolated-public-api-evidence.py",
+      "suite": "b4-isolated-2",
+      "scope": "TWO_B4_CANDIDATE_ONLY: newly compiled four-locale original PDF for InputListing external C++ source and scoped legacy keywords, 18 source/output mutants, original source/PDF SHA256, BCP47 PDF catalog and deliberate error checks; no automatic ledger promotion"
     }
   ],
   "entries": {
