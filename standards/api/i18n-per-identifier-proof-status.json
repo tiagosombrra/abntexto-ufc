@@ -268,16 +268,16 @@
         "result": "PENDING",
         "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
         "evidence_id": null,
-        "candidate_source": "tests/documents/catalog-card.tex",
-        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "candidate_source": "tests/integration/frontmatter/i18n-pretextual-command-evidence.py",
+        "reason": "New four-locale source-bound PDF probe is pending GitHub CI and original-artifact audit. No PASS is authorized until independent PDF/geometry inspection, raw hashes and exact source SHA have been certified.",
         "human_normative_linguistic_review": "PENDING"
       },
       "\\ufcPrintDedication": {
         "result": "PENDING",
         "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
         "evidence_id": null,
-        "candidate_source": "tests/documents/frontmatter-academic-work.tex",
-        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "candidate_source": "tests/integration/frontmatter/i18n-pretextual-command-evidence.py",
+        "reason": "New four-locale source-bound PDF probe is pending GitHub CI and original-artifact audit. No PASS is authorized until independent PDF/geometry inspection, raw hashes and exact source SHA have been certified.",
         "human_normative_linguistic_review": "PENDING"
       },
       "\\ufcPrintAcknowledgments": {
@@ -292,8 +292,8 @@
         "result": "PENDING",
         "scope": "NOT_YET_CERTIFIED_PER_IDENTIFIER",
         "evidence_id": null,
-        "candidate_source": "tests/documents/frontmatter-academic-work.tex",
-        "reason": "Candidate source identifies a testing path, not per-identifier functional acceptance; requires direct positive/negative evidence tied to exact SHA.",
+        "candidate_source": "tests/integration/frontmatter/i18n-pretextual-command-evidence.py",
+        "reason": "New four-locale source-bound PDF probe is pending GitHub CI and original-artifact audit. No PASS is authorized until independent PDF/geometry inspection, raw hashes and exact source SHA have been certified.",
         "human_normative_linguistic_review": "PENDING"
       },
       "\\ufcPrintErrata": {
