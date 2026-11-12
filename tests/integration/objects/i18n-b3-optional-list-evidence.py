@@ -125,8 +125,8 @@ def check_case(locale: str, scenario: str, source: str,
                 i for i, pg in enumerate(pages)
                 if i >= body_index and fold(token) in fold(pg)
             ]
-            require(bool(caption_pages),
-                    "B3 optional body caption missing after list page")
+            require(len(caption_pages) == 1,
+                    "B3 optional body caption absent or duplicated")
             report.append({
                 "identifier": command, "status": "BOUNDED_REAL_PDF_PASS",
                 "heading_physical_page": position + 1,
