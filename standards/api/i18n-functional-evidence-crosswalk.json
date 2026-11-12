@@ -127,8 +127,8 @@
     },
     {
       "path": "tests/integration/frontmatter/i18n-b1-family-evidence.py",
-      "suite": "b1-family-25",
-      "scope": "25 public setup/core IDs inventoried, 13 scenario candidates tied to original seven-profile four-locale PDFs and existing six-API/52-key receipts, 12 explicitly pending extra route evidence; no automatic ledger PASS"
+      "suite": "b1-integrated-15",
+      "scope": "15 bounded B1 setup/core API identifiers over seven real PDF profiles in PT/EN/ES/FR; 52 authored metadata roundtrips and physical pages including populated doctoral glossary/index; 14 negative controls; no global human normative or linguistic approval"
     },
     {
       "path": "tests/integration/frontmatter/i18n-b1-auxiliary-pdf-evidence.py",
