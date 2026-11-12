@@ -176,7 +176,7 @@ def negatives() -> int:
             (KEYWORDS_API, keywords, body.replace(r"\keywords{", r"\wrong{")),
             (KEYWORDS_API, keywords.replace(
                 r"\ufcPrintSummaryInLanguage{" + locale + "}",
-                r"\ufcPrintSummaryInLanguage{en}"), body),
+                r"\ufcPrintSummaryInLanguage{" + ("pt" if locale == "en" else "en") + "}"), body),
         ):
             try:
                 validate_source(api, bad_source, bad_body, locale)
