@@ -12,6 +12,7 @@ on:
       - tests/integration/frontmatter/institution-display-fallback-evidence.py
       - tests/integration/frontmatter/i18n-list-environment-evidence.py
       - tests/integration/frontmatter/i18n-optional-environment-evidence.py
+      - tests/integration/frontmatter/i18n-pretextual-command-evidence.py
       - tests/integration/layout/font-config.sh
       - tests/integration/frontmatter/i18n-api-inventory.py
       - tests/integration/frontmatter/i18n-evidence-crosswalk.py
@@ -41,6 +42,7 @@ on:
       - tests/integration/frontmatter/institution-display-fallback-evidence.py
       - tests/integration/frontmatter/i18n-list-environment-evidence.py
       - tests/integration/frontmatter/i18n-optional-environment-evidence.py
+      - tests/integration/frontmatter/i18n-pretextual-command-evidence.py
       - tests/integration/layout/font-config.sh
       - tests/integration/frontmatter/i18n-api-inventory.py
       - tests/integration/frontmatter/i18n-evidence-crosswalk.py
@@ -112,6 +114,8 @@ jobs:
         run: python3 tests/integration/frontmatter/i18n-list-environment-evidence.py --preflight
       - name: Verify 12 optional environment sources and 22 negative controls
         run: python3 tests/integration/frontmatter/i18n-optional-environment-evidence.py --preflight
+      - name: Verify 16 pretextual-command source fixtures and 16 negative controls
+        run: python3 tests/integration/frontmatter/i18n-pretextual-command-evidence.py --preflight
   manuscripts:
     # Preserve the established CI status context; this job also verifies 12 fallback PDFs.
     name: Integrated documents / ${{ matrix.locale }} (7 real PDFs)
@@ -144,6 +148,7 @@ jobs:
             python3 tests/integration/frontmatter/institution-display-fallback-evidence.py --locale ${{ matrix.locale }}
             python3 tests/integration/frontmatter/i18n-list-environment-evidence.py --locale ${{ matrix.locale }}
             python3 tests/integration/frontmatter/i18n-optional-environment-evidence.py --locale ${{ matrix.locale }}
+            python3 tests/integration/frontmatter/i18n-pretextual-command-evidence.py --locale ${{ matrix.locale }}
       - name: Upload source-bound PDF and manifest evidence
         if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
