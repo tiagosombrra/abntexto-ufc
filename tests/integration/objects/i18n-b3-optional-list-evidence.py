@@ -202,7 +202,15 @@ def negatives() -> int:
             count += 1
         else:
             raise ValueError("B3 optional wrong catalog language was accepted")
-    require(count == 12 and len(set(COMMANDS)) == 2,
+    for token in ("OPTIONAL-LISTING-EN", "OPTIONAL-ALGORITHM-EN"):
+        duplicated = [*baseline, token]
+        try:
+            check_case("en", "optional-objects", src, duplicated)
+        except ValueError:
+            count += 1
+        else:
+            raise ValueError("B3 repeated optional body caption was accepted")
+    require(count == 14 and len(set(COMMANDS)) == 2,
             "B3 optional command negative coverage drift")
     return count
 
@@ -286,7 +294,7 @@ def run(locale: str) -> None:
         "status": "BOUNDED_B3_TWO_COMMAND_PDF_PASS",
         "source_sha": sha, "locale": locale, "real_pdfs": 3,
         "identifiers": list(COMMANDS), "applicable_observations": 3,
-        "not_exercised_observations": 3, "negative_controls": 12,
+        "not_exercised_observations": 3, "negative_controls": 14,
         "records": report, "ledger_promotion": "NOT_AUTOMATIC",
         "human_normative_linguistic_review": "PENDING",
         "publication_authorized": False,
@@ -295,7 +303,7 @@ def run(locale: str) -> None:
         json.dumps(result, ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8")
     print(f"I18N-B3-OPTIONAL status=PASS locale={locale} ids=2"
-          " actual_pdfs=3 positives=3 negatives=12 physical_pages=PASS"
+          " actual_pdfs=3 positives=3 negatives=14 physical_pages=PASS"
           " original_sha256=PASS human_review=PENDING")
 
 
