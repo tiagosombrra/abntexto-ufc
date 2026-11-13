@@ -126,7 +126,7 @@
       "path": ".github/workflows/r81-controlled-pagination.yml",
       "owner_doc": "docs/R81-CONTROLLED-PAGINATION.md",
       "purpose": "Execute controlled real-PDF PT/EN/ES/FR diagnosis distinguishing language configuration from translated long-table content in R8.1.",
-      "reason": "An eight-PDF source-bound diagnostic for a disputed page-layout defect belongs to a dedicated TeX Live workflow, not in every static or Linux Integration execution. It never grants human or release approval."
+      "reason": "A source-bound multilingual PDF diagnostic for a disputed page-layout defect belongs to a dedicated TeX Live workflow, not in every static or Linux Integration execution. It never grants human or release approval."
     }
   ]
 }
