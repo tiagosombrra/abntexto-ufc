@@ -22,7 +22,7 @@ def run(*command: str) -> str:
     completed = subprocess.run(command, cwd=ROOT, text=True,
                                capture_output=True, check=False)
     if completed.returncode:
-        raise RuntimeError(f"{command}: {completed.stderr[-3000:]}")
+        raise RuntimeError(f"{command}: stdout={completed.stdout[-7000:]} stderr={completed.stderr[-3000:]}")
     return completed.stdout
 
 
