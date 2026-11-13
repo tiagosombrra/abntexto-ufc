@@ -164,6 +164,13 @@ def execute_checks() -> tuple[int, int, int, int]:
     # The integrated PDF workflow is path-scoped, so it is not sufficient here.
     run([sys.executable, "tests/integration/frontmatter/i18n-evidence-crosswalk.py"],
         "72 public API evidence-source links (source-only; no PDF claim)")
+    # Check the new-runtime candidate shape and reject forged API promotions.
+    # The networked original ZIP byte audit remains a separate required CI gate.
+    candidate = ROOT / "standards/api/i18n-v310-runtime-proof-candidate.json"
+    if candidate.is_file():
+        run([sys.executable, "tools/ci/audit-v310-runtime-candidate.py",
+             "--self-test", "--skip-git"],
+            "72 new-runtime candidate API evidence and fail-closed mutations")
     run([sys.executable, "tests/integration/frontmatter/i18n-executable-driver-evidence.py"],
         "six executable driver/fixture links (registered and bounded; no PDF claim)")
     run([sys.executable, "tests/integration/frontmatter/i18n-six-api-output-evidence.py",
