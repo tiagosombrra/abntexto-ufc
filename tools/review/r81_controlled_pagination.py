@@ -1,88 +1,99 @@
 #!/usr/bin/env python3
-"""R8.1 controlled pagination experiment; does not alter runtime or release PDFs."""
+"""Controlled real-PDF R8.1 experiment using the original native longtable path.
+
+It compares identical content, real localized content, and localized content
+with a last-row page-break guard. It never changes runtime or release artifacts.
+"""
 from __future__ import annotations
 
 import argparse
 import json
 import re
+import runpy
 import subprocess
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 LOCALES = {"pt": "pt-BR", "en": "en-US", "es": "es-ES", "fr": "fr-FR"}
-TRANSLATED = {
-    "pt": ("Execução controlada", "Caso de observação", "Valor medido"),
-    "en": ("Controlled execution", "Observation case", "Measured value"),
-    "es": ("Ejecución controlada", "Caso de observación", "Valor medido"),
-    "fr": ("Exécution contrôlée", "Cas d'observation", "Valeur mesurée"),
-}
+R4 = runpy.run_path(str(ROOT / "tests/integration/frontmatter/generate-comprehensive-corpus.py"))
+READABLE = runpy.run_path(str(ROOT / "tools/review/generate_readable_28.py"))
+PROSE = R4["PROSE"]
+LABELS = READABLE["STRINGS"]
+EXPECTED_ROWS = 85
 
 
 def run(*command: str) -> str:
     completed = subprocess.run(command, cwd=ROOT, text=True,
                                capture_output=True, check=False)
     if completed.returncode:
-        raise RuntimeError(f"{command}: stdout={completed.stdout[-7000:]} stderr={completed.stderr[-3000:]}")
+        raise RuntimeError(f"{command}: stdout={completed.stdout[-6000:]} "
+                           f"stderr={completed.stderr[-2000:]}")
     return completed.stdout
 
 
-def source(locale: str, translated: bool) -> str:
-    # Keep row IDs and numeric values invariant across locales.
-    heading, first, second = TRANSLATED[locale if translated else "pt"]
-    front = [
+def source(locale: str, translated: bool, guarded: bool) -> str:
+    # Match the actual R8.1 corpus's native longtable and linguistic inputs.
+    effective = locale if translated else "pt"
+    dictionary = LABELS[effective]
+    header_case = dictionary["header_case"]
+    header_value = dictionary["header_value"]
+    row_case = dictionary["native_case"]
+    title = dictionary["nativetable"]
+    intro, discussion = PROSE[effective]
+    lines = [
         rf"\DocumentMetadata{{lang={LOCALES[locale]},pdfstandard=A-2b,pdfversion=1.7}}",
         r"\documentclass{abntexto-ufc}",
-        r"\ufcsetup{type=research-project,tables=tabularray,document-language=" + locale
+        r"\usepackage{longtable}",
+        r"\ufcsetup{type=research-project,tables=tabularray,document-language="
+        + locale
         + r",print-mode=single-sided,cover=false,coat-of-arms=false,"
         + r"catalog-card=false,author={Controlled Author},"
         + r"title={Controlled Pagination},year={2026},location={Fortaleza}}",
         r"\begin{document}",
-        rf"\section{{{heading}}}",
+        rf"\section{{{title}}}",
     ]
-    paragraph = (
-        "This fixed-length passage precedes the tables and tests the same "
-        "available vertical space independently from localization settings. "
-        "Every run uses identical bytes in this paragraph."
-        if not translated else
-        f"{first} e {second}. "
-        + ("A repetição de palavras pode modificar as quebras de linha. " * 3)
-    )
-    front.extend([paragraph + r"\par"] * 9)
-    front.extend([
-        r"\begin{longabnttblr}[caption={Controlled multi-page table},"
-        r"label={tab:controlled}]{colspec={X[l] X[r]},rowhead=1,width=0.80\linewidth}",
-        r"\toprule",
-        f"{first} & {second} " + r"\\",
-        r"\midrule",
+    # Reuse real locale-specific R4 prose, not an invented pseudo-translation.
+    lines.extend((intro + " " + discussion + r"\par") for _ in range(9))
+    lines.extend([
+        r"\begin{longtable}{rr}",
+        rf"\caption{{{title}}}\label{{tab:r81-controlled}}" + r"\\",
+        r"\hline",
+        f"{header_case} & {header_value} " + r"\\",
+        r"\hline",
+        r"\endfirsthead",
+        f"{header_case} & {header_value} " + r"\\",
+        r"\hline",
+        r"\endhead",
     ])
-    for n in range(1, 126):
-        label = f"R81ROW{n:03d}"
-        if translated:
-            label += " " + first
-        front.append(f"{label} & {n} " + r"\\")
-    front.extend([r"\bottomrule", r"\end{longabnttblr}", r"\end{document}"])
-    return "\n".join(front) + "\n"
+    for n in range(1, EXPECTED_ROWS + 1):
+        lines.append(f"R81ROW{n:03d} {row_case} & {n} " + r"\\")
+        if guarded and n == EXPECTED_ROWS - 1:
+            lines.append(r"\nopagebreak[4]")
+    lines.extend([r"\hline", r"\end{longtable}", r"\end{document}"])
+    return "\n".join(lines) + "\n"
 
 
 def check_pdf(pdf: Path) -> dict:
     pages = run("pdftotext", "-layout", str(pdf), "-").split("\f")
-    pages = [p for p in pages if p.strip()]
-    ids = {}
-    for number, page in enumerate(pages, 1):
+    pages = [page for page in pages if page.strip()]
+    positions: dict[int, list[int]] = {}
+    for index, page in enumerate(pages, 1):
         for row in re.findall(r"R81ROW(\d{3})", page):
-            ids.setdefault(int(row), []).append(number)
-    missing = sorted(set(range(1, 126)) - ids.keys())
-    duplicate = {str(k): v for k, v in ids.items() if len(v) != 1}
-    last_page = ids.get(125, [None])[0]
-    final_rows = [n for n, p in ids.items() if last_page in p]
+            positions.setdefault(int(row), []).append(index)
+    missing = sorted(set(range(1, EXPECTED_ROWS + 1)) - positions.keys())
+    duplicated = {str(value): pages for value, pages in positions.items()
+                  if len(pages) != 1}
+    last_page = positions.get(EXPECTED_ROWS, [None])[0]
+    last_rows = sorted(value for value, pages in positions.items()
+                       if last_page in pages) if last_page else []
     return {
         "pages": len(pages),
         "last_row_page": last_page,
-        "final_table_page_row_count": len(final_rows),
-        "final_table_page_row_ids": sorted(final_rows),
-        "potential_single_row_final_page": len(final_rows) == 1,
+        "last_page_row_count": len(last_rows),
+        "last_page_rows": last_rows,
+        "single_final_row": len(last_rows) == 1,
         "missing_rows": missing,
-        "duplicated_rows": duplicate,
+        "duplicated_rows": duplicated,
     }
 
 
@@ -92,40 +103,62 @@ def main() -> None:
     args = parser.parse_args()
     out = ROOT / args.output
     out.mkdir(parents=True, exist_ok=True)
-    report = {"scope": "diagnostic_only", "source": "common class",
-              "experiments": {}, "same_content_comparison": {},
-              "translated_content_comparison": {}}
-    for translated in (False, True):
-        mode = "identical-content" if not translated else "translated-content"
-        report["experiments"][mode] = {}
-        for loc in LOCALES:
-            tex = out / f"{mode}-{loc}.tex"
-            tex.write_text(source(loc, translated), encoding="utf-8")
+    experiments = {}
+    for mode, translated, guarded in (
+        ("identical-content", False, False),
+        ("localized-content", True, False),
+        ("localized-guarded", True, True),
+    ):
+        by_locale = {}
+        for locale in LOCALES:
+            tex = out / f"{mode}-{locale}.tex"
+            tex.write_text(source(locale, translated, guarded), encoding="utf-8")
             for _ in range(3):
                 run("pdflatex", "-interaction=nonstopmode", "-halt-on-error",
                     "-output-directory=" + str(out), str(tex))
-            pdf = tex.with_suffix(".pdf")
-            report["experiments"][mode][loc] = check_pdf(pdf)
-    for key, mode in (("same_content_comparison", "identical-content"),
-                      ("translated_content_comparison", "translated-content")):
-        experiments = report["experiments"][mode]
-        report[key] = {
-            "final_page_rows_by_locale": {
-                loc: value["final_table_page_row_count"]
-                for loc, value in experiments.items()
+            by_locale[locale] = check_pdf(tex.with_suffix(".pdf"))
+        experiments[mode] = by_locale
+    comparisons = {}
+    for mode, per_locale in experiments.items():
+        comparisons[mode] = {
+            "rows_on_last_page": {
+                locale: measurement["last_page_row_count"]
+                for locale, measurement in per_locale.items()
             },
-            "same_final_page_distribution": len({
-                tuple(value["final_table_page_row_ids"])
-                for value in experiments.values()
+            "identical_row_distribution": len({
+                tuple(measurement["last_page_rows"])
+                for measurement in per_locale.values()
             }) == 1,
+            "single_last_row_locales": [
+                locale for locale, measurement in per_locale.items()
+                if measurement["single_final_row"]
+            ],
         }
+    report = {
+        "classification": "DIAGNOSTIC_NOT_HUMAN_NORMATIVE_ACCEPTANCE",
+        "structure": "native-longtable-85-rows",
+        "real_translation_source": [
+            "tests/integration/frontmatter/generate-comprehensive-corpus.py",
+            "tools/review/generate_readable_28.py",
+        ],
+        "experiments": experiments,
+        "comparisons": comparisons,
+    }
     (out / "report.json").write_text(
         json.dumps(report, ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8")
-    print(json.dumps(report, ensure_ascii=False, indent=2))
-    if any(x["missing_rows"] or x["duplicated_rows"]
-           for mode in report["experiments"].values() for x in mode.values()):
-        raise SystemExit("FAIL: table rows missing or duplicated")
+    print("R81-CONTROLLED-SUMMARY " +
+          json.dumps(comparisons, ensure_ascii=False), flush=True)
+    errors = []
+    for mode, per_locale in experiments.items():
+        for locale, measurement in per_locale.items():
+            if measurement["missing_rows"] or measurement["duplicated_rows"]:
+                errors.append(f"{mode}/{locale}: missing/duplicated rows")
+    for locale, measurement in experiments["localized-guarded"].items():
+        if measurement["single_final_row"]:
+            errors.append(f"localized-guarded/{locale}: final row still orphaned")
+    if errors:
+        raise SystemExit("R81-CONTROLLED-FAIL " + "; ".join(errors))
 
 
 if __name__ == "__main__":
