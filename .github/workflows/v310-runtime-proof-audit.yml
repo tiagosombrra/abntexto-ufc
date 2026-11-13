@@ -8,6 +8,7 @@ on:
       - standards/api/public-api.json
       - standards/api/i18n-per-identifier-proof-status.json
       - standards/api/i18n-v310-runtime-proof-candidate.json
+      - standards/api/i18n-v310-bounded-functional-qualified.json
       - standards/api/i18n-functional-evidence-crosswalk.json
       - tests/integration/frontmatter/i18n-b4-integrated-backmatter-evidence.py
       - tests/integration/frontmatter/i18n-b4-isolated-public-api-evidence.py
