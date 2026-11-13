@@ -81,6 +81,7 @@ jobs:
               python3 tests/integration/objects/i18n-inputlisting-container-repro.py --locale pt
               python3 tests/integration/objects/i18n-inputlisting-container-repro.py --isolation
               python3 tests/integration/objects/i18n-inputlisting-container-repro.py --candidate
+              python3 tests/integration/objects/i18n-inputlisting-container-repro.py --runtime
             fi
       - name: Upload source-bound PDFs and hashes
         if: always()
@@ -92,5 +93,6 @@ jobs:
             artifacts/inputlisting-container-repro/${{ matrix.locale }}/**
             artifacts/inputlisting-container-repro/isolation-pt/**
             artifacts/inputlisting-container-repro/candidate-pt/**
+            artifacts/inputlisting-container-repro/runtime-pt/**
           retention-days: 21
           if-no-files-found: warn
