@@ -196,33 +196,33 @@ def isolation_tex(profile: str, wrapper: str, importer: str) -> str:
     if importer not in ("public", "native"):
         raise ValueError("unknown import command")
     head = [
-        r"\\DocumentMetadata{lang=pt-BR,pdfstandard=A-2b,pdfversion=1.7}",
-        r"\\documentclass{abntexto-ufc}",
-        rf"\\ufcsetup{{type={profile},document-language=pt,code=listings,"
+        r"\DocumentMetadata{lang=pt-BR,pdfstandard=A-2b,pdfversion=1.7}",
+        r"\documentclass{abntexto-ufc}",
+        rf"\ufcsetup{{type={profile},document-language=pt,code=listings,"
         r"cover=false,coat-of-arms=false,catalog-card=false,"
         r"title={InputListing isolation},author={Synthetic Author}}",
-        r"\\begin{document}",
-        r"\\textual",
-        r"\\section{Isolation test}",
+        r"\begin{document}",
+        r"\textual",
+        r"\section{Isolation test}",
     ]
     starts = {
         "direct": None,
-        "place": r"\\begin{place}[here]",
-        "ufcobject": r"\\begin{ufcobject}[here]",
-        "minipage": r"\\begin{minipage}{\\linewidth}",
+        "place": r"\begin{place}[here]",
+        "ufcobject": r"\begin{ufcobject}[here]",
+        "minipage": r"\begin{minipage}{\linewidth}",
     }
     ends = {
-        "direct": None, "place": r"\\end{place}",
-        "ufcobject": r"\\end{ufcobject}",
-        "minipage": r"\\end{minipage}",
+        "direct": None, "place": r"\end{place}",
+        "ufcobject": r"\end{ufcobject}",
+        "minipage": r"\end{minipage}",
     }
     if starts[wrapper]:
         head.append(starts[wrapper])
-    command = r"\\ufcInputListing" if importer == "public" else r"\\lstinputlisting"
+    command = r"\ufcInputListing" if importer == "public" else r"\lstinputlisting"
     head.append(command + r"[language=C++]{tests/fixtures/example.cpp}")
     if ends[wrapper]:
         head.append(ends[wrapper])
-    return "\\n".join(head + [r"\\end{document}", ""])
+    return "\n".join(head + [r"\end{document}", ""])
 
 
 def isolation_preflight() -> None:
@@ -235,13 +235,13 @@ def isolation_preflight() -> None:
         raise ValueError("isolation matrix inventory drift")
     for profile, wrapper, importer in scenarios:
         source = isolation_tex(profile, wrapper, importer)
-        if source.count(r"\\lstinputlisting" if importer == "native" else r"\\ufcInputListing") != 1:
+        if source.count(r"\lstinputlisting" if importer == "native" else r"\ufcInputListing") != 1:
             raise ValueError("isolation import drift")
-        if source.count(r"\\begin{place}[here]") != int(wrapper == "place"):
+        if source.count(r"\begin{place}[here]") != int(wrapper == "place"):
             raise ValueError("place wrapper drift")
-        if source.count(r"\\begin{ufcobject}[here]") != int(wrapper == "ufcobject"):
+        if source.count(r"\begin{ufcobject}[here]") != int(wrapper == "ufcobject"):
             raise ValueError("ufcobject wrapper drift")
-        if source.count(r"\\begin{minipage}") != int(wrapper == "minipage"):
+        if source.count(r"\begin{minipage}") != int(wrapper == "minipage"):
             raise ValueError("minipage wrapper drift")
     print("I18N-INPUTLISTING-ISOLATION-PREFLIGHT status=PASS cases=16"
           " profiles=2 wrappers=4 importers=2 publication_authorized=false")
@@ -271,7 +271,7 @@ def run_isolation() -> None:
         )
         log = folder / (name + ".log")
         pdf = folder / (name + ".pdf")
-        output = process.stdout + "\\n" + process.stderr
+        output = process.stdout + "\n" + process.stderr
         success = process.returncode == 0 and pdf.is_file()
         if success:
             verify = subprocess.run(["qpdf", "--check", str(pdf)],
@@ -307,7 +307,7 @@ def run_isolation() -> None:
         "publication_authorized": False,
     }
     (folder / "isolation-manifest.json").write_text(
-        json.dumps(result, indent=2, ensure_ascii=False) + "\\n", encoding="utf-8")
+        json.dumps(result, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     print("I18N-INPUTLISTING-ISOLATION status=RECORDED cases=16"
           f" valid_pdf={sum(x['status'] == 'VALID_PDF' for x in results)}"
           " root_cause=NOT_YET_PROVEN publication_authorized=false")
