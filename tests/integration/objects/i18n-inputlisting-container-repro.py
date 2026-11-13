@@ -383,10 +383,10 @@ def candidate_tex(profile: str, wrapper: str, legend: bool) -> str:
     return value
 
 
-def run_candidate() -> None:
-    """Compile all proposed variants and reject missing code or invalid PDFs."""
+def run_candidate(real_runtime: bool = False) -> None:
+    """Compile the experimental injection or the actual class implementation."""
     candidate_preflight()
-    folder = BASE / "candidate-pt"
+    folder = BASE / ("runtime-pt" if real_runtime else "candidate-pt")
     folder.mkdir(parents=True, exist_ok=True)
     sha = subprocess.check_output(
         ["git", "rev-parse", "HEAD"], cwd=ROOT, text=True
@@ -395,12 +395,22 @@ def run_candidate() -> None:
     for profile, wrapper, legend in itertools.product(
         PROFILES, ("direct", "place", "ufcobject", "minipage"), (False, True)
     ):
-        name = ("candidate-" + ("article" if profile == PROFILES[0] else "capstone")
+        name = (("runtime-" if real_runtime else "candidate-")
+                + ("article" if profile == PROFILES[0] else "capstone")
                 + "-" + wrapper + ("-legend" if legend else "-plain"))
         source = folder / (name + ".tex")
         pdf = folder / (name + ".pdf")
         log = folder / (name + ".log")
-        source.write_text(candidate_tex(profile, wrapper, legend), encoding="utf-8")
+        value = candidate_tex(profile, wrapper, legend)
+        if real_runtime:
+            # Test the class itself without any replacement macro in the input.
+            injection = "\\n".join(CANDIDATE_PATCH) + "\\n"
+            if value.count(injection) != 1:
+                raise ValueError("missing candidate injection to remove")
+            value = value.replace(injection, "", 1)
+            if r"\\RenewDocumentCommand \\ufcInputListing" in value:
+                raise ValueError("unintended runtime macro override")
+        source.write_text(value, encoding="utf-8")
         process = subprocess.run(
             ["pdflatex", "-interaction=nonstopmode", "-halt-on-error",
              "-file-line-error", "-jobname=" + name,
@@ -436,24 +446,27 @@ def run_candidate() -> None:
             "source_sha256": digest(source), "log_sha256": digest(log),
             "pdf_sha256": digest(pdf),
         })
-        print(f"INPUTLISTING-CANDIDATE {name}"
+        print(f"INPUTLISTING-{'RUNTIME' if real_runtime else 'CANDIDATE'} {name}"
               f" status={'PASS' if valid else 'FAIL'}"
               f" math_delim_error={bool(marker)}")
     result = {
         "source_sha": sha, "locale": "pt", "cases": len(results),
         "observations": results,
-        "runtime_class_modified": False,
-        "conclusion": "EXPERIMENTAL_CANDIDATE_ONLY",
+        "runtime_class_modified": real_runtime,
+        "conclusion": ("DEVELOPMENT_RUNTIME_REGRESSION" if real_runtime
+                       else "EXPERIMENTAL_CANDIDATE_ONLY"),
         "ledger_promotion": "NOT_AUTHORIZED",
         "publication_authorized": False,
     }
-    (folder / "candidate-manifest.json").write_text(
+    (folder / ("runtime-manifest.json" if real_runtime else "candidate-manifest.json")).write_text(
         json.dumps(result, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
     )
     if any(not x["valid_pdf_and_text"] for x in results):
-        raise ValueError("candidate did not pass all real-PDF and text probes")
-    print("I18N-INPUTLISTING-CANDIDATE status=PASS cases=16"
-          " real_pdfs=16 runtime_class_unchanged=true publication_authorized=false")
+        raise ValueError("import did not pass all real-PDF and text probes")
+    label = "RUNTIME" if real_runtime else "CANDIDATE"
+    print(f"I18N-INPUTLISTING-{label} status=PASS cases=16"
+          f" real_pdfs=16 runtime_class_modified={str(real_runtime).lower()}"
+          " publication_authorized=false")
 
 
 if __name__ == "__main__":
@@ -461,19 +474,22 @@ if __name__ == "__main__":
     parser.add_argument("--preflight", action="store_true")
     parser.add_argument("--isolation", action="store_true")
     parser.add_argument("--candidate", action="store_true")
+    parser.add_argument("--runtime", action="store_true")
     parser.add_argument("--locale", choices=tuple(LOCALES))
     args = parser.parse_args()
     try:
         preflight()
         isolation_preflight()
         candidate_preflight()
-        if args.candidate and not args.preflight:
+        if args.runtime and not args.preflight:
+            run_candidate(real_runtime=True)
+        elif args.candidate and not args.preflight:
             run_candidate()
         elif args.isolation and not args.preflight:
             run_isolation()
         elif args.locale and not args.preflight:
             run(args.locale)
         elif not args.preflight:
-            raise ValueError("select --preflight, --isolation, --candidate or --locale")
+            raise ValueError("select --preflight, --isolation, --candidate, --runtime or --locale")
     except (OSError, ValueError, subprocess.CalledProcessError) as e:
         raise SystemExit(f"I18N-INPUTLISTING-REPRO status=FAIL reason={e}") from e
