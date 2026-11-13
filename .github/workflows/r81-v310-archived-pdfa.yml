@@ -1,0 +1,90 @@
+name: R8.1 archived reviewed-PDF independent PDF/A-2b validation
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths:
+      - abntexto-ufc.cls
+      - tools/review/prepare_v310_r81_human_review.py
+      - tools/review/verify_final_pdfa_28.py
+      - tools/review/generate_readable_28.py
+      - tools/review/build_readable_28.py
+      - docs/R81-V310-HUMAN-REVIEW.md
+      - .github/workflows/r81-v310-archived-pdfa.yml
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: r81-v310-archived-pdfa-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  archived-reviewed-pdfs:
+    name: Exact archived 972-page reviewer PDF/A-2b audit (not accepted)
+    if: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    env:
+      GH_TOKEN: ${{ github.token }}
+      R81_PDFA_SCOPE: archived-development
+      SOURCE_COMMIT_SHA: de99db499cbc5bb78097f415fb91e3bb3ca3128a
+      R81_ORIGINAL_PROOF_RUN_ID: "43467471975"
+    steps:
+      - name: Checkout latest candidate and full source provenance
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Install original-PDF and page-count validators
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends qpdf poppler-utils
+      - name: Independently authenticate original reviewer ZIP bytes and source
+        run: |
+          set -euo pipefail
+          python3 tools/review/prepare_v310_r81_human_review.py \
+            --download --archives artifacts/r81-v310-human-review/original-zips
+          mkdir -p artifacts/r5-archived-development-pdfa/source
+          python3 - <<'PY'
+          from pathlib import Path
+          import zipfile
+          artifacts = Path("artifacts/r81-v310-human-review/original-zips")
+          source = Path("artifacts/r5-archived-development-pdfa/source")
+          for locale in ("pt", "en", "es", "fr"):
+              zipfile_path = artifacts / f"readable-complete-{locale}-43467471975.zip"
+              with zipfile.ZipFile(zipfile_path) as archive:
+                  # The preceding auditor already rejected unsafe ZIP members.
+                  archive.extractall(source / locale)
+          PY
+          python3 tools/review/verify_final_pdfa_28.py prepare
+      - name: Run official independent veraPDF on exact unchanged reviewer PDF bytes
+        run: |
+          set -euo pipefail
+          docker pull verapdf/cli:latest
+          docker image inspect verapdf/cli:latest --format '{{json .RepoDigests}}' \
+            > artifacts/r5-archived-development-pdfa/validator-image-digests.json
+          docker run --rm -v "$PWD/artifacts/r5-archived-development-pdfa/pdfs:/data:ro" \
+            verapdf/cli:latest --flavour 2b --format raw --recurse /data \
+            > artifacts/r5-archived-development-pdfa/verapdf-raw.xml \
+            2> artifacts/r5-archived-development-pdfa/verapdf-stderr.log || {
+              echo "veraPDF nonzero; preserving raw evidence"
+              test -s artifacts/r5-archived-development-pdfa/verapdf-raw.xml
+            }
+          test -s artifacts/r5-archived-development-pdfa/verapdf-raw.xml
+      - name: Audit each PDF/A-2b result against the exact original PDF SHA256
+        run: |
+          set -euo pipefail
+          python3 tools/review/verify_final_pdfa_28.py verify
+      - name: Upload separate source-bound PDF/A receipt; never grant human acceptance
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: r81-v310-archived-972-pdfa28-${{ github.run_id }}
+          path: |
+            artifacts/r5-archived-development-pdfa/input-manifest.json
+            artifacts/r5-archived-development-pdfa/validator-image-digests.json
+            artifacts/r5-archived-development-pdfa/verapdf-raw.xml
+            artifacts/r5-archived-development-pdfa/verapdf-stderr.log
+            artifacts/r5-archived-development-pdfa/results.json
+          retention-days: 30
+          if-no-files-found: warn
