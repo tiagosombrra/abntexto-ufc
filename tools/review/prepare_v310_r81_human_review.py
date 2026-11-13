@@ -288,7 +288,7 @@ def markdown(packet: dict) -> str:
         "",
         "**Estado: PRONTO PARA REVISÃO, NÃO HOMOLOGADO.** Não há aceite humano.",
         "",
-        f"Fonte auditada: \`{PROOF_SOURCE}\`. Classe Git blob: \`{CLASS_BLOB}\`.",
+        f"Fonte auditada: `{PROOF_SOURCE}`. Classe Git blob: `{CLASS_BLOB}`.",
         f"Execução original: https://github.com/{REPO}/actions/runs/{R5_RUN}.",
         "",
         "A matriz contém 28 PDFs, 984 páginas e 984 decisões por página **PENDING**.",
@@ -302,7 +302,7 @@ def markdown(packet: dict) -> str:
         loc = doc["locale"]
         lines.append(
             f"| {loc} | {doc['profile']} | {doc['physical_pages']} | "
-            f"\`{doc['pdf_sha256']}\` | "
+            f"`{doc['pdf_sha256']}` | "
             f"[ZIP #{doc['original_artifact_id']}](https://github.com/{REPO}/actions/runs/{R5_RUN}/artifacts/{doc['original_artifact_id']}) "
             "| PENDING |"
         )
@@ -319,14 +319,14 @@ def markdown(packet: dict) -> str:
         "",
         "Registrar para cada documento: examinador, data, páginas inspecionadas,",
         "observações, norma e seção aplicável, e uma das decisões",
-        "\`ACCEPT\`, \`NEEDS_CHANGES\` ou \`REJECT\`. Versos vazios exigem",
+        "`ACCEPT`, `NEEDS_CHANGES` ou `REJECT`. Versos vazios exigem",
         "justificativa específica. Não presumir aprovação por qpdf, veraPDF ou",
         "sucesso do CI. Qualquer alteração de classe exige novo conjunto de",
         "PDFs e nova avaliação vinculada à fonte.",
         "",
         "## Portas ainda bloqueadas",
         "",
-        "- R8.1 visual/normativa/linguística: PENDING.",
+        "- R8.1 visual/normativa e linguística: PENDING.",
         "- Aprovação institucional: PENDING.",
         "- Release/tag/CTAN v3.1.0: NÃO AUTORIZADOS.",
         "",
