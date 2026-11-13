@@ -338,7 +338,7 @@ CANDIDATE_PATCH = (
 
 def candidate_preflight() -> None:
     """Prove that the experimental patch tests only the public import path."""
-    if len(CANDIDATE_PATCH) != 13:
+    if len(CANDIDATE_PATCH) != 12:
         raise ValueError("experimental patch line inventory drift")
     if not any(r"\mode_if_inner:TF" in x for x in CANDIDATE_PATCH):
         raise ValueError("inner-horizontal candidate guard absent")
