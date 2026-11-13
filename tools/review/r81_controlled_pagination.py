@@ -32,7 +32,7 @@ def source(locale: str, translated: bool) -> str:
     front = [
         rf"\DocumentMetadata{{lang={LOCALES[locale]},pdfstandard=A-2b,pdfversion=1.7}}",
         r"\documentclass{abntexto-ufc}",
-        r"\ufcsetup{type=research-project,document-language=" + locale
+        r"\ufcsetup{type=research-project,tables=tabularray,document-language=" + locale
         + r",print-mode=single-sided,cover=false,coat-of-arms=false,"
         + r"catalog-card=false,author={Controlled Author},"
         + r"title={Controlled Pagination},year={2026},location={Fortaleza}}",
