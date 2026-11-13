@@ -34,6 +34,18 @@ Os dados de revisão produzidos são **solicitações em branco**. Qualquer deci
 7. **Frente e verso:** toda página vazia exige fundamentação individual por transição de elemento e modo de impressão; não transformar paridade observada em obrigação normativa.
 8. **Anonimização:** o PDF de projeto anonimizado deve ser inspecionado para informações identificadoras, inclusive metadados, conteúdo e possíveis indícios indiretos. O código-fonte TeX de teste pode intencionalmente conter identidades sintéticas e **não é um pacote de submissão cega**.
 
+## PDF/A-2b independente dos mesmos 28 arquivos
+
+A execução [#43470720979](https://github.com/tiagosombrra/abntexto-ufc/actions/runs/43470720979) validou os **28 PDFs originais do pacote de revisão humana**, não os arquivos diferentes recompilados num commit posterior. O workflow específico é [R8.1 archived reviewed-PDF independent PDF/A-2b validation](../.github/workflows/r81-v310-archived-pdfa.yml).
+
+- Fonte original dos PDFs: `de99db499cbc5bb78097f415fb91e3bb3ca3128a`; execução de geração: `43467471975`.
+- Resultado do veraPDF oficial: `PASS_ARCHIVED_DEVELOPMENT_EXTERNAL_PDF_A_2B`, **28/28 conformes**, zero não conformidades, 972 páginas.
+- Artefato original do laudo: GitHub artifact `14060196996`, ZIP SHA-256 `91fe34f6ea0effcaf33ca74c074124849e7ee1ad53bc31d8e0148e742a8ed476`. Contém o XML bruto do veraPDF, relatório JSON, manifesto de entrada e digest da imagem usada.
+- Auditoria independente adicional: os **28 hashes PDF do manifesto do veraPDF** foram confrontados, um a um, com os **28 hashes dos documentos no pedido R8.1**, e todos coincidiram. Isso elimina a ambiguidade gerada quando dois commits compilam PDFs de conteúdo equivalente, mas bytes diferentes.
+- A classe continua vinculada ao Git blob `299293e273dcefb80256eed2e17d2557db6aae52`. Os scripts que produziram os PDFs originais têm Git blobs comparados ao estado candidato antes de qualquer aceitação técnica.
+
+Esse laudo comprova apenas PDF/A-2b nos arquivos originais; **não** atesta PDF/UA, acessibilidade, qualidade dos conteúdos, diagramação UFC/ABNT, traduções ou assinatura visual. Os 972 registros de página e os 28 documentos continuam **PENDING** para decisão humana. A validação R8.1 histórica, feita para a classe antiga, não foi modificada nem herdada.
+
 ## Portas de decisão
 
 Revisão humana por página: `PENDING`; revisão visual final: `PENDING`; revisão normativa e linguística: `PENDING`; autorização institucional: `PENDING`. Somente uma pessoa autorizada pode registrar um `ACCEPT` explícito, sempre vinculando o SHA da fonte e os arquivos realmente examinados.
