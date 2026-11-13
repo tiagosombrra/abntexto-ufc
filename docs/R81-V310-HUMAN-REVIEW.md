@@ -1,0 +1,42 @@
+# R8.1 — Solicitação de revisão humana dos 28 PDFs da classe corrigida
+
+**Situação: READY_FOR_HUMAN_REVIEW_NOT_ACCEPTED.** Este documento descreve a preparação da revisão da linha `v3.1.0` em desenvolvimento. Não concede aceitação visual, linguística, normativa ou institucional; `publication_authorized=false`. A [PR #592](https://github.com/tiagosombrra/abntexto-ufc/pull/592) continua draft até a conclusão dos gates apropriados.
+
+## Identidade dos PDFs originais
+
+- Classe recompilada: `abntexto-ufc.cls`, Git blob `299293e273dcefb80256eed2e17d2557db6aae52`.
+- Fonte completa que gerou os 28 PDFs editoriais: `a4a4665ce099d0786e92e443b95dab656b25afad`.
+- Execução: [GitHub Actions #43452221682](https://github.com/tiagosombrra/abntexto-ufc/actions/runs/43452221682). Os quatro jobs de idioma compilaram com sucesso.
+- Documentos: 7 perfis × 4 idiomas (PT/EN/ES/FR) = **28 arquivos e 984 páginas**.
+- Recebimentos originais: PT artifact `14051882443`, EN `14051792499`, ES `14051702300`, FR `14051807414`. O auditor verifica identidade, SHA-256 dos ZIPs, SHA-256 de cada PDF e fonte TeX, hashes dos recibos e contagens físicas de páginas, sem regravar os originais.
+- A verificação independente do **veraPDF-2b de desenvolvimento** sobre esses PDFs teve 28 conformes e 0 não conformes, sem constituir aprovação visual ou institucional. O antigo verificador R8.1 permanece deliberadamente incompatível com o blob da classe atual.
+
+## Gerar o pacote de revisão, sem aceite automático
+
+O workflow [R8.1 corrected-runtime human PDF review request](../.github/workflows/r81-v310-human-review-request.yml) produz um artefato `r81-v310-pending-review-request-<run_id>` contendo:
+
+- `request.json`: identidade dos 28 documentos, fonte e SHA-256 original de cada PDF e arquivo TeX, número de páginas, ZIP de origem, oito dimensões de revisão **PENDING** por documento e 984 decisões de páginas inicializadas como **PENDING**;
+- `REVIEW-REQUEST.md`: relação por perfil/idioma, URLs para os quatro artefatos originais e orientações de inspeção.
+
+O script `tools/review/prepare_v310_r81_human_review.py` é executado por CI com token somente de leitura e os comandos `qpdf --check` e `pdfinfo`. Uma alteração posterior na classe altera o blob e bloqueia a reutilização da evidência; os pacotes gerados para outra fonte devem ser regenerados. Os ZIPs originais continuam na execução original, e não são republicados como artefatos de distribuição.
+
+Os dados de revisão produzidos são **solicitações em branco**. Qualquer decisão humana deve ser mantida num registro separado e rastreado, com identificação da pessoa revisora, data, PDF, SHA-256, página, justificativa normativa e evidência. A geração de arquivos não pode produzir automaticamente `ACCEPT`.
+
+## Critérios mínimos para a decisão de cada documento
+
+1. **Norma UFC/ABNT:** citar edição e seção aplicável, distinguindo NBR 14724:2024 (com a correção vigente), NBR 15287:2025 para projetos, NBR 6023:2025 para referências e o guia UFC conforme aplicabilidade. Questões contraditórias exigem parecer humano, não suposição por código.
+2. **Geometria e apresentação:** margens, títulos, folios em páginas pares/ímpares, recuos de citações, entrelinhas, sumário e pontos de condução, números e capitulares.
+3. **Perfil acadêmico:** elementos obrigatórios, opcionais e proibidos para TCC, especialização, mestrado, doutorado, projeto, projeto anônimo e artigo, incluindo a banca e a área de concentração.
+4. **Traduções:** português, inglês, espanhol e francês, com revisão de termos acadêmicos, natureza do trabalho e consistência dos textos institucionais.
+5. **Elementos pré/pós-textuais:** resumos, listas, glossário, índice, bibliografia, apêndices e anexos, ordem, existência e localização.
+6. **Objetos e listagens:** figuras, gráficos, quadros, tabelas, notas, fontes e trechos importados; em `\ufcobject`, verificar a importação com a nova implementação de `\ufcInputListing`. Listagens extensas não devem ser pressupostas divisíveis quando dentro de caixas herdadas.
+7. **Frente e verso:** toda página vazia exige fundamentação individual por transição de elemento e modo de impressão; não transformar paridade observada em obrigação normativa.
+8. **Anonimização:** o PDF de projeto anonimizado deve ser inspecionado para informações identificadoras, inclusive metadados, conteúdo e possíveis indícios indiretos. O código-fonte TeX de teste pode intencionalmente conter identidades sintéticas e **não é um pacote de submissão cega**.
+
+## Portas de decisão
+
+Revisão humana por página: `PENDING`; revisão visual final: `PENDING`; revisão normativa/linguística: `PENDING`; autorização institucional: `PENDING`. Somente uma pessoa autorizada pode registrar um `ACCEPT` explícito, sempre vinculando o SHA da fonte e os arquivos realmente examinados.
+
+**Ainda não fazer:** merge protegido da PR #592, alteração do registro histórico da classe antiga, tag v3.1.0, GitHub Release ou envio CTAN. Para release, os gates de integração, fonte final e aceite humano precisam ser novamente certificados no commit aprovado.
+
+Veja também [R5 — auditoria de artefatos](R5-ARTIFACT-REVIEW.md) e [Revisão de sete perfis](SEVEN-PROFILE-REVIEW.md).
