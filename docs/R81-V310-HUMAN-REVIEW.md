@@ -35,7 +35,7 @@ Os dados de revisão produzidos são **solicitações em branco**. Qualquer deci
 
 ## Portas de decisão
 
-Revisão humana por página: `PENDING`; revisão visual final: `PENDING`; revisão normativa/linguística: `PENDING`; autorização institucional: `PENDING`. Somente uma pessoa autorizada pode registrar um `ACCEPT` explícito, sempre vinculando o SHA da fonte e os arquivos realmente examinados.
+Revisão humana por página: `PENDING`; revisão visual final: `PENDING`; revisão normativa e linguística: `PENDING`; autorização institucional: `PENDING`. Somente uma pessoa autorizada pode registrar um `ACCEPT` explícito, sempre vinculando o SHA da fonte e os arquivos realmente examinados.
 
 **Ainda não fazer:** merge protegido da PR #592, alteração do registro histórico da classe antiga, tag v3.1.0, GitHub Release ou envio CTAN. Para release, os gates de integração, fonte final e aceite humano precisam ser novamente certificados no commit aprovado.
 
