@@ -404,11 +404,11 @@ def run_candidate(real_runtime: bool = False) -> None:
         value = candidate_tex(profile, wrapper, legend)
         if real_runtime:
             # Test the class itself without any replacement macro in the input.
-            injection = "\\n".join(CANDIDATE_PATCH) + "\\n"
+            injection = "\n".join(CANDIDATE_PATCH) + "\n"
             if value.count(injection) != 1:
                 raise ValueError("missing candidate injection to remove")
             value = value.replace(injection, "", 1)
-            if r"\\RenewDocumentCommand \\ufcInputListing" in value:
+            if r"\RenewDocumentCommand \ufcInputListing" in value:
                 raise ValueError("unintended runtime macro override")
         source.write_text(value, encoding="utf-8")
         process = subprocess.run(
