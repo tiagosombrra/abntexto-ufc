@@ -188,16 +188,144 @@ def run(locale: str) -> None:
           " conclusion=UNDETERMINED human_review=PENDING")
 
 
+
+def isolation_tex(profile: str, wrapper: str, importer: str) -> str:
+    """Build a minimal controlled source for the wrapper-level causal experiment."""
+    if profile not in PROFILES or wrapper not in ("direct", "place", "ufcobject", "minipage"):
+        raise ValueError("unknown isolation profile or wrapper")
+    if importer not in ("public", "native"):
+        raise ValueError("unknown import command")
+    head = [
+        r"\\DocumentMetadata{lang=pt-BR,pdfstandard=A-2b,pdfversion=1.7}",
+        r"\\documentclass{abntexto-ufc}",
+        rf"\\ufcsetup{{type={profile},document-language=pt,code=listings,"
+        r"cover=false,coat-of-arms=false,catalog-card=false,"
+        r"title={InputListing isolation},author={Synthetic Author}}",
+        r"\\begin{document}",
+        r"\\textual",
+        r"\\section{Isolation test}",
+    ]
+    starts = {
+        "direct": None,
+        "place": r"\\begin{place}[here]",
+        "ufcobject": r"\\begin{ufcobject}[here]",
+        "minipage": r"\\begin{minipage}{\\linewidth}",
+    }
+    ends = {
+        "direct": None, "place": r"\\end{place}",
+        "ufcobject": r"\\end{ufcobject}",
+        "minipage": r"\\end{minipage}",
+    }
+    if starts[wrapper]:
+        head.append(starts[wrapper])
+    command = r"\\ufcInputListing" if importer == "public" else r"\\lstinputlisting"
+    head.append(command + r"[language=C++]{tests/fixtures/example.cpp}")
+    if ends[wrapper]:
+        head.append(ends[wrapper])
+    return "\\n".join(head + [r"\\end{document}", ""])
+
+
+def isolation_preflight() -> None:
+    """Fail closed when the isolation matrix loses any controlled variant."""
+    scenarios = [(profile, wrapper, importer)
+                 for profile, wrapper, importer in itertools.product(
+                     PROFILES, ("direct", "place", "ufcobject", "minipage"),
+                     ("public", "native"))]
+    if len(scenarios) != 16:
+        raise ValueError("isolation matrix inventory drift")
+    for profile, wrapper, importer in scenarios:
+        source = isolation_tex(profile, wrapper, importer)
+        if source.count(r"\\lstinputlisting" if importer == "native" else r"\\ufcInputListing") != 1:
+            raise ValueError("isolation import drift")
+        if source.count(r"\\begin{place}[here]") != int(wrapper == "place"):
+            raise ValueError("place wrapper drift")
+        if source.count(r"\\begin{ufcobject}[here]") != int(wrapper == "ufcobject"):
+            raise ValueError("ufcobject wrapper drift")
+        if source.count(r"\\begin{minipage}") != int(wrapper == "minipage"):
+            raise ValueError("minipage wrapper drift")
+    print("I18N-INPUTLISTING-ISOLATION-PREFLIGHT status=PASS cases=16"
+          " profiles=2 wrappers=4 importers=2 publication_authorized=false")
+
+
+def run_isolation() -> None:
+    """Record exact-source TeX/PDF evidence without promoting a failing API."""
+    isolation_preflight()
+    folder = BASE / "isolation-pt"
+    folder.mkdir(parents=True, exist_ok=True)
+    sha = subprocess.check_output(["git", "rev-parse", "HEAD"],
+                                  cwd=ROOT, text=True).strip()
+    results = []
+    for profile, wrapper, importer in itertools.product(
+        PROFILES, ("direct", "place", "ufcobject", "minipage"),
+        ("public", "native")
+    ):
+        name = "isolate-" + ("article" if profile == PROFILES[0] else "capstone")
+        name += "-" + wrapper + "-" + importer
+        src = folder / (name + ".tex")
+        src.write_text(isolation_tex(profile, wrapper, importer), encoding="utf-8")
+        process = subprocess.run(
+            ["pdflatex", "-interaction=nonstopmode", "-halt-on-error",
+             "-file-line-error", "-jobname=" + name,
+             "-output-directory=" + str(folder), str(src)],
+            cwd=ROOT, capture_output=True, text=True, check=False,
+        )
+        log = folder / (name + ".log")
+        pdf = folder / (name + ".pdf")
+        output = process.stdout + "\\n" + process.stderr
+        success = process.returncode == 0 and pdf.is_file()
+        if success:
+            verify = subprocess.run(["qpdf", "--check", str(pdf)],
+                                    cwd=ROOT, capture_output=True, text=True,
+                                    check=False)
+            if verify.returncode != 0:
+                raise ValueError("invalid isolation PDF: " + name)
+        marker = ERROR_MARKER in output or (
+            log.is_file() and ERROR_MARKER in log.read_text(errors="replace"))
+        results.append({
+            "name": name, "profile": profile, "wrapper": wrapper,
+            "importer": importer, "status": "VALID_PDF" if success else "TEX_FAILURE",
+            "math_delimiter_error": bool(marker), "exit_code": process.returncode,
+            "source_sha256": digest(src), "log_sha256": digest(log),
+            "pdf_sha256": digest(pdf),
+        })
+        print(f"INPUTLISTING-ISOLATION {name}"
+              f" status={'VALID_PDF' if success else 'TEX_FAILURE'}"
+              f" math_delim_error={bool(marker)}")
+    # Direct import must compile with both the class API and native Listings.
+    for profile in PROFILES:
+        for importer in ("public", "native"):
+            baseline = [r for r in results if r["profile"] == profile
+                        and r["wrapper"] == "direct" and r["importer"] == importer]
+            if len(baseline) != 1 or baseline[0]["status"] != "VALID_PDF":
+                raise ValueError("direct positive control failed: "
+                                 + profile + "/" + importer)
+    result = {
+        "source_sha": sha, "locale": "pt", "cases": len(results),
+        "observations": results,
+        "conclusion": "EXPERIMENTAL_NOT_YET_RUNTIME_FIX",
+        "ledger_promotion": "NOT_AUTHORIZED",
+        "publication_authorized": False,
+    }
+    (folder / "isolation-manifest.json").write_text(
+        json.dumps(result, indent=2, ensure_ascii=False) + "\\n", encoding="utf-8")
+    print("I18N-INPUTLISTING-ISOLATION status=RECORDED cases=16"
+          f" valid_pdf={sum(x['status'] == 'VALID_PDF' for x in results)}"
+          " root_cause=NOT_YET_PROVEN publication_authorized=false")
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--preflight", action="store_true")
+    parser.add_argument("--isolation", action="store_true")
     parser.add_argument("--locale", choices=tuple(LOCALES))
     args = parser.parse_args()
     try:
         preflight()
-        if args.locale and not args.preflight:
+        isolation_preflight()
+        if args.isolation and not args.preflight:
+            run_isolation()
+        elif args.locale and not args.preflight:
             run(args.locale)
         elif not args.preflight:
-            raise ValueError("select --preflight or --locale")
+            raise ValueError("select --preflight, --isolation or --locale")
     except (OSError, ValueError, subprocess.CalledProcessError) as e:
         raise SystemExit(f"I18N-INPUTLISTING-REPRO status=FAIL reason={e}") from e
