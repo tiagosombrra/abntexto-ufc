@@ -18,6 +18,8 @@ on:
       - tests/integration/frontmatter/i18n-b1-family-evidence.py
       - tests/integration/frontmatter/i18n-b1-final-five-evidence.py
       - tests/integration/frontmatter/i18n-b3-integrated-list-evidence.py
+      - tests/integration/frontmatter/i18n-b4-integrated-backmatter-evidence.py
+      - tests/integration/frontmatter/i18n-b4-isolated-public-api-evidence.py
       - tests/integration/frontmatter/i18n-b1-auxiliary-pdf-evidence.py
       - tests/integration/layout/font-config.sh
       - tests/integration/frontmatter/i18n-api-inventory.py
@@ -54,6 +56,8 @@ on:
       - tests/integration/frontmatter/i18n-b1-family-evidence.py
       - tests/integration/frontmatter/i18n-b1-final-five-evidence.py
       - tests/integration/frontmatter/i18n-b3-integrated-list-evidence.py
+      - tests/integration/frontmatter/i18n-b4-integrated-backmatter-evidence.py
+      - tests/integration/frontmatter/i18n-b4-isolated-public-api-evidence.py
       - tests/integration/frontmatter/i18n-b1-auxiliary-pdf-evidence.py
       - tests/integration/layout/font-config.sh
       - tests/integration/frontmatter/i18n-api-inventory.py
@@ -118,6 +122,9 @@ jobs:
             python3 tests/integration/frontmatter/i18n-list-environment-evidence.py --locale ${{ matrix.locale }}
             python3 tests/integration/frontmatter/i18n-optional-environment-evidence.py --locale ${{ matrix.locale }}
             python3 tests/integration/frontmatter/i18n-b1-final-five-evidence.py --locale ${{ matrix.locale }}
+            # B4 work is transplanted from PR #589 without its old-class ledger.
+            python3 tests/integration/frontmatter/i18n-b4-integrated-backmatter-evidence.py --locale ${{ matrix.locale }}
+            python3 tests/integration/frontmatter/i18n-b4-isolated-public-api-evidence.py --locale ${{ matrix.locale }}
       - name: Archive original candidate PDFs and provenance receipts
         if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
