@@ -79,6 +79,7 @@ jobs:
             python3 tests/integration/objects/i18n-b3-optional-list-evidence.py --locale ${{ matrix.locale }}
             if [ "${{ matrix.locale }}" = "pt" ]; then
               python3 tests/integration/objects/i18n-inputlisting-container-repro.py --locale pt
+              python3 tests/integration/objects/i18n-inputlisting-container-repro.py --isolation
             fi
       - name: Upload source-bound PDFs and hashes
         if: always()
@@ -88,5 +89,6 @@ jobs:
           path: |
             artifacts/optional-i18n/${{ matrix.locale }}/**
             artifacts/inputlisting-container-repro/${{ matrix.locale }}/**
+            artifacts/inputlisting-container-repro/isolation-pt/**
           retention-days: 21
           if-no-files-found: warn
