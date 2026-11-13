@@ -9,6 +9,7 @@ on:
       - tests/integration/objects/i18n-optional-api-output-evidence.py
       - tests/integration/objects/i18n-b1-optional-config-evidence.py
       - tests/integration/objects/i18n-b3-optional-list-evidence.py
+      - tests/integration/objects/i18n-inputlisting-container-repro.py
       - tests/integration/frontmatter/run-integrated-locale.py
       - standards/evidence/test-surface-policy.json
       - .github/workflows/i18n-optional-modules-matrix.yml
@@ -20,6 +21,7 @@ on:
       - tests/integration/objects/i18n-optional-api-output-evidence.py
       - tests/integration/objects/i18n-b1-optional-config-evidence.py
       - tests/integration/objects/i18n-b3-optional-list-evidence.py
+      - tests/integration/objects/i18n-inputlisting-container-repro.py
       - tests/integration/frontmatter/run-integrated-locale.py
       - .github/workflows/i18n-optional-modules-matrix.yml
 permissions:
@@ -45,6 +47,7 @@ jobs:
           python3 tests/integration/objects/i18n-optional-api-output-evidence.py --self-test
           python3 tests/integration/objects/i18n-b1-optional-config-evidence.py --self-test
           python3 tests/integration/objects/i18n-b3-optional-list-evidence.py --preflight
+          python3 tests/integration/objects/i18n-inputlisting-container-repro.py --preflight
   optional-locales:
     name: Code + minted + algorithm comments + long tables / ${{ matrix.locale }}
     needs: preflight
@@ -74,11 +77,16 @@ jobs:
             python3 tests/integration/objects/optional-locale-evidence.py --locale ${{ matrix.locale }}
             python3 tests/integration/objects/i18n-b1-optional-config-evidence.py --locale ${{ matrix.locale }}
             python3 tests/integration/objects/i18n-b3-optional-list-evidence.py --locale ${{ matrix.locale }}
+            if [ "${{ matrix.locale }}" = "pt" ]; then
+              python3 tests/integration/objects/i18n-inputlisting-container-repro.py --locale pt
+            fi
       - name: Upload source-bound PDFs and hashes
         if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: optional-i18n-${{ matrix.locale }}-${{ github.run_id }}
-          path: artifacts/optional-i18n/${{ matrix.locale }}/**
+          path: |
+            artifacts/optional-i18n/${{ matrix.locale }}/**
+            artifacts/inputlisting-container-repro/${{ matrix.locale }}/**
           retention-days: 21
           if-no-files-found: warn
