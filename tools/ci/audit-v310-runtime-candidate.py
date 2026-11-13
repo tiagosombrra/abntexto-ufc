@@ -266,9 +266,16 @@ def download_archive(name: str, metadata: dict, dest: Path, token: str) -> None:
             and record["workflow_run"]["head_sha"] == SOURCE_SHA
             and record["digest"] == "sha256:" + metadata["zip_sha256"]
             and not record["expired"], f"incorrect or expired GitHub artifact {name}")
-    # GitHub redirects the ZIP endpoint to an expiring, signed content URL.
-    with urllib.request.urlopen(urllib.request.Request(url + "/zip", headers=headers)) as stream:
-        dest.write_bytes(stream.read())
+    print(f"V310-REMOTE-METADATA status=PASS artifact={metadata['artifact_id']} source={SOURCE_SHA}", flush=True)
+    # Do not forward GitHub Authorization across the CDN redirect.
+    # curl -L strips that header when the target host changes.
+    subprocess.run([
+        "curl", "--fail", "--location", "--silent", "--show-error",
+        "--retry", "3",
+        "-H", f"Authorization: Bearer {token}",
+        "-H", "Accept: application/vnd.github+json",
+        url + "/zip", "--output", str(dest),
+    ], check=True)
 
 
 def main() -> None:
