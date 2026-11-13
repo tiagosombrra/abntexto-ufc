@@ -19,6 +19,7 @@ import zipfile
 
 ROOT = Path(__file__).resolve().parents[2]
 CANDIDATE = ROOT / "standards/api/i18n-v310-runtime-proof-candidate.json"
+QUALIFIED = ROOT / "standards/api/i18n-v310-bounded-functional-qualified.json"
 OLD = ROOT / "standards/api/i18n-per-identifier-proof-status.json"
 PUBLIC = ROOT / "standards/api/public-api.json"
 CROSS = ROOT / "standards/api/i18n-functional-evidence-crosswalk.json"
@@ -150,6 +151,74 @@ def verify_registry(data: dict, old: dict, public: dict, cross: dict) -> dict:
     return {"identifiers": 72, "historical_pass": old_pass,
             "historical_pending": old_pending, "suites": len(suites_used)}
 
+
+
+def verify_qualified(qualified: dict, candidate: dict, old: dict,
+                     public: dict, cross: dict) -> int:
+    """Accept only independently audited, scope-bounded new-class API receipts."""
+    require(qualified["schema_version"] == 1
+            and qualified["certification_boundary"]
+                == "SOURCE_BOUND_BOUNDED_FUNCTIONAL_PDF_ONLY"
+            and qualified["certification_state"]
+                == "FUNCTIONAL_BOUNDED_ACCEPTED_FROM_INDEPENDENT_ORIGINAL_BYTE_AUDIT",
+            "bounded functional qualification scope drift")
+    require(qualified["source_sha"] == SOURCE_SHA
+            and qualified["class_git_blob"] == CLASS_BLOB
+            and qualified["candidate_registry"] == CANDIDATE.relative_to(ROOT).as_posix()
+            and qualified["immutable_historical_ledger"] == OLD.relative_to(ROOT).as_posix(),
+            "qualified ledger not source-bound to candidate and immutable history")
+    require(qualified["public_api"] == PUBLIC.relative_to(ROOT).as_posix()
+            and qualified["crosswalk"] == CROSS.relative_to(ROOT).as_posix(),
+            "qualified ledger disconnected from canonical API")
+    require(qualified["suites"] == candidate["suites"]
+            and qualified["original_artifacts"] == candidate["artifact_receipts"],
+            "source proof suite/ZIP references drifted from independently audited candidate")
+    require(qualified["summary"] == {"PASS": 72, "PENDING": 0, "NA": 0}
+            and qualified["human_normative_linguistic_review"] == "PENDING"
+            and qualified["R81_editorial_visual_acceptance"] == "PENDING"
+            and qualified["global_internationalization_acceptance"] == "PENDING"
+            and qualified["publication_authorized"] is False
+            and qualified["release_candidate_state"] == "UNRELEASED",
+            "bounded PDF qualification improperly promoted normative or release approval")
+    receipt = qualified["audit"]
+    require(receipt["workflow_run_id"] == 43442738972
+            and receipt["job_id"] == 131944234081
+            and receipt["report_artifact_id"] == 14047290868
+            and receipt["report_artifact_sha256"]
+                == "6023e5a42147479d674166509ca3f884378e8e7e8986a5679d840d0c240d0d79"
+            and receipt["original_zip_count"] == 10
+            and receipt["original_pdf_count"] == 310
+            and receipt["sha256_reference_count"] == 4952
+            and receipt["source_shas_equal_for_13_runners"] is True,
+            "qualified ledger changed original independent byte-audit receipt")
+    require(set(qualified["entries"]) == set(GROUPS),
+            "qualified ledger missing public API groups")
+    all_names = identifier_sets(public, cross)
+    count = 0
+    for group in GROUPS:
+        original = old["entries"][group]
+        rows = qualified["entries"][group]
+        require(set(rows) == set(original) == all_names[group],
+                f"qualified register missing/invented identifier: {group}")
+        for name, row in rows.items():
+            candidate_row = candidate["entries"][group][name]
+            suite_name = candidate_row["proof_suite"]
+            suite = candidate["suites"][suite_name]
+            require(row == {
+                "result": "PASS",
+                "qualification": "SOURCE_BOUND_BOUNDED_FUNCTIONAL_PDF_ONLY",
+                "scope": candidate_row["scope"],
+                "evidence_id": suite_name,
+                "evidence_source_sha": SOURCE_SHA,
+                "runtime_class_git_blob": CLASS_BLOB,
+                "candidate_test_file": candidate_row["candidate_source"],
+                "original_archive_names": suite["artifact_files"],
+                "human_normative_linguistic_review": "PENDING",
+                "publication_authorized": False,
+            }, f"unverified bounded functional classification: {group}/{name}")
+            count += 1
+    require(count == 72, "qualified named public API count drift")
+    return count
 
 def references(obj: object):
     if isinstance(obj, dict):
@@ -345,8 +414,10 @@ def main() -> None:
     parser.add_argument("--report", type=Path)
     parser.add_argument("--self-test", action="store_true")
     args = parser.parse_args()
-    data, old, public, cross = map(load, (CANDIDATE, OLD, PUBLIC, CROSS))
+    data, old, public, cross, qualified = map(
+        load, (CANDIDATE, OLD, PUBLIC, CROSS, QUALIFIED))
     summary = verify_registry(data, old, public, cross)
+    bounded_accepted = verify_qualified(qualified, data, old, public, cross)
     if not args.skip_git:
         require(git("hash-object", "abntexto-ufc.cls") == CLASS_BLOB,
                 "candidate HEAD changed the evidenced runtime")
@@ -378,7 +449,27 @@ def main() -> None:
             except ValueError:
                 continue
             raise ValueError("ledger mutation bypassed a fail-closed contract")
-        print("V310-LEDGER-PREFLIGHT status=PASS identifiers=72 mutants=4 publication_authorized=false")
+        qualified_mutants = []
+        for key, value in (("publication_authorized", True),
+                           ("R81_editorial_visual_acceptance", "ACCEPT"),
+                           ("class_git_blob", "0" * 40)):
+            mutation = copy.deepcopy(qualified)
+            mutation[key] = value
+            qualified_mutants.append(mutation)
+        mutation = copy.deepcopy(qualified)
+        mutation["entries"]["public_commands"][r"\ufcInputListing"]["result"] = "PENDING"
+        qualified_mutants.append(mutation)
+        mutation = copy.deepcopy(qualified)
+        mutation["entries"]["retained_upstream_identifiers"][r"\legend"]["original_archive_names"] = []
+        qualified_mutants.append(mutation)
+        for mutation in qualified_mutants:
+            try:
+                verify_qualified(mutation, data, old, public, cross)
+            except ValueError:
+                continue
+            raise ValueError("qualified functional ledger mutation bypassed a fail-closed contract")
+        print("V310-LEDGER-PREFLIGHT status=PASS identifiers=72 mutants=9"
+              " bounded=72 human_review=PENDING publication_authorized=false")
     output = {}
     if args.archives:
         args.archives.mkdir(parents=True, exist_ok=True)
@@ -412,10 +503,15 @@ def main() -> None:
                     f"one or more named public identifiers lack source-bound positive proof: {suite_name}")
         print("V310-PER-ID status=PASS named_identifiers=72 suites=13"
               " four_locales=true formal_human_review=PENDING", flush=True)
+        require(bounded_accepted == 72, "final bounded classification mismatch")
+        print("V310-BOUNDED-QUALIFICATION status=PASS bounded_accepted=72"
+              " human_normative_review=PENDING global_acceptance=PENDING"
+              " publication_authorized=false", flush=True)
         print("V310-ARCHIVE-LEDGER status=PASS archives=10 pdfs=310 hashes=4952"
               " candidate_identifiers=72 formal_certification=PENDING publication=false", flush=True)
     report = {"source_commit_sha": SOURCE_SHA, "runtime_class_git_blob": CLASS_BLOB,
               "candidate_identifiers": summary["identifiers"],
+              "bounded_functional_accepted": bounded_accepted,
               "historical_only_pass": summary["historical_pass"],
               "historical_only_pending": summary["historical_pending"],
               "source_bound_suites": summary["suites"], "archives": output,
