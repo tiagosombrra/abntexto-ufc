@@ -9,6 +9,7 @@ on:
       - tests/integration/objects/i18n-optional-api-output-evidence.py
       - tests/integration/objects/i18n-b1-optional-config-evidence.py
       - tests/integration/objects/i18n-b3-optional-list-evidence.py
+      - tests/integration/objects/i18n-b4-inputminted-evidence.py
       - tests/integration/objects/i18n-inputlisting-container-repro.py
       - tests/integration/frontmatter/run-integrated-locale.py
       - standards/evidence/test-surface-policy.json
@@ -21,6 +22,7 @@ on:
       - tests/integration/objects/i18n-optional-api-output-evidence.py
       - tests/integration/objects/i18n-b1-optional-config-evidence.py
       - tests/integration/objects/i18n-b3-optional-list-evidence.py
+      - tests/integration/objects/i18n-b4-inputminted-evidence.py
       - tests/integration/objects/i18n-inputlisting-container-repro.py
       - tests/integration/frontmatter/run-integrated-locale.py
       - .github/workflows/i18n-optional-modules-matrix.yml
@@ -47,6 +49,7 @@ jobs:
           python3 tests/integration/objects/i18n-optional-api-output-evidence.py --self-test
           python3 tests/integration/objects/i18n-b1-optional-config-evidence.py --self-test
           python3 tests/integration/objects/i18n-b3-optional-list-evidence.py --preflight
+          python3 tests/integration/objects/i18n-b4-inputminted-evidence.py --preflight
           python3 tests/integration/objects/i18n-inputlisting-container-repro.py --preflight
   optional-locales:
     name: Code + minted + algorithm comments + long tables / ${{ matrix.locale }}
@@ -77,6 +80,7 @@ jobs:
             python3 tests/integration/objects/optional-locale-evidence.py --locale ${{ matrix.locale }}
             python3 tests/integration/objects/i18n-b1-optional-config-evidence.py --locale ${{ matrix.locale }}
             python3 tests/integration/objects/i18n-b3-optional-list-evidence.py --locale ${{ matrix.locale }}
+            python3 tests/integration/objects/i18n-b4-inputminted-evidence.py --locale ${{ matrix.locale }}
             if [ "${{ matrix.locale }}" = "pt" ]; then
               python3 tests/integration/objects/i18n-inputlisting-container-repro.py --locale pt
               python3 tests/integration/objects/i18n-inputlisting-container-repro.py --isolation
