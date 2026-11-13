@@ -349,20 +349,20 @@ Inclui o conteúdo **real de um arquivo externo** pelo módulo `listings`, que d
 \ufcInputListing[language=C++]{code/example.cpp}
 ```
 
-**Compatibilidade de posicionamento (prévia v3.1.0, issue [#590](https://github.com/tiagosombrra/abntexto-ufc/issues/590)):** a correção em desenvolvimento permite utilizar a API pública \`\ufcInputListing\` diretamente no texto ou dentro de \`place\`, \`ufcobject\` e \`minipage\`. Quando a listagem é executada em modo horizontal interno, a classe aplica um encapsulamento vertical; na chamada direta, preserva o comportamento original de paginação. A matriz de validação compilou **64 PDFs reais** no TeX Live 2026, considerando quatro idiomas, dois perfis, quatro contextos e duas variações de legenda/fonte. Os testes verificaram integridade estrutural do PDF, código C++ visível e marcadores de legenda/fonte nos casos aplicáveis.
+**Compatibilidade de posicionamento (prévia v3.1.0, issue [#590](https://github.com/tiagosombrra/abntexto-ufc/issues/590)):** a correção em desenvolvimento permite utilizar a API pública `\ufcInputListing` diretamente no texto ou dentro de `place`, `ufcobject` e `minipage`. Quando a listagem é executada em modo horizontal interno, a classe aplica um encapsulamento vertical; na chamada direta, preserva o comportamento original de paginação. A matriz de validação compilou **64 PDFs reais** no TeX Live 2026, considerando quatro idiomas, dois perfis, quatro contextos e duas variações de legenda/fonte. Os testes verificaram integridade estrutural do PDF, código C++ visível e marcadores de legenda/fonte nos casos aplicáveis.
 
-Para utilizar o ambiente \`ufcobject\` com o importador público:
+Para utilizar o ambiente `ufcobject` com o importador público:
 
-\`\`\`tex
+```tex
 \legend{code}{Arquivo C++ externo}
 \ufcSource{Elaboração própria.}
 \label{cod:arquivo-externo}
 \begin{ufcobject}[here]
   \ufcInputListing[language=C++]{code/example.cpp}
 \end{ufcobject}
-\`\`\`
+```
 
-Essa correção **não se aplica automaticamente** ao comando nativo \`\lstinputlisting\` invocado diretamente dentro do \`place\` herdado. Listagens extensas que precisam quebrar entre páginas devem permanecer fora de \`place\`/\`ufcobject\`, porque esses ambientes utilizam caixas não divisíveis. A matriz de 64 casos é uma prova funcional delimitada: não substitui a revisão de posicionamento, paginação longa, referências cruzadas, conformidade UFC/ABNT ou aceite visual e linguístico. **A correção ainda pertence à PR [#592](https://github.com/tiagosombrra/abntexto-ufc/pull/592); a v3.1.0 não foi publicada.**
+Essa correção **não se aplica automaticamente** ao comando nativo `\lstinputlisting` invocado diretamente dentro do `place` herdado. Listagens extensas que precisam quebrar entre páginas devem permanecer fora de `place`/`ufcobject`, porque esses ambientes utilizam caixas não divisíveis. A matriz de 64 casos é uma prova funcional delimitada: não substitui a revisão de posicionamento, paginação longa, referências cruzadas, conformidade UFC/ABNT ou aceite visual e linguístico. **A correção ainda pertence à PR [#592](https://github.com/tiagosombrra/abntexto-ufc/pull/592); a v3.1.0 não foi publicada.**
 
 O arquivo `code/example.cpp` deve existir no projeto de compilação. Traduções de títulos e legendas não alteram automaticamente a linguagem de programação nem o conteúdo do arquivo; configure suas opções de `listings` explicitamente.
 
