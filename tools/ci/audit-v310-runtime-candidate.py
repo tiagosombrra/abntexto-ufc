@@ -352,6 +352,13 @@ def main() -> None:
                 "candidate HEAD changed the evidenced runtime")
         require(git("rev-parse", SOURCE_SHA + ":abntexto-ufc.cls") == CLASS_BLOB,
                 "evidence source class blob cannot be verified")
+        # Require the audited proof scripts to remain byte-identical to those
+        # executed when the original ZIPs were produced.
+        for suite_name, suite in data["suites"].items():
+            path = suite["runner"]
+            require(git("rev-parse", SOURCE_SHA + ":" + path)
+                    == git("rev-parse", "HEAD:" + path),
+                    f"probe source drift since archived PDFs: {suite_name}")
     if args.self_test:
         mutants = []
         for key, value in (("publication_authorized", True),
