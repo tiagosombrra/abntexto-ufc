@@ -81,8 +81,9 @@ jobs:
               python3 tests/integration/objects/i18n-inputlisting-container-repro.py --locale pt
               python3 tests/integration/objects/i18n-inputlisting-container-repro.py --isolation
               python3 tests/integration/objects/i18n-inputlisting-container-repro.py --candidate
-              python3 tests/integration/objects/i18n-inputlisting-container-repro.py --runtime
             fi
+            # Run the unpatched-source regression against the actual class in each locale.
+            python3 tests/integration/objects/i18n-inputlisting-container-repro.py --runtime --locale ${{ matrix.locale }}
       - name: Upload source-bound PDFs and hashes
         if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
@@ -93,6 +94,6 @@ jobs:
             artifacts/inputlisting-container-repro/${{ matrix.locale }}/**
             artifacts/inputlisting-container-repro/isolation-pt/**
             artifacts/inputlisting-container-repro/candidate-pt/**
-            artifacts/inputlisting-container-repro/runtime-pt/**
+            artifacts/inputlisting-container-repro/runtime-${{ matrix.locale }}/**
           retention-days: 21
           if-no-files-found: warn
