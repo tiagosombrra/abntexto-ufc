@@ -123,10 +123,10 @@
       "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
       "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
       "artifact_files": [
-        "optional-pt-43427522327.zip",
-        "optional-en-43427522327.zip",
-        "optional-es-43427522327.zip",
-        "optional-fr-43427522327.zip"
+        "requal-pt-43427522352.zip",
+        "requal-en-43427522352.zip",
+        "requal-es-43427522352.zip",
+        "requal-fr-43427522352.zip"
       ],
       "proof_scope": "ONE_ISOLATED_PDF_PER_ENVIRONMENT_AND_LOCALE",
       "qualification": "CANDIDATE_ORIGINAL_BYTE_AUDIT_ONLY"
