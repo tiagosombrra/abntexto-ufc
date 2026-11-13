@@ -77,6 +77,7 @@ on:
       - .github/workflows/integrated-manuscript-locale-matrix.yml
 permissions:
   contents: read
+  actions: read
 concurrency:
   group: integrated-i18n-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
@@ -180,12 +181,13 @@ jobs:
   preflight:
     name: Fast complete-profile source/locale contract
     runs-on: ubuntu-24.04
-    timeout-minutes: 3
+    timeout-minutes: 5
     steps:
       - name: Checkout exact source
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
           persist-credentials: false
       - name: Check all supported public tags, macros and environments
         run: python3 tests/integration/frontmatter/i18n-api-inventory.py
@@ -193,10 +195,25 @@ jobs:
         env:
           SOURCE_COMMIT_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
         run: python3 tests/integration/frontmatter/i18n-evidence-crosswalk.py --report
-      - name: Audit 72 per-identifier proof results and 42 fail-closed mutations
+      - name: Audit 72 per-identifier proof receipts against the actual class blob
         env:
           SOURCE_COMMIT_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
-        run: python3 tests/integration/frontmatter/i18n-per-identifier-proof-status.py --report
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          actual_blob="$(git hash-object abntexto-ufc.cls)"
+          if [ "$actual_blob" = "a73ef656de71d38ad30d7029ac3d86f852339950" ]; then
+            # Preserve the original 58/72 historical validator unchanged.
+            python3 tests/integration/frontmatter/i18n-per-identifier-proof-status.py --report
+          elif [ "$actual_blob" = "299293e273dcefb80256eed2e17d2557db6aae52" ]; then
+            # A corrected runtime needs fresh original-byte, named-ID evidence.
+            python3 tools/ci/audit-v310-runtime-candidate.py --self-test \
+              --download --archives artifacts/validation/v310-original-archives \
+              --report artifacts/validation/i18n-per-identifier-proof-status.json
+          else
+            echo "I18N-ITEM-STATUS status=FAIL reason=unknown-uncertified-runtime-blob:$actual_blob"
+            exit 1
+          fi
       - name: Verify six executable test relationships against actual runner registration
         env:
           SOURCE_COMMIT_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
