@@ -1,0 +1,78 @@
+name: R8.1 controlled multilingual pagination diagnosis
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
+    paths:
+      - tools/review/r81_controlled_pagination.py
+      - tools/review/r81_original_pdf_audit.py
+      - tests/integration/frontmatter/generate-comprehensive-corpus.py
+      - tools/review/generate_readable_28.py
+      - .github/workflows/r81-controlled-pagination.yml
+      - abntexto-ufc.cls
+permissions:
+  contents: read
+  actions: read
+jobs:
+  diagnostic:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - name: Checkout exact candidate source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Compile native longtable controls in twelve real PDFs
+        uses: xu-cheng/texlive-action@22c04326a5d855880f9d39bb955138bf11c6df80 # v3
+        with:
+          texlive_version: 2026
+          os: debian
+          run: |
+            export DEBIAN_FRONTEND=noninteractive
+            apt-get update -y
+            apt-get install -y --no-install-recommends poppler-utils
+            python3 tools/review/r81_controlled_pagination.py
+      - name: Retain source, real PDFs, and physical pagination report
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: r81-controlled-pagination-${{ github.run_id }}
+          path: |
+            artifacts/r81-controlled-pagination/*.tex
+            artifacts/r81-controlled-pagination/*.pdf
+            artifacts/r81-controlled-pagination/*.log
+            artifacts/r81-controlled-pagination/report.json
+          if-no-files-found: warn
+          retention-days: 21
+  original-pdfs-audit:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: Checkout current diagnostic script
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Retrieve exact original 28 R8.1 PDFs from immutable run
+        shell: bash
+        run: |
+          set -euo pipefail
+          actual="$(gh run view 43452221682 --repo "$GITHUB_REPOSITORY" --json headSha --jq .headSha)"
+          test "$actual" = "a4a4665ce099d0786e92e443b95dab656b25afad"
+          for loc in pt en es fr; do
+            gh run download 43452221682 --repo "$GITHUB_REPOSITORY" \
+              --name "readable-complete-$loc-43452221682" \
+              --dir "artifacts/r81-original-audit/downloads/$loc"
+          done
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends poppler-utils
+          python3 tools/review/r81_original_pdf_audit.py
+      - name: Preserve read-only original-PDF audit report
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: r81-original-pdf-audit-${{ github.run_id }}
+          path: artifacts/r81-original-audit/original-audit.json
+          if-no-files-found: warn
+          retention-days: 21

@@ -108,6 +108,11 @@ def extra_body(profile: str, locale: str) -> str:
         f"R4NATIVEROW{i:03d} & {i} " + "\\\\"
         for i in range(1, 86)
     ]
+    # Keep the final two native longtable rows together to avoid a
+    # language-sensitive page containing only the repeated header and row 85.
+    # Native longtable owns its page breaks; the shared class need not change.
+    native_rows.insert(-1, r"\nopagebreak[4]")
+
     lines = [
         rf"\section{{R4-METHOD-{locale.upper()}}}",
         first,
