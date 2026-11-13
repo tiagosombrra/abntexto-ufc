@@ -44,6 +44,41 @@ def page_text(pdf: Path, *, first_only: bool = False) -> str:
 
 
 
+def native_longtable_pagination(extracted: str, loc: str) -> tuple[dict, list[str]]:
+    """Inspect original native longtable data rows on physical PDF pages."""
+    native_name = {
+        "pt": "Amostra", "en": "Sample",
+        "es": "Muestra", "fr": "Échantillon",
+    }[loc]
+    row_pattern = re.compile(
+        r"(?<!\w)" + re.escape(native_name) + r"\s+([1-9]\d{0,2})(?!\d)",
+        re.I,
+    )
+    row_pages: dict[int, list[int]] = {}
+    for page_no, page in enumerate(extracted.split("\f"), 1):
+        for match in row_pattern.finditer(page):
+            number = int(match.group(1))
+            if 1 <= number <= 85:
+                row_pages.setdefault(number, []).append(page_no)
+    missing = sorted(set(range(1, 86)) - row_pages.keys())
+    duplicated = sorted(number for number, pages in row_pages.items()
+                        if len(pages) != 1)
+    last_page = row_pages.get(85, [None])[0]
+    count = sum(last_page in pages for pages in row_pages.values()) if last_page else 0
+    metrics = {
+        "last_data_page": last_page,
+        "last_data_page_rows": count,
+        "missing_rows": missing,
+        "duplicate_rows": duplicated,
+    }
+    findings = []
+    if missing or duplicated:
+        findings.append("native_longtable_rows_missing_or_duplicated")
+    if count == 1:
+        findings.append("native_longtable_single_final_row_page:" + str(last_page))
+    return metrics, findings
+
+
 def isolated_author_year_line_faults(page: ET.Element) -> list[str]:
     """Reject single-word author-year fragments on actual PDF line boxes."""
     word_tag = "{http://www.w3.org/1999/xhtml}word"
@@ -229,6 +264,8 @@ def build_one(entry: dict, loc: str, out: Path, work: Path) -> dict:
                           "INTEGRATED MULTILINGUAL DOCUMENT")
               if w in extracted]
     findings = list(layout_failures)
+    native_table_metrics, native_table_findings = native_longtable_pagination(extracted, loc)
+    findings.extend(native_table_findings)
     for page_no in orphaned_native_table_pages(extracted, loc):
         findings.append(f"orphan_native_longtable_final_row:physical_page={page_no}")
     if leaked:
@@ -464,6 +501,7 @@ def build_one(entry: dict, loc: str, out: Path, work: Path) -> dict:
               "pdf_sha256": sha(final), "pdf": str(final.relative_to(ROOT)),
               "pages": int(p[1]) if p else 0,
               "definition_gap_pt": definition_gap_pt,
+              "native_longtable_pagination": native_table_metrics,
               "coat_of_arms_embedded": (images_on_cover(final) > 0),
               "failures": findings, "human_visual_approval": "PENDING"}
     (out / f"{job}-receipt.json").write_text(

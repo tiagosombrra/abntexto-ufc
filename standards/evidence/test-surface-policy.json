@@ -121,6 +121,12 @@
       "owner_doc": "docs/R5-HUMAN-READABLE-28.md",
       "purpose": "Fail-closed SHA-bound independent veraPDF/A-2b inspection of exactly 28 final readable PDFs, their 984 physical pages, TeX/PDF hashes and original compiler receipts.",
       "reason": "The dedicated R5 human-readable four-locale PDF workflow owns this external validation after real PDF matrix completion; it retains the original 28 binaries, raw veraPDF reports, image digest and no false human-release acceptance."
+    },
+    {
+      "path": ".github/workflows/r81-controlled-pagination.yml",
+      "owner_doc": "docs/R81-CONTROLLED-PAGINATION.md",
+      "purpose": "Execute controlled real-PDF PT/EN/ES/FR diagnosis distinguishing language configuration from translated long-table content in R8.1.",
+      "reason": "A source-bound multilingual PDF diagnostic for a disputed page-layout defect belongs to a dedicated TeX Live workflow, not in every static or Linux Integration execution. It never grants human or release approval."
     }
   ]
 }
