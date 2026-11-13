@@ -988,6 +988,12 @@ def readable_source(source: str, profile: str, loc: str) -> str:
                 f"Native review table row missing or repeated: {profile}/{loc}/{row_number}"
             )
         source = source.replace(row + "\n", "", 1)
+    # The 85-row R4 specimen keeps its explicit last-two-row guard.
+    # The readable specimen has only 80 rows and must not retain that guard.
+    guard = r"\nopagebreak[4]" + "\n"
+    if source.count(guard) != 1:
+        raise RuntimeError(f"Missing native R4 guard: {profile}/{loc}")
+    source = source.replace(guard, "", 1)
     source = re.sub(r"R4NATIVEROW(\d+)",
                     lambda m: f"{d['native_case']} {int(m[1])}", source)
     source = source.replace("long numeric observations", "")

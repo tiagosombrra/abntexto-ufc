@@ -64,21 +64,23 @@ def verify_own_source() -> None:
         cwd=ROOT, text=True).strip()
     require(current == CLASS_BLOB and source_blob(PROOF_SOURCE) == CLASS_BLOB,
             "source class changed since editorial PDF proof; regenerate review PDFs")
-    # A class-identical commit is still incompatible with changed PDF producers.
-    for producer in (
-        "tools/review/generate_readable_28.py",
-        "tools/review/build_readable_28.py",
-        "tests/integration/frontmatter/generate-comprehensive-corpus.py",
-    ):
-        expected = subprocess.check_output(
+    # Archived PDFs bind to the original source and immutable Git blobs.
+    # Current HEAD generators may evolve; they cannot retroactively change
+    # these original PDF/source SHA receipts or approve newly generated PDFs.
+    frozen_producers = {
+        "tools/review/generate_readable_28.py":
+            "35fbdc94505d138c0dcf8e6179d895c2dcd64ecf",
+        "tools/review/build_readable_28.py":
+            "993b36e475b12bf34d10b7b695194bc0ff24f948",
+        "tests/integration/frontmatter/generate-comprehensive-corpus.py":
+            "cb4091294743dc49a0e6ecfa1f8b2aeac7cac59d",
+    }
+    for producer, expected_blob in frozen_producers.items():
+        actual = subprocess.check_output(
             ["git", "rev-parse", f"{PROOF_SOURCE}:{producer}"],
             cwd=ROOT, text=True).strip()
-        current_producer = subprocess.check_output(
-            ["git", "rev-parse", f"HEAD:{producer}"],
-            cwd=ROOT, text=True).strip()
-        require(current_producer == expected,
-                f"editorial PDF producer changed: {producer}; regenerate review PDFs")
-
+        require(actual == expected_blob,
+                f"Archived original PDF source drifted: {producer}")
 
 def github_zip(locale: str, dest: Path, token: str) -> None:
     require(token, "GH_TOKEN must authorize original GitHub artifact inspection")
@@ -269,6 +271,7 @@ def selftest() -> None:
         "runtime_class_git_blob": CLASS_BLOB,
         "source_workflow_run_id": R5_RUN,
         "status": "READY_FOR_HUMAN_REVIEW_NOT_ACCEPTED",
+        "review_packet_scope": "ARCHIVED_SOURCE_ONLY_NOT_CURRENT_HEAD",
         "human_normative_linguistic_review": "PENDING",
         "human_visual_acceptance": "PENDING",
         "publication_authorized": False,

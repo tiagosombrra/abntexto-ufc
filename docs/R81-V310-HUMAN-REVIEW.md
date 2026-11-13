@@ -12,6 +12,8 @@
 - Recebimentos originais: PT artifact `14059297908`, EN `14057939644`, ES `14059198079`, FR `14058644629`. O auditor verifica identidade, SHA-256 dos ZIPs, SHA-256 de cada PDF e fonte TeX, hashes dos recibos e contagens físicas de páginas, sem regravar os originais.
 - A verificação independente do **veraPDF-2b de desenvolvimento** sobre esses PDFs teve 28 conformes e 0 não conformes, sem constituir aprovação visual ou institucional. O antigo verificador R8.1 permanece deliberadamente incompatível com o blob da classe atual.
 
+**Atenção ao avanço da PR #592 após R8.1 #594:** a branch experimental já incorpora a `main` certificada `83dbaa6d...`. O corpus R4 mantém 85 linhas e o novo corpus R5 editorial mantém 80 linhas; ambos devem ter verificadores source-bound separados. Este pacote de 972 páginas é **evidência arquivada do commit `de99db...`**, não comprova a revisão visual nem normativa dos PDFs recompilados pelo HEAD posterior. Os PDFs gerados no novo HEAD exigem novos hashes, revisão e aceite próprios.
+
 ## Gerar o pacote de revisão, sem aceite automático
 
 O workflow [R8.1 corrected-runtime human PDF review request](../.github/workflows/r81-v310-human-review-request.yml) produz um artefato `r81-v310-pending-review-request-<run_id>` contendo:
@@ -42,7 +44,7 @@ A execução [#43470720979](https://github.com/tiagosombrra/abntexto-ufc/actions
 - Resultado do veraPDF oficial: `PASS_ARCHIVED_DEVELOPMENT_EXTERNAL_PDF_A_2B`, **28/28 conformes**, zero não conformidades, 972 páginas.
 - Artefato original do laudo: GitHub artifact `14060196996`, ZIP SHA-256 `91fe34f6ea0effcaf33ca74c074124849e7ee1ad53bc31d8e0148e742a8ed476`. Contém o XML bruto do veraPDF, relatório JSON, manifesto de entrada e digest da imagem usada.
 - Auditoria independente adicional: os **28 hashes PDF do manifesto do veraPDF** foram confrontados, um a um, com os **28 hashes dos documentos no pedido R8.1**, e todos coincidiram. Isso elimina a ambiguidade gerada quando dois commits compilam PDFs de conteúdo equivalente, mas bytes diferentes.
-- A classe continua vinculada ao Git blob `299293e273dcefb80256eed2e17d2557db6aae52`. Os scripts que produziram os PDFs originais têm Git blobs comparados ao estado candidato antes de qualquer aceitação técnica.
+- A classe continua vinculada ao Git blob `299293e273dcefb80256eed2e17d2557db6aae52`. Os três scripts geradores dos PDFs originais são verificados por seus Git blobs **congelados no commit de origem**. Alterações posteriores dos geradores na branch não modificam os 28 PDFs arquivados e não autorizam transferir seu aceite para novos documentos.
 
 Esse laudo comprova apenas PDF/A-2b nos arquivos originais; **não** atesta PDF/UA, acessibilidade, qualidade dos conteúdos, diagramação UFC/ABNT, traduções ou assinatura visual. Os 972 registros de página e os 28 documentos continuam **PENDING** para decisão humana. A validação R8.1 histórica, feita para a classe antiga, não foi modificada nem herdada.
 
