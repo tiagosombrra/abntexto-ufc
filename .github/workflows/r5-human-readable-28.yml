@@ -65,6 +65,8 @@ jobs:
           retention-days: 21
 
   verify-final-pdfa:
+    # Historical acceptance is source-bound; changed-class PRs use the separate development gate.
+    if: ${{ github.event_name == 'workflow_dispatch' }}
     name: veraPDF 2b / 28 final readable PDFs from this SHA
     needs: [real-pdfs]
     runs-on: ubuntu-24.04
@@ -131,8 +133,8 @@ jobs:
           retention-days: 21
 
   verify-development-pdfa:
-    # Draft candidates get an independent PDF/A probe, not an R8.1 approval.
-    if: ${{ github.event_name == 'pull_request' && github.event.pull_request.draft && needs.real-pdfs.result == 'success' }}
+    # Every PR validates its actual candidate PDFs; no historic approval is inherited.
+    if: ${{ github.event_name == 'pull_request' && needs.real-pdfs.result == 'success' }}
     name: Development PDF/A-2b / 28 PDFs (human review pending)
     needs: [real-pdfs]
     runs-on: ubuntu-24.04

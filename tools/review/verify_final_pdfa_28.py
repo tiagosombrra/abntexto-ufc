@@ -140,19 +140,22 @@ def prepare():
                 text=True).strip()
             require(original_class_blob == class_at_commit,
                     "Archived PDF original class differs from checked-out runtime")
-            for producer in (
-                "tools/review/generate_readable_28.py",
-                "tools/review/build_readable_28.py",
-                "tests/integration/frontmatter/generate-comprehensive-corpus.py",
-            ):
+            # Authenticate archived source against immutable producer blob IDs.
+            # Current HEAD may intentionally contain later editorial regression checks.
+            archived_producer_blobs = {
+                "tools/review/generate_readable_28.py":
+                    "35fbdc94505d138c0dcf8e6179d895c2dcd64ecf",
+                "tools/review/build_readable_28.py":
+                    "993b36e475b12bf34d10b7b695194bc0ff24f948",
+                "tests/integration/frontmatter/generate-comprehensive-corpus.py":
+                    "cb4091294743dc49a0e6ecfa1f8b2aeac7cac59d",
+            }
+            for producer, frozen_blob in archived_producer_blobs.items():
                 original_blob = subprocess.check_output(
                     ["git", "rev-parse", f"{expected_sha}:{producer}"],
                     text=True).strip()
-                current_blob = subprocess.check_output(
-                    ["git", "rev-parse", f"HEAD:{producer}"],
-                    text=True).strip()
-                require(original_blob == current_blob,
-                        f"Archived R8.1 PDF producer changed: {producer}")
+                require(original_blob == frozen_blob,
+                        f"Archived R8.1 original source changed: {producer}")
             manifest["original_pdf_artifact_run_id"] = 43467471975
         require(class_at_commit == "299293e273dcefb80256eed2e17d2557db6aae52",
                 "Development PDF/A source class changed; requalification required")
