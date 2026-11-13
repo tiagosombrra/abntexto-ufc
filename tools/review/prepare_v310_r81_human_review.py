@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Prepare a source-bound R8.1 human review packet from original editorial PDFs.
 
-The packet intentionally starts with 984 PENDING page decisions. A green
+The packet intentionally starts with 972 PENDING page decisions. A green
 machine workflow never creates or asserts human, UFC/ABNT or release approval.
 """
 from __future__ import annotations
@@ -19,19 +19,21 @@ import zipfile
 
 ROOT = Path(__file__).resolve().parents[2]
 OUTPUT = ROOT / "artifacts/r81-v310-human-review"
-PROOF_SOURCE = "a4a4665ce099d0786e92e443b95dab656b25afad"
+PROOF_SOURCE = "de99db499cbc5bb78097f415fb91e3bb3ca3128a"
 CLASS_BLOB = "299293e273dcefb80256eed2e17d2557db6aae52"
-R5_RUN = 43452221682
+R5_RUN = 43467471975
 REPO = "tiagosombrra/abntexto-ufc"
 PROFILES = ("undergraduate-capstone", "specialization-capstone",
             "masters-thesis", "doctoral-thesis", "research-project",
             "anonymized-research-project", "scientific-article")
 LOCALES = ("pt", "en", "es", "fr")
+LOCALE_PAGES = {"pt": 246, "en": 240, "es": 240, "fr": 246}
+REVIEW_PAGE_COUNT = sum(LOCALE_PAGES.values())
 ARTIFACTS = {
-    "pt": (14051882443, "06f9a8b20d3ff8972d118921aed16d1cc08930f0f39456e9937d7f2c45b0292d"),
-    "en": (14051792499, "4190fe60830077eca64faf44fefa0b4979ea2a1c2ea680ac0c8344d41640c09f"),
-    "es": (14051702300, "a389af9802edc3cfdab7045bcf70658566615cf2b1cad081740d513c6ddb9378"),
-    "fr": (14051807414, "48f269328238aa963eadc2b980b98bfae02be34225395a5718052f5fa8224c7b"),
+    "pt": (14059297908, "d44df18aafdd38a721b2861c97ebf695906e0399201071eb28d1081bc6297790"),
+    "en": (14057939644, "812c17969708e847fc1f6225002df3632a162b259baf66470bd0d42d0635ec59"),
+    "es": (14059198079, "8a3b26219f72cdde5da050482a64914269ae1934d71a8cd5db0c93d9ccea8d2a"),
+    "fr": (14058644629, "356028075dd9a5cb638dd05264d2e1959d7ba625cfa7228ebd1f4bf6cb99c5e8"),
 }
 REVIEW_DIMENSIONS = (
     "normative_UFC_ABNT", "physical_visual_layout",
@@ -62,6 +64,20 @@ def verify_own_source() -> None:
         cwd=ROOT, text=True).strip()
     require(current == CLASS_BLOB and source_blob(PROOF_SOURCE) == CLASS_BLOB,
             "source class changed since editorial PDF proof; regenerate review PDFs")
+    # A class-identical commit is still incompatible with changed PDF producers.
+    for producer in (
+        "tools/review/generate_readable_28.py",
+        "tools/review/build_readable_28.py",
+        "tests/integration/frontmatter/generate-comprehensive-corpus.py",
+    ):
+        expected = subprocess.check_output(
+            ["git", "rev-parse", f"{PROOF_SOURCE}:{producer}"],
+            cwd=ROOT, text=True).strip()
+        current_producer = subprocess.check_output(
+            ["git", "rev-parse", f"HEAD:{producer}"],
+            cwd=ROOT, text=True).strip()
+        require(current_producer == expected,
+                f"editorial PDF producer changed: {producer}; regenerate review PDFs")
 
 
 def github_zip(locale: str, dest: Path, token: str) -> None:
@@ -180,7 +196,7 @@ def document_receipts(locale: str, zip_path: Path) -> list[dict]:
                     ],
                 },
             })
-        require(sum(x["physical_pages"] for x in result) == 246,
+        require(sum(x["physical_pages"] for x in result) == LOCALE_PAGES[locale],
                 f"unexpected {locale} physical page total")
         return result
 
@@ -200,8 +216,12 @@ def validate_pending(packet: dict) -> None:
             and {(x["locale"], x["profile"]) for x in documents}
                 == {(l, p) for l in LOCALES for p in PROFILES},
             "duplicate or missing profile/locale in R8.1 review packet")
-    require(sum(x["physical_pages"] for x in documents) == 984,
-            "R8.1 review packet is not the original 984-page corpus")
+    require(sum(x["physical_pages"] for x in documents) == REVIEW_PAGE_COUNT,
+            "R8.1 review packet does not match corrected page counts")
+    for locale in LOCALES:
+        require(sum(x["physical_pages"] for x in documents if x["locale"] == locale)
+                == LOCALE_PAGES[locale],
+                f"{locale} review packet has incorrect physical pages")
     for d in documents:
         require(re.fullmatch(r"[0-9a-f]{64}", d["pdf_sha256"]) is not None
                 and re.fullmatch(r"[0-9a-f]{64}", d["tex_sha256"]) is not None
@@ -229,6 +249,8 @@ def selftest() -> None:
             count = 16 if profile == "scientific-article" else (
                 29 if profile in ("research-project", "anonymized-research-project")
                 else 43)
+            if locale in ("en", "es") and profile != "scientific-article":
+                count -= 1
             rows.append({
                 "locale": locale, "profile": profile, "physical_pages": count,
                 "pdf_sha256": "a"*64, "tex_sha256": "b"*64,
@@ -278,7 +300,7 @@ def selftest() -> None:
         except ValueError:
             continue
         raise ValueError("R8.1 human-review mutation bypassed the pending contract")
-    print("R81-HUMAN-REVIEW-SELFTEST status=PASS mutants=6 pending_pages=984"
+    print("R81-HUMAN-REVIEW-SELFTEST status=PASS mutants=6 pending_pages=972"
           " publication_authorized=false")
 
 
@@ -291,7 +313,7 @@ def markdown(packet: dict) -> str:
         f"Fonte auditada: `{PROOF_SOURCE}`. Classe Git blob: `{CLASS_BLOB}`.",
         f"Execução original: https://github.com/{REPO}/actions/runs/{R5_RUN}.",
         "",
-        "A matriz contém 28 PDFs, 984 páginas e 984 decisões por página **PENDING**.",
+        "A matriz contém 28 PDFs, 972 páginas e 972 decisões por página **PENDING**.",
         "O pacote é imutável como solicitação: decisões assinadas devem ser registradas",
         "em um documento separado, sem reescrever os comprovantes originais.",
         "",
@@ -356,7 +378,7 @@ def main() -> None:
                 f"missing or changed original R5 PDF artifact: {loc}")
         items = document_receipts(loc, archive_path)
         all_docs.extend(items)
-        print(f"R81-HUMAN-REVIEW-INPUT status=PASS locale={loc} pdfs=7 pages=246", flush=True)
+        print(f"R81-HUMAN-REVIEW-INPUT status=PASS locale={loc} pdfs=7 pages={LOCALE_PAGES[loc]}", flush=True)
     packet = {
         "schema_version": 1,
         "status": "READY_FOR_HUMAN_REVIEW_NOT_ACCEPTED",
@@ -371,7 +393,8 @@ def main() -> None:
             for loc in LOCALES
         },
         "summary": {
-            "documents": 28, "physical_pages": 984, "pending_page_decisions": 984,
+            "documents": 28, "physical_pages": REVIEW_PAGE_COUNT,
+            "pending_page_decisions": REVIEW_PAGE_COUNT,
             "human_approved_documents": 0,
         },
         "review_dimensions": list(REVIEW_DIMENSIONS),
@@ -382,8 +405,8 @@ def main() -> None:
     (OUTPUT / "request.json").write_text(
         json.dumps(packet, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     (OUTPUT / "REVIEW-REQUEST.md").write_text(markdown(packet), encoding="utf-8")
-    print("R81-HUMAN-REVIEW-PACKET status=PASS pdfs=28 pages=984"
-          " pending_page_decisions=984 human_acceptance=PENDING"
+    print("R81-HUMAN-REVIEW-PACKET status=PASS pdfs=28 pages=972"
+          " pending_page_decisions=972 human_acceptance=PENDING"
           " publication_authorized=false", flush=True)
 
 
