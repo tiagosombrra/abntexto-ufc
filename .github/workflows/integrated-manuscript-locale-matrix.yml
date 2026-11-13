@@ -26,6 +26,10 @@ on:
       - tests/integration/frontmatter/i18n-evidence-crosswalk.py
       - tests/integration/frontmatter/i18n-per-identifier-proof-status.py
       - standards/api/i18n-per-identifier-proof-status.json
+      - standards/api/i18n-v310-runtime-proof-candidate.json
+      - standards/api/i18n-v310-bounded-functional-qualified.json
+      - tools/ci/audit-v310-runtime-candidate.py
+      - .github/workflows/v310-runtime-proof-audit.yml
       - tests/integration/frontmatter/i18n-executable-driver-evidence.py
       - tests/integration/frontmatter/i18n-executable-driver-evidence.json
       - tests/run.py
@@ -64,6 +68,10 @@ on:
       - tests/integration/frontmatter/i18n-evidence-crosswalk.py
       - tests/integration/frontmatter/i18n-per-identifier-proof-status.py
       - standards/api/i18n-per-identifier-proof-status.json
+      - standards/api/i18n-v310-runtime-proof-candidate.json
+      - standards/api/i18n-v310-bounded-functional-qualified.json
+      - tools/ci/audit-v310-runtime-candidate.py
+      - .github/workflows/v310-runtime-proof-audit.yml
       - tests/integration/frontmatter/i18n-executable-driver-evidence.py
       - tests/integration/frontmatter/i18n-executable-driver-evidence.json
       - tests/run.py
