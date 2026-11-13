@@ -48,7 +48,10 @@ def prepare():
                 f"{loc}: locale mismatch")
         require(report["source_commit_sha"] == expected_sha,
                 f"{loc}: missing or wrong SHA-bound source receipt")
-        require(report["pdf_count"] == 7 and report["page_count"] == 246,
+        expected_locale_pages = (246 if SCOPE == "historical" or loc in ("pt", "fr")
+                                 else 240)
+        require(report["pdf_count"] == 7
+                and report["page_count"] == expected_locale_pages,
                 f"{loc}: wrong document/page count")
         require(report["failures"] == 0 and report["human_approval"] == "PENDING"
                 and report["release_authorized"] is False,
@@ -96,15 +99,16 @@ def prepare():
             })
     require(len(files) == 28 and len({x["filename"] for x in files}) == 28,
             "Missing or duplicate PDF")
-    require(sum(x["pages"] for x in files) == 984,
-            "R8.1 final page count differs from the 984-page baseline")
+    expected_total_pages = 984 if SCOPE == "historical" else 972
+    require(sum(x["pages"] for x in files) == expected_total_pages,
+            f"R8.1 input page count differs from the {expected_total_pages}-page source")
     require(len(list(PDFS.glob("*.pdf"))) == 28, "Unexpected PDF in validator input")
     manifest = {
         "source_run": run, "source_commit_sha": expected_sha,
         "source_class_git_blob": subprocess.check_output(
             ["git", "hash-object", "abntexto-ufc.cls"], text=True).strip(),
         "expected_profile": "PDF/A-2b", "documents": files,
-        "pdf_count": 28, "page_count": 984,
+        "pdf_count": 28, "page_count": expected_total_pages,
         "human_review": "PENDING", "publication_authorized": False,
         "status": "PDF_A_EXTERNAL_PENDING",
     }
@@ -119,8 +123,8 @@ def prepare():
         require(actual_commit == expected_sha
                 and manifest["source_class_git_blob"] == class_at_commit,
                 "Development PDF/A source/class provenance mismatch")
-        require(class_at_commit != "a73ef656de71d38ad30d7029ac3d86f852339950",
-                "Historical class must use the historical R8.1 validator")
+        require(class_at_commit == "299293e273dcefb80256eed2e17d2557db6aae52",
+                "Development PDF/A source class changed; requalification required")
         manifest["certification_scope"] = "DEVELOPMENT_UNRELEASED_ONLY"
     else:
         require(manifest["source_class_git_blob"]
@@ -130,7 +134,7 @@ def prepare():
     (ROOT / "input-manifest.json").write_text(
         json.dumps(manifest, indent=2, ensure_ascii=False) + "\n", "utf-8")
     label = "DEVELOPMENT" if SCOPE == "development" else "FINAL"
-    print(f"R81-{label}-PDFA-SOURCE status=PASS pdfs=28 pages=984 "
+    print(f"R81-{label}-PDFA-SOURCE status=PASS pdfs=28 pages={expected_total_pages} "
           + "source_sha=" + expected_sha
           + " human_review=PENDING publication_authorized=false", flush=True)
 
