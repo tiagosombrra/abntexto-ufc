@@ -111,12 +111,63 @@ jobs:
             python3 tests/integration/frontmatter/run-integrated-locale.py --locale ${{ matrix.locale }}
             python3 tests/integration/frontmatter/i18n-b1-family-evidence.py --locale ${{ matrix.locale }}
             python3 tests/integration/frontmatter/i18n-b3-integrated-list-evidence.py --locale ${{ matrix.locale }}
+            # Reproduce the other original 58-ID families at the changed class SHA.
+            python3 tests/integration/frontmatter/i18n-pretextual-command-evidence.py --locale ${{ matrix.locale }}
+            python3 tests/integration/frontmatter/i18n-b2-remaining-summary-evidence.py --locale ${{ matrix.locale }}
+            python3 tests/integration/frontmatter/i18n-b2-family-evidence.py --locale ${{ matrix.locale }}
+            python3 tests/integration/frontmatter/i18n-list-environment-evidence.py --locale ${{ matrix.locale }}
+            python3 tests/integration/frontmatter/i18n-optional-environment-evidence.py --locale ${{ matrix.locale }}
+            python3 tests/integration/frontmatter/i18n-b1-final-five-evidence.py --locale ${{ matrix.locale }}
       - name: Archive original candidate PDFs and provenance receipts
         if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: runtime-requalification-${{ matrix.locale }}-${{ github.run_id }}
           path: artifacts/integrated-i18n/${{ matrix.locale }}/**
+          retention-days: 21
+          if-no-files-found: warn
+  # Do not fake a green ledger by skipping the original SHA-bound preflight.
+  # These 32+32 PDFs independently requalify B1 auxiliary configuration routes.
+  runtime-requalification-aux:
+    name: Runtime B1 auxiliary diagnostic / ${{ matrix.suite }} (not certified)
+    needs: preflight
+    if: ${{ always() && github.event_name == 'pull_request' && needs.preflight.result == 'failure' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 42
+    strategy:
+      fail-fast: false
+      matrix:
+        suite: [dual, coat]
+    steps:
+      - name: Checkout exact candidate source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - name: Rebuild and audit 32 source-bound actual PDFs (no ledger promotion)
+        uses: xu-cheng/texlive-action@22c04326a5d855880f9d39bb955138bf11c6df80 # v3
+        env:
+          SOURCE_COMMIT_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        with:
+          texlive_version: 2026
+          os: debian
+          run: |
+            export DEBIAN_FRONTEND=noninteractive
+            apt-get update -y
+            apt-get install -y --no-install-recommends poppler-utils qpdf
+            git config --global --add safe.directory "$PWD"
+            if [ "${{ matrix.suite }}" = "dual" ]; then
+              python3 tests/integration/frontmatter/dual-language-evidence.py
+            else
+              python3 tests/integration/frontmatter/coat-of-arms-evidence.py
+            fi
+            python3 tests/integration/frontmatter/i18n-b1-auxiliary-pdf-evidence.py --suite ${{ matrix.suite }}
+      - name: Archive original PDF and source SHA256 observations
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: runtime-b1-aux-${{ matrix.suite }}-${{ github.run_id }}
+          path: artifacts/integrated-i18n/${{ matrix.suite == 'dual' && 'dual-language' || 'coat-path' }}/**
           retention-days: 21
           if-no-files-found: warn
   preflight:
