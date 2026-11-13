@@ -189,16 +189,18 @@ def run(locale: str) -> None:
 
 
 
-def isolation_tex(profile: str, wrapper: str, importer: str) -> str:
+def isolation_tex(profile: str, wrapper: str, importer: str, locale: str = "pt") -> str:
     """Build a minimal controlled source for the wrapper-level causal experiment."""
     if profile not in PROFILES or wrapper not in ("direct", "place", "ufcobject", "minipage"):
         raise ValueError("unknown isolation profile or wrapper")
     if importer not in ("public", "native"):
         raise ValueError("unknown import command")
+    if locale not in LOCALES:
+        raise ValueError("unsupported isolation locale")
     head = [
-        r"\DocumentMetadata{lang=pt-BR,pdfstandard=A-2b,pdfversion=1.7}",
+        rf"\DocumentMetadata{{lang={LOCALES[locale]},pdfstandard=A-2b,pdfversion=1.7}}",
         r"\documentclass{abntexto-ufc}",
-        rf"\ufcsetup{{type={profile},document-language=pt,code=listings,"
+        rf"\ufcsetup{{type={profile},document-language={locale},code=listings,"
         r"cover=false,coat-of-arms=false,catalog-card=false,"
         r"title={InputListing isolation},author={Synthetic Author}}",
         r"\begin{document}",
@@ -358,9 +360,9 @@ def candidate_preflight() -> None:
           " cases=16 runtime_class_unchanged=true publication_authorized=false")
 
 
-def candidate_tex(profile: str, wrapper: str, legend: bool) -> str:
+def candidate_tex(profile: str, wrapper: str, legend: bool, locale: str = "pt") -> str:
     """Create a standalone source with the hypothetical localized macro patch."""
-    value = isolation_tex(profile, wrapper, "public")
+    value = isolation_tex(profile, wrapper, "public", locale)
     entry = r"\begin{document}" + "\n"
     extra = "\n".join(CANDIDATE_PATCH) + "\n"
     if value.count(entry) != 1:
@@ -383,10 +385,12 @@ def candidate_tex(profile: str, wrapper: str, legend: bool) -> str:
     return value
 
 
-def run_candidate(real_runtime: bool = False) -> None:
+def run_candidate(real_runtime: bool = False, locale: str = "pt") -> None:
     """Compile the experimental injection or the actual class implementation."""
     candidate_preflight()
-    folder = BASE / ("runtime-pt" if real_runtime else "candidate-pt")
+    if locale not in LOCALES:
+        raise ValueError("unsupported candidate locale")
+    folder = BASE / (("runtime-" if real_runtime else "candidate-") + locale)
     folder.mkdir(parents=True, exist_ok=True)
     sha = subprocess.check_output(
         ["git", "rev-parse", "HEAD"], cwd=ROOT, text=True
@@ -401,7 +405,7 @@ def run_candidate(real_runtime: bool = False) -> None:
         source = folder / (name + ".tex")
         pdf = folder / (name + ".pdf")
         log = folder / (name + ".log")
-        value = candidate_tex(profile, wrapper, legend)
+        value = candidate_tex(profile, wrapper, legend, locale)
         if real_runtime:
             # Test the class itself without any replacement macro in the input.
             injection = "\n".join(CANDIDATE_PATCH) + "\n"
@@ -450,7 +454,7 @@ def run_candidate(real_runtime: bool = False) -> None:
               f" status={'PASS' if valid else 'FAIL'}"
               f" math_delim_error={bool(marker)}")
     result = {
-        "source_sha": sha, "locale": "pt", "cases": len(results),
+        "source_sha": sha, "locale": locale, "cases": len(results),
         "observations": results,
         "runtime_class_modified": real_runtime,
         "conclusion": ("DEVELOPMENT_RUNTIME_REGRESSION" if real_runtime
@@ -464,7 +468,7 @@ def run_candidate(real_runtime: bool = False) -> None:
     if any(not x["valid_pdf_and_text"] for x in results):
         raise ValueError("import did not pass all real-PDF and text probes")
     label = "RUNTIME" if real_runtime else "CANDIDATE"
-    print(f"I18N-INPUTLISTING-{label} status=PASS cases=16"
+    print(f"I18N-INPUTLISTING-{label} status=PASS locale={locale} cases=16"
           f" real_pdfs=16 runtime_class_modified={str(real_runtime).lower()}"
           " publication_authorized=false")
 
@@ -482,9 +486,9 @@ if __name__ == "__main__":
         isolation_preflight()
         candidate_preflight()
         if args.runtime and not args.preflight:
-            run_candidate(real_runtime=True)
+            run_candidate(real_runtime=True, locale=args.locale or "pt")
         elif args.candidate and not args.preflight:
-            run_candidate()
+            run_candidate(locale=args.locale or "pt")
         elif args.isolation and not args.preflight:
             run_isolation()
         elif args.locale and not args.preflight:
