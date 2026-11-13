@@ -204,6 +204,63 @@ def check_proofs(name: str, manifests: dict) -> None:
                 "B1 auxiliary negative controls drift")
 
 
+
+def per_identifier_receipts(filename: str, manifests: dict) -> dict[str, list[str]]:
+    """Extract the actual identifier names from each original proof manifest."""
+    out: dict[str, set[str]] = {}
+
+    def add(suite: str, items) -> None:
+        values = list(items)
+        require(values and all(isinstance(i, str) and i for i in values),
+                f"missing named identifier for {suite}")
+        out[suite] = set(values)
+
+    if filename.startswith("requal-") and not filename.startswith("requal-b1-"):
+        add("core-lists-12",
+            (x["environment"] for x in
+             manifests["core-list-environments/manifest.json"]["records"]))
+        add("optional-env-12",
+            (x["environment"] for x in
+             manifests["optional-environments/manifest.json"]["records"]))
+        add("b1-integrated-15",
+            manifests["b1-family-proof.json"]["candidate_identifiers"])
+        add("b1-final-five",
+            manifests["b1-final-five/manifest.json"]["identifiers"])
+        b2 = manifests["b2-family-proof.json"]["observations"]
+        require(len(b2) == 16 and all(x.get("verified") is True for x in b2),
+                "B2 individual source/PDF receipts are not individually verified")
+        add("b2-family-12", (x["identifier"] for x in b2))
+        add("b2-summary-remaining",
+            (name for row in manifests["b2-summary-remaining/manifest.json"]["records"]
+             for name in row["commands"]))
+        add("b3-integrated-9",
+            manifests["b3-integrated-list-proof.json"]["identifiers"])
+        b4 = manifests["b4-integrated-backmatter-proof.json"]
+        add("b4-integrated-11", b4["identifiers"])
+        verified = {row["identifier"]
+                    for receipt in b4["receipts"]
+                    for row in receipt["observations"]
+                    if row["status"] == "BOUNDED_REAL_PDF_PASS"}
+        require(verified == out["b4-integrated-11"],
+                "B4 original PDF proof lacks a positive per-ID observation")
+        isolated = manifests["b4-isolated/manifest.json"]
+        add("b4-isolated-2",
+            (row["identifier"] for row in isolated["records"]
+             if row["status"] == "BOUNDED_ISOLATED_REAL_PDF_PASS"))
+    elif filename.startswith("optional-"):
+        locale = filename.split("-")[1]
+        prefix = f"optional-i18n/{locale}/"
+        add("b1-optional-config-3",
+            manifests[prefix + "b1-optional-config-proof.json"]["identifiers"])
+        add("b3-optional-2",
+            manifests[prefix + "b3-optional-list-proof.json"]["identifiers"])
+        minted = manifests[prefix + "b4-inputminted-proof.json"]
+        add("b4-inputminted-1", [minted["identifier"]])
+    elif filename.startswith("requal-b1-"):
+        add("b1-auxiliary-2",
+            [manifests["b1-auxiliary-proof.json"]["proof"]["identifier"]])
+    return {suite: sorted(items) for suite, items in out.items()}
+
 def audit_zip(path: Path, metadata: dict) -> dict:
     require(path.is_file(), f"original ZIP not downloaded: {path.name}")
     raw = path.read_bytes()
@@ -245,7 +302,9 @@ def audit_zip(path: Path, metadata: dict) -> dict:
         require(all(sha256(archive.read(n)) in refs for n in pdf_names),
                 f"unreferenced PDF bytes in original ZIP: {path.name}")
         check_proofs(path.name, manifests)
+        names_per_suite = per_identifier_receipts(path.name, manifests)
         return {"artifact_id": metadata["artifact_id"],
+                "per_identifier_proof": names_per_suite,
                 "original_zip_sha256": metadata["zip_sha256"],
                 "pdfs": len(pdf_names), "sha256_references_verified": len(refs),
                 "status": "ORIGINAL_ZIP_BYTES_VERIFIED"}
@@ -326,6 +385,26 @@ def main() -> None:
         require(len(output) == 10 and sum(x["pdfs"] for x in output.values()) == 310
                 and sum(x["sha256_references_verified"] for x in output.values()) == 4952,
                 "original evidence byte-audit totals drift")
+        for suite_name, suite in data["suites"].items():
+            expected_ids = {
+                name for rows in data["entries"].values()
+                for name, row in rows.items() if row["proof_suite"] == suite_name
+            }
+            covered = set()
+            for filename in suite["artifact_files"]:
+                ids = set(output[filename]["per_identifier_proof"].get(suite_name, []))
+                require(bool(ids), f"missing source-bound per-ID evidence: {suite_name}/{filename}")
+                if suite_name == "b2-family-12":
+                    require(len(ids) == 16 and expected_ids.issubset(ids),
+                            "B2 producer must cover 16 named commands")
+                else:
+                    require(ids.issubset(expected_ids),
+                            f"foreign per-identifier receipt in {suite_name}/{filename}")
+                covered.update(ids & expected_ids)
+            require(covered == expected_ids,
+                    f"one or more named public identifiers lack source-bound positive proof: {suite_name}")
+        print("V310-PER-ID status=PASS named_identifiers=72 suites=13"
+              " four_locales=true formal_human_review=PENDING", flush=True)
         print("V310-ARCHIVE-LEDGER status=PASS archives=10 pdfs=310 hashes=4952"
               " candidate_identifiers=72 formal_certification=PENDING publication=false", flush=True)
     report = {"source_commit_sha": SOURCE_SHA, "runtime_class_git_blob": CLASS_BLOB,
