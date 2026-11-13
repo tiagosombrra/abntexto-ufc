@@ -315,20 +315,165 @@ def run_isolation() -> None:
           f" valid_pdf={sum(x['status'] == 'VALID_PDF' for x in results)}"
           " root_cause=NOT_YET_PROVEN publication_authorized=false")
 
+
+# Experimental proposal only. It does not change the shipped class.
+# The public external import gains a vertical box only inside inner horizontal mode.
+# This follows the class's existing ufclisting layout strategy without changing
+# pagination of direct, nonboxed imports.
+CANDIDATE_PATCH = (
+    r"\ExplSyntaxOn",
+    r"\RenewDocumentCommand \ufcInputListing { O{} m }",
+    r"  {",
+    r"    \mode_if_horizontal:TF",
+    r"      {",
+    r"        \mode_if_inner:TF",
+    r"          { \vbox{ \hsize=\linewidth \lstinputlisting[#1]{#2} } }",
+    r"          { \lstinputlisting[#1]{#2} }",
+    r"      }",
+    r"      { \lstinputlisting[#1]{#2} }",
+    r"  }",
+    r"\ExplSyntaxOff",
+)
+
+
+def candidate_preflight() -> None:
+    """Prove that the experimental patch tests only the public import path."""
+    if len(CANDIDATE_PATCH) != 13:
+        raise ValueError("experimental patch line inventory drift")
+    if not any(r"\mode_if_inner:TF" in x for x in CANDIDATE_PATCH):
+        raise ValueError("inner-horizontal candidate guard absent")
+    if not any(r"\vbox" in x for x in CANDIDATE_PATCH):
+        raise ValueError("vertical wrapper candidate absent")
+    for profile, wrapper, legend in itertools.product(
+        PROFILES, ("direct", "place", "ufcobject", "minipage"), (False, True)
+    ):
+        value = candidate_tex(profile, wrapper, legend)
+        if value.count(r"\RenewDocumentCommand \ufcInputListing") != 1:
+            raise ValueError("candidate injection drift")
+        if value.count(r"\ufcInputListing[language=C++]") != 1:
+            raise ValueError("candidate invocation drift")
+        if value.count(r"\legend{code}") != int(legend):
+            raise ValueError("candidate legend drift")
+    print("I18N-INPUTLISTING-CANDIDATE-PREFLIGHT status=PASS"
+          " cases=16 runtime_class_unchanged=true publication_authorized=false")
+
+
+def candidate_tex(profile: str, wrapper: str, legend: bool) -> str:
+    """Create a standalone source with the hypothetical localized macro patch."""
+    value = isolation_tex(profile, wrapper, "public")
+    entry = r"\begin{document}" + "\n"
+    extra = "\n".join(CANDIDATE_PATCH) + "\n"
+    if value.count(entry) != 1:
+        raise ValueError("missing document entry")
+    value = value.replace(entry, entry + extra, 1)
+    if legend:
+        before = {
+            "direct": r"\ufcInputListing[language=C++]",
+            "place": r"\begin{place}[here]",
+            "ufcobject": r"\begin{ufcobject}[here]",
+            "minipage": r"\begin{minipage}{\linewidth}",
+        }[wrapper]
+        value = value.replace(
+            before,
+            r"\legend{code}{CANDIDATE-CODE-LEGEND}" + "\n"
+            + r"\ufcSource{CANDIDATE-SOURCE}" + "\n"
+            + r"\label{cod:candidate-visual}" + "\n" + before,
+            1,
+        )
+    return value
+
+
+def run_candidate() -> None:
+    """Compile all proposed variants and reject missing code or invalid PDFs."""
+    candidate_preflight()
+    folder = BASE / "candidate-pt"
+    folder.mkdir(parents=True, exist_ok=True)
+    sha = subprocess.check_output(
+        ["git", "rev-parse", "HEAD"], cwd=ROOT, text=True
+    ).strip()
+    results = []
+    for profile, wrapper, legend in itertools.product(
+        PROFILES, ("direct", "place", "ufcobject", "minipage"), (False, True)
+    ):
+        name = ("candidate-" + ("article" if profile == PROFILES[0] else "capstone")
+                + "-" + wrapper + ("-legend" if legend else "-plain"))
+        source = folder / (name + ".tex")
+        pdf = folder / (name + ".pdf")
+        log = folder / (name + ".log")
+        source.write_text(candidate_tex(profile, wrapper, legend), encoding="utf-8")
+        process = subprocess.run(
+            ["pdflatex", "-interaction=nonstopmode", "-halt-on-error",
+             "-file-line-error", "-jobname=" + name,
+             "-output-directory=" + str(folder), str(source)],
+            cwd=ROOT, text=True, capture_output=True, check=False,
+        )
+        outcome = process.stdout + "\n" + process.stderr
+        valid = process.returncode == 0 and pdf.is_file()
+        marker = ERROR_MARKER in outcome or (
+            log.is_file() and ERROR_MARKER in log.read_text(errors="replace"))
+        extracted = ""
+        if valid:
+            verify = subprocess.run(
+                ["qpdf", "--check", str(pdf)], cwd=ROOT,
+                capture_output=True, text=True, check=False,
+            )
+            if verify.returncode != 0:
+                valid = False
+            else:
+                extracted = subprocess.run(
+                    ["pdftotext", "-layout", str(pdf), "-"],
+                    cwd=ROOT, capture_output=True, text=True, check=True,
+                ).stdout
+                if "main" not in extracted:
+                    valid = False
+                if legend and wrapper in ("place", "ufcobject"):
+                    if "CANDIDATE-CODE-LEGEND" not in extracted or "CANDIDATE-SOURCE" not in extracted:
+                        valid = False
+        results.append({
+            "name": name, "profile": profile, "wrapper": wrapper,
+            "legend": legend, "valid_pdf_and_text": valid,
+            "math_delimiter_error": bool(marker), "exit_code": process.returncode,
+            "source_sha256": digest(source), "log_sha256": digest(log),
+            "pdf_sha256": digest(pdf),
+        })
+        print(f"INPUTLISTING-CANDIDATE {name}"
+              f" status={'PASS' if valid else 'FAIL'}"
+              f" math_delim_error={bool(marker)}")
+    result = {
+        "source_sha": sha, "locale": "pt", "cases": len(results),
+        "observations": results,
+        "runtime_class_modified": False,
+        "conclusion": "EXPERIMENTAL_CANDIDATE_ONLY",
+        "ledger_promotion": "NOT_AUTHORIZED",
+        "publication_authorized": False,
+    }
+    (folder / "candidate-manifest.json").write_text(
+        json.dumps(result, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
+    )
+    if any(not x["valid_pdf_and_text"] for x in results):
+        raise ValueError("candidate did not pass all real-PDF and text probes")
+    print("I18N-INPUTLISTING-CANDIDATE status=PASS cases=16"
+          " real_pdfs=16 runtime_class_unchanged=true publication_authorized=false")
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--preflight", action="store_true")
     parser.add_argument("--isolation", action="store_true")
+    parser.add_argument("--candidate", action="store_true")
     parser.add_argument("--locale", choices=tuple(LOCALES))
     args = parser.parse_args()
     try:
         preflight()
         isolation_preflight()
-        if args.isolation and not args.preflight:
+        candidate_preflight()
+        if args.candidate and not args.preflight:
+            run_candidate()
+        elif args.isolation and not args.preflight:
             run_isolation()
         elif args.locale and not args.preflight:
             run(args.locale)
         elif not args.preflight:
-            raise ValueError("select --preflight, --isolation or --locale")
+            raise ValueError("select --preflight, --isolation, --candidate or --locale")
     except (OSError, ValueError, subprocess.CalledProcessError) as e:
         raise SystemExit(f"I18N-INPUTLISTING-REPRO status=FAIL reason={e}") from e
