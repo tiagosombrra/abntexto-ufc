@@ -5,17 +5,18 @@
 ## Identidade dos PDFs originais
 
 - Classe recompilada: `abntexto-ufc.cls`, Git blob `299293e273dcefb80256eed2e17d2557db6aae52`.
-- Fonte completa que gerou os 28 PDFs editoriais: `a4a4665ce099d0786e92e443b95dab656b25afad`.
-- Execução: [GitHub Actions #43452221682](https://github.com/tiagosombrra/abntexto-ufc/actions/runs/43452221682). Os quatro jobs de idioma compilaram com sucesso.
-- Documentos: 7 perfis × 4 idiomas (PT/EN/ES/FR) = **28 arquivos e 984 páginas**.
-- Recebimentos originais: PT artifact `14051882443`, EN `14051792499`, ES `14051702300`, FR `14051807414`. O auditor verifica identidade, SHA-256 dos ZIPs, SHA-256 de cada PDF e fonte TeX, hashes dos recibos e contagens físicas de páginas, sem regravar os originais.
+- Fonte completa que gerou os 28 PDFs editoriais: `de99db499cbc5bb78097f415fb91e3bb3ca3128a`.
+- Execução: [GitHub Actions #43467471975](https://github.com/tiagosombrra/abntexto-ufc/actions/runs/43467471975). Os quatro jobs de idioma compilaram com sucesso.
+- Documentos: 7 perfis × 4 idiomas (PT/EN/ES/FR) = **28 arquivos e 972 páginas**.
+- Distribuição após corrigir a issue [#593](https://github.com/tiagosombrra/abntexto-ufc/issues/593): **PT 246, EN 240, ES 240, FR 246 páginas**. No corpus anterior havia 12 páginas EN/ES com somente a última linha da tabela longa. A classe e as 85 linhas do teste sintético R4 foram preservadas; os documentos editoriais empregam 80 linhas para evitar a página residual.
+- Recebimentos originais: PT artifact `14059297908`, EN `14057939644`, ES `14059198079`, FR `14058644629`. O auditor verifica identidade, SHA-256 dos ZIPs, SHA-256 de cada PDF e fonte TeX, hashes dos recibos e contagens físicas de páginas, sem regravar os originais.
 - A verificação independente do **veraPDF-2b de desenvolvimento** sobre esses PDFs teve 28 conformes e 0 não conformes, sem constituir aprovação visual ou institucional. O antigo verificador R8.1 permanece deliberadamente incompatível com o blob da classe atual.
 
 ## Gerar o pacote de revisão, sem aceite automático
 
 O workflow [R8.1 corrected-runtime human PDF review request](../.github/workflows/r81-v310-human-review-request.yml) produz um artefato `r81-v310-pending-review-request-<run_id>` contendo:
 
-- `request.json`: identidade dos 28 documentos, fonte e SHA-256 original de cada PDF e arquivo TeX, número de páginas, ZIP de origem, oito dimensões de revisão **PENDING** por documento e 984 decisões de páginas inicializadas como **PENDING**;
+- `request.json`: identidade dos 28 documentos, fonte e SHA-256 original de cada PDF e arquivo TeX, número de páginas, ZIP de origem, oito dimensões de revisão **PENDING** por documento e 972 decisões de páginas inicializadas como **PENDING**;
 - `REVIEW-REQUEST.md`: relação por perfil/idioma, URLs para os quatro artefatos originais e orientações de inspeção.
 
 O script `tools/review/prepare_v310_r81_human_review.py` é executado por CI com token somente de leitura e os comandos `qpdf --check` e `pdfinfo`. Uma alteração posterior na classe altera o blob e bloqueia a reutilização da evidência; os pacotes gerados para outra fonte devem ser regenerados. Os ZIPs originais continuam na execução original, e não são republicados como artefatos de distribuição.
