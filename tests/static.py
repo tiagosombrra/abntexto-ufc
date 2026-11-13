@@ -164,6 +164,10 @@ def execute_checks() -> tuple[int, int, int, int]:
     # The integrated PDF workflow is path-scoped, so it is not sufficient here.
     run([sys.executable, "tests/integration/frontmatter/i18n-evidence-crosswalk.py"],
         "72 public API evidence-source links (source-only; no PDF claim)")
+    # Human R8.1 review requests must reject machine-generated acceptance.
+    run([sys.executable, "tools/review/prepare_v310_r81_human_review.py",
+         "--self-test"],
+        "28-PDF 984-page human-review packet pending-state mutations")
     # Check the new-runtime candidate shape and reject forged API promotions.
     # The networked original ZIP byte audit remains a separate required CI gate.
     candidate = ROOT / "standards/api/i18n-v310-runtime-proof-candidate.json"
