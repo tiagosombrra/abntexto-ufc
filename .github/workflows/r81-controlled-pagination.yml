@@ -6,6 +6,8 @@ on:
     paths:
       - tools/review/r81_controlled_pagination.py
       - tools/review/r81_original_pdf_audit.py
+      - tests/integration/frontmatter/generate-comprehensive-corpus.py
+      - tools/review/generate_readable_28.py
       - .github/workflows/r81-controlled-pagination.yml
       - abntexto-ufc.cls
 permissions:
@@ -20,7 +22,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - name: Compile identical and translated content across four locales
+      - name: Compile native longtable controls in twelve real PDFs
         uses: xu-cheng/texlive-action@22c04326a5d855880f9d39bb955138bf11c6df80 # v3
         with:
           texlive_version: 2026

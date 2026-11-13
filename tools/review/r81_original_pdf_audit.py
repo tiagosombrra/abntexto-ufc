@@ -85,6 +85,7 @@ def main() -> None:
         "documents": [],
     }
     failures = []
+    supplementary_abnt_extraction_limitations = []
     total_pages = 0
     for locale, names in LOCALES.items():
         folder = INPUT / locale
@@ -118,8 +119,12 @@ def main() -> None:
                 measurements[family] = inspect_rows(pages, names[family], count)
                 if measurements[family]["missing_rows"] or \
                         measurements[family]["duplicated_rows"]:
-                    failures.append(f"{locale}/{item['profile']}/{family}: "
-                                    "row extraction incomplete (requires inspection)")
+                    message = (f"{locale}/{item['profile']}/{family}: "
+                               "row text extraction incomplete")
+                    if family == "native":
+                        failures.append(message)
+                    else:
+                        supplementary_abnt_extraction_limitations.append(message)
             record = {
                 "locale": locale,
                 "profile": item["profile"],
@@ -149,15 +154,19 @@ def main() -> None:
     report["summary"] = summary
     report["page_total"] = total_pages
     report["row_extraction_findings"] = failures
+    report["supplementary_abnt_extraction_limitations"] = supplementary_abnt_extraction_limitations
     OUTPUT.mkdir(parents=True, exist_ok=True)
     (OUTPUT / "original-audit.json").write_text(
         json.dumps(report, ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8")
     print("R81-ORIGINAL-SUMMARY " + json.dumps(summary, ensure_ascii=False),
           flush=True)
+    if supplementary_abnt_extraction_limitations:
+        print("R81-ORIGINAL-ABNT-EXTRACTION-LIMITATIONS " +
+              str(len(supplementary_abnt_extraction_limitations)), flush=True)
     if failures:
-        print("R81-ORIGINAL-WARNINGS " + json.dumps(failures, ensure_ascii=False),
-              flush=True)
+        raise SystemExit("R81-ORIGINAL-FAIL " +
+                         json.dumps(failures, ensure_ascii=False))
 
 
 if __name__ == "__main__":

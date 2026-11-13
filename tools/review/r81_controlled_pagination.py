@@ -11,10 +11,12 @@ import json
 import re
 import runpy
 import subprocess
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 LOCALES = {"pt": "pt-BR", "en": "en-US", "es": "es-ES", "fr": "fr-FR"}
+sys.path.insert(0, str(ROOT / "tests/integration/frontmatter"))
 R4 = runpy.run_path(str(ROOT / "tests/integration/frontmatter/generate-comprehensive-corpus.py"))
 READABLE = runpy.run_path(str(ROOT / "tools/review/generate_readable_28.py"))
 PROSE = R4["PROSE"]
