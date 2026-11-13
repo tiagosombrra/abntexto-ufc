@@ -10,7 +10,10 @@ import subprocess
 import sys
 import xml.etree.ElementTree as ET
 
-ROOT = pathlib.Path("artifacts/r5-final-pdfa")
+# Development evidence must never overwrite R8.1 historical approval receipts.
+SCOPE = os.environ.get("R81_PDFA_SCOPE", "historical")
+ROOT = pathlib.Path("artifacts/r5-development-pdfa"
+                    if SCOPE == "development" else "artifacts/r5-final-pdfa")
 PDFS = ROOT / "pdfs"
 PROFILES = {
     "undergraduate-capstone", "specialization-capstone",
@@ -30,6 +33,7 @@ def sha256(path):
 
 
 def prepare():
+    require(SCOPE in ("historical", "development"), "Unknown PDF/A evidence scope")
     expected_sha = os.environ["SOURCE_COMMIT_SHA"]
     run = os.environ["GITHUB_RUN_ID"]
     require(re.fullmatch(r"[0-9a-f]{40}", expected_sha) is not None,
@@ -104,17 +108,40 @@ def prepare():
         "human_review": "PENDING", "publication_authorized": False,
         "status": "PDF_A_EXTERNAL_PENDING",
     }
-    require(manifest["source_class_git_blob"]
-            == "a73ef656de71d38ad30d7029ac3d86f852339950",
-            "R8.1 accepted class has changed; re-approval required")
+    if SCOPE == "development":
+        # This validates a new runtime, never the older approved R8.1 class.
+        actual_commit = subprocess.check_output(
+            ["git", "rev-parse", "HEAD"], text=True).strip()
+        class_at_commit = subprocess.check_output(
+            ["git", "rev-parse", "HEAD:abntexto-ufc.cls"], text=True).strip()
+        require(os.environ.get("GITHUB_EVENT_NAME") == "pull_request",
+                "Development PDF/A evidence requires a pull request")
+        require(actual_commit == expected_sha
+                and manifest["source_class_git_blob"] == class_at_commit,
+                "Development PDF/A source/class provenance mismatch")
+        require(class_at_commit != "a73ef656de71d38ad30d7029ac3d86f852339950",
+                "Historical class must use the historical R8.1 validator")
+        manifest["certification_scope"] = "DEVELOPMENT_UNRELEASED_ONLY"
+    else:
+        require(manifest["source_class_git_blob"]
+                == "a73ef656de71d38ad30d7029ac3d86f852339950",
+                "R8.1 accepted class has changed; re-approval required")
+        manifest["certification_scope"] = "HISTORICAL_R8_1_CLASS_ONLY"
     (ROOT / "input-manifest.json").write_text(
         json.dumps(manifest, indent=2, ensure_ascii=False) + "\n", "utf-8")
-    print("R81-FINAL-PDFA-SOURCE status=PASS pdfs=28 pages=984 "
-          + "source_sha=" + expected_sha, flush=True)
+    label = "DEVELOPMENT" if SCOPE == "development" else "FINAL"
+    print(f"R81-{label}-PDFA-SOURCE status=PASS pdfs=28 pages=984 "
+          + "source_sha=" + expected_sha
+          + " human_review=PENDING publication_authorized=false", flush=True)
 
 
 def verify():
+    require(SCOPE in ("historical", "development"), "Unknown PDF/A evidence scope")
     manifest = json.loads((ROOT / "input-manifest.json").read_text("utf-8"))
+    expected_scope = ("DEVELOPMENT_UNRELEASED_ONLY" if SCOPE == "development"
+                      else "HISTORICAL_R8_1_CLASS_ONLY")
+    require(manifest.get("certification_scope") == expected_scope,
+            "PDF/A evidence scope mismatch")
     documents = {x["filename"]: x for x in manifest["documents"]}
     require(len(documents) == 28, "Invalid input count")
     for name, doc in documents.items():
@@ -180,12 +207,18 @@ def verify():
         "pdfa_2b_compliant": compliant_count,
         "pdfa_2b_noncompliant": 28 - compliant_count,
         "human_review": "PENDING", "publication_authorized": False,
-        "status": "PASS_EXTERNAL_PDF_A_2B" if compliant_count == 28
-                  else "BLOCKED_EXTERNAL_PDF_A_2B",
+        "status": (("PASS_DEVELOPMENT_EXTERNAL_PDF_A_2B"
+                    if compliant_count == 28
+                    else "BLOCKED_DEVELOPMENT_EXTERNAL_PDF_A_2B")
+                   if SCOPE == "development"
+                   else ("PASS_EXTERNAL_PDF_A_2B" if compliant_count == 28
+                         else "BLOCKED_EXTERNAL_PDF_A_2B")),
     })
     (ROOT / "results.json").write_text(
         json.dumps(manifest, indent=2, ensure_ascii=False) + "\n", "utf-8")
-    print("R81-FINAL-PDFA-EVIDENCE status=" + manifest["status"]
+    print(("R81-DEVELOPMENT-PDFA-EVIDENCE" if SCOPE == "development"
+           else "R81-FINAL-PDFA-EVIDENCE")
+          + " status=" + manifest["status"]
           + f" compliant={compliant_count} noncompliant={28-compliant_count}"
           + " human_review=PENDING publication_authorized=false",
           flush=True)
