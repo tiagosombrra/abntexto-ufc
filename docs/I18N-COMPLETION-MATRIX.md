@@ -458,13 +458,59 @@ A família integrada testa glossary=glossaries e index=imakeidx no doutorado em 
 
 ## P0.8 B3 — 11 public list/contents APIs: bounded proof ledger (PR #588)
 
-**This state is on the PR branch only**, after B1 merged main \`9a2348e6fba9517f735ad64ad818ceb54ee52f59\`. Main retains **47 PASS/25 PENDING**, and the B3 candidate branch adds 11 bounded functional proofs for **58 PASS/14 PENDING/0 NA**. The 14 remaining identifiers are not promoted. Neither human normative/linguistic review nor v3.1.0 publication is authorized.
+**This state is on the PR branch only**, after B1 merged main `9a2348e6fba9517f735ad64ad818ceb54ee52f59`. Main retains **47 PASS/25 PENDING**, and the B3 candidate branch adds 11 bounded functional proofs for **58 PASS/14 PENDING/0 NA**. The 14 remaining identifiers are not promoted. Neither human normative/linguistic review nor v3.1.0 publication is authorized.
 
-B3 original source SHA: \`851d16bb131a1b88ad93a5ff4830b2286297dea3\`.
+B3 original source SHA: `851d16bb131a1b88ad93a5ff4830b2286297dea3`.
 
-- \`b3-integrated-9\`: integrated matrix [#43271021807](https://github.com/tiagosombrra/abntexto-ufc/actions/runs/43271021807), **7/7 SUCCESS**, four locale ZIPs PT \`13967553724\`, EN \`13967129601\`, ES \`13969081744\`, FR \`13967509371\`. Independent original-byte audit: 4 ZIP CRC, **56 source/PDF SHA256**, 28 PDFs/576 physical pages, 180 applicable list/contents/entry output observations, 72 profile-specific nonapplicabilities, **120 unique textual body-caption page predicates**, 28 /Root/Lang BCP47 checks. Per-locale producer preflight **24 negative controls**.
-- \`b3-optional-2\`: optional matrix [#43271021778](https://github.com/tiagosombrra/abntexto-ufc/actions/runs/43271021778), **5/5 SUCCESS**, ZIPs PT \`13969011260\`, EN \`13968662366\`, ES \`13968561852\`, FR \`13968691920\`. Independent original-byte audit: 4 ZIP CRC, **24 source/PDF SHA256**, 12 PDFs/40 physical pages, 12 applicable and 12 inapplicable outputs, 24 exact list/body physical page positions, 12 /Root/Lang BCP47 checks, **14 negative controls**.
+- `b3-integrated-9`: integrated matrix [#43271021807](https://github.com/tiagosombrra/abntexto-ufc/actions/runs/43271021807), **7/7 SUCCESS**, four locale ZIPs PT `13967553724`, EN `13967129601`, ES `13969081744`, FR `13967509371`. Independent original-byte audit: 4 ZIP CRC, **56 source/PDF SHA256**, 28 PDFs/576 physical pages, 180 applicable list/contents/entry output observations, 72 profile-specific nonapplicabilities, **120 unique textual body-caption page predicates**, 28 /Root/Lang BCP47 checks. Per-locale producer preflight **24 negative controls**.
+- `b3-optional-2`: optional matrix [#43271021778](https://github.com/tiagosombrra/abntexto-ufc/actions/runs/43271021778), **5/5 SUCCESS**, ZIPs PT `13969011260`, EN `13968662366`, ES `13968561852`, FR `13968691920`. Independent original-byte audit: 4 ZIP CRC, **24 source/PDF SHA256**, 12 PDFs/40 physical pages, 12 applicable and 12 inapplicable outputs, 24 exact list/body physical page positions, 12 /Root/Lang BCP47 checks, **14 negative controls**.
 
 Total B3 original evidence: eight original ZIPs, 80 independently verified source/PDF SHA256, 40 real PDFs (616 physical pages), 192 applicable positive functional receipts and 84 profile/case not-exercised observations. Tests verify uniquely localized headings, entry markers on the correct physical list page, captions/definitions in a real following textual body, strict source applicability, PDF catalog language and deliberate invalid mutations. **This is not validation of all input cross-products or human normative acceptance.**
 
 The 72-ID ledger validator now requires an exact source SHA, CI workflow run, original artifact IDs, existing runner and scoped per-identifier reason for all 11 B3 PASS, and includes **42 fail-closed ledger mutation guards** (previously 32). A new CI run on the **candidate ledger HEAD** is required before development squash. Do not merge while any Static, Canonical, Integrated Matrix, Optional Matrix, Linux complete or Release/pkgcheck gate is pending or failed; after protected squash, certify the new main. v3.1.0 stays UNRELEASED/publication_authorized=false, and published v3.0.5 assets remain immutable.
+
+
+## P0.8 corrected runtime — 72 bounded functional PDFs (issue #590 / draft PR #592)
+
+**Separate evidence scope and original source.** At proof-source commit
+`9ab436da5027c4e20c305398bf89356b70bb17ad`, corrected
+`abntexto-ufc.cls` has Git blob
+`299293e273dcefb80256eed2e17d2557db6aae52`. This is **not** the
+historical 58/72 class blob `a73ef656de71d38ad30d7029ac3d86f852339950`,
+nor does it inherit old class approvals. The original historical ledger
+`standards/api/i18n-per-identifier-proof-status.json` remains immutable.
+
+**New-runtime bounded functional qualification:** source registry
+`standards/api/i18n-v310-runtime-proof-candidate.json`, per-ID
+qualification `standards/api/i18n-v310-bounded-functional-qualified.json`,
+independent auditor `tools/ci/audit-v310-runtime-candidate.py`, and
+Actions [#43449903422](https://github.com/tiagosombrra/abntexto-ufc/actions/runs/43449903422).
+The auditor re-fetches the *original* ten GitHub ZIPs from
+integrated [#43427522352](https://github.com/tiagosombrra/abntexto-ufc/actions/runs/43427522352)
+and optional [#43427522327](https://github.com/tiagosombrra/abntexto-ufc/actions/runs/43427522327),
+checks GitHub artifact digests and exact source commit, opens **310 original
+PDFs**, verifies **4,952 SHA256 references** against original archive bytes
+and links **all 72 named identifiers to 13 scoped proof suites**, with
+negative mutation checks and unchanged proof-runner/class Git blobs. Final
+auditor marks only `SOURCE_BOUND_BOUNDED_FUNCTIONAL_PDF_ONLY` as PASS, not
+unbounded API behavior or global institutional compliance.
+
+**Original functional test coordinates:** B1 (25 options/core identifiers),
+B2 (16 frontmatter commands), B3 (11 lists and contents), B4 (14 inherited,
+backmatter and imported code APIs), plus six public environments.
+PT/EN/ES/FR original TeX Live 2026 receipts validate the limited
+positive/negative cases. In particular, the nested `\ufcInputListing`
+regression in inherited `place`/public `ufcobject` is covered by
+64 actual-class PDFs in four locales; the native `\lstinputlisting` macro
+does **not** inherit this public wrapper fix and boxed long listings may not
+break across pages.
+
+**Release exclusion:** 72 bounded functional PASS does not mean institutional
+UFC/ABNT, R8.1 editorial/visual, human translation or v3.1.0 release approval.
+The separate development veriPDF suite produced **28/28 PDF/A-2b PASS** across
+984 pages on the new class, while the old historical R8.1 verifier intentionally
+fails on the changed class SHA. The next approval requires human review of all
+28 source-bound editorial PDFs, formal new-class R8.1 acceptance, final-HEAD
+complete Static/Linux Integration/Linux Release Check and the protected
+post-merge main certification. CTAN publication still requires an authorized
+maintainer decision. `publication_authorized=false`, v3.1.0 UNRELEASED.
