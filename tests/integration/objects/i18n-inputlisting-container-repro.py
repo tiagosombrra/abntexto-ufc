@@ -291,14 +291,17 @@ def run_isolation() -> None:
         print(f"INPUTLISTING-ISOLATION {name}"
               f" status={'VALID_PDF' if success else 'TEX_FAILURE'}"
               f" math_delim_error={bool(marker)}")
-    # Direct import must compile with both the class API and native Listings.
+    # Both direct and minipage imports are proven positive control paths.
+    # Do not lock the inherited place failure as an expected long-term result.
     for profile in PROFILES:
         for importer in ("public", "native"):
-            baseline = [r for r in results if r["profile"] == profile
-                        and r["wrapper"] == "direct" and r["importer"] == importer]
-            if len(baseline) != 1 or baseline[0]["status"] != "VALID_PDF":
-                raise ValueError("direct positive control failed: "
-                                 + profile + "/" + importer)
+            for wrapper in ("direct", "minipage"):
+                baseline = [r for r in results if r["profile"] == profile
+                            and r["wrapper"] == wrapper
+                            and r["importer"] == importer]
+                if len(baseline) != 1 or baseline[0]["status"] != "VALID_PDF":
+                    raise ValueError("positive import control failed: "
+                                     + profile + "/" + importer + "/" + wrapper)
     result = {
         "source_sha": sha, "locale": "pt", "cases": len(results),
         "observations": results,
