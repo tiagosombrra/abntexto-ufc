@@ -77,6 +77,48 @@ concurrency:
   group: integrated-i18n-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 jobs:
+  # Produce new-runtime evidence without bypassing the original fail-closed ledger.
+  # This independent diagnostic runs only when the normal preflight rejects a PR.
+  # The workflow must remain FAILED until source-bound API recertification is done.
+  runtime-proof-probe:
+    name: Runtime requalification probe / ${{ matrix.locale }} (not certified)
+    needs: preflight
+    if: ${{ always() && github.event_name == 'pull_request' && needs.preflight.result == 'failure' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 42
+    strategy:
+      fail-fast: false
+      matrix:
+        locale: [pt, en, es, fr]
+    steps:
+      - name: Checkout exact candidate source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - name: Rebuild original per-profile and per-identifier evidence (no ledger promotion)
+        uses: xu-cheng/texlive-action@22c04326a5d855880f9d39bb955138bf11c6df80 # v3
+        env:
+          SOURCE_COMMIT_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        with:
+          texlive_version: 2026
+          os: debian
+          run: |
+            export DEBIAN_FRONTEND=noninteractive
+            apt-get update -y
+            apt-get install -y --no-install-recommends make poppler-utils qpdf
+            git config --global --add safe.directory "$PWD"
+            python3 tests/integration/frontmatter/run-integrated-locale.py --locale ${{ matrix.locale }}
+            python3 tests/integration/frontmatter/i18n-b1-family-evidence.py --locale ${{ matrix.locale }}
+            python3 tests/integration/frontmatter/i18n-b3-integrated-list-evidence.py --locale ${{ matrix.locale }}
+      - name: Archive original candidate PDFs and provenance receipts
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: runtime-requalification-${{ matrix.locale }}-${{ github.run_id }}
+          path: artifacts/integrated-i18n/${{ matrix.locale }}/**
+          retention-days: 21
+          if-no-files-found: warn
   preflight:
     name: Fast complete-profile source/locale contract
     runs-on: ubuntu-24.04
