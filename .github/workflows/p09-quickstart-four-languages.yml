@@ -50,6 +50,10 @@ jobs:
           texlive_version: 2026
           os: debian
           run: |
+            # Export matrix values inside the TeX Live action container.
+            export QUICKSTART_LOCALE="${{ matrix.locale }}"
+            export QUICKSTART_BCP="${{ matrix.bcp }}"
+            export SOURCE_COMMIT_SHA="${{ github.event.pull_request.head.sha || github.sha }}"
             set -eu
             export DEBIAN_FRONTEND=noninteractive
             apt-get update -y
