@@ -15,7 +15,7 @@ REFERENCE = re.compile(r"(?m)^[ \t]{0,3}\[[^\]\n]+\]:[ \t]*(?:<([^>\n]+)>|([^\s]
 HEADING = re.compile(r"^[ \t]{0,3}#{1,6}[ \t]+(.+?)[ \t]*#*[ \t]*$")
 FENCE = re.compile(r"^[ \t]{0,3}([\x60]{3,}|~{3,})")
 SCHEME = re.compile(r"^[A-Za-z][A-Za-z0-9+.-]*:")
-EXCLUDED = ("docs/history/", "release/history/")
+EXCLUDED_PARENTS = {("docs", "history"), ("release", "history")}
 
 
 def visible_text(source: str) -> str:
@@ -139,7 +139,7 @@ def tracked_markdown() -> list[Path]:
     ]
     return sorted(
         path for path in paths
-        if not path.as_posix().startswith(EXCLUDED)
+        if tuple(path.parts[:2]) not in EXCLUDED_PARENTS
     )
 
 
