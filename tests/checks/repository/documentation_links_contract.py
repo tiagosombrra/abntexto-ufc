@@ -88,7 +88,7 @@ def scan(root: Path, documents: list[Path]) -> tuple[list[str], int, int, int]:
             if not resolved.is_relative_to(base):
                 errors.append(f"{document}:{line}: link escapes repository: {uri}")
                 continue
-            if target and not resolved.is_file():
+            if target and not resolved.exists():
                 errors.append(f"{document}:{line}: missing relative target: {uri}")
                 continue
             local += 1
@@ -108,9 +108,10 @@ def selftest() -> None:
         (root / "docs").mkdir()
         (root / "guide.md").write_text("# Overview\n", encoding="utf-8")
         path = root / "docs" / "index.md"
-        path.write_text("[Guide](../guide.md#overview)\n", encoding="utf-8")
+        (root / "docs" / "assets").mkdir()
+        path.write_text("[Guide](../guide.md#overview)\n[Assets](assets/)\n", encoding="utf-8")
         ok, local, fragments, _ = scan(root, [Path("docs/index.md")])
-        if ok or local != 1 or fragments != 1:
+        if ok or local != 2 or fragments != 1:
             raise AssertionError("Valid linked Markdown is rejected")
         for invalid in (
             "[Gone](../missing.md)\n",
