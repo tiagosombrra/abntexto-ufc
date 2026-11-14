@@ -2703,8 +2703,19 @@
         \egroup\endplace
       }
 
+    % The inherited place environment captures its body inside an \hbox.
+    % External listings need vertical mode there; direct imports must retain
+    % their original page-breaking and layout behavior.
     \NewDocumentCommand \ufcInputListing { O{} m }
-      { \lstinputlisting[##1]{##2} }
+      {
+        \mode_if_horizontal:TF
+          {
+            \mode_if_inner:TF
+              { \vbox{ \hsize=\linewidth \lstinputlisting[##1]{##2} } }
+              { \lstinputlisting[##1]{##2} }
+          }
+          { \lstinputlisting[##1]{##2} }
+      }
   }
 
 \cs_new_protected:Npn \ufc_objects_setup_minted:

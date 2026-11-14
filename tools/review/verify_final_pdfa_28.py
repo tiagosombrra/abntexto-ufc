@@ -10,7 +10,13 @@ import subprocess
 import sys
 import xml.etree.ElementTree as ET
 
-ROOT = pathlib.Path("artifacts/r5-final-pdfa")
+# Development evidence must never overwrite R8.1 historical approval receipts.
+SCOPE = os.environ.get("R81_PDFA_SCOPE", "historical")
+ROOT = pathlib.Path(
+    "artifacts/r5-development-pdfa" if SCOPE == "development"
+    else ("artifacts/r5-archived-development-pdfa"
+          if SCOPE == "archived-development" else "artifacts/r5-final-pdfa")
+)
 PDFS = ROOT / "pdfs"
 PROFILES = {
     "undergraduate-capstone", "specialization-capstone",
@@ -30,6 +36,8 @@ def sha256(path):
 
 
 def prepare():
+    require(SCOPE in ("historical", "development", "archived-development"),
+            "Unknown PDF/A evidence scope")
     expected_sha = os.environ["SOURCE_COMMIT_SHA"]
     run = os.environ["GITHUB_RUN_ID"]
     require(re.fullmatch(r"[0-9a-f]{40}", expected_sha) is not None,
@@ -44,7 +52,10 @@ def prepare():
                 f"{loc}: locale mismatch")
         require(report["source_commit_sha"] == expected_sha,
                 f"{loc}: missing or wrong SHA-bound source receipt")
-        require(report["pdf_count"] == 7 and report["page_count"] == 246,
+        expected_locale_pages = (246 if SCOPE == "historical" or loc in ("pt", "fr")
+                                 else 240)
+        require(report["pdf_count"] == 7
+                and report["page_count"] == expected_locale_pages,
                 f"{loc}: wrong document/page count")
         require(report["failures"] == 0 and report["human_approval"] == "PENDING"
                 and report["release_authorized"] is False,
@@ -92,29 +103,92 @@ def prepare():
             })
     require(len(files) == 28 and len({x["filename"] for x in files}) == 28,
             "Missing or duplicate PDF")
-    require(sum(x["pages"] for x in files) == 984,
-            "R8.1 final page count differs from the 984-page baseline")
+    expected_total_pages = 984 if SCOPE == "historical" else 972
+    require(sum(x["pages"] for x in files) == expected_total_pages,
+            f"R8.1 input page count differs from the {expected_total_pages}-page source")
     require(len(list(PDFS.glob("*.pdf"))) == 28, "Unexpected PDF in validator input")
     manifest = {
         "source_run": run, "source_commit_sha": expected_sha,
         "source_class_git_blob": subprocess.check_output(
             ["git", "hash-object", "abntexto-ufc.cls"], text=True).strip(),
         "expected_profile": "PDF/A-2b", "documents": files,
-        "pdf_count": 28, "page_count": 984,
+        "pdf_count": 28, "page_count": expected_total_pages,
         "human_review": "PENDING", "publication_authorized": False,
         "status": "PDF_A_EXTERNAL_PENDING",
     }
-    require(manifest["source_class_git_blob"]
-            == "a73ef656de71d38ad30d7029ac3d86f852339950",
-            "R8.1 accepted class has changed; re-approval required")
+    if SCOPE in ("development", "archived-development"):
+        # Never transfer the historical R8.1 approval to a new runtime.
+        actual_commit = subprocess.check_output(
+            ["git", "rev-parse", "HEAD"], text=True).strip()
+        class_at_commit = subprocess.check_output(
+            ["git", "rev-parse", "HEAD:abntexto-ufc.cls"], text=True).strip()
+        require(os.environ.get("GITHUB_EVENT_NAME") == "pull_request",
+                "Development PDF/A evidence requires a pull request")
+        require(manifest["source_class_git_blob"] == class_at_commit,
+                "Development PDF/A source/class provenance mismatch")
+        if SCOPE == "development":
+            require(actual_commit == expected_sha,
+                    "Development PDF/A input must be the current exact source commit")
+        else:
+            # Authenticate all original PDFs against the independently prepared
+            # reviewer packet, and require byte-identical source producers.
+            require(expected_sha == "de99db499cbc5bb78097f415fb91e3bb3ca3128a"
+                    and os.environ.get("R81_ORIGINAL_PROOF_RUN_ID") == "43467471975",
+                    "Unexpected original R8.1 reviewer PDF source/run")
+            original_class_blob = subprocess.check_output(
+                ["git", "rev-parse", f"{expected_sha}:abntexto-ufc.cls"],
+                text=True).strip()
+            require(original_class_blob == class_at_commit,
+                    "Archived PDF original class differs from checked-out runtime")
+            # Authenticate archived source against immutable producer blob IDs.
+            # Current HEAD may intentionally contain later editorial regression checks.
+            archived_producer_blobs = {
+                "tools/review/generate_readable_28.py":
+                    "35fbdc94505d138c0dcf8e6179d895c2dcd64ecf",
+                "tools/review/build_readable_28.py":
+                    "993b36e475b12bf34d10b7b695194bc0ff24f948",
+                "tests/integration/frontmatter/generate-comprehensive-corpus.py":
+                    "cb4091294743dc49a0e6ecfa1f8b2aeac7cac59d",
+            }
+            for producer, frozen_blob in archived_producer_blobs.items():
+                original_blob = subprocess.check_output(
+                    ["git", "rev-parse", f"{expected_sha}:{producer}"],
+                    text=True).strip()
+                require(original_blob == frozen_blob,
+                        f"Archived R8.1 original source changed: {producer}")
+            manifest["original_pdf_artifact_run_id"] = 43467471975
+        require(class_at_commit == "299293e273dcefb80256eed2e17d2557db6aae52",
+                "Development PDF/A source class changed; requalification required")
+        manifest["certification_scope"] = (
+            "ARCHIVED_DEVELOPMENT_ORIGINAL_PDF_BYTES_ONLY"
+            if SCOPE == "archived-development" else "DEVELOPMENT_UNRELEASED_ONLY"
+        )
+    else:
+        require(manifest["source_class_git_blob"]
+                == "a73ef656de71d38ad30d7029ac3d86f852339950",
+                "R8.1 accepted class has changed; re-approval required")
+        manifest["certification_scope"] = "HISTORICAL_R8_1_CLASS_ONLY"
     (ROOT / "input-manifest.json").write_text(
         json.dumps(manifest, indent=2, ensure_ascii=False) + "\n", "utf-8")
-    print("R81-FINAL-PDFA-SOURCE status=PASS pdfs=28 pages=984 "
-          + "source_sha=" + expected_sha, flush=True)
+    label = ("ARCHIVED-DEVELOPMENT" if SCOPE == "archived-development"
+             else "DEVELOPMENT" if SCOPE == "development" else "FINAL")
+    print(f"R81-{label}-PDFA-SOURCE status=PASS pdfs=28 pages={expected_total_pages} "
+          + "source_sha=" + expected_sha
+          + " human_review=PENDING publication_authorized=false", flush=True)
 
 
 def verify():
+    require(SCOPE in ("historical", "development", "archived-development"),
+            "Unknown PDF/A evidence scope")
     manifest = json.loads((ROOT / "input-manifest.json").read_text("utf-8"))
+    expected_scope = (
+        "ARCHIVED_DEVELOPMENT_ORIGINAL_PDF_BYTES_ONLY"
+        if SCOPE == "archived-development"
+        else ("DEVELOPMENT_UNRELEASED_ONLY" if SCOPE == "development"
+              else "HISTORICAL_R8_1_CLASS_ONLY")
+    )
+    require(manifest.get("certification_scope") == expected_scope,
+            "PDF/A evidence scope mismatch")
     documents = {x["filename"]: x for x in manifest["documents"]}
     require(len(documents) == 28, "Invalid input count")
     for name, doc in documents.items():
@@ -180,12 +254,26 @@ def verify():
         "pdfa_2b_compliant": compliant_count,
         "pdfa_2b_noncompliant": 28 - compliant_count,
         "human_review": "PENDING", "publication_authorized": False,
-        "status": "PASS_EXTERNAL_PDF_A_2B" if compliant_count == 28
-                  else "BLOCKED_EXTERNAL_PDF_A_2B",
+        "status": (
+            ("PASS_ARCHIVED_DEVELOPMENT_EXTERNAL_PDF_A_2B"
+             if compliant_count == 28
+             else "BLOCKED_ARCHIVED_DEVELOPMENT_EXTERNAL_PDF_A_2B")
+            if SCOPE == "archived-development"
+            else (("PASS_DEVELOPMENT_EXTERNAL_PDF_A_2B"
+                   if compliant_count == 28
+                   else "BLOCKED_DEVELOPMENT_EXTERNAL_PDF_A_2B")
+                  if SCOPE == "development"
+                  else ("PASS_EXTERNAL_PDF_A_2B" if compliant_count == 28
+                        else "BLOCKED_EXTERNAL_PDF_A_2B"))
+        ),
     })
     (ROOT / "results.json").write_text(
         json.dumps(manifest, indent=2, ensure_ascii=False) + "\n", "utf-8")
-    print("R81-FINAL-PDFA-EVIDENCE status=" + manifest["status"]
+    print(("R81-ARCHIVED-DEVELOPMENT-PDFA-EVIDENCE"
+           if SCOPE == "archived-development"
+           else "R81-DEVELOPMENT-PDFA-EVIDENCE" if SCOPE == "development"
+           else "R81-FINAL-PDFA-EVIDENCE")
+          + " status=" + manifest["status"]
           + f" compliant={compliant_count} noncompliant={28-compliant_count}"
           + " human_review=PENDING publication_authorized=false",
           flush=True)

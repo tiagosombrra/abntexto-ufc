@@ -1,0 +1,61 @@
+name: v3.1.0 corrected-runtime 72-ID original archive byte audit
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths:
+      - abntexto-ufc.cls
+      - standards/api/public-api.json
+      - standards/api/i18n-per-identifier-proof-status.json
+      - standards/api/i18n-v310-runtime-proof-candidate.json
+      - standards/api/i18n-v310-bounded-functional-qualified.json
+      - standards/api/i18n-functional-evidence-crosswalk.json
+      - tests/integration/frontmatter/i18n-b4-integrated-backmatter-evidence.py
+      - tests/integration/frontmatter/i18n-b4-isolated-public-api-evidence.py
+      - tests/integration/objects/i18n-b4-inputminted-evidence.py
+      - tools/ci/audit-v310-runtime-candidate.py
+      - .github/workflows/v310-runtime-proof-audit.yml
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: v310-runtime-audit-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  original-proof-archives:
+    name: SHA-bound 72-ID corrected-runtime archive audit (candidate only)
+    if: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    env:
+      GH_TOKEN: ${{ github.token }}
+      SOURCE_COMMIT_SHA: ${{ github.event.pull_request.head.sha }}
+    steps:
+      - name: Checkout exact pull request with commit history
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Verify exact source, class, 72 identifiers and mutation controls
+        run: |
+          set -euo pipefail
+          python3 tools/ci/audit-v310-runtime-candidate.py --self-test \
+            --report artifacts/v310-runtime-audit/preflight.json
+      - name: Fetch original ten GitHub ZIPs and independently audit their bytes
+        run: |
+          set -euo pipefail
+          python3 tools/ci/audit-v310-runtime-candidate.py \
+            --archives artifacts/v310-runtime-audit/archives \
+            --download \
+            --report artifacts/v310-runtime-audit/original-archive-audit.json
+      - name: Preserve source-bound proof report without republishing old ZIPs
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: v310-runtime-72-candidate-byte-audit-${{ github.run_id }}
+          path: |
+            artifacts/v310-runtime-audit/preflight.json
+            artifacts/v310-runtime-audit/original-archive-audit.json
+          retention-days: 30
+          if-no-files-found: warn

@@ -18,12 +18,18 @@ on:
       - tests/integration/frontmatter/i18n-b1-family-evidence.py
       - tests/integration/frontmatter/i18n-b1-final-five-evidence.py
       - tests/integration/frontmatter/i18n-b3-integrated-list-evidence.py
+      - tests/integration/frontmatter/i18n-b4-integrated-backmatter-evidence.py
+      - tests/integration/frontmatter/i18n-b4-isolated-public-api-evidence.py
       - tests/integration/frontmatter/i18n-b1-auxiliary-pdf-evidence.py
       - tests/integration/layout/font-config.sh
       - tests/integration/frontmatter/i18n-api-inventory.py
       - tests/integration/frontmatter/i18n-evidence-crosswalk.py
       - tests/integration/frontmatter/i18n-per-identifier-proof-status.py
       - standards/api/i18n-per-identifier-proof-status.json
+      - standards/api/i18n-v310-runtime-proof-candidate.json
+      - standards/api/i18n-v310-bounded-functional-qualified.json
+      - tools/ci/audit-v310-runtime-candidate.py
+      - .github/workflows/v310-runtime-proof-audit.yml
       - tests/integration/frontmatter/i18n-executable-driver-evidence.py
       - tests/integration/frontmatter/i18n-executable-driver-evidence.json
       - tests/run.py
@@ -54,12 +60,18 @@ on:
       - tests/integration/frontmatter/i18n-b1-family-evidence.py
       - tests/integration/frontmatter/i18n-b1-final-five-evidence.py
       - tests/integration/frontmatter/i18n-b3-integrated-list-evidence.py
+      - tests/integration/frontmatter/i18n-b4-integrated-backmatter-evidence.py
+      - tests/integration/frontmatter/i18n-b4-isolated-public-api-evidence.py
       - tests/integration/frontmatter/i18n-b1-auxiliary-pdf-evidence.py
       - tests/integration/layout/font-config.sh
       - tests/integration/frontmatter/i18n-api-inventory.py
       - tests/integration/frontmatter/i18n-evidence-crosswalk.py
       - tests/integration/frontmatter/i18n-per-identifier-proof-status.py
       - standards/api/i18n-per-identifier-proof-status.json
+      - standards/api/i18n-v310-runtime-proof-candidate.json
+      - standards/api/i18n-v310-bounded-functional-qualified.json
+      - tools/ci/audit-v310-runtime-candidate.py
+      - .github/workflows/v310-runtime-proof-audit.yml
       - tests/integration/frontmatter/i18n-executable-driver-evidence.py
       - tests/integration/frontmatter/i18n-executable-driver-evidence.json
       - tests/run.py
@@ -73,19 +85,117 @@ on:
       - .github/workflows/integrated-manuscript-locale-matrix.yml
 permissions:
   contents: read
+  actions: read
 concurrency:
   group: integrated-i18n-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 jobs:
+  # Produce new-runtime evidence without bypassing the original fail-closed ledger.
+  # This independent diagnostic runs only when the normal preflight rejects a PR.
+  # The workflow must remain FAILED until source-bound API recertification is done.
+  runtime-proof-probe:
+    name: Runtime requalification probe / ${{ matrix.locale }} (not certified)
+    needs: preflight
+    if: ${{ always() && github.event_name == 'pull_request' && needs.preflight.result == 'failure' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 42
+    strategy:
+      fail-fast: false
+      matrix:
+        locale: [pt, en, es, fr]
+    steps:
+      - name: Checkout exact candidate source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - name: Rebuild original per-profile and per-identifier evidence (no ledger promotion)
+        uses: xu-cheng/texlive-action@22c04326a5d855880f9d39bb955138bf11c6df80 # v3
+        env:
+          SOURCE_COMMIT_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        with:
+          texlive_version: 2026
+          os: debian
+          run: |
+            export DEBIAN_FRONTEND=noninteractive
+            apt-get update -y
+            apt-get install -y --no-install-recommends make poppler-utils qpdf
+            git config --global --add safe.directory "$PWD"
+            python3 tests/integration/frontmatter/run-integrated-locale.py --locale ${{ matrix.locale }}
+            python3 tests/integration/frontmatter/i18n-b1-family-evidence.py --locale ${{ matrix.locale }}
+            python3 tests/integration/frontmatter/i18n-b3-integrated-list-evidence.py --locale ${{ matrix.locale }}
+            # Reproduce the other original 58-ID families at the changed class SHA.
+            python3 tests/integration/frontmatter/i18n-pretextual-command-evidence.py --locale ${{ matrix.locale }}
+            python3 tests/integration/frontmatter/i18n-b2-remaining-summary-evidence.py --locale ${{ matrix.locale }}
+            python3 tests/integration/frontmatter/i18n-b2-family-evidence.py --locale ${{ matrix.locale }}
+            python3 tests/integration/frontmatter/i18n-list-environment-evidence.py --locale ${{ matrix.locale }}
+            python3 tests/integration/frontmatter/i18n-optional-environment-evidence.py --locale ${{ matrix.locale }}
+            python3 tests/integration/frontmatter/i18n-b1-final-five-evidence.py --locale ${{ matrix.locale }}
+            # B4 work is transplanted from PR #589 without its old-class ledger.
+            python3 tests/integration/frontmatter/i18n-b4-integrated-backmatter-evidence.py --locale ${{ matrix.locale }}
+            python3 tests/integration/frontmatter/i18n-b4-isolated-public-api-evidence.py --locale ${{ matrix.locale }}
+      - name: Archive original candidate PDFs and provenance receipts
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: runtime-requalification-${{ matrix.locale }}-${{ github.run_id }}
+          path: artifacts/integrated-i18n/${{ matrix.locale }}/**
+          retention-days: 21
+          if-no-files-found: warn
+  # Do not fake a green ledger by skipping the original SHA-bound preflight.
+  # These 32+32 PDFs independently requalify B1 auxiliary configuration routes.
+  runtime-requalification-aux:
+    name: Runtime B1 auxiliary diagnostic / ${{ matrix.suite }} (not certified)
+    needs: preflight
+    if: ${{ always() && github.event_name == 'pull_request' && needs.preflight.result == 'failure' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 42
+    strategy:
+      fail-fast: false
+      matrix:
+        suite: [dual, coat]
+    steps:
+      - name: Checkout exact candidate source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - name: Rebuild and audit 32 source-bound actual PDFs (no ledger promotion)
+        uses: xu-cheng/texlive-action@22c04326a5d855880f9d39bb955138bf11c6df80 # v3
+        env:
+          SOURCE_COMMIT_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        with:
+          texlive_version: 2026
+          os: debian
+          run: |
+            export DEBIAN_FRONTEND=noninteractive
+            apt-get update -y
+            apt-get install -y --no-install-recommends poppler-utils qpdf
+            git config --global --add safe.directory "$PWD"
+            if [ "${{ matrix.suite }}" = "dual" ]; then
+              python3 tests/integration/frontmatter/dual-language-evidence.py
+            else
+              python3 tests/integration/frontmatter/coat-of-arms-evidence.py
+            fi
+            python3 tests/integration/frontmatter/i18n-b1-auxiliary-pdf-evidence.py --suite ${{ matrix.suite }}
+      - name: Archive original PDF and source SHA256 observations
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: runtime-b1-aux-${{ matrix.suite }}-${{ github.run_id }}
+          path: artifacts/integrated-i18n/${{ matrix.suite == 'dual' && 'dual-language' || 'coat-path' }}/**
+          retention-days: 21
+          if-no-files-found: warn
   preflight:
     name: Fast complete-profile source/locale contract
     runs-on: ubuntu-24.04
-    timeout-minutes: 3
+    timeout-minutes: 5
     steps:
       - name: Checkout exact source
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
           persist-credentials: false
       - name: Check all supported public tags, macros and environments
         run: python3 tests/integration/frontmatter/i18n-api-inventory.py
@@ -93,10 +203,25 @@ jobs:
         env:
           SOURCE_COMMIT_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
         run: python3 tests/integration/frontmatter/i18n-evidence-crosswalk.py --report
-      - name: Audit 72 per-identifier proof results and 42 fail-closed mutations
+      - name: Audit 72 per-identifier proof receipts against the actual class blob
         env:
           SOURCE_COMMIT_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
-        run: python3 tests/integration/frontmatter/i18n-per-identifier-proof-status.py --report
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          actual_blob="$(git hash-object abntexto-ufc.cls)"
+          if [ "$actual_blob" = "a73ef656de71d38ad30d7029ac3d86f852339950" ]; then
+            # Preserve the original 58/72 historical validator unchanged.
+            python3 tests/integration/frontmatter/i18n-per-identifier-proof-status.py --report
+          elif [ "$actual_blob" = "299293e273dcefb80256eed2e17d2557db6aae52" ]; then
+            # A corrected runtime needs fresh original-byte, named-ID evidence.
+            python3 tools/ci/audit-v310-runtime-candidate.py --self-test \
+              --download --archives artifacts/validation/v310-original-archives \
+              --report artifacts/validation/i18n-per-identifier-proof-status.json
+          else
+            echo "I18N-ITEM-STATUS status=FAIL reason=unknown-uncertified-runtime-blob:$actual_blob"
+            exit 1
+          fi
       - name: Verify six executable test relationships against actual runner registration
         env:
           SOURCE_COMMIT_SHA: ${{ github.event.pull_request.head.sha || github.sha }}

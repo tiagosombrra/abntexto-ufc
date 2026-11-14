@@ -38,6 +38,16 @@ The maintainer selected v3.1.0 as the next backward-compatible minor development
 
 First scoped source correction #487 restores word boundaries in default metadata created under `\\ExplSyntaxOn`, and validates PDF output for the new candidate. Draft documentation says `development preview`, never implying CTAN submission/approval. No historical published artifact may be rebuilt or retargeted.
 
+### R8.1 v3.1.0 — technical PDF correction and original-byte evidence (2026-11-13)
+
+Draft [PR #592](https://github.com/tiagosombrra/abntexto-ufc/pull/592) retains `abntexto-ufc.cls` Git blob `299293e273dcefb80256eed2e17d2557db6aae52` and a separate **72/72 source-bound, bounded functional API evidence register**; its original class `58 PASS / 14 PENDING` history stays unmodified. The new-class approval remains limited to the tested positive and negative PDF scenarios.
+
+The preliminary editorial R8.1 review detected a reproducible [12-document orphan native-longtable row defect (#593)](https://github.com/tiagosombrra/abntexto-ufc/issues/593) in EN/ES. The editorial generator was corrected without changing the class or the R4 85-row stress corpus. The **28 original corrected PDFs** were produced at source `de99db499cbc5bb78097f415fb91e3bb3ca3128a`, GitHub [run #43467471975](https://github.com/tiagosombrra/abntexto-ufc/actions/runs/43467471975): **972 physical pages**, 12 orphan table continuation pages before / 0 after; PT 246, EN 240, ES 240, FR 246. Their actual original ZIP and document SHA256 receipts are linked by the [R8.1 reviewer packet #43469253970](https://github.com/tiagosombrra/abntexto-ufc/actions/runs/43469253970), containing 972 **PENDING** individual page decisions.
+
+An independent [official veraPDF-2b original-byte audit #43470720979](https://github.com/tiagosombrra/abntexto-ufc/actions/runs/43470720979) confirms **28/28 conformant and 0 nonconformant** on those **exact same PDF SHA256 bytes** from reviewer packet, original report artifact `14060196996`. A subsequent 28-PDF development run on a different Git commit is distinct, even when visually equivalent. No human or institutional acceptance is inferred.
+
+**Outstanding release gates:** R8.1 human visual/normative/linguistic inspection of 28 documents and all 972 pages, explicit responsible-maintainer acceptance tied to source/PDF SHA256, final-head green Static/Integration/Release and postmerge verification. Historic v3.0.5 assets remain immutable; v3.1.0 `UNRELEASED`, `publication_authorized=false`. No protected merge, tag, Release or CTAN submission has been authorized.
+
 ## Certified v3.0.4 publication evidence
 
 The published source `7e176fd5472925b519d469a9a756330f4851f0b3` passed:

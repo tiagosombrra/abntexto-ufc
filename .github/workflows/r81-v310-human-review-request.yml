@@ -1,0 +1,51 @@
+name: R8.1 corrected-runtime human PDF review request
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths:
+      - abntexto-ufc.cls
+      - tools/review/prepare_v310_r81_human_review.py
+      - .github/workflows/r81-v310-human-review-request.yml
+      - docs/R81-V310-HUMAN-REVIEW.md
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: r81-v310-human-review-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  reviewer-packet:
+    name: Prepare 28 actual PDF receipts and 972 pending page decisions
+    if: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: Checkout candidate source with original editorial PDF commit
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Install independent PDF structure and page-count verifiers
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends qpdf poppler-utils
+      - name: Audit exact original 28 source-bound PDFs and create pending review packet
+        run: |
+          set -euo pipefail
+          python3 tools/review/prepare_v310_r81_human_review.py --self-test
+          python3 tools/review/prepare_v310_r81_human_review.py \
+            --download --archives artifacts/r81-v310-human-review/original-zips
+      - name: Keep reviewer packet separate from original PDF archives and human signoff
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: r81-v310-pending-review-request-${{ github.run_id }}
+          path: |
+            artifacts/r81-v310-human-review/request.json
+            artifacts/r81-v310-human-review/REVIEW-REQUEST.md
+          retention-days: 30
+          if-no-files-found: warn

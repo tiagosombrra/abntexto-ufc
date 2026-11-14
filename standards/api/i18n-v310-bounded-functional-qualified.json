@@ -1,0 +1,1527 @@
+{
+  "schema_version": 1,
+  "description": "New class source-bound bounded functional qualification for 72 public APIs. Does not inherit historical class approval. Only PDF functional predicates; no normative, visual, linguistic, institutional, R8.1 or release approval.",
+  "certification_boundary": "SOURCE_BOUND_BOUNDED_FUNCTIONAL_PDF_ONLY",
+  "certification_state": "FUNCTIONAL_BOUNDED_ACCEPTED_FROM_INDEPENDENT_ORIGINAL_BYTE_AUDIT",
+  "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+  "class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+  "crosswalk": "standards/api/i18n-functional-evidence-crosswalk.json",
+  "public_api": "standards/api/public-api.json",
+  "immutable_historical_ledger": "standards/api/i18n-per-identifier-proof-status.json",
+  "candidate_registry": "standards/api/i18n-v310-runtime-proof-candidate.json",
+  "audit": {
+    "workflow_run_id": 43442738972,
+    "job_id": 131944234081,
+    "report_artifact_id": 14047290868,
+    "report_artifact_sha256": "6023e5a42147479d674166509ca3f884378e8e7e8986a5679d840d0c240d0d79",
+    "original_zip_count": 10,
+    "original_pdf_count": 310,
+    "sha256_reference_count": 4952,
+    "source_shas_equal_for_13_runners": true,
+    "negative_controls": "CI verified; candidate ledger mutants=4"
+  },
+  "summary": {
+    "PASS": 72,
+    "PENDING": 0,
+    "NA": 0
+  },
+  "human_normative_linguistic_review": "PENDING",
+  "R81_editorial_visual_acceptance": "PENDING",
+  "global_internationalization_acceptance": "PENDING",
+  "publication_authorized": false,
+  "release_candidate_state": "UNRELEASED",
+  "suites": {
+    "core-lists-12": {
+      "runner": "tests/integration/frontmatter/i18n-list-environment-evidence.py",
+      "negative_controls": 15,
+      "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+      "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+      "artifact_files": [
+        "requal-pt-43427522352.zip",
+        "requal-en-43427522352.zip",
+        "requal-es-43427522352.zip",
+        "requal-fr-43427522352.zip"
+      ],
+      "proof_scope": "ONE_ISOLATED_PDF_PER_ENVIRONMENT_AND_LOCALE",
+      "qualification": "CANDIDATE_ORIGINAL_BYTE_AUDIT_ONLY"
+    },
+    "optional-env-12": {
+      "runner": "tests/integration/frontmatter/i18n-optional-environment-evidence.py",
+      "negative_controls": 22,
+      "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+      "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+      "artifact_files": [
+        "requal-pt-43427522352.zip",
+        "requal-en-43427522352.zip",
+        "requal-es-43427522352.zip",
+        "requal-fr-43427522352.zip"
+      ],
+      "proof_scope": "ONE_ISOLATED_PDF_PER_ENVIRONMENT_AND_LOCALE",
+      "qualification": "CANDIDATE_ORIGINAL_BYTE_AUDIT_ONLY"
+    },
+    "b2-family-12": {
+      "runner": "tests/integration/frontmatter/i18n-b2-family-evidence.py",
+      "negative_controls": 26,
+      "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+      "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+      "artifact_files": [
+        "requal-pt-43427522352.zip",
+        "requal-en-43427522352.zip",
+        "requal-es-43427522352.zip",
+        "requal-fr-43427522352.zip"
+      ],
+      "proof_scope": "TWELVE_PRETEXTUAL_COMMANDS_FOUR_LOCALE_REAL_PDFS",
+      "qualification": "CANDIDATE_ORIGINAL_BYTE_AUDIT_ONLY"
+    },
+    "b2-summary-remaining": {
+      "runner": "tests/integration/frontmatter/i18n-b2-remaining-summary-evidence.py",
+      "negative_controls": 30,
+      "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+      "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+      "artifact_files": [
+        "requal-pt-43427522352.zip",
+        "requal-en-43427522352.zip",
+        "requal-es-43427522352.zip",
+        "requal-fr-43427522352.zip"
+      ],
+      "proof_scope": "FOUR_SUMMARY_COMMANDS_APPLICABLE_LOCALE_REAL_PDFS",
+      "qualification": "CANDIDATE_ORIGINAL_BYTE_AUDIT_ONLY"
+    },
+    "b1-integrated-15": {
+      "runner": "tests/integration/frontmatter/i18n-b1-family-evidence.py",
+      "negative_controls": 14,
+      "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+      "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+      "artifact_files": [
+        "requal-pt-43427522352.zip",
+        "requal-en-43427522352.zip",
+        "requal-es-43427522352.zip",
+        "requal-fr-43427522352.zip"
+      ],
+      "proof_scope": "FIFTEEN_B1_PUBLIC_SETUP_CORE_FOUR_LOCALE_SEVEN_PROFILE_PDFS",
+      "qualification": "CANDIDATE_ORIGINAL_BYTE_AUDIT_ONLY"
+    },
+    "b1-auxiliary-2": {
+      "runner": "tests/integration/frontmatter/i18n-b1-auxiliary-pdf-evidence.py",
+      "negative_controls": 4,
+      "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+      "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+      "artifact_files": [
+        "requal-b1-dual-43427522352.zip",
+        "requal-b1-coat-43427522352.zip"
+      ],
+      "proof_scope": "TWO_B1_CONFIG_OPTIONS_SIXTY_FOUR_REAL_PDFS",
+      "qualification": "CANDIDATE_ORIGINAL_BYTE_AUDIT_ONLY"
+    },
+    "b1-optional-config-3": {
+      "runner": "tests/integration/objects/i18n-b1-optional-config-evidence.py",
+      "negative_controls": 10,
+      "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+      "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+      "artifact_files": [
+        "optional-pt-43427522327.zip",
+        "optional-en-43427522327.zip",
+        "optional-es-43427522327.zip",
+        "optional-fr-43427522327.zip"
+      ],
+      "proof_scope": "THREE_B1_OPTIONAL_CONFIG_FOUR_LOCALE_TWELVE_REAL_PDFS",
+      "qualification": "CANDIDATE_ORIGINAL_BYTE_AUDIT_ONLY"
+    },
+    "b1-final-five": {
+      "runner": "tests/integration/frontmatter/i18n-b1-final-five-evidence.py",
+      "negative_controls": 4,
+      "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+      "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+      "artifact_files": [
+        "requal-pt-43427522352.zip",
+        "requal-en-43427522352.zip",
+        "requal-es-43427522352.zip",
+        "requal-fr-43427522352.zip"
+      ],
+      "proof_scope": "FIVE_B1_CORE_OPTIONS_FOUR_LOCALE_PDFTEX_LUATEX_RECEIPTS",
+      "qualification": "CANDIDATE_ORIGINAL_BYTE_AUDIT_ONLY"
+    },
+    "b3-integrated-9": {
+      "runner": "tests/integration/frontmatter/i18n-b3-integrated-list-evidence.py",
+      "negative_controls": 24,
+      "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+      "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+      "artifact_files": [
+        "requal-pt-43427522352.zip",
+        "requal-en-43427522352.zip",
+        "requal-es-43427522352.zip",
+        "requal-fr-43427522352.zip"
+      ],
+      "proof_scope": "NINE_B3_PRETEXTUAL_LISTS_FOUR_LOCALE_SEVEN_PROFILE_REAL_PDFS",
+      "qualification": "CANDIDATE_ORIGINAL_BYTE_AUDIT_ONLY"
+    },
+    "b3-optional-2": {
+      "runner": "tests/integration/objects/i18n-b3-optional-list-evidence.py",
+      "negative_controls": 14,
+      "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+      "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+      "artifact_files": [
+        "optional-pt-43427522327.zip",
+        "optional-en-43427522327.zip",
+        "optional-es-43427522327.zip",
+        "optional-fr-43427522327.zip"
+      ],
+      "proof_scope": "TWO_B3_OPTIONAL_LISTS_FOUR_LOCALE_THREE_PROFILE_REAL_PDFS",
+      "qualification": "CANDIDATE_ORIGINAL_BYTE_AUDIT_ONLY"
+    },
+    "b4-integrated-11": {
+      "runner": "tests/integration/frontmatter/i18n-b4-integrated-backmatter-evidence.py",
+      "negative_controls": 15,
+      "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+      "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+      "artifact_files": [
+        "requal-pt-43427522352.zip",
+        "requal-en-43427522352.zip",
+        "requal-es-43427522352.zip",
+        "requal-fr-43427522352.zip"
+      ],
+      "proof_scope": "ELEVEN_B4_BACKMATTER_SOURCE_AND_LEGACY_APIS_FOUR_LOCALE_SEVEN_PROFILE_REAL_PDFS",
+      "qualification": "CANDIDATE_ORIGINAL_BYTE_AUDIT_ONLY"
+    },
+    "b4-inputminted-1": {
+      "runner": "tests/integration/objects/i18n-b4-inputminted-evidence.py",
+      "negative_controls": 9,
+      "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+      "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+      "artifact_files": [
+        "optional-pt-43427522327.zip",
+        "optional-en-43427522327.zip",
+        "optional-es-43427522327.zip",
+        "optional-fr-43427522327.zip"
+      ],
+      "proof_scope": "ONE_B4_MINTED_IMPORTED_PYTHON_FOUR_LOCALE_THREE_OPTIONAL_REAL_PDFS",
+      "qualification": "CANDIDATE_ORIGINAL_BYTE_AUDIT_ONLY"
+    },
+    "b4-isolated-2": {
+      "runner": "tests/integration/frontmatter/i18n-b4-isolated-public-api-evidence.py",
+      "negative_controls": 18,
+      "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+      "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+      "artifact_files": [
+        "requal-pt-43427522352.zip",
+        "requal-en-43427522352.zip",
+        "requal-es-43427522352.zip",
+        "requal-fr-43427522352.zip"
+      ],
+      "proof_scope": "TWO_B4_ISOLATED_DIRECT_INPUTLISTING_AND_LEGACY_KEYWORDS_FOUR_LOCALE_REAL_PDFS",
+      "qualification": "CANDIDATE_ORIGINAL_BYTE_AUDIT_ONLY"
+    }
+  },
+  "original_artifacts": {
+    "requal-pt-43427522352.zip": {
+      "kind": "integrated",
+      "locale_or_suite": "pt",
+      "run_id": 43427522352,
+      "artifact_id": 14038459203,
+      "zip_sha256": "30da67d8d45b634a9800f579c58966b0775c33908b7c069e07111aefbfdc76b7",
+      "original_pdfs": 27
+    },
+    "requal-en-43427522352.zip": {
+      "kind": "integrated",
+      "locale_or_suite": "en",
+      "run_id": 43427522352,
+      "artifact_id": 14037189515,
+      "zip_sha256": "abd3a22bcdcb3679d06f285a6e99ac6e8971559bee0b1e0606d1adb754a0dee6",
+      "original_pdfs": 27
+    },
+    "requal-es-43427522352.zip": {
+      "kind": "integrated",
+      "locale_or_suite": "es",
+      "run_id": 43427522352,
+      "artifact_id": 14037464202,
+      "zip_sha256": "c7fa53c68951c2c85cd9c21b3bd6b121cad57fa120b3c1592bf54028f4bb1645",
+      "original_pdfs": 28
+    },
+    "requal-fr-43427522352.zip": {
+      "kind": "integrated",
+      "locale_or_suite": "fr",
+      "run_id": 43427522352,
+      "artifact_id": 14038339407,
+      "zip_sha256": "88d9a1d9f9de02179bc3a7437c052bbd157e9679ed295bd5361697b0661915b9",
+      "original_pdfs": 28
+    },
+    "requal-b1-dual-43427522352.zip": {
+      "kind": "auxiliary",
+      "locale_or_suite": "dual",
+      "run_id": 43427522352,
+      "artifact_id": 14037438603,
+      "zip_sha256": "41574187ab46603fb2b637947e30ae20b2a3bb9959623a3d2b835f5c4c805baf",
+      "original_pdfs": 32
+    },
+    "requal-b1-coat-43427522352.zip": {
+      "kind": "auxiliary",
+      "locale_or_suite": "coat",
+      "run_id": 43427522352,
+      "artifact_id": 14038865046,
+      "zip_sha256": "12a754b8aa69ba30aa59195c2e82d4471b7d8829a9553c019c8b86286b190b26",
+      "original_pdfs": 32
+    },
+    "optional-pt-43427522327.zip": {
+      "kind": "optional",
+      "locale_or_suite": "pt",
+      "run_id": 43427522327,
+      "artifact_id": 14037753631,
+      "zip_sha256": "3db7e01907b7056f30c9830f4b9ec0da4c0bd7bda172e39559bac60d1ea1a59f",
+      "original_pdfs": 79
+    },
+    "optional-en-43427522327.zip": {
+      "kind": "optional",
+      "locale_or_suite": "en",
+      "run_id": 43427522327,
+      "artifact_id": 14037213638,
+      "zip_sha256": "648b6fd430a953712fc74ecceb9dac3201860e749d4abbffcdd8341244e9235d",
+      "original_pdfs": 19
+    },
+    "optional-es-43427522327.zip": {
+      "kind": "optional",
+      "locale_or_suite": "es",
+      "run_id": 43427522327,
+      "artifact_id": 14036679351,
+      "zip_sha256": "cc794a207ab6881fd59a0be52451b7452e5e225c24e81ee4db02853f8c6011ce",
+      "original_pdfs": 19
+    },
+    "optional-fr-43427522327.zip": {
+      "kind": "optional",
+      "locale_or_suite": "fr",
+      "run_id": 43427522327,
+      "artifact_id": 14038183082,
+      "zip_sha256": "2151a70fd152b8eda8dd5d6f050bb775751a68e13913b9de2ada11012d13ff4a",
+      "original_pdfs": 19
+    }
+  },
+  "entries": {
+    "setup_option_identifiers": {
+      "type": {
+        "result": "PASS",
+        "qualification": "SOURCE_BOUND_BOUNDED_FUNCTIONAL_PDF_ONLY",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b1-integrated-15",
+        "evidence_source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "runtime_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "original_archive_names": [
+          "requal-pt-43427522352.zip",
+          "requal-en-43427522352.zip",
+          "requal-es-43427522352.zip",
+          "requal-fr-43427522352.zip"
+        ],
+        "human_normative_linguistic_review": "PENDING",
+        "publication_authorized": false
+      },
+      "document-language": {
+        "result": "PASS",
+        "qualification": "SOURCE_BOUND_BOUNDED_FUNCTIONAL_PDF_ONLY",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b1-integrated-15",
+        "evidence_source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "runtime_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "original_archive_names": [
+          "requal-pt-43427522352.zip",
+          "requal-en-43427522352.zip",
+          "requal-es-43427522352.zip",
+          "requal-fr-43427522352.zip"
+        ],
+        "human_normative_linguistic_review": "PENDING",
+        "publication_authorized": false
+      },
+      "labels-language": {
+        "result": "PASS",
+        "qualification": "SOURCE_BOUND_BOUNDED_FUNCTIONAL_PDF_ONLY",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b1-auxiliary-2",
+        "evidence_source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "runtime_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "candidate_test_file": "tests/integration/frontmatter/primary-document-locale-matrix.sh",
+        "original_archive_names": [
+          "requal-b1-dual-43427522352.zip",
+          "requal-b1-coat-43427522352.zip"
+        ],
+        "human_normative_linguistic_review": "PENDING",
+        "publication_authorized": false
+      },
+      "print-mode": {
+        "result": "PASS",
+        "qualification": "SOURCE_BOUND_BOUNDED_FUNCTIONAL_PDF_ONLY",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b1-integrated-15",
+        "evidence_source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "runtime_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "original_archive_names": [
+          "requal-pt-43427522352.zip",
+          "requal-en-43427522352.zip",
+          "requal-es-43427522352.zip",
+          "requal-fr-43427522352.zip"
+        ],
+        "human_normative_linguistic_review": "PENDING",
+        "publication_authorized": false
+      },
+      "cover": {
+        "result": "PASS",
+        "qualification": "SOURCE_BOUND_BOUNDED_FUNCTIONAL_PDF_ONLY",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b1-integrated-15",
+        "evidence_source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "runtime_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "original_archive_names": [
+          "requal-pt-43427522352.zip",
+          "requal-en-43427522352.zip",
+          "requal-es-43427522352.zip",
+          "requal-fr-43427522352.zip"
+        ],
+        "human_normative_linguistic_review": "PENDING",
+        "publication_authorized": false
+      },
+      "catalog-card": {
+        "result": "PASS",
+        "qualification": "SOURCE_BOUND_BOUNDED_FUNCTIONAL_PDF_ONLY",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b1-final-five",
+        "evidence_source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "runtime_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "original_archive_names": [
+          "requal-pt-43427522352.zip",
+          "requal-en-43427522352.zip",
+          "requal-es-43427522352.zip",
+          "requal-fr-43427522352.zip"
+        ],
+        "human_normative_linguistic_review": "PENDING",
+        "publication_authorized": false
+      },
+      "coat-of-arms": {
+        "result": "PASS",
+        "qualification": "SOURCE_BOUND_BOUNDED_FUNCTIONAL_PDF_ONLY",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b1-auxiliary-2",
+        "evidence_source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "runtime_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "original_archive_names": [
+          "requal-b1-dual-43427522352.zip",
+          "requal-b1-coat-43427522352.zip"
+        ],
+        "human_normative_linguistic_review": "PENDING",
+        "publication_authorized": false
+      },
+      "advisor-feminine-label": {
+        "result": "PASS",
+        "qualification": "SOURCE_BOUND_BOUNDED_FUNCTIONAL_PDF_ONLY",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b1-integrated-15",
+        "evidence_source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "runtime_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "original_archive_names": [
+          "requal-pt-43427522352.zip",
+          "requal-en-43427522352.zip",
+          "requal-es-43427522352.zip",
+          "requal-fr-43427522352.zip"
+        ],
+        "human_normative_linguistic_review": "PENDING",
+        "publication_authorized": false
+      },
+      "coadvisor-feminine-label": {
+        "result": "PASS",
+        "qualification": "SOURCE_BOUND_BOUNDED_FUNCTIONAL_PDF_ONLY",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b1-integrated-15",
+        "evidence_source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "runtime_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "original_archive_names": [
+          "requal-pt-43427522352.zip",
+          "requal-en-43427522352.zip",
+          "requal-es-43427522352.zip",
+          "requal-fr-43427522352.zip"
+        ],
+        "human_normative_linguistic_review": "PENDING",
+        "publication_authorized": false
+      },
+      "font": {
+        "result": "PASS",
+        "qualification": "SOURCE_BOUND_BOUNDED_FUNCTIONAL_PDF_ONLY",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b1-final-five",
+        "evidence_source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "runtime_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "candidate_test_file": "tests/integration/frontmatter/frontmatter-summary-languages.sh",
+        "original_archive_names": [
+          "requal-pt-43427522352.zip",
+          "requal-en-43427522352.zip",
+          "requal-es-43427522352.zip",
+          "requal-fr-43427522352.zip"
+        ],
+        "human_normative_linguistic_review": "PENDING",
+        "publication_authorized": false
+      },
+      "strict-font": {
+        "result": "PASS",
+        "qualification": "SOURCE_BOUND_BOUNDED_FUNCTIONAL_PDF_ONLY",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b1-final-five",
+        "evidence_source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "runtime_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "candidate_test_file": "tests/integration/layout/font-config.sh",
+        "original_archive_names": [
+          "requal-pt-43427522352.zip",
+          "requal-en-43427522352.zip",
+          "requal-es-43427522352.zip",
+          "requal-fr-43427522352.zip"
+        ],
+        "human_normative_linguistic_review": "PENDING",
+        "publication_authorized": false
+      },
+      "tables": {
+        "result": "PASS",
+        "qualification": "SOURCE_BOUND_BOUNDED_FUNCTIONAL_PDF_ONLY",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b1-optional-config-3",
+        "evidence_source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "runtime_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "candidate_test_file": "tests/integration/objects/optional-locale-evidence.py",
+        "original_archive_names": [
+          "optional-pt-43427522327.zip",
+          "optional-en-43427522327.zip",
+          "optional-es-43427522327.zip",
+          "optional-fr-43427522327.zip"
+        ],
+        "human_normative_linguistic_review": "PENDING",
+        "publication_authorized": false
+      },
+      "code": {
+        "result": "PASS",
+        "qualification": "SOURCE_BOUND_BOUNDED_FUNCTIONAL_PDF_ONLY",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b1-optional-config-3",
+        "evidence_source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "runtime_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "original_archive_names": [
+          "optional-pt-43427522327.zip",
+          "optional-en-43427522327.zip",
+          "optional-es-43427522327.zip",
+          "optional-fr-43427522327.zip"
+        ],
+        "human_normative_linguistic_review": "PENDING",
+        "publication_authorized": false
+      },
+      "algorithms": {
+        "result": "PASS",
+        "qualification": "SOURCE_BOUND_BOUNDED_FUNCTIONAL_PDF_ONLY",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b1-optional-config-3",
+        "evidence_source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "runtime_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "candidate_test_file": "tests/integration/objects/optional-locale-evidence.py",
+        "original_archive_names": [
+          "optional-pt-43427522327.zip",
+          "optional-en-43427522327.zip",
+          "optional-es-43427522327.zip",
+          "optional-fr-43427522327.zip"
+        ],
+        "human_normative_linguistic_review": "PENDING",
+        "publication_authorized": false
+      },
+      "glossary": {
+        "result": "PASS",
+        "qualification": "SOURCE_BOUND_BOUNDED_FUNCTIONAL_PDF_ONLY",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b1-integrated-15",
+        "evidence_source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "runtime_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "original_archive_names": [
+          "requal-pt-43427522352.zip",
+          "requal-en-43427522352.zip",
+          "requal-es-43427522352.zip",
+          "requal-fr-43427522352.zip"
+        ],
+        "human_normative_linguistic_review": "PENDING",
+        "publication_authorized": false
+      },
+      "index": {
+        "result": "PASS",
+        "qualification": "SOURCE_BOUND_BOUNDED_FUNCTIONAL_PDF_ONLY",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b1-integrated-15",
+        "evidence_source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "runtime_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "original_archive_names": [
+          "requal-pt-43427522352.zip",
+          "requal-en-43427522352.zip",
+          "requal-es-43427522352.zip",
+          "requal-fr-43427522352.zip"
+        ],
+        "human_normative_linguistic_review": "PENDING",
+        "publication_authorized": false
+      },
+      "initial-page": {
+        "result": "PASS",
+        "qualification": "SOURCE_BOUND_BOUNDED_FUNCTIONAL_PDF_ONLY",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b1-final-five",
+        "evidence_source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "runtime_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "candidate_test_file": "tests/integration/profiles/multivolume.sh",
+        "original_archive_names": [
+          "requal-pt-43427522352.zip",
+          "requal-en-43427522352.zip",
+          "requal-es-43427522352.zip",
+          "requal-fr-43427522352.zip"
+        ],
+        "human_normative_linguistic_review": "PENDING",
+        "publication_authorized": false
+      }
+    },
+    "public_commands": {
+      "\\ufcsetup": {
+        "result": "PASS",
+        "qualification": "SOURCE_BOUND_BOUNDED_FUNCTIONAL_PDF_ONLY",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b1-integrated-15",
+        "evidence_source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "runtime_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "original_archive_names": [
+          "requal-pt-43427522352.zip",
+          "requal-en-43427522352.zip",
+          "requal-es-43427522352.zip",
+          "requal-fr-43427522352.zip"
+        ],
+        "human_normative_linguistic_review": "PENDING",
+        "publication_authorized": false
+      },
+      "\\ufcDocumentType": {
+        "result": "PASS",
+        "qualification": "SOURCE_BOUND_BOUNDED_FUNCTIONAL_PDF_ONLY",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b1-integrated-15",
+        "evidence_source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "runtime_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "original_archive_names": [
+          "requal-pt-43427522352.zip",
+          "requal-en-43427522352.zip",
+          "requal-es-43427522352.zip",
+          "requal-fr-43427522352.zip"
+        ],
+        "human_normative_linguistic_review": "PENDING",
+        "publication_authorized": false
+      },
+      "\\ufcPrintMode": {
+        "result": "PASS",
+        "qualification": "SOURCE_BOUND_BOUNDED_FUNCTIONAL_PDF_ONLY",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b1-integrated-15",
+        "evidence_source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "runtime_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "original_archive_names": [
+          "requal-pt-43427522352.zip",
+          "requal-en-43427522352.zip",
+          "requal-es-43427522352.zip",
+          "requal-fr-43427522352.zip"
+        ],
+        "human_normative_linguistic_review": "PENDING",
+        "publication_authorized": false
+      },
+      "\\ufcMeta": {
+        "result": "PASS",
+        "qualification": "SOURCE_BOUND_BOUNDED_FUNCTIONAL_PDF_ONLY",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b1-integrated-15",
+        "evidence_source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "runtime_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "original_archive_names": [
+          "requal-pt-43427522352.zip",
+          "requal-en-43427522352.zip",
+          "requal-es-43427522352.zip",
+          "requal-fr-43427522352.zip"
+        ],
+        "human_normative_linguistic_review": "PENDING",
+        "publication_authorized": false
+      },
+      "\\ufcIfProjectTF": {
+        "result": "PASS",
+        "qualification": "SOURCE_BOUND_BOUNDED_FUNCTIONAL_PDF_ONLY",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b1-integrated-15",
+        "evidence_source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "runtime_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "original_archive_names": [
+          "requal-pt-43427522352.zip",
+          "requal-en-43427522352.zip",
+          "requal-es-43427522352.zip",
+          "requal-fr-43427522352.zip"
+        ],
+        "human_normative_linguistic_review": "PENDING",
+        "publication_authorized": false
+      },
+      "\\ufcIfAnonymizedProjectTF": {
+        "result": "PASS",
+        "qualification": "SOURCE_BOUND_BOUNDED_FUNCTIONAL_PDF_ONLY",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b1-integrated-15",
+        "evidence_source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "runtime_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "original_archive_names": [
+          "requal-pt-43427522352.zip",
+          "requal-en-43427522352.zip",
+          "requal-es-43427522352.zip",
+          "requal-fr-43427522352.zip"
+        ],
+        "human_normative_linguistic_review": "PENDING",
+        "publication_authorized": false
+      },
+      "\\ufcMathFontPolicy": {
+        "result": "PASS",
+        "qualification": "SOURCE_BOUND_BOUNDED_FUNCTIONAL_PDF_ONLY",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b1-final-five",
+        "evidence_source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "runtime_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "candidate_test_file": "tests/documents/mathematics.tex",
+        "original_archive_names": [
+          "requal-pt-43427522352.zip",
+          "requal-en-43427522352.zip",
+          "requal-es-43427522352.zip",
+          "requal-fr-43427522352.zip"
+        ],
+        "human_normative_linguistic_review": "PENDING",
+        "publication_authorized": false
+      },
+      "\\ufcPrintCover": {
+        "result": "PASS",
+        "qualification": "SOURCE_BOUND_BOUNDED_FUNCTIONAL_PDF_ONLY",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b2-family-12",
+        "evidence_source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "runtime_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "original_archive_names": [
+          "requal-pt-43427522352.zip",
+          "requal-en-43427522352.zip",
+          "requal-es-43427522352.zip",
+          "requal-fr-43427522352.zip"
+        ],
+        "human_normative_linguistic_review": "PENDING",
+        "publication_authorized": false
+      },
+      "\\ufcPrintTitlePage": {
+        "result": "PASS",
+        "qualification": "SOURCE_BOUND_BOUNDED_FUNCTIONAL_PDF_ONLY",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b2-family-12",
+        "evidence_source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "runtime_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "original_archive_names": [
+          "requal-pt-43427522352.zip",
+          "requal-en-43427522352.zip",
+          "requal-es-43427522352.zip",
+          "requal-fr-43427522352.zip"
+        ],
+        "human_normative_linguistic_review": "PENDING",
+        "publication_authorized": false
+      },
+      "\\ufcPrintApprovalPage": {
+        "result": "PASS",
+        "qualification": "SOURCE_BOUND_BOUNDED_FUNCTIONAL_PDF_ONLY",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b2-family-12",
+        "evidence_source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "runtime_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "original_archive_names": [
+          "requal-pt-43427522352.zip",
+          "requal-en-43427522352.zip",
+          "requal-es-43427522352.zip",
+          "requal-fr-43427522352.zip"
+        ],
+        "human_normative_linguistic_review": "PENDING",
+        "publication_authorized": false
+      },
+      "\\ufcPrintCatalogCard": {
+        "result": "PASS",
+        "qualification": "SOURCE_BOUND_BOUNDED_FUNCTIONAL_PDF_ONLY",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b2-family-12",
+        "evidence_source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "runtime_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "candidate_test_file": "tests/documents/catalog-card.tex",
+        "original_archive_names": [
+          "requal-pt-43427522352.zip",
+          "requal-en-43427522352.zip",
+          "requal-es-43427522352.zip",
+          "requal-fr-43427522352.zip"
+        ],
+        "human_normative_linguistic_review": "PENDING",
+        "publication_authorized": false
+      },
+      "\\ufcPrintDedication": {
+        "result": "PASS",
+        "qualification": "SOURCE_BOUND_BOUNDED_FUNCTIONAL_PDF_ONLY",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b2-family-12",
+        "evidence_source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "runtime_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "candidate_test_file": "tests/documents/frontmatter-academic-work.tex",
+        "original_archive_names": [
+          "requal-pt-43427522352.zip",
+          "requal-en-43427522352.zip",
+          "requal-es-43427522352.zip",
+          "requal-fr-43427522352.zip"
+        ],
+        "human_normative_linguistic_review": "PENDING",
+        "publication_authorized": false
+      },
+      "\\ufcPrintAcknowledgments": {
+        "result": "PASS",
+        "qualification": "SOURCE_BOUND_BOUNDED_FUNCTIONAL_PDF_ONLY",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b2-family-12",
+        "evidence_source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "runtime_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "original_archive_names": [
+          "requal-pt-43427522352.zip",
+          "requal-en-43427522352.zip",
+          "requal-es-43427522352.zip",
+          "requal-fr-43427522352.zip"
+        ],
+        "human_normative_linguistic_review": "PENDING",
+        "publication_authorized": false
+      },
+      "\\ufcPrintEpigraph": {
+        "result": "PASS",
+        "qualification": "SOURCE_BOUND_BOUNDED_FUNCTIONAL_PDF_ONLY",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b2-family-12",
+        "evidence_source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "runtime_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "candidate_test_file": "tests/documents/frontmatter-academic-work.tex",
+        "original_archive_names": [
+          "requal-pt-43427522352.zip",
+          "requal-en-43427522352.zip",
+          "requal-es-43427522352.zip",
+          "requal-fr-43427522352.zip"
+        ],
+        "human_normative_linguistic_review": "PENDING",
+        "publication_authorized": false
+      },
+      "\\ufcPrintErrata": {
+        "result": "PASS",
+        "qualification": "SOURCE_BOUND_BOUNDED_FUNCTIONAL_PDF_ONLY",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b2-family-12",
+        "evidence_source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "runtime_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "original_archive_names": [
+          "requal-pt-43427522352.zip",
+          "requal-en-43427522352.zip",
+          "requal-es-43427522352.zip",
+          "requal-fr-43427522352.zip"
+        ],
+        "human_normative_linguistic_review": "PENDING",
+        "publication_authorized": false
+      },
+      "\\ufcDocumentLanguage": {
+        "result": "PASS",
+        "qualification": "SOURCE_BOUND_BOUNDED_FUNCTIONAL_PDF_ONLY",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b1-integrated-15",
+        "evidence_source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "runtime_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "original_archive_names": [
+          "requal-pt-43427522352.zip",
+          "requal-en-43427522352.zip",
+          "requal-es-43427522352.zip",
+          "requal-fr-43427522352.zip"
+        ],
+        "human_normative_linguistic_review": "PENDING",
+        "publication_authorized": false
+      },
+      "\\ufcSummaryKeywordsInLanguage": {
+        "result": "PASS",
+        "qualification": "SOURCE_BOUND_BOUNDED_FUNCTIONAL_PDF_ONLY",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b2-family-12",
+        "evidence_source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "runtime_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "original_archive_names": [
+          "requal-pt-43427522352.zip",
+          "requal-en-43427522352.zip",
+          "requal-es-43427522352.zip",
+          "requal-fr-43427522352.zip"
+        ],
+        "human_normative_linguistic_review": "PENDING",
+        "publication_authorized": false
+      },
+      "\\ufcPrintSummaryInLanguage": {
+        "result": "PASS",
+        "qualification": "SOURCE_BOUND_BOUNDED_FUNCTIONAL_PDF_ONLY",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b2-summary-remaining",
+        "evidence_source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "runtime_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "candidate_test_file": "tests/integration/frontmatter/summary-legacy-context.sh",
+        "original_archive_names": [
+          "requal-pt-43427522352.zip",
+          "requal-en-43427522352.zip",
+          "requal-es-43427522352.zip",
+          "requal-fr-43427522352.zip"
+        ],
+        "human_normative_linguistic_review": "PENDING",
+        "publication_authorized": false
+      },
+      "\\ufcPrintRequiredSummaries": {
+        "result": "PASS",
+        "qualification": "SOURCE_BOUND_BOUNDED_FUNCTIONAL_PDF_ONLY",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b2-family-12",
+        "evidence_source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "runtime_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "original_archive_names": [
+          "requal-pt-43427522352.zip",
+          "requal-en-43427522352.zip",
+          "requal-es-43427522352.zip",
+          "requal-fr-43427522352.zip"
+        ],
+        "human_normative_linguistic_review": "PENDING",
+        "publication_authorized": false
+      },
+      "\\ufcPrintOptionalEnglishSummary": {
+        "result": "PASS",
+        "qualification": "SOURCE_BOUND_BOUNDED_FUNCTIONAL_PDF_ONLY",
+        "scope": "BOUNDED_REAL_PDF_ES_FR_ONLY",
+        "evidence_id": "b2-summary-remaining",
+        "evidence_source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "runtime_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "candidate_test_file": "tests/integration/frontmatter/frontmatter-summary-languages.sh",
+        "original_archive_names": [
+          "requal-pt-43427522352.zip",
+          "requal-en-43427522352.zip",
+          "requal-es-43427522352.zip",
+          "requal-fr-43427522352.zip"
+        ],
+        "human_normative_linguistic_review": "PENDING",
+        "publication_authorized": false
+      },
+      "\\ufcPrintArticleTranslatedSummary": {
+        "result": "PASS",
+        "qualification": "SOURCE_BOUND_BOUNDED_FUNCTIONAL_PDF_ONLY",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b2-family-12",
+        "evidence_source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "runtime_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "original_archive_names": [
+          "requal-pt-43427522352.zip",
+          "requal-en-43427522352.zip",
+          "requal-es-43427522352.zip",
+          "requal-fr-43427522352.zip"
+        ],
+        "human_normative_linguistic_review": "PENDING",
+        "publication_authorized": false
+      },
+      "\\ufcSummaryKeywords": {
+        "result": "PASS",
+        "qualification": "SOURCE_BOUND_BOUNDED_FUNCTIONAL_PDF_ONLY",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b2-family-12",
+        "evidence_source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "runtime_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "original_archive_names": [
+          "requal-pt-43427522352.zip",
+          "requal-en-43427522352.zip",
+          "requal-es-43427522352.zip",
+          "requal-fr-43427522352.zip"
+        ],
+        "human_normative_linguistic_review": "PENDING",
+        "publication_authorized": false
+      },
+      "\\ufcPrintSummary": {
+        "result": "PASS",
+        "qualification": "SOURCE_BOUND_BOUNDED_FUNCTIONAL_PDF_ONLY",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b2-summary-remaining",
+        "evidence_source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "runtime_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "candidate_test_file": "tests/integration/frontmatter/summary-legacy-context.sh",
+        "original_archive_names": [
+          "requal-pt-43427522352.zip",
+          "requal-en-43427522352.zip",
+          "requal-es-43427522352.zip",
+          "requal-fr-43427522352.zip"
+        ],
+        "human_normative_linguistic_review": "PENDING",
+        "publication_authorized": false
+      },
+      "\\ufcPrintAbstract": {
+        "result": "PASS",
+        "qualification": "SOURCE_BOUND_BOUNDED_FUNCTIONAL_PDF_ONLY",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b2-summary-remaining",
+        "evidence_source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "runtime_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "candidate_test_file": "tests/integration/frontmatter/summary-legacy-context.sh",
+        "original_archive_names": [
+          "requal-pt-43427522352.zip",
+          "requal-en-43427522352.zip",
+          "requal-es-43427522352.zip",
+          "requal-fr-43427522352.zip"
+        ],
+        "human_normative_linguistic_review": "PENDING",
+        "publication_authorized": false
+      },
+      "\\ufcPrintListOfIllustrations": {
+        "result": "PASS",
+        "qualification": "SOURCE_BOUND_BOUNDED_FUNCTIONAL_PDF_ONLY",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b3-integrated-9",
+        "evidence_source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "runtime_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "original_archive_names": [
+          "requal-pt-43427522352.zip",
+          "requal-en-43427522352.zip",
+          "requal-es-43427522352.zip",
+          "requal-fr-43427522352.zip"
+        ],
+        "human_normative_linguistic_review": "PENDING",
+        "publication_authorized": false
+      },
+      "\\ufcPrintListOfFigures": {
+        "result": "PASS",
+        "qualification": "SOURCE_BOUND_BOUNDED_FUNCTIONAL_PDF_ONLY",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b3-integrated-9",
+        "evidence_source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "runtime_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "original_archive_names": [
+          "requal-pt-43427522352.zip",
+          "requal-en-43427522352.zip",
+          "requal-es-43427522352.zip",
+          "requal-fr-43427522352.zip"
+        ],
+        "human_normative_linguistic_review": "PENDING",
+        "publication_authorized": false
+      },
+      "\\ufcPrintListOfTables": {
+        "result": "PASS",
+        "qualification": "SOURCE_BOUND_BOUNDED_FUNCTIONAL_PDF_ONLY",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b3-integrated-9",
+        "evidence_source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "runtime_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "original_archive_names": [
+          "requal-pt-43427522352.zip",
+          "requal-en-43427522352.zip",
+          "requal-es-43427522352.zip",
+          "requal-fr-43427522352.zip"
+        ],
+        "human_normative_linguistic_review": "PENDING",
+        "publication_authorized": false
+      },
+      "\\ufcPrintListOfTextTables": {
+        "result": "PASS",
+        "qualification": "SOURCE_BOUND_BOUNDED_FUNCTIONAL_PDF_ONLY",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b3-integrated-9",
+        "evidence_source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "runtime_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "original_archive_names": [
+          "requal-pt-43427522352.zip",
+          "requal-en-43427522352.zip",
+          "requal-es-43427522352.zip",
+          "requal-fr-43427522352.zip"
+        ],
+        "human_normative_linguistic_review": "PENDING",
+        "publication_authorized": false
+      },
+      "\\ufcPrintListOfCharts": {
+        "result": "PASS",
+        "qualification": "SOURCE_BOUND_BOUNDED_FUNCTIONAL_PDF_ONLY",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b3-integrated-9",
+        "evidence_source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "runtime_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "original_archive_names": [
+          "requal-pt-43427522352.zip",
+          "requal-en-43427522352.zip",
+          "requal-es-43427522352.zip",
+          "requal-fr-43427522352.zip"
+        ],
+        "human_normative_linguistic_review": "PENDING",
+        "publication_authorized": false
+      },
+      "\\ufcPrintListOfCodeListings": {
+        "result": "PASS",
+        "qualification": "SOURCE_BOUND_BOUNDED_FUNCTIONAL_PDF_ONLY",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b3-optional-2",
+        "evidence_source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "runtime_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "candidate_test_file": "tests/integration/objects/optional-locale-evidence.py",
+        "original_archive_names": [
+          "optional-pt-43427522327.zip",
+          "optional-en-43427522327.zip",
+          "optional-es-43427522327.zip",
+          "optional-fr-43427522327.zip"
+        ],
+        "human_normative_linguistic_review": "PENDING",
+        "publication_authorized": false
+      },
+      "\\ufcPrintListOfAlgorithms": {
+        "result": "PASS",
+        "qualification": "SOURCE_BOUND_BOUNDED_FUNCTIONAL_PDF_ONLY",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b3-optional-2",
+        "evidence_source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "runtime_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "candidate_test_file": "tests/integration/objects/optional-locale-evidence.py",
+        "original_archive_names": [
+          "optional-pt-43427522327.zip",
+          "optional-en-43427522327.zip",
+          "optional-es-43427522327.zip",
+          "optional-fr-43427522327.zip"
+        ],
+        "human_normative_linguistic_review": "PENDING",
+        "publication_authorized": false
+      },
+      "\\ufcPrintListOfAbbreviationsAndAcronyms": {
+        "result": "PASS",
+        "qualification": "SOURCE_BOUND_BOUNDED_FUNCTIONAL_PDF_ONLY",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b3-integrated-9",
+        "evidence_source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "runtime_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "original_archive_names": [
+          "requal-pt-43427522352.zip",
+          "requal-en-43427522352.zip",
+          "requal-es-43427522352.zip",
+          "requal-fr-43427522352.zip"
+        ],
+        "human_normative_linguistic_review": "PENDING",
+        "publication_authorized": false
+      },
+      "\\ufcPrintListOfSymbols": {
+        "result": "PASS",
+        "qualification": "SOURCE_BOUND_BOUNDED_FUNCTIONAL_PDF_ONLY",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b3-integrated-9",
+        "evidence_source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "runtime_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "original_archive_names": [
+          "requal-pt-43427522352.zip",
+          "requal-en-43427522352.zip",
+          "requal-es-43427522352.zip",
+          "requal-fr-43427522352.zip"
+        ],
+        "human_normative_linguistic_review": "PENDING",
+        "publication_authorized": false
+      },
+      "\\ufcListEntry": {
+        "result": "PASS",
+        "qualification": "SOURCE_BOUND_BOUNDED_FUNCTIONAL_PDF_ONLY",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b3-integrated-9",
+        "evidence_source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "runtime_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "original_archive_names": [
+          "requal-pt-43427522352.zip",
+          "requal-en-43427522352.zip",
+          "requal-es-43427522352.zip",
+          "requal-fr-43427522352.zip"
+        ],
+        "human_normative_linguistic_review": "PENDING",
+        "publication_authorized": false
+      },
+      "\\ufcPrintTableOfContents": {
+        "result": "PASS",
+        "qualification": "SOURCE_BOUND_BOUNDED_FUNCTIONAL_PDF_ONLY",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b3-integrated-9",
+        "evidence_source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "runtime_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "original_archive_names": [
+          "requal-pt-43427522352.zip",
+          "requal-en-43427522352.zip",
+          "requal-es-43427522352.zip",
+          "requal-fr-43427522352.zip"
+        ],
+        "human_normative_linguistic_review": "PENDING",
+        "publication_authorized": false
+      },
+      "\\ufcSource": {
+        "result": "PASS",
+        "qualification": "SOURCE_BOUND_BOUNDED_FUNCTIONAL_PDF_ONLY",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b4-integrated-11",
+        "evidence_source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "runtime_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "original_archive_names": [
+          "requal-pt-43427522352.zip",
+          "requal-en-43427522352.zip",
+          "requal-es-43427522352.zip",
+          "requal-fr-43427522352.zip"
+        ],
+        "human_normative_linguistic_review": "PENDING",
+        "publication_authorized": false
+      },
+      "\\ufcNote": {
+        "result": "PASS",
+        "qualification": "SOURCE_BOUND_BOUNDED_FUNCTIONAL_PDF_ONLY",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b4-integrated-11",
+        "evidence_source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "runtime_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "original_archive_names": [
+          "requal-pt-43427522352.zip",
+          "requal-en-43427522352.zip",
+          "requal-es-43427522352.zip",
+          "requal-fr-43427522352.zip"
+        ],
+        "human_normative_linguistic_review": "PENDING",
+        "publication_authorized": false
+      },
+      "\\ufcAddBibliographyResource": {
+        "result": "PASS",
+        "qualification": "SOURCE_BOUND_BOUNDED_FUNCTIONAL_PDF_ONLY",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b4-integrated-11",
+        "evidence_source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "runtime_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "original_archive_names": [
+          "requal-pt-43427522352.zip",
+          "requal-en-43427522352.zip",
+          "requal-es-43427522352.zip",
+          "requal-fr-43427522352.zip"
+        ],
+        "human_normative_linguistic_review": "PENDING",
+        "publication_authorized": false
+      },
+      "\\ufcPrintReferences": {
+        "result": "PASS",
+        "qualification": "SOURCE_BOUND_BOUNDED_FUNCTIONAL_PDF_ONLY",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b4-integrated-11",
+        "evidence_source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "runtime_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "original_archive_names": [
+          "requal-pt-43427522352.zip",
+          "requal-en-43427522352.zip",
+          "requal-es-43427522352.zip",
+          "requal-fr-43427522352.zip"
+        ],
+        "human_normative_linguistic_review": "PENDING",
+        "publication_authorized": false
+      },
+      "\\ufcPrintGlossary": {
+        "result": "PASS",
+        "qualification": "SOURCE_BOUND_BOUNDED_FUNCTIONAL_PDF_ONLY",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b4-integrated-11",
+        "evidence_source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "runtime_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "original_archive_names": [
+          "requal-pt-43427522352.zip",
+          "requal-en-43427522352.zip",
+          "requal-es-43427522352.zip",
+          "requal-fr-43427522352.zip"
+        ],
+        "human_normative_linguistic_review": "PENDING",
+        "publication_authorized": false
+      },
+      "\\ufcPrintIndex": {
+        "result": "PASS",
+        "qualification": "SOURCE_BOUND_BOUNDED_FUNCTIONAL_PDF_ONLY",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b4-integrated-11",
+        "evidence_source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "runtime_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "original_archive_names": [
+          "requal-pt-43427522352.zip",
+          "requal-en-43427522352.zip",
+          "requal-es-43427522352.zip",
+          "requal-fr-43427522352.zip"
+        ],
+        "human_normative_linguistic_review": "PENDING",
+        "publication_authorized": false
+      },
+      "\\ufcInputListing": {
+        "result": "PASS",
+        "qualification": "SOURCE_BOUND_BOUNDED_FUNCTIONAL_PDF_ONLY",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b4-isolated-2",
+        "evidence_source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "runtime_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "candidate_test_file": "tests/documents/advanced-objects.tex",
+        "original_archive_names": [
+          "requal-pt-43427522352.zip",
+          "requal-en-43427522352.zip",
+          "requal-es-43427522352.zip",
+          "requal-fr-43427522352.zip"
+        ],
+        "human_normative_linguistic_review": "PENDING",
+        "publication_authorized": false
+      },
+      "\\ufcInputMinted": {
+        "result": "PASS",
+        "qualification": "SOURCE_BOUND_BOUNDED_FUNCTIONAL_PDF_ONLY",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b4-inputminted-1",
+        "evidence_source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "runtime_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "candidate_test_file": "tests/integration/objects/optional-locale-evidence.py",
+        "original_archive_names": [
+          "optional-pt-43427522327.zip",
+          "optional-en-43427522327.zip",
+          "optional-es-43427522327.zip",
+          "optional-fr-43427522327.zip"
+        ],
+        "human_normative_linguistic_review": "PENDING",
+        "publication_authorized": false
+      }
+    },
+    "public_environments": {
+      "ufclettereditems": {
+        "result": "PASS",
+        "qualification": "SOURCE_BOUND_BOUNDED_FUNCTIONAL_PDF_ONLY",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "core-lists-12",
+        "evidence_source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "runtime_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "candidate_test_file": "tests/integration/frontmatter/i18n-list-environment-evidence.py",
+        "original_archive_names": [
+          "requal-pt-43427522352.zip",
+          "requal-en-43427522352.zip",
+          "requal-es-43427522352.zip",
+          "requal-fr-43427522352.zip"
+        ],
+        "human_normative_linguistic_review": "PENDING",
+        "publication_authorized": false
+      },
+      "ufcdashedsubitems": {
+        "result": "PASS",
+        "qualification": "SOURCE_BOUND_BOUNDED_FUNCTIONAL_PDF_ONLY",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "core-lists-12",
+        "evidence_source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "runtime_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "candidate_test_file": "tests/integration/frontmatter/i18n-list-environment-evidence.py",
+        "original_archive_names": [
+          "requal-pt-43427522352.zip",
+          "requal-en-43427522352.zip",
+          "requal-es-43427522352.zip",
+          "requal-fr-43427522352.zip"
+        ],
+        "human_normative_linguistic_review": "PENDING",
+        "publication_authorized": false
+      },
+      "ufcdefinitionlist": {
+        "result": "PASS",
+        "qualification": "SOURCE_BOUND_BOUNDED_FUNCTIONAL_PDF_ONLY",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "core-lists-12",
+        "evidence_source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "runtime_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "candidate_test_file": "tests/integration/frontmatter/i18n-list-environment-evidence.py",
+        "original_archive_names": [
+          "requal-pt-43427522352.zip",
+          "requal-en-43427522352.zip",
+          "requal-es-43427522352.zip",
+          "requal-fr-43427522352.zip"
+        ],
+        "human_normative_linguistic_review": "PENDING",
+        "publication_authorized": false
+      },
+      "ufcobject": {
+        "result": "PASS",
+        "qualification": "SOURCE_BOUND_BOUNDED_FUNCTIONAL_PDF_ONLY",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "optional-env-12",
+        "evidence_source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "runtime_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "candidate_test_file": "tests/integration/frontmatter/i18n-optional-environment-evidence.py",
+        "original_archive_names": [
+          "requal-pt-43427522352.zip",
+          "requal-en-43427522352.zip",
+          "requal-es-43427522352.zip",
+          "requal-fr-43427522352.zip"
+        ],
+        "human_normative_linguistic_review": "PENDING",
+        "publication_authorized": false
+      },
+      "ufclisting": {
+        "result": "PASS",
+        "qualification": "SOURCE_BOUND_BOUNDED_FUNCTIONAL_PDF_ONLY",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "optional-env-12",
+        "evidence_source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "runtime_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "candidate_test_file": "tests/integration/frontmatter/i18n-optional-environment-evidence.py",
+        "original_archive_names": [
+          "requal-pt-43427522352.zip",
+          "requal-en-43427522352.zip",
+          "requal-es-43427522352.zip",
+          "requal-fr-43427522352.zip"
+        ],
+        "human_normative_linguistic_review": "PENDING",
+        "publication_authorized": false
+      },
+      "ufcalgorithm": {
+        "result": "PASS",
+        "qualification": "SOURCE_BOUND_BOUNDED_FUNCTIONAL_PDF_ONLY",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "optional-env-12",
+        "evidence_source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "runtime_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "candidate_test_file": "tests/integration/frontmatter/i18n-optional-environment-evidence.py",
+        "original_archive_names": [
+          "requal-pt-43427522352.zip",
+          "requal-en-43427522352.zip",
+          "requal-es-43427522352.zip",
+          "requal-fr-43427522352.zip"
+        ],
+        "human_normative_linguistic_review": "PENDING",
+        "publication_authorized": false
+      }
+    },
+    "retained_upstream_identifiers": {
+      "\\legend": {
+        "result": "PASS",
+        "qualification": "SOURCE_BOUND_BOUNDED_FUNCTIONAL_PDF_ONLY",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b4-integrated-11",
+        "evidence_source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "runtime_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "original_archive_names": [
+          "requal-pt-43427522352.zip",
+          "requal-en-43427522352.zip",
+          "requal-es-43427522352.zip",
+          "requal-fr-43427522352.zip"
+        ],
+        "human_normative_linguistic_review": "PENDING",
+        "publication_authorized": false
+      },
+      "\\keywords": {
+        "result": "PASS",
+        "qualification": "SOURCE_BOUND_BOUNDED_FUNCTIONAL_PDF_ONLY",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b4-isolated-2",
+        "evidence_source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "runtime_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "candidate_test_file": "tests/integration/frontmatter/summary-legacy-context.sh",
+        "original_archive_names": [
+          "requal-pt-43427522352.zip",
+          "requal-en-43427522352.zip",
+          "requal-es-43427522352.zip",
+          "requal-fr-43427522352.zip"
+        ],
+        "human_normative_linguistic_review": "PENDING",
+        "publication_authorized": false
+      },
+      "\\appendix": {
+        "result": "PASS",
+        "qualification": "SOURCE_BOUND_BOUNDED_FUNCTIONAL_PDF_ONLY",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b4-integrated-11",
+        "evidence_source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "runtime_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "original_archive_names": [
+          "requal-pt-43427522352.zip",
+          "requal-en-43427522352.zip",
+          "requal-es-43427522352.zip",
+          "requal-fr-43427522352.zip"
+        ],
+        "human_normative_linguistic_review": "PENDING",
+        "publication_authorized": false
+      },
+      "\\annex": {
+        "result": "PASS",
+        "qualification": "SOURCE_BOUND_BOUNDED_FUNCTIONAL_PDF_ONLY",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b4-integrated-11",
+        "evidence_source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "runtime_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "original_archive_names": [
+          "requal-pt-43427522352.zip",
+          "requal-en-43427522352.zip",
+          "requal-es-43427522352.zip",
+          "requal-fr-43427522352.zip"
+        ],
+        "human_normative_linguistic_review": "PENDING",
+        "publication_authorized": false
+      },
+      "\\pretextual": {
+        "result": "PASS",
+        "qualification": "SOURCE_BOUND_BOUNDED_FUNCTIONAL_PDF_ONLY",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b4-integrated-11",
+        "evidence_source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "runtime_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "original_archive_names": [
+          "requal-pt-43427522352.zip",
+          "requal-en-43427522352.zip",
+          "requal-es-43427522352.zip",
+          "requal-fr-43427522352.zip"
+        ],
+        "human_normative_linguistic_review": "PENDING",
+        "publication_authorized": false
+      },
+      "\\textual": {
+        "result": "PASS",
+        "qualification": "SOURCE_BOUND_BOUNDED_FUNCTIONAL_PDF_ONLY",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "evidence_id": "b4-integrated-11",
+        "evidence_source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "runtime_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "candidate_test_file": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "original_archive_names": [
+          "requal-pt-43427522352.zip",
+          "requal-en-43427522352.zip",
+          "requal-es-43427522352.zip",
+          "requal-fr-43427522352.zip"
+        ],
+        "human_normative_linguistic_review": "PENDING",
+        "publication_authorized": false
+      }
+    }
+  }
+}

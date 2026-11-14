@@ -44,8 +44,10 @@ def page_text(pdf: Path, *, first_only: bool = False) -> str:
 
 
 
-def native_longtable_pagination(extracted: str, loc: str) -> tuple[dict, list[str]]:
-    """Inspect original native longtable data rows on physical PDF pages."""
+def native_longtable_pagination(extracted: str, loc: str, expected_rows: int = 85) -> tuple[dict, list[str]]:
+    """Validate the source-declared native table row count on physical PDF pages."""
+    if not 1 <= expected_rows <= 85:
+        raise ValueError("Unsupported native longtable row count")
     native_name = {
         "pt": "Amostra", "en": "Sample",
         "es": "Muestra", "fr": "Échantillon",
@@ -60,23 +62,44 @@ def native_longtable_pagination(extracted: str, loc: str) -> tuple[dict, list[st
             number = int(match.group(1))
             if 1 <= number <= 85:
                 row_pages.setdefault(number, []).append(page_no)
-    missing = sorted(set(range(1, 86)) - row_pages.keys())
+    missing = sorted(set(range(1, expected_rows + 1)) - row_pages.keys())
+    unexpected = sorted(number for number in row_pages if number > expected_rows)
     duplicated = sorted(number for number, pages in row_pages.items()
                         if len(pages) != 1)
-    last_page = row_pages.get(85, [None])[0]
-    count = sum(last_page in pages for pages in row_pages.values()) if last_page else 0
+    last_page = row_pages.get(expected_rows, [None])[0]
+    count = sum(last_page in pages for number, pages in row_pages.items()
+                if number <= expected_rows) if last_page else 0
     metrics = {
+        "expected_rows": expected_rows,
         "last_data_page": last_page,
         "last_data_page_rows": count,
         "missing_rows": missing,
+        "unexpected_rows": unexpected,
         "duplicate_rows": duplicated,
     }
     findings = []
-    if missing or duplicated:
-        findings.append("native_longtable_rows_missing_or_duplicated")
+    if missing or duplicated or unexpected:
+        findings.append("native_longtable_rows_missing_duplicated_or_unexpected")
     if count == 1:
         findings.append("native_longtable_single_final_row_page:" + str(last_page))
     return metrics, findings
+
+
+def selftest_native_longtable_pagination() -> None:
+    """Check exact row counts, duplicates, extra rows and orphan final pages."""
+    valid = "\n".join(f"Amostra {n} {n}" for n in range(1, 81)) + "\f"
+    metrics, findings = native_longtable_pagination(valid, "pt", expected_rows=80)
+    if findings or metrics["last_data_page_rows"] != 80:
+        raise AssertionError("Valid 80-row readable table was rejected")
+    for mutated in (
+        valid.replace("Amostra 40 40\n", ""),
+        valid + "Amostra 81 81\n",
+        valid.replace("Amostra 40 40\n", "Amostra 40 40\nAmostra 40 40\n"),
+        valid.replace("Amostra 80 80", "") + "\fAmostra 80 80\n",
+    ):
+        _, problems = native_longtable_pagination(mutated, "pt", expected_rows=80)
+        if not problems:
+            raise AssertionError("Malformed readable native table was accepted")
 
 
 def isolated_author_year_line_faults(page: ET.Element) -> list[str]:
@@ -164,6 +187,38 @@ def find_layout_defects(pdf: Path, loc: str) -> tuple[list[str], float | None]:
     return faults, min(pairs)
 
 
+def orphaned_native_table_pages(extracted: str, locale: str) -> list[int]:
+    """Reject a one-row final native longtable continuation in a real PDF."""
+    header_case, header_value, native_case = {
+        "pt": ("Caso", "Valor", "Amostra"),
+        "en": ("Case", "Value", "Sample"),
+        "es": ("Caso", "Valor", "Muestra"),
+        "fr": ("Cas", "Valeur", "Échantillon"),
+    }[locale]
+    pattern = (
+        r"\d+ " + re.escape(header_case) + " " + re.escape(header_value)
+        + " " + re.escape(native_case) + r" (\d+) \1"
+    )
+    return [
+        physical_page
+        for physical_page, page in enumerate(extracted.split("\f"), start=1)
+        if re.fullmatch(pattern, " ".join(page.split()))
+    ]
+
+
+def selftest_native_longtable_orphan_guard() -> None:
+    """Ensure that real PDF row-only tail pages cannot pass as normal layout."""
+    old_en = "35\nCase Value\nSample 85 85\f36\nMain text\n"
+    old_es = "35\nCaso Valor\nMuestra 85 85\f36\nTexto principal\n"
+    valid = "34\nCaso Valor\nMuestra 83 83\nMuestra 84 84\n\f"
+    if orphaned_native_table_pages(old_en, "en") != [1]:
+        raise AssertionError("Native table EN orphan regression escaped")
+    if orphaned_native_table_pages(old_es, "es") != [1]:
+        raise AssertionError("Native table ES orphan regression escaped")
+    if orphaned_native_table_pages(valid, "es"):
+        raise AssertionError("Normal multirow continuation rejected")
+
+
 def selftest_geometry_guard() -> None:
     """Ensure the geometric acceptance threshold rejects the known R8 defect."""
     normal_space = 3.2
@@ -232,8 +287,11 @@ def build_one(entry: dict, loc: str, out: Path, work: Path) -> dict:
                           "INTEGRATED MULTILINGUAL DOCUMENT")
               if w in extracted]
     findings = list(layout_failures)
-    native_table_metrics, native_table_findings = native_longtable_pagination(extracted, loc)
+    native_table_metrics, native_table_findings = native_longtable_pagination(
+        extracted, loc, expected_rows=80)
     findings.extend(native_table_findings)
+    for page_no in orphaned_native_table_pages(extracted, loc):
+        findings.append(f"orphan_native_longtable_final_row:physical_page={page_no}")
     if leaked:
         findings.append("fixture_labels_visible:" + ",".join(leaked))
     if loc != "en":
@@ -480,6 +538,8 @@ def build_one(entry: dict, loc: str, out: Path, work: Path) -> dict:
 
 def main() -> int:
     selftest_geometry_guard()
+    selftest_native_longtable_orphan_guard()
+    selftest_native_longtable_pagination()
     parser = argparse.ArgumentParser()
     parser.add_argument("--locale", required=True, choices=LOCALES)
     parser.add_argument("--preflight", action="store_true")

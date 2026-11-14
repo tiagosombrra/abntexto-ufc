@@ -1,0 +1,1017 @@
+{
+  "schema_version": 1,
+  "description": "Independent v3.1.0 72-ID candidate register. All 72 have bounded original-PDF runner receipts tied to one corrected runtime, not official human/normative/release acceptance.",
+  "source_commit_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+  "runtime_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+  "current_branch_expected": "fix/590-inputlisting-place-vertical-box",
+  "origin_historical_58_id_registry": "standards/api/i18n-per-identifier-proof-status.json",
+  "baseline_main_sha": "4000be3fc77d3f6e20c30eaaaed506f289240c30",
+  "api_source": "standards/api/public-api.json",
+  "source_crosswalk": "standards/api/i18n-functional-evidence-crosswalk.json",
+  "audit_method": "10 original GitHub ZIP digests, CRC, 310 original PDFs independently opened, 4952 raw SHA256 JSON manifest file references checked against original bytes",
+  "global_acceptance": "PENDING",
+  "human_normative_linguistic_review": "PENDING",
+  "publication_authorized": false,
+  "formal_new_runtime_ledger_promotion": "NOT_AUTHORIZED",
+  "summary": {
+    "bounded_functional_candidate_pass": 72,
+    "formal_new_runtime_certified": 0,
+    "formally_pending": 72,
+    "historical_original_class_pass": 58,
+    "historical_original_class_pending": 14
+  },
+  "artifact_receipts": {
+    "requal-pt-43427522352.zip": {
+      "kind": "integrated",
+      "locale_or_suite": "pt",
+      "run_id": 43427522352,
+      "artifact_id": 14038459203,
+      "zip_sha256": "30da67d8d45b634a9800f579c58966b0775c33908b7c069e07111aefbfdc76b7",
+      "original_pdfs": 27
+    },
+    "requal-en-43427522352.zip": {
+      "kind": "integrated",
+      "locale_or_suite": "en",
+      "run_id": 43427522352,
+      "artifact_id": 14037189515,
+      "zip_sha256": "abd3a22bcdcb3679d06f285a6e99ac6e8971559bee0b1e0606d1adb754a0dee6",
+      "original_pdfs": 27
+    },
+    "requal-es-43427522352.zip": {
+      "kind": "integrated",
+      "locale_or_suite": "es",
+      "run_id": 43427522352,
+      "artifact_id": 14037464202,
+      "zip_sha256": "c7fa53c68951c2c85cd9c21b3bd6b121cad57fa120b3c1592bf54028f4bb1645",
+      "original_pdfs": 28
+    },
+    "requal-fr-43427522352.zip": {
+      "kind": "integrated",
+      "locale_or_suite": "fr",
+      "run_id": 43427522352,
+      "artifact_id": 14038339407,
+      "zip_sha256": "88d9a1d9f9de02179bc3a7437c052bbd157e9679ed295bd5361697b0661915b9",
+      "original_pdfs": 28
+    },
+    "requal-b1-dual-43427522352.zip": {
+      "kind": "auxiliary",
+      "locale_or_suite": "dual",
+      "run_id": 43427522352,
+      "artifact_id": 14037438603,
+      "zip_sha256": "41574187ab46603fb2b637947e30ae20b2a3bb9959623a3d2b835f5c4c805baf",
+      "original_pdfs": 32
+    },
+    "requal-b1-coat-43427522352.zip": {
+      "kind": "auxiliary",
+      "locale_or_suite": "coat",
+      "run_id": 43427522352,
+      "artifact_id": 14038865046,
+      "zip_sha256": "12a754b8aa69ba30aa59195c2e82d4471b7d8829a9553c019c8b86286b190b26",
+      "original_pdfs": 32
+    },
+    "optional-pt-43427522327.zip": {
+      "kind": "optional",
+      "locale_or_suite": "pt",
+      "run_id": 43427522327,
+      "artifact_id": 14037753631,
+      "zip_sha256": "3db7e01907b7056f30c9830f4b9ec0da4c0bd7bda172e39559bac60d1ea1a59f",
+      "original_pdfs": 79
+    },
+    "optional-en-43427522327.zip": {
+      "kind": "optional",
+      "locale_or_suite": "en",
+      "run_id": 43427522327,
+      "artifact_id": 14037213638,
+      "zip_sha256": "648b6fd430a953712fc74ecceb9dac3201860e749d4abbffcdd8341244e9235d",
+      "original_pdfs": 19
+    },
+    "optional-es-43427522327.zip": {
+      "kind": "optional",
+      "locale_or_suite": "es",
+      "run_id": 43427522327,
+      "artifact_id": 14036679351,
+      "zip_sha256": "cc794a207ab6881fd59a0be52451b7452e5e225c24e81ee4db02853f8c6011ce",
+      "original_pdfs": 19
+    },
+    "optional-fr-43427522327.zip": {
+      "kind": "optional",
+      "locale_or_suite": "fr",
+      "run_id": 43427522327,
+      "artifact_id": 14038183082,
+      "zip_sha256": "2151a70fd152b8eda8dd5d6f050bb775751a68e13913b9de2ada11012d13ff4a",
+      "original_pdfs": 19
+    }
+  },
+  "suites": {
+    "core-lists-12": {
+      "runner": "tests/integration/frontmatter/i18n-list-environment-evidence.py",
+      "negative_controls": 15,
+      "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+      "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+      "artifact_files": [
+        "requal-pt-43427522352.zip",
+        "requal-en-43427522352.zip",
+        "requal-es-43427522352.zip",
+        "requal-fr-43427522352.zip"
+      ],
+      "proof_scope": "ONE_ISOLATED_PDF_PER_ENVIRONMENT_AND_LOCALE",
+      "qualification": "CANDIDATE_ORIGINAL_BYTE_AUDIT_ONLY"
+    },
+    "optional-env-12": {
+      "runner": "tests/integration/frontmatter/i18n-optional-environment-evidence.py",
+      "negative_controls": 22,
+      "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+      "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+      "artifact_files": [
+        "requal-pt-43427522352.zip",
+        "requal-en-43427522352.zip",
+        "requal-es-43427522352.zip",
+        "requal-fr-43427522352.zip"
+      ],
+      "proof_scope": "ONE_ISOLATED_PDF_PER_ENVIRONMENT_AND_LOCALE",
+      "qualification": "CANDIDATE_ORIGINAL_BYTE_AUDIT_ONLY"
+    },
+    "b2-family-12": {
+      "runner": "tests/integration/frontmatter/i18n-b2-family-evidence.py",
+      "negative_controls": 26,
+      "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+      "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+      "artifact_files": [
+        "requal-pt-43427522352.zip",
+        "requal-en-43427522352.zip",
+        "requal-es-43427522352.zip",
+        "requal-fr-43427522352.zip"
+      ],
+      "proof_scope": "TWELVE_PRETEXTUAL_COMMANDS_FOUR_LOCALE_REAL_PDFS",
+      "qualification": "CANDIDATE_ORIGINAL_BYTE_AUDIT_ONLY"
+    },
+    "b2-summary-remaining": {
+      "runner": "tests/integration/frontmatter/i18n-b2-remaining-summary-evidence.py",
+      "negative_controls": 30,
+      "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+      "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+      "artifact_files": [
+        "requal-pt-43427522352.zip",
+        "requal-en-43427522352.zip",
+        "requal-es-43427522352.zip",
+        "requal-fr-43427522352.zip"
+      ],
+      "proof_scope": "FOUR_SUMMARY_COMMANDS_APPLICABLE_LOCALE_REAL_PDFS",
+      "qualification": "CANDIDATE_ORIGINAL_BYTE_AUDIT_ONLY"
+    },
+    "b1-integrated-15": {
+      "runner": "tests/integration/frontmatter/i18n-b1-family-evidence.py",
+      "negative_controls": 14,
+      "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+      "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+      "artifact_files": [
+        "requal-pt-43427522352.zip",
+        "requal-en-43427522352.zip",
+        "requal-es-43427522352.zip",
+        "requal-fr-43427522352.zip"
+      ],
+      "proof_scope": "FIFTEEN_B1_PUBLIC_SETUP_CORE_FOUR_LOCALE_SEVEN_PROFILE_PDFS",
+      "qualification": "CANDIDATE_ORIGINAL_BYTE_AUDIT_ONLY"
+    },
+    "b1-auxiliary-2": {
+      "runner": "tests/integration/frontmatter/i18n-b1-auxiliary-pdf-evidence.py",
+      "negative_controls": 4,
+      "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+      "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+      "artifact_files": [
+        "requal-b1-dual-43427522352.zip",
+        "requal-b1-coat-43427522352.zip"
+      ],
+      "proof_scope": "TWO_B1_CONFIG_OPTIONS_SIXTY_FOUR_REAL_PDFS",
+      "qualification": "CANDIDATE_ORIGINAL_BYTE_AUDIT_ONLY"
+    },
+    "b1-optional-config-3": {
+      "runner": "tests/integration/objects/i18n-b1-optional-config-evidence.py",
+      "negative_controls": 10,
+      "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+      "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+      "artifact_files": [
+        "optional-pt-43427522327.zip",
+        "optional-en-43427522327.zip",
+        "optional-es-43427522327.zip",
+        "optional-fr-43427522327.zip"
+      ],
+      "proof_scope": "THREE_B1_OPTIONAL_CONFIG_FOUR_LOCALE_TWELVE_REAL_PDFS",
+      "qualification": "CANDIDATE_ORIGINAL_BYTE_AUDIT_ONLY"
+    },
+    "b1-final-five": {
+      "runner": "tests/integration/frontmatter/i18n-b1-final-five-evidence.py",
+      "negative_controls": 4,
+      "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+      "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+      "artifact_files": [
+        "requal-pt-43427522352.zip",
+        "requal-en-43427522352.zip",
+        "requal-es-43427522352.zip",
+        "requal-fr-43427522352.zip"
+      ],
+      "proof_scope": "FIVE_B1_CORE_OPTIONS_FOUR_LOCALE_PDFTEX_LUATEX_RECEIPTS",
+      "qualification": "CANDIDATE_ORIGINAL_BYTE_AUDIT_ONLY"
+    },
+    "b3-integrated-9": {
+      "runner": "tests/integration/frontmatter/i18n-b3-integrated-list-evidence.py",
+      "negative_controls": 24,
+      "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+      "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+      "artifact_files": [
+        "requal-pt-43427522352.zip",
+        "requal-en-43427522352.zip",
+        "requal-es-43427522352.zip",
+        "requal-fr-43427522352.zip"
+      ],
+      "proof_scope": "NINE_B3_PRETEXTUAL_LISTS_FOUR_LOCALE_SEVEN_PROFILE_REAL_PDFS",
+      "qualification": "CANDIDATE_ORIGINAL_BYTE_AUDIT_ONLY"
+    },
+    "b3-optional-2": {
+      "runner": "tests/integration/objects/i18n-b3-optional-list-evidence.py",
+      "negative_controls": 14,
+      "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+      "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+      "artifact_files": [
+        "optional-pt-43427522327.zip",
+        "optional-en-43427522327.zip",
+        "optional-es-43427522327.zip",
+        "optional-fr-43427522327.zip"
+      ],
+      "proof_scope": "TWO_B3_OPTIONAL_LISTS_FOUR_LOCALE_THREE_PROFILE_REAL_PDFS",
+      "qualification": "CANDIDATE_ORIGINAL_BYTE_AUDIT_ONLY"
+    },
+    "b4-integrated-11": {
+      "runner": "tests/integration/frontmatter/i18n-b4-integrated-backmatter-evidence.py",
+      "negative_controls": 15,
+      "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+      "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+      "artifact_files": [
+        "requal-pt-43427522352.zip",
+        "requal-en-43427522352.zip",
+        "requal-es-43427522352.zip",
+        "requal-fr-43427522352.zip"
+      ],
+      "proof_scope": "ELEVEN_B4_BACKMATTER_SOURCE_AND_LEGACY_APIS_FOUR_LOCALE_SEVEN_PROFILE_REAL_PDFS",
+      "qualification": "CANDIDATE_ORIGINAL_BYTE_AUDIT_ONLY"
+    },
+    "b4-inputminted-1": {
+      "runner": "tests/integration/objects/i18n-b4-inputminted-evidence.py",
+      "negative_controls": 9,
+      "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+      "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+      "artifact_files": [
+        "optional-pt-43427522327.zip",
+        "optional-en-43427522327.zip",
+        "optional-es-43427522327.zip",
+        "optional-fr-43427522327.zip"
+      ],
+      "proof_scope": "ONE_B4_MINTED_IMPORTED_PYTHON_FOUR_LOCALE_THREE_OPTIONAL_REAL_PDFS",
+      "qualification": "CANDIDATE_ORIGINAL_BYTE_AUDIT_ONLY"
+    },
+    "b4-isolated-2": {
+      "runner": "tests/integration/frontmatter/i18n-b4-isolated-public-api-evidence.py",
+      "negative_controls": 18,
+      "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+      "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+      "artifact_files": [
+        "requal-pt-43427522352.zip",
+        "requal-en-43427522352.zip",
+        "requal-es-43427522352.zip",
+        "requal-fr-43427522352.zip"
+      ],
+      "proof_scope": "TWO_B4_ISOLATED_DIRECT_INPUTLISTING_AND_LEGACY_KEYWORDS_FOUR_LOCALE_REAL_PDFS",
+      "qualification": "CANDIDATE_ORIGINAL_BYTE_AUDIT_ONLY"
+    }
+  },
+  "entries": {
+    "setup_option_identifiers": {
+      "type": {
+        "candidate_functional_result": "BOUNDED_PDF_CANDIDATE_PASS",
+        "formal_new_runtime_result": "PENDING_FINAL_RECERTIFICATION",
+        "proof_suite": "b1-integrated-15",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "document-language": {
+        "candidate_functional_result": "BOUNDED_PDF_CANDIDATE_PASS",
+        "formal_new_runtime_result": "PENDING_FINAL_RECERTIFICATION",
+        "proof_suite": "b1-integrated-15",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "labels-language": {
+        "candidate_functional_result": "BOUNDED_PDF_CANDIDATE_PASS",
+        "formal_new_runtime_result": "PENDING_FINAL_RECERTIFICATION",
+        "proof_suite": "b1-auxiliary-2",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "candidate_source": "tests/integration/frontmatter/primary-document-locale-matrix.sh",
+        "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "print-mode": {
+        "candidate_functional_result": "BOUNDED_PDF_CANDIDATE_PASS",
+        "formal_new_runtime_result": "PENDING_FINAL_RECERTIFICATION",
+        "proof_suite": "b1-integrated-15",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "cover": {
+        "candidate_functional_result": "BOUNDED_PDF_CANDIDATE_PASS",
+        "formal_new_runtime_result": "PENDING_FINAL_RECERTIFICATION",
+        "proof_suite": "b1-integrated-15",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "catalog-card": {
+        "candidate_functional_result": "BOUNDED_PDF_CANDIDATE_PASS",
+        "formal_new_runtime_result": "PENDING_FINAL_RECERTIFICATION",
+        "proof_suite": "b1-final-five",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "coat-of-arms": {
+        "candidate_functional_result": "BOUNDED_PDF_CANDIDATE_PASS",
+        "formal_new_runtime_result": "PENDING_FINAL_RECERTIFICATION",
+        "proof_suite": "b1-auxiliary-2",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "advisor-feminine-label": {
+        "candidate_functional_result": "BOUNDED_PDF_CANDIDATE_PASS",
+        "formal_new_runtime_result": "PENDING_FINAL_RECERTIFICATION",
+        "proof_suite": "b1-integrated-15",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "coadvisor-feminine-label": {
+        "candidate_functional_result": "BOUNDED_PDF_CANDIDATE_PASS",
+        "formal_new_runtime_result": "PENDING_FINAL_RECERTIFICATION",
+        "proof_suite": "b1-integrated-15",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "font": {
+        "candidate_functional_result": "BOUNDED_PDF_CANDIDATE_PASS",
+        "formal_new_runtime_result": "PENDING_FINAL_RECERTIFICATION",
+        "proof_suite": "b1-final-five",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "candidate_source": "tests/integration/frontmatter/frontmatter-summary-languages.sh",
+        "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "strict-font": {
+        "candidate_functional_result": "BOUNDED_PDF_CANDIDATE_PASS",
+        "formal_new_runtime_result": "PENDING_FINAL_RECERTIFICATION",
+        "proof_suite": "b1-final-five",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "candidate_source": "tests/integration/layout/font-config.sh",
+        "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "tables": {
+        "candidate_functional_result": "BOUNDED_PDF_CANDIDATE_PASS",
+        "formal_new_runtime_result": "PENDING_FINAL_RECERTIFICATION",
+        "proof_suite": "b1-optional-config-3",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "candidate_source": "tests/integration/objects/optional-locale-evidence.py",
+        "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "code": {
+        "candidate_functional_result": "BOUNDED_PDF_CANDIDATE_PASS",
+        "formal_new_runtime_result": "PENDING_FINAL_RECERTIFICATION",
+        "proof_suite": "b1-optional-config-3",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "algorithms": {
+        "candidate_functional_result": "BOUNDED_PDF_CANDIDATE_PASS",
+        "formal_new_runtime_result": "PENDING_FINAL_RECERTIFICATION",
+        "proof_suite": "b1-optional-config-3",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "candidate_source": "tests/integration/objects/optional-locale-evidence.py",
+        "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "glossary": {
+        "candidate_functional_result": "BOUNDED_PDF_CANDIDATE_PASS",
+        "formal_new_runtime_result": "PENDING_FINAL_RECERTIFICATION",
+        "proof_suite": "b1-integrated-15",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "index": {
+        "candidate_functional_result": "BOUNDED_PDF_CANDIDATE_PASS",
+        "formal_new_runtime_result": "PENDING_FINAL_RECERTIFICATION",
+        "proof_suite": "b1-integrated-15",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "initial-page": {
+        "candidate_functional_result": "BOUNDED_PDF_CANDIDATE_PASS",
+        "formal_new_runtime_result": "PENDING_FINAL_RECERTIFICATION",
+        "proof_suite": "b1-final-five",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "candidate_source": "tests/integration/profiles/multivolume.sh",
+        "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "human_normative_linguistic_review": "PENDING"
+      }
+    },
+    "public_commands": {
+      "\\ufcsetup": {
+        "candidate_functional_result": "BOUNDED_PDF_CANDIDATE_PASS",
+        "formal_new_runtime_result": "PENDING_FINAL_RECERTIFICATION",
+        "proof_suite": "b1-integrated-15",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "\\ufcDocumentType": {
+        "candidate_functional_result": "BOUNDED_PDF_CANDIDATE_PASS",
+        "formal_new_runtime_result": "PENDING_FINAL_RECERTIFICATION",
+        "proof_suite": "b1-integrated-15",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "\\ufcPrintMode": {
+        "candidate_functional_result": "BOUNDED_PDF_CANDIDATE_PASS",
+        "formal_new_runtime_result": "PENDING_FINAL_RECERTIFICATION",
+        "proof_suite": "b1-integrated-15",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "\\ufcMeta": {
+        "candidate_functional_result": "BOUNDED_PDF_CANDIDATE_PASS",
+        "formal_new_runtime_result": "PENDING_FINAL_RECERTIFICATION",
+        "proof_suite": "b1-integrated-15",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "\\ufcIfProjectTF": {
+        "candidate_functional_result": "BOUNDED_PDF_CANDIDATE_PASS",
+        "formal_new_runtime_result": "PENDING_FINAL_RECERTIFICATION",
+        "proof_suite": "b1-integrated-15",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "\\ufcIfAnonymizedProjectTF": {
+        "candidate_functional_result": "BOUNDED_PDF_CANDIDATE_PASS",
+        "formal_new_runtime_result": "PENDING_FINAL_RECERTIFICATION",
+        "proof_suite": "b1-integrated-15",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "\\ufcMathFontPolicy": {
+        "candidate_functional_result": "BOUNDED_PDF_CANDIDATE_PASS",
+        "formal_new_runtime_result": "PENDING_FINAL_RECERTIFICATION",
+        "proof_suite": "b1-final-five",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "candidate_source": "tests/documents/mathematics.tex",
+        "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "\\ufcPrintCover": {
+        "candidate_functional_result": "BOUNDED_PDF_CANDIDATE_PASS",
+        "formal_new_runtime_result": "PENDING_FINAL_RECERTIFICATION",
+        "proof_suite": "b2-family-12",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "\\ufcPrintTitlePage": {
+        "candidate_functional_result": "BOUNDED_PDF_CANDIDATE_PASS",
+        "formal_new_runtime_result": "PENDING_FINAL_RECERTIFICATION",
+        "proof_suite": "b2-family-12",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "\\ufcPrintApprovalPage": {
+        "candidate_functional_result": "BOUNDED_PDF_CANDIDATE_PASS",
+        "formal_new_runtime_result": "PENDING_FINAL_RECERTIFICATION",
+        "proof_suite": "b2-family-12",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "\\ufcPrintCatalogCard": {
+        "candidate_functional_result": "BOUNDED_PDF_CANDIDATE_PASS",
+        "formal_new_runtime_result": "PENDING_FINAL_RECERTIFICATION",
+        "proof_suite": "b2-family-12",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "candidate_source": "tests/documents/catalog-card.tex",
+        "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "\\ufcPrintDedication": {
+        "candidate_functional_result": "BOUNDED_PDF_CANDIDATE_PASS",
+        "formal_new_runtime_result": "PENDING_FINAL_RECERTIFICATION",
+        "proof_suite": "b2-family-12",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "candidate_source": "tests/documents/frontmatter-academic-work.tex",
+        "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "\\ufcPrintAcknowledgments": {
+        "candidate_functional_result": "BOUNDED_PDF_CANDIDATE_PASS",
+        "formal_new_runtime_result": "PENDING_FINAL_RECERTIFICATION",
+        "proof_suite": "b2-family-12",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "\\ufcPrintEpigraph": {
+        "candidate_functional_result": "BOUNDED_PDF_CANDIDATE_PASS",
+        "formal_new_runtime_result": "PENDING_FINAL_RECERTIFICATION",
+        "proof_suite": "b2-family-12",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "candidate_source": "tests/documents/frontmatter-academic-work.tex",
+        "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "\\ufcPrintErrata": {
+        "candidate_functional_result": "BOUNDED_PDF_CANDIDATE_PASS",
+        "formal_new_runtime_result": "PENDING_FINAL_RECERTIFICATION",
+        "proof_suite": "b2-family-12",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "\\ufcDocumentLanguage": {
+        "candidate_functional_result": "BOUNDED_PDF_CANDIDATE_PASS",
+        "formal_new_runtime_result": "PENDING_FINAL_RECERTIFICATION",
+        "proof_suite": "b1-integrated-15",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "\\ufcSummaryKeywordsInLanguage": {
+        "candidate_functional_result": "BOUNDED_PDF_CANDIDATE_PASS",
+        "formal_new_runtime_result": "PENDING_FINAL_RECERTIFICATION",
+        "proof_suite": "b2-family-12",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "\\ufcPrintSummaryInLanguage": {
+        "candidate_functional_result": "BOUNDED_PDF_CANDIDATE_PASS",
+        "formal_new_runtime_result": "PENDING_FINAL_RECERTIFICATION",
+        "proof_suite": "b2-summary-remaining",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "candidate_source": "tests/integration/frontmatter/summary-legacy-context.sh",
+        "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "\\ufcPrintRequiredSummaries": {
+        "candidate_functional_result": "BOUNDED_PDF_CANDIDATE_PASS",
+        "formal_new_runtime_result": "PENDING_FINAL_RECERTIFICATION",
+        "proof_suite": "b2-family-12",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "\\ufcPrintOptionalEnglishSummary": {
+        "candidate_functional_result": "BOUNDED_PDF_CANDIDATE_PASS",
+        "formal_new_runtime_result": "PENDING_FINAL_RECERTIFICATION",
+        "proof_suite": "b2-summary-remaining",
+        "scope": "BOUNDED_REAL_PDF_ES_FR_ONLY",
+        "candidate_source": "tests/integration/frontmatter/frontmatter-summary-languages.sh",
+        "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "\\ufcPrintArticleTranslatedSummary": {
+        "candidate_functional_result": "BOUNDED_PDF_CANDIDATE_PASS",
+        "formal_new_runtime_result": "PENDING_FINAL_RECERTIFICATION",
+        "proof_suite": "b2-family-12",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "\\ufcSummaryKeywords": {
+        "candidate_functional_result": "BOUNDED_PDF_CANDIDATE_PASS",
+        "formal_new_runtime_result": "PENDING_FINAL_RECERTIFICATION",
+        "proof_suite": "b2-family-12",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "\\ufcPrintSummary": {
+        "candidate_functional_result": "BOUNDED_PDF_CANDIDATE_PASS",
+        "formal_new_runtime_result": "PENDING_FINAL_RECERTIFICATION",
+        "proof_suite": "b2-summary-remaining",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "candidate_source": "tests/integration/frontmatter/summary-legacy-context.sh",
+        "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "\\ufcPrintAbstract": {
+        "candidate_functional_result": "BOUNDED_PDF_CANDIDATE_PASS",
+        "formal_new_runtime_result": "PENDING_FINAL_RECERTIFICATION",
+        "proof_suite": "b2-summary-remaining",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "candidate_source": "tests/integration/frontmatter/summary-legacy-context.sh",
+        "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "\\ufcPrintListOfIllustrations": {
+        "candidate_functional_result": "BOUNDED_PDF_CANDIDATE_PASS",
+        "formal_new_runtime_result": "PENDING_FINAL_RECERTIFICATION",
+        "proof_suite": "b3-integrated-9",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "\\ufcPrintListOfFigures": {
+        "candidate_functional_result": "BOUNDED_PDF_CANDIDATE_PASS",
+        "formal_new_runtime_result": "PENDING_FINAL_RECERTIFICATION",
+        "proof_suite": "b3-integrated-9",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "\\ufcPrintListOfTables": {
+        "candidate_functional_result": "BOUNDED_PDF_CANDIDATE_PASS",
+        "formal_new_runtime_result": "PENDING_FINAL_RECERTIFICATION",
+        "proof_suite": "b3-integrated-9",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "\\ufcPrintListOfTextTables": {
+        "candidate_functional_result": "BOUNDED_PDF_CANDIDATE_PASS",
+        "formal_new_runtime_result": "PENDING_FINAL_RECERTIFICATION",
+        "proof_suite": "b3-integrated-9",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "\\ufcPrintListOfCharts": {
+        "candidate_functional_result": "BOUNDED_PDF_CANDIDATE_PASS",
+        "formal_new_runtime_result": "PENDING_FINAL_RECERTIFICATION",
+        "proof_suite": "b3-integrated-9",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "\\ufcPrintListOfCodeListings": {
+        "candidate_functional_result": "BOUNDED_PDF_CANDIDATE_PASS",
+        "formal_new_runtime_result": "PENDING_FINAL_RECERTIFICATION",
+        "proof_suite": "b3-optional-2",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "candidate_source": "tests/integration/objects/optional-locale-evidence.py",
+        "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "\\ufcPrintListOfAlgorithms": {
+        "candidate_functional_result": "BOUNDED_PDF_CANDIDATE_PASS",
+        "formal_new_runtime_result": "PENDING_FINAL_RECERTIFICATION",
+        "proof_suite": "b3-optional-2",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "candidate_source": "tests/integration/objects/optional-locale-evidence.py",
+        "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "\\ufcPrintListOfAbbreviationsAndAcronyms": {
+        "candidate_functional_result": "BOUNDED_PDF_CANDIDATE_PASS",
+        "formal_new_runtime_result": "PENDING_FINAL_RECERTIFICATION",
+        "proof_suite": "b3-integrated-9",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "\\ufcPrintListOfSymbols": {
+        "candidate_functional_result": "BOUNDED_PDF_CANDIDATE_PASS",
+        "formal_new_runtime_result": "PENDING_FINAL_RECERTIFICATION",
+        "proof_suite": "b3-integrated-9",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "\\ufcListEntry": {
+        "candidate_functional_result": "BOUNDED_PDF_CANDIDATE_PASS",
+        "formal_new_runtime_result": "PENDING_FINAL_RECERTIFICATION",
+        "proof_suite": "b3-integrated-9",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "\\ufcPrintTableOfContents": {
+        "candidate_functional_result": "BOUNDED_PDF_CANDIDATE_PASS",
+        "formal_new_runtime_result": "PENDING_FINAL_RECERTIFICATION",
+        "proof_suite": "b3-integrated-9",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "\\ufcSource": {
+        "candidate_functional_result": "BOUNDED_PDF_CANDIDATE_PASS",
+        "formal_new_runtime_result": "PENDING_FINAL_RECERTIFICATION",
+        "proof_suite": "b4-integrated-11",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "\\ufcNote": {
+        "candidate_functional_result": "BOUNDED_PDF_CANDIDATE_PASS",
+        "formal_new_runtime_result": "PENDING_FINAL_RECERTIFICATION",
+        "proof_suite": "b4-integrated-11",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "\\ufcAddBibliographyResource": {
+        "candidate_functional_result": "BOUNDED_PDF_CANDIDATE_PASS",
+        "formal_new_runtime_result": "PENDING_FINAL_RECERTIFICATION",
+        "proof_suite": "b4-integrated-11",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "\\ufcPrintReferences": {
+        "candidate_functional_result": "BOUNDED_PDF_CANDIDATE_PASS",
+        "formal_new_runtime_result": "PENDING_FINAL_RECERTIFICATION",
+        "proof_suite": "b4-integrated-11",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "\\ufcPrintGlossary": {
+        "candidate_functional_result": "BOUNDED_PDF_CANDIDATE_PASS",
+        "formal_new_runtime_result": "PENDING_FINAL_RECERTIFICATION",
+        "proof_suite": "b4-integrated-11",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "\\ufcPrintIndex": {
+        "candidate_functional_result": "BOUNDED_PDF_CANDIDATE_PASS",
+        "formal_new_runtime_result": "PENDING_FINAL_RECERTIFICATION",
+        "proof_suite": "b4-integrated-11",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "\\ufcInputListing": {
+        "candidate_functional_result": "BOUNDED_PDF_CANDIDATE_PASS",
+        "formal_new_runtime_result": "PENDING_FINAL_RECERTIFICATION",
+        "proof_suite": "b4-isolated-2",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "candidate_source": "tests/documents/advanced-objects.tex",
+        "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "\\ufcInputMinted": {
+        "candidate_functional_result": "BOUNDED_PDF_CANDIDATE_PASS",
+        "formal_new_runtime_result": "PENDING_FINAL_RECERTIFICATION",
+        "proof_suite": "b4-inputminted-1",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "candidate_source": "tests/integration/objects/optional-locale-evidence.py",
+        "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "human_normative_linguistic_review": "PENDING"
+      }
+    },
+    "public_environments": {
+      "ufclettereditems": {
+        "candidate_functional_result": "BOUNDED_PDF_CANDIDATE_PASS",
+        "formal_new_runtime_result": "PENDING_FINAL_RECERTIFICATION",
+        "proof_suite": "core-lists-12",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "candidate_source": "tests/integration/frontmatter/i18n-list-environment-evidence.py",
+        "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "ufcdashedsubitems": {
+        "candidate_functional_result": "BOUNDED_PDF_CANDIDATE_PASS",
+        "formal_new_runtime_result": "PENDING_FINAL_RECERTIFICATION",
+        "proof_suite": "core-lists-12",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "candidate_source": "tests/integration/frontmatter/i18n-list-environment-evidence.py",
+        "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "ufcdefinitionlist": {
+        "candidate_functional_result": "BOUNDED_PDF_CANDIDATE_PASS",
+        "formal_new_runtime_result": "PENDING_FINAL_RECERTIFICATION",
+        "proof_suite": "core-lists-12",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "candidate_source": "tests/integration/frontmatter/i18n-list-environment-evidence.py",
+        "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "ufcobject": {
+        "candidate_functional_result": "BOUNDED_PDF_CANDIDATE_PASS",
+        "formal_new_runtime_result": "PENDING_FINAL_RECERTIFICATION",
+        "proof_suite": "optional-env-12",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "candidate_source": "tests/integration/frontmatter/i18n-optional-environment-evidence.py",
+        "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "ufclisting": {
+        "candidate_functional_result": "BOUNDED_PDF_CANDIDATE_PASS",
+        "formal_new_runtime_result": "PENDING_FINAL_RECERTIFICATION",
+        "proof_suite": "optional-env-12",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "candidate_source": "tests/integration/frontmatter/i18n-optional-environment-evidence.py",
+        "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "ufcalgorithm": {
+        "candidate_functional_result": "BOUNDED_PDF_CANDIDATE_PASS",
+        "formal_new_runtime_result": "PENDING_FINAL_RECERTIFICATION",
+        "proof_suite": "optional-env-12",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "candidate_source": "tests/integration/frontmatter/i18n-optional-environment-evidence.py",
+        "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "human_normative_linguistic_review": "PENDING"
+      }
+    },
+    "retained_upstream_identifiers": {
+      "\\legend": {
+        "candidate_functional_result": "BOUNDED_PDF_CANDIDATE_PASS",
+        "formal_new_runtime_result": "PENDING_FINAL_RECERTIFICATION",
+        "proof_suite": "b4-integrated-11",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "\\keywords": {
+        "candidate_functional_result": "BOUNDED_PDF_CANDIDATE_PASS",
+        "formal_new_runtime_result": "PENDING_FINAL_RECERTIFICATION",
+        "proof_suite": "b4-isolated-2",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "candidate_source": "tests/integration/frontmatter/summary-legacy-context.sh",
+        "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "\\appendix": {
+        "candidate_functional_result": "BOUNDED_PDF_CANDIDATE_PASS",
+        "formal_new_runtime_result": "PENDING_FINAL_RECERTIFICATION",
+        "proof_suite": "b4-integrated-11",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "\\annex": {
+        "candidate_functional_result": "BOUNDED_PDF_CANDIDATE_PASS",
+        "formal_new_runtime_result": "PENDING_FINAL_RECERTIFICATION",
+        "proof_suite": "b4-integrated-11",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "\\pretextual": {
+        "candidate_functional_result": "BOUNDED_PDF_CANDIDATE_PASS",
+        "formal_new_runtime_result": "PENDING_FINAL_RECERTIFICATION",
+        "proof_suite": "b4-integrated-11",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "human_normative_linguistic_review": "PENDING"
+      },
+      "\\textual": {
+        "candidate_functional_result": "BOUNDED_PDF_CANDIDATE_PASS",
+        "formal_new_runtime_result": "PENDING_FINAL_RECERTIFICATION",
+        "proof_suite": "b4-integrated-11",
+        "scope": "BOUNDED_REAL_PDF_4_LOCALES",
+        "candidate_source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_sha": "9ab436da5027c4e20c305398bf89356b70bb17ad",
+        "source_class_git_blob": "299293e273dcefb80256eed2e17d2557db6aae52",
+        "human_normative_linguistic_review": "PENDING"
+      }
+    }
+  }
+}

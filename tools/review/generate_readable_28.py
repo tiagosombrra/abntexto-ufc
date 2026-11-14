@@ -977,6 +977,23 @@ def readable_source(source: str, profile: str, loc: str) -> str:
     source = source.replace("R4NATIVEVALUE", d["header_value"])
     source = re.sub(r"R4LONGROW(\d+)",
                     lambda m: f"{d['row_case']} {int(m[1])}", source)
+    # Keep the original 85-row R4 stress fixture unchanged. Human-readable
+    # editorial specimens use 80 native rows to prevent a table continuation
+    # page containing only row 85 in the English and Spanish manuscripts.
+    # This still exercises multi-page native longtable continuation.
+    for row_number in range(81, 86):
+        row = f"R4NATIVEROW{row_number:03d} & {row_number} " + r"\\"
+        if source.count(row + "\n") != 1:
+            raise RuntimeError(
+                f"Native review table row missing or repeated: {profile}/{loc}/{row_number}"
+            )
+        source = source.replace(row + "\n", "", 1)
+    # The 85-row R4 specimen keeps its explicit last-two-row guard.
+    # The readable specimen has only 80 rows and must not retain that guard.
+    guard = r"\nopagebreak[4]" + "\n"
+    if source.count(guard) != 1:
+        raise RuntimeError(f"Missing native R4 guard: {profile}/{loc}")
+    source = source.replace(guard, "", 1)
     source = re.sub(r"R4NATIVEROW(\d+)",
                     lambda m: f"{d['native_case']} {int(m[1])}", source)
     source = source.replace("long numeric observations", "")
