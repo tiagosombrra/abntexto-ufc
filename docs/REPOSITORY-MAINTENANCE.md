@@ -4,6 +4,15 @@ This document is the current durable map for repository-wide maintenance and org
 
 It does not redefine release state. Publication and development-line facts remain owned by `release/v3-release-candidate.json` and `docs/RELEASE-STATE.md`.
 
+## Current v3.1.0 development phases — checkpoint 2026-11-14
+
+The current source of truth for normative/internationalization work is [issue #489](https://github.com/tiagosombrra/abntexto-ufc/issues/489) and the release boundary in [docs/RELEASE-STATE.md](RELEASE-STATE.md). This section supplements the historical repository-structure phase map below; it does **not** rename or re-open those completed taxonomy phases.
+
+- **P0.8 — certified for development:** runtime/listing correction [#592](https://github.com/tiagosombrra/abntexto-ufc/pull/592) and post-squash historical-proof CI correction [#595](https://github.com/tiagosombrra/abntexto-ufc/pull/595) are protected squash merges, with final audited `main=e4f8bf766d6213d4b390f84e4940dbfb74ad73b8`. The exact-main Static [#43539771114](https://github.com/tiagosombrra/abntexto-ufc/actions/runs/43539771114), Linux 42/42 [#43539771133](https://github.com/tiagosombrra/abntexto-ufc/actions/runs/43539771133), Linux Release 38/38 plus pkgcheck [#43539771199](https://github.com/tiagosombrra/abntexto-ufc/actions/runs/43539771199), and integrated four-language evidence [#43539771126](https://github.com/tiagosombrra/abntexto-ufc/actions/runs/43539771126) passed. The 72-ID proof is **bounded functional evidence**, not institutional approval or a blanket release certification.
+- **P0.9 — in progress:** [PR #596](https://github.com/tiagosombrra/abntexto-ufc/pull/596) updates README, author documentation, version boundaries and troubleshooting, and adds **four source-bound executable TeX quickstarts** (PT/EN/ES/FR) with a dedicated TeX Live 2026 actual-PDF check. At the intermediate `fd4b6fd4...` HEAD the four quickstarts passed [#43585284542](https://github.com/tiagosombrra/abntexto-ufc/actions/runs/43585284542) and Static passed [#43585284521](https://github.com/tiagosombrra/abntexto-ufc/actions/runs/43585284521). Linux and optional modules were still running; any subsequent HEAD must be checked separately. Codex found that this maintenance map needed synchronizing; its review thread is a **blocking finding until this correction is reviewed and resolved**.
+- **P0.10–P0.12 — pending:** documentation governance and consistency, public site/validator completion, and final cross-surface auditing and source-bound human acceptance, respectively. No phase-complete or 100% status should be inferred from CI alone.
+- **Release invariant:** v3.0.5 remains the last **published** GitHub/CTAN release. The v3.1.0 line remains **UNRELEASED**, `publication_authorized=false`. The maintainer's global visual acceptance of 28 PDFs/972 pages from [#592](https://github.com/tiagosombrra/abntexto-ufc/pull/592) is source/PDF-bound, not 972 individually signed page findings or formal UFC/ABNT/linguistic homologation. No tag, release asset or CTAN upload is authorized by this checkpoint.
+
 ## Working policy — pragmatic mode
 
 This roadmap is a continuity aid, not a ceremony checklist. Historical receipts below are kept for auditability, but their detailed step-by-step wording is not a mandatory template for new work.
@@ -21,7 +30,7 @@ Use the lightest process that still protects correctness:
 
 ## Core invariants
 
-- Published v3.0.4 source, annotated tag, GitHub Release assets and checksums remain immutable.
+- Published v3.0.4 **and v3.0.5** sources, annotated tags, GitHub Release assets and checksums remain immutable.
 - `abntexto-ufc.cls` remains the canonical project-owned runtime at repository root.
 - Historical v3 evidence is not rewritten merely for aesthetics.
 - No force-push, tag retargeting, release-asset replacement or history rewriting.
