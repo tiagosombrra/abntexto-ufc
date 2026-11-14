@@ -4,6 +4,18 @@ Este guia explica o fluxo normal de produção de um trabalho com a classe `abnt
 
 A classe concentra decisões de apresentação, mas o autor continua responsável pelo conteúdo acadêmico, pelas fontes citadas e pelas regras específicas do curso, programa, edital ou procedimento de depósito.
 
+## Antes de começar: escolha a distribuição correta
+
+A versão **v3.0.5** é a última publicada no [GitHub Releases](https://github.com/tiagosombrra/abntexto-ufc/releases/tag/v3.0.5) e no CTAN. A **v3.1.0 permanece em desenvolvimento**; configurações multilíngues e a correção de listagens aninhadas descritas neste guia referem-se ao código de desenvolvimento, não aos bundles publicados.
+
+| Ambiente | O que usar | Primeira ação |
+| --- | --- | --- |
+| Overleaf | `abntexto-ufc-overleaf-3.0.5.zip` | Importar como novo projeto e editar `main.tex` |
+| TeX Live local | `abntexto-ufc-template-3.0.5.zip` | Extrair preservando diretórios, verificar dependências e compilar `main.tex` |
+| Autor que testa a v3.1.0 | `main` do repositório | Isolar do trabalho de entrega, executar testes e conferir resultados |
+
+O pacote CTAN é a distribuição da classe e **não** equivale a um projeto TCC pronto para editar. Evite combinar arquivos da v3.0.5 com componentes da `main` na mesma compilação.
+
 ## Fluxo recomendado
 
 1. copie o Template ou importe o ZIP Overleaf da Release;
@@ -392,6 +404,8 @@ Código externo pode ser incluído com:
 
 A referência completa também documenta `ufclisting`, `\ufcInputMinted` e `ufcalgorithm`. A escolha do módulo de código ou da numeração de linhas é política editorial, não uma exigência geral da ABNT.
 
+**Listagens dentro de caixas (v3.1.0):** `\ufcInputListing` suporta a importação no texto e, com a correção incorporada pela [PR #592](https://github.com/tiagosombrra/abntexto-ufc/pull/592), em `ufcobject`/`place` no contexto funcional testado. Entretanto, a caixa não se divide entre páginas: para um arquivo grande use `\ufcInputListing` diretamente no corpo textual. O comando upstream `\lstinputlisting` não herda automaticamente essa correção. Consulte a [referência de listagens](COMMAND-REFERENCE.md#ufcinputlistingopçõesarquivo).
+
 ### Equações
 
 Use os ambientes matemáticos normais do LaTeX:
@@ -494,6 +508,19 @@ make release-check
 ```
 
 O último comando é um gate de engenharia do projeto, não uma etapa exigida de um aluno que apenas usa o template.
+
+## Solução de problemas de compilação e validação
+
+| Sintoma | Diagnóstico inicial | Próxima ação |
+| --- | --- | --- |
+| Arquivo de imagem ou `.tex` ausente | Diretórios foram reorganizados ou `coat-of-arms=true` sem ativo | Restaurar a estrutura do bundle; para um teste sem marca institucional, selecionar `coat-of-arms=false` |
+| Referências/citações indefinidas | Biber não executado, entrada `.bib` ausente ou chave divergente | Verificar o arquivo bibliográfico e executar o fluxo completo de compilação, com as passagens adicionais |
+| Títulos automáticos em idioma diferente do corpo | `document-language`, `labels-language` e `\DocumentMetadata` não estão coerentes | Conferir a [tabela de idiomas](#revisão-prática-do-idioma-e-do-pdf-v310-em-desenvolvimento) e testar os quatro rótulos separados |
+| Erro em `\ufcInputListing` aninhado ou listagem longa truncada | Classe publicada antiga, importador upstream ou caixa sem quebra de páginas | Na prévia v3.1.0 usar `\ufcInputListing` público; deslocar listagens longas para fora de `place` |
+| Erro de fonte com `strict-font=true` | Família literal solicitada não disponível ao mecanismo TeX | Instalar/configurar legalmente a fonte ou mudar de política editorial; não tratar substituição silenciosa como aprovação |
+| PDF/A não validado pelo Web/Lite | O navegador não executa a auditoria completa da estrutura/fontes | Validar com CLI/Deep e, quando exigido, com veraPDF; revisar o relatório e o PDF visualmente |
+
+Se o erro persistir, abra uma [issue](https://github.com/tiagosombrra/abntexto-ufc/issues) informando versão, `type`, engine (`pdfLaTeX`/`LuaLaTeX`), log e um exemplo mínimo sem dados pessoais.
 
 ## Checklist de entrega
 
