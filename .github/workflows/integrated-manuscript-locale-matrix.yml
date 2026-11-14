@@ -197,6 +197,18 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
           fetch-depth: 0
           persist-credentials: false
+      - name: Restore frozen new-runtime proof commit after protected squash
+        # The proof SHA is an ancestor of PR #592, but not of squash-merged main.
+        # Fetch only the immutable PR ref and assert its exact commit and class.
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh auth setup-git
+          git fetch --no-tags origin refs/pull/592/head
+          test "$(git rev-parse FETCH_HEAD)" = "af313c17aafe6b1c8cabc97917f40d5c9afa5dcc"
+          git merge-base --is-ancestor "9ab436da5027c4e20c305398bf89356b70bb17ad" FETCH_HEAD
+          test "$(git rev-parse 9ab436da5027c4e20c305398bf89356b70bb17ad:abntexto-ufc.cls)" = "299293e273dcefb80256eed2e17d2557db6aae52"
       - name: Check all supported public tags, macros and environments
         run: python3 tests/integration/frontmatter/i18n-api-inventory.py
       - name: Reconcile 72 public API evidence sources without false PDF certification
