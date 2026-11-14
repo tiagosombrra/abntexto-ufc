@@ -16,6 +16,10 @@ A versão **v3.0.5** é a última publicada no [GitHub Releases](https://github.
 
 O pacote CTAN é a distribuição da classe e **não** equivale a um projeto TCC pronto para editar. Evite combinar arquivos da v3.0.5 com componentes da `main` na mesma compilação.
 
+### Quatro exemplos TeX mínimos (somente v3.1.0)
+
+O diretório [examples/quickstart](../examples/quickstart/README.md) fornece fontes autocontidas PT/EN/ES/FR no perfil `research-project`. Um workflow dedicado compila os quatro PDFs em TeX Live 2026 e conserva hashes do código e do PDF. A demonstração não equivale à homologação dos sete perfis, nem à aprovação institucional ou ao lançamento da v3.1.0.
+
 ## Fluxo recomendado
 
 1. copie o Template ou importe o ZIP Overleaf da Release;

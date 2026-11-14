@@ -121,6 +121,8 @@ Texto do trabalho.
 \end{document}
 ```
 
+Para testar a configuração da v3.1.0 nos quatro idiomas, utilize também os [quatro exemplos mínimos TeX](examples/quickstart/README.md). Cada um terá um PDF real e um recibo SHA-bound no workflow P0.9; são exemplos de desenvolvimento, não material da release v3.0.5.
+
 Para aprender pelo exemplo completo, use `template/main.tex`. Ele é um TCC tutorial: mostra o fluxo real de edição e usa os recursos principais no contexto em que aparecem. Nos bundles de Template e Overleaf, essa fonte mantém `coat-of-arms=true`, inclui `assets/institutional/ufc-coat-of-arms.png` e vem acompanhada de `abntexto-ufc-reference.pdf`, gerado a partir da mesma fonte distribuída.
 
 Para consulta sem inflar o TCC, use [docs/USER-GUIDE.md](docs/USER-GUIDE.md) e [docs/COMMAND-REFERENCE.md](docs/COMMAND-REFERENCE.md). Casos extremos e cobertura normativa permanecem em `tests/` e `standards/`, não no texto acadêmico do tutorial.

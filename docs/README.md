@@ -1,6 +1,6 @@
 # Documentation index
 
-This directory contains the current human-readable documentation for `abntexto-ufc`. Start with the [root README](../README.md) for download decisions and quick setup, then the [authoring guide](USER-GUIDE.md) for an end-to-end document. The latest **published** version is `v3.0.5`; `v3.1.0` is a **development preview** only.
+This directory contains the current human-readable documentation for `abntexto-ufc`. For four source-bound minimum manuscript examples of unreleased v3.1.0, see the [PT/EN/ES/FR quickstarts](../examples/quickstart/README.md). Start with the [root README](../README.md) for download decisions and quick setup, then the [authoring guide](USER-GUIDE.md) for an end-to-end document. The latest **published** version is `v3.0.5`; `v3.1.0` is a **development preview** only.
 
 The documentation describes the current supported project only. Historical implementation phases, closed release work and retired API evidence are not user guidance and live under `docs/history/v3/` or `release/history/v3/` when they still have audit value.
 
