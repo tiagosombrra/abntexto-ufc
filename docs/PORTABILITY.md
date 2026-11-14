@@ -30,5 +30,5 @@ A dependent Ubuntu job reuses the existing font-embedding and PDF/A-2b contracts
 - Windows proves Windows-specific path/font preparation behavior.
 - macOS proves Darwin + ARM64 public-template compilation.
 - Cross-platform smokes fail closed; `continue-on-error` is not an accepted portability policy.
-- Published v3.0.4 release/tag/archive bytes remain immutable.
+- Published v3.0.4 **and v3.0.5** release/tag/archive bytes remain immutable. The separately developed v3.1.0 line is not published.
 - No cross-platform workflow may redistribute proprietary system fonts.

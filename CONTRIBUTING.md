@@ -93,6 +93,8 @@ Do not add user-facing documentation whose primary purpose is explaining retired
 
 Keep links repository-relative where possible and make sure they resolve.
 
+The repository-owned `make static-check` includes `tests/checks/repository/documentation_links_contract.py`: it checks relative links and Markdown heading fragments in tracked, nonhistorical `.md` documents (including contributor-facing examples), with local positive/negative regression tests. Broken relative references block the Static Contract. External URLs and external fragment availability require separate manual or approved online verification; this offline test does not claim to validate them.
+
 ## Distribution changes
 
 The current distribution contract is documented in `docs/CTAN-RELEASE.md` and `docs/ARCHITECTURE.md`.

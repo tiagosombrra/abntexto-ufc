@@ -36,6 +36,7 @@ SOURCE_CHECK_NAMES = (
     "v3_api_residual.py",
     "librarian_review_contract.py",
     "internationalization_docs_contract.py",
+    "documentation_links_contract.py",
     "mesh_study.py",  # Pure-Python reproducibility; no network or TeX dependency.
     "homepage_locales_contract.py",
 )

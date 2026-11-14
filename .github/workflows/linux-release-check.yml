@@ -5,11 +5,10 @@ on:
     branches:
       - main
     paths-ignore:
-      - README.md
-      - AGENTS.md
+      # Current active documentation is part of the P0 release-grade evidence.
+      # Immutable release-history and repository metadata remain excluded.
       - LICENSE
       - .gitignore
-      - 'docs/**'
       - 'release/history/v3/**'
   pull_request:
     branches:
@@ -20,6 +19,16 @@ on:
       - reopened
       - ready_for_review
     paths:
+      # P0.10 governance: automatically validate active documentation,
+      # Markdown contracts and current release-state changes on exact PR HEAD.
+      - README.md
+      - AGENTS.md
+      - CHANGELOG.md
+      - CONTRIBUTING.md
+      - SECURITY.md
+      - 'docs/**'
+      - tests/static.py
+      - 'tests/checks/repository/**'
       - release/v3-release-candidate.json
       - .github/workflows/linux-release-check.yml
       - tools/ci/validate-release-reference.py

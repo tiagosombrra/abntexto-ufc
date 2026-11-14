@@ -1,6 +1,6 @@
 # abntexto-ufc architecture
 
-Updated: 2026-09-20
+Updated: 2026-11-14 (documentation/quickstart boundary; canonical runtime unchanged)
 
 This document describes the current engineering architecture of `abntexto-ufc`. It is intentionally limited to the supported repository/runtime model and does not serve as a chronology of earlier implementation phases.
 
@@ -219,6 +219,12 @@ Current release/lifecycle authority is:
 2. `release/v3-release-candidate.json`;
 3. `docs/RELEASE-STATE.md`;
 4. current durable technical documentation.
+
+### Executable documentation boundaries — P0.10
+
+The user-facing `examples/quickstart/` directory contains four minimal PT/EN/ES/FR TeX manuscripts for the **unreleased v3.1.0** development line. The dedicated `.github/workflows/p09-quickstart-four-languages.yml` workflow compiles actual PDFs and verifies extracted text, PDF language and SHA-bound receipts. These bounded examples supplement, but do not replace, the complete R4/R5 matrices or human normative review.
+
+The Static Contract also checks repository-relative Markdown links and heading fragments across tracked nonhistorical documents via `tests/checks/repository/documentation_links_contract.py`. This source-only validation does not access the network, test the correctness of external links, or certify semantic/normative content. Historical receipts under controlled history directories are excluded from this active-link contract to avoid rewriting past evidence.
 
 ## Release-state architecture
 

@@ -16,11 +16,22 @@ The documentation describes the current supported project only. Historical imple
 - [WINDOWS-FONT-SUPPORT.md](WINDOWS-FONT-SUPPORT.md) — scoped support for literal Windows font validation.
 - [PORTABILITY.md](PORTABILITY.md) — bounded Linux/Windows/macOS portability coverage and CI boundaries.
 
+## Scoped diagnostic and reproducibility material
+
+These sources record bounded experiments, technical evidence and diagnostic states. They are not substitutes for the current normative authority or for maintained author instructions.
+
+- [EXAMPLES-ROADMAP-AND-CI.md](EXAMPLES-ROADMAP-AND-CI.md) — scoped academic examples and real-PDF pipeline plans.
+- [PUBLIC-MESH-USER-GUIDE.md](PUBLIC-MESH-USER-GUIDE.md) — academic mesh-study examples; development-only evidence.
+- [R5-HUMAN-READABLE-28.md](R5-HUMAN-READABLE-28.md) and [R81-V310-HUMAN-REVIEW.md](R81-V310-HUMAN-REVIEW.md) — source-bound human-review packets; preserve original state markers and differentiate later maintainer acceptance.
+- [ACCESSIBILITY-EXPERIMENT.md](ACCESSIBILITY-EXPERIMENT.md) — experimental accessibility diagnostics, **not PDF/UA compliance**.
+- [E3-28-PDF-COMPOSED-INTEGRATION.md](E3-28-PDF-COMPOSED-INTEGRATION.md) — diagnostic composed-corpus evidence, not a release gate by itself.
+
 ## Architecture and engineering
 
 - [ARCHITECTURE.md](ARCHITECTURE.md) — current repository/runtime architecture and ownership boundaries.
 - [ENGINEERING-LANGUAGE.md](ENGINEERING-LANGUAGE.md) — language policy for project-owned engineering surfaces.
 - [LINUX-INTEGRATION-SCOPES.md](LINUX-INTEGRATION-SCOPES.md) — integration scopes and CI selection rules.
+- [CI-MAIN-INTEGRATION.md](CI-MAIN-INTEGRATION.md) — exact-main coverage, triggers and historical failure diagnosis.
 - [REPOSITORY-MAINTENANCE.md](REPOSITORY-MAINTENANCE.md) — current repository-wide maintenance map, phase boundaries and acceptance criteria.
 
 ## Normative and institutional basis
@@ -34,6 +45,7 @@ The documentation describes the current supported project only. Historical imple
 
 - [RELEASE-STATE.md](RELEASE-STATE.md) — current published baseline and active development state.
 - [CTAN-RELEASE.md](CTAN-RELEASE.md) — reusable GitHub/CTAN release discipline and distribution contract.
+- [RELEASE-PUBLICATION-OPERATOR.md](RELEASE-PUBLICATION-OPERATOR.md) — historical v3.0.5 receipts and operator handoff; not a v3.1.0 publication instruction.
 - [ARCHIVAL-PRESERVATION.md](ARCHIVAL-PRESERVATION.md) — citation authority, Zenodo/DOI prerequisites, artifact-attestation decision and preservation boundaries.
 
 ## Repository-wide contributor material
