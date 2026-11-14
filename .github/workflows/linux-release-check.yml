@@ -6,10 +6,9 @@ on:
       - main
     paths-ignore:
       # Current active documentation is part of the P0 release-grade evidence.
-      # Pure historical receipts and repository metadata are not.
+      # Immutable release-history and repository metadata remain excluded.
       - LICENSE
       - .gitignore
-      - 'docs/history/**'
       - 'release/history/v3/**'
   pull_request:
     branches:
@@ -28,7 +27,6 @@ on:
       - CONTRIBUTING.md
       - SECURITY.md
       - 'docs/**'
-      - '!docs/history/**'
       - tests/static.py
       - 'tests/checks/repository/**'
       - release/v3-release-candidate.json
