@@ -4,12 +4,15 @@ abntexto-ufc changelog
 3.1.0 — Unreleased
 ------------------
 
+- Integrates `ufcInputListing` nested-Listings regression correction with bounded original-byte 72-API proof; restores archived Git proof ancestry in the post-squash four-locale integration workflow (#592 and #595).
+- Certifies P0.9 author onboarding/documentation and four real TeX Live 2026 PT/EN/ES/FR quickstart PDFs in development, source-bound to the protected #596 merge; adds dedicated CI and precise published-versus-preview instructions.
+- Starts P0.10 active-document documentation consistency and Markdown link auditing; the last published release remains v3.0.5 and v3.1.0 is not publication-authorized.
 - Opens a backward-compatible minor development line distinct from the immutable CTAN-published 3.0.5.
 - Fixes spaces lost in default institution, submission entity, and research-project type values under expl3.
 - Labels the development manual as a v3.1.0 preview instead of inheriting the published v3.0.5 manual's stale status.
 - Adds generated cover and actual CTAN ZIP PDF text-boundary regression tests.
 - Continues the ABNT/IBGE/UFC, seven-profile validator and multilingual roadmap under issues #488 and #489.
-- Develops opt-in PT/EN/ES/FR class-owned text and summary localization with 33 text keys and 9 front-matter labels per locale, preserving legacy Portuguese and fixed historical PT/EN commands.
+- Develops opt-in PT/EN/ES/FR class-owned text and summary localization with 37 document keys and 9 front-matter labels per locale, preserving legacy Portuguese and fixed historical PT/EN commands.
 - Repairs actual inherited appendix, annex and object-note labels and adds five rendered-PDF regression cases.
 - Adds fast static locale-catalog/documentation checks, synchronizes current public documentation, and records the limitations of earlier display-only 28-PDF tests.
 

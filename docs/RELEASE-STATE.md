@@ -38,7 +38,13 @@ The maintainer selected v3.1.0 as the next backward-compatible minor development
 
 First scoped source correction #487 restores word boundaries in default metadata created under `\\ExplSyntaxOn`, and validates PDF output for the new candidate. Draft documentation says `development preview`, never implying CTAN submission/approval. No historical published artifact may be rebuilt or retargeted.
 
-### Current development integration and P0.8 verification — 2026-11-14
+### P0.9 documentation and four-language quickstarts — POSTMERGE_CERTIFIED 2026-11-14
+
+[PR #596](https://github.com/tiagosombrra/abntexto-ufc/pull/596) was protected-squash merged to exact `main=dc605fd3646bd848902b97eb5a607ea959aaa08b`, following same-SHA source review and all premerge gates. The final `main` successfully passed [Static Contract #43597223682](https://github.com/tiagosombrra/abntexto-ufc/actions/runs/43597223682), [Linux Integration #43597223719](https://github.com/tiagosombrra/abntexto-ufc/actions/runs/43597223719) (`SCOPE=complete PASS=42 FAIL=0 SKIP=0`, real Web/Lite/browser E2E), [Linux Release Check #43597223664](https://github.com/tiagosombrra/abntexto-ufc/actions/runs/43597223664) (`SCOPE=complete PASS=38 FAIL=0 SKIP=0`, CTAN pkgcheck 4.1.3 PASS), and [four PT/EN/ES/FR quickstart PDFs #43597223691](https://github.com/tiagosombrra/abntexto-ufc/actions/runs/43597223691) (four real TeX Live 2026 jobs, PDF language, text and SHA receipts). See [the exact audit in PR #596](https://github.com/tiagosombrra/abntexto-ufc/pull/596#issuecomment-6878109711).
+
+**P0.9 development technical closure = PASS.** The documentation guide, release boundary and four basic examples are certified as development artifacts, **not** as a formally approved UFC/ABNT submission, exhaustive PDF/UA or linguistic review. The `v3.1.0` line remains `UNRELEASED` with `publication_authorized=false`; v3.0.5 remains the last published GitHub and CTAN release. The phase P0.10 documentation audit is active, while P0.11 and P0.12 remain pending.
+
+### P0.8 development integration and verification — 2026-11-14
 
 The protected development merges [PR #592](https://github.com/tiagosombrra/abntexto-ufc/pull/592) (runtime and editorial R8.1 corpus correction) and [PR #595](https://github.com/tiagosombrra/abntexto-ufc/pull/595) (workflow-only recovery of frozen proof history after squash) are **MERGED**. The last audited `main` is `e4f8bf766d6213d4b390f84e4940dbfb74ad73b8`. The runtime Git blob `299293e273dcefb80256eed2e17d2557db6aae52` and original R5 generator blobs did not change during #595.
 
@@ -46,7 +52,7 @@ Four post-merge workflows on **that exact SHA** passed: [Static Contract #435397
 
 The R5 development corpus [#43532245052](https://github.com/tiagosombrra/abntexto-ufc/actions/runs/43532245052) contains **28 PDFs/972 physical pages with 28/28 independently PDF/A-2b compliant** at the accepted #592 source SHA. The maintainer explicitly accepted **the presented set of 28 documents globally**, recorded in [#592 comment 6868188102](https://github.com/tiagosombrra/abntexto-ufc/pull/592#issuecomment-6868188102), not 972 individually logged page decisions, normative UFC/ABNT approval, or formal review of the four translations.
 
-**P0.8 development technical closure = PASS**; global institutional/normative/linguistic review and the P0.9–P0.12 documentation/site/final acceptance stages are **PENDING**. Version `v3.1.0` stays `UNRELEASED` and `publication_authorized=false`; `v3.0.5` remains the last published release. The following 2026-11-13 R8.1 notes describe the **historical intermediate draft state**, not the current merge state.
+**P0.8 development technical closure = PASS**; global institutional/normative/linguistic review and the P0.10–P0.12 documentation/site/final acceptance stages remain **PENDING**; the later P0.9 source-bound certification is recorded above. Version `v3.1.0` stays `UNRELEASED` and `publication_authorized=false`; `v3.0.5` remains the last published release. The following 2026-11-13 R8.1 notes describe the **historical intermediate draft state**, not the current merge state.
 
 ### R8.1 v3.1.0 — technical PDF correction and original-byte evidence (2026-11-13)
 
