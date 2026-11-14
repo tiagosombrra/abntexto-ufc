@@ -127,6 +127,12 @@
       "owner_doc": "docs/R81-CONTROLLED-PAGINATION.md",
       "purpose": "Execute controlled real-PDF PT/EN/ES/FR diagnosis distinguishing language configuration from translated long-table content in R8.1.",
       "reason": "A source-bound multilingual PDF diagnostic for a disputed page-layout defect belongs to a dedicated TeX Live workflow, not in every static or Linux Integration execution. It never grants human or release approval."
+    },
+    {
+      "path": ".github/workflows/p09-quickstart-four-languages.yml",
+      "owner_doc": "examples/quickstart/README.md",
+      "purpose": "Compile real PT/EN/ES/FR quickstart PDFs in pinned TeX Live 2026, checking rendered text, PDF language and immutable source/PDF hashes.",
+      "reason": "Dedicated bounded user-facing samples require real PDF evidence without pretending to replace the heavy R4/R5 matrices, visual review, or release approval."
     }
   ]
 }

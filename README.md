@@ -35,6 +35,14 @@ O `abntexto-ufc` organiza em uma única classe LaTeX:
 
 O projeto usa uma única API pública canônica em inglês, sem traduzir nomes de comandos e opções. O português é o idioma padrão. Na linha **v3.1.0 em desenvolvimento**, o idioma principal e os rótulos gerados pela classe podem ser configurados para português, inglês, espanhol e francês. Isso **não traduz automaticamente** o texto do autor, dados bibliográficos nem nomes oficiais de instituições.
 
+## Comece em poucos minutos
+
+1. **Escolha uma versão:** para um trabalho a ser entregue, use a [v3.0.5 publicada](https://github.com/tiagosombrra/abntexto-ufc/releases/tag/v3.0.5). A `main` documenta recursos **v3.1.0 ainda não publicados**, destinados a avaliação e desenvolvimento.
+2. **Escolha o ambiente:** no Overleaf, importe o ZIP `abntexto-ufc-overleaf-3.0.5.zip`; localmente, extraia `abntexto-ufc-template-3.0.5.zip` e prepare TeX Live, `abntexto` e Biber. Preserve o conteúdo das pastas.
+3. **Edite e confira:** escolha `type`, preencha `\ufcsetup{...}`, substitua os arquivos de exemplo, compile e revise o PDF inteiro. Use o [guia passo a passo](docs/USER-GUIDE.md) para os sete perfis e os comandos opcionais.
+
+O uso de `main` **não atualiza** automaticamente uma instalação publicada da v3.0.5; configurações de `document-language=en|es|fr` e a correção de listagens aninhadas descritas abaixo pertencem à v3.1.0 em desenvolvimento.
+
 ## Para quem é
 
 | Público | Caminho recomendado |
@@ -88,12 +96,13 @@ Depois que a versão estiver disponível no CTAN/TeX Live, a instalação normal
 ## Uso mínimo
 
 ```tex
+\DocumentMetadata{lang=pt-BR,pdfstandard=A-2b,pdfversion=1.7}
 \documentclass{abntexto-ufc}
 
 \ufcsetup{
   type = undergraduate-capstone,
   print-mode = single-sided,
-  coat-of-arms = true,
+  coat-of-arms = false,
   author = {Nome Sobrenome},
   title = {Título do trabalho},
   location = {Fortaleza},
@@ -102,13 +111,17 @@ Depois que a versão estiver disponível no CTAN/TeX Live, a instalação normal
 }
 
 \begin{document}
+\pretextual
 \ufcPrintCover
 \ufcPrintTitlePage
 
+\textual
 \section{Introdução}
 Texto do trabalho.
 \end{document}
 ```
+
+Para testar a configuração da v3.1.0 nos quatro idiomas, utilize também os [quatro exemplos mínimos TeX](examples/quickstart/README.md). Cada um terá um PDF real e um recibo SHA-bound no workflow P0.9; são exemplos de desenvolvimento, não material da release v3.0.5.
 
 Para aprender pelo exemplo completo, use `template/main.tex`. Ele é um TCC tutorial: mostra o fluxo real de edição e usa os recursos principais no contexto em que aparecem. Nos bundles de Template e Overleaf, essa fonte mantém `coat-of-arms=true`, inclui `assets/institutional/ufc-coat-of-arms.png` e vem acompanhada de `abntexto-ufc-reference.pdf`, gerado a partir da mesma fonte distribuída.
 
@@ -135,7 +148,7 @@ Exemplo de configuração para inglês **no código de desenvolvimento v3.1.0** 
 
 O idioma do PDF declarado em `\DocumentMetadata` é **independente** do idioma Babel configurado por `document-language`; ambos devem ser coerentes. Para espanhol use `es`/`es-ES`; para francês `fr`/`fr-FR`; para português `pt`/`pt-BR`. Conteúdos de resumo, palavras-chave e nomes institucionais exigem edição e revisão humanas.
 
-A cobertura automatizada já inclui matrizes de documentos completos em quatro idiomas e testes funcionais delimitados de APIs públicas, mas **não certifica individualmente todos os 72 identificadores auditados** nem substitui a revisão linguística/visual. Consulte [configuração e resumos multilíngues](docs/USER-GUIDE.md), [referência da API](docs/COMMAND-REFERENCE.md), [matriz de evidências](docs/I18N-COMPLETION-MATRIX.md) e [roadmap da v3.1.0](https://github.com/tiagosombrra/abntexto-ufc/issues/489).
+A cobertura atual de desenvolvimento inclui matrizes de documentos completos em quatro idiomas e **72/72 identificadores da API pública com recibos individuais de prova funcional delimitada**: 13 suítes originais, 10 ZIPs autenticados, 310 PDFs e 4.952 referências SHA-256. Esse resultado **não significa** aprovação irrestrita de todos os perfis, mecanismos TeX, cenários ou normas UFC/ABNT, nem revisão linguística/visual institucional. O ledger histórico da classe anterior permanece preservado e a certificação formal global da nova classe continua pendente. Consulte [configuração e resumos multilíngues](docs/USER-GUIDE.md), [referência da API](docs/COMMAND-REFERENCE.md), [matriz de evidências](docs/I18N-COMPLETION-MATRIX.md) e [roadmap da v3.1.0](https://github.com/tiagosombrra/abntexto-ufc/issues/489).
 
 ## Perfis de documento
 
@@ -184,6 +197,20 @@ python3 tools/validate-ufc-pdf.py arquivo.pdf --profile strict --format json --o
 ```
 
 O CLI/Deep usa ferramentas locais como Poppler e, quando disponível, veraPDF para verificações que o navegador não deve declarar automaticamente como PASS.
+
+## Perguntas frequentes e diagnóstico
+
+**Posso usar a v3.1.0 em um trabalho para entrega?** Ela ainda é uma prévia de desenvolvimento, sem Release ou CTAN próprios. Para depósito acadêmico, prefira a v3.0.5 publicada e confirme os requisitos atuais do curso e do programa.
+
+**A capa não mostra o brasão ou aparece erro de imagem ausente.** O exemplo mínimo usa `coat-of-arms=false` para não depender de um arquivo institucional. Os bundles Template e Overleaf trazem o brasão utilizado pelo tutorial e configuram `coat-of-arms=true`; quem trabalha com o pacote CTAN deve providenciar o ativo separadamente, se aplicável.
+
+**Citações ou referências aparecem como interrogações.** Confira `backmatter/references.bib`, as chaves de citação e a execução de Biber entre as passagens de LaTeX. Executar apenas uma vez `pdflatex` não reproduz necessariamente o resultado do tutorial completo.
+
+**O PDF mostra idioma ou palavras-chave errados.** Na v3.1.0, configure `document-language` com `pt|en|es|fr`, escolha `labels-language` somente quando quiser títulos pré-textuais diferentes, e declare o `lang` BCP 47 correspondente em `\DocumentMetadata` antes da classe. O conteúdo dos resumos e os nomes oficiais não são traduzidos automaticamente.
+
+**Uma listagem externa falha dentro de `ufcobject` ou `place`.** Na v3.1.0, use a API `\ufcInputListing` com `code=listings`, e não presuma que `\lstinputlisting` nativo receba a mesma correção. Para listagens longas que precisam quebrar entre páginas, faça a importação diretamente no fluxo textual, fora dessas caixas. Consulte a [referência da API](docs/COMMAND-REFERENCE.md).
+
+**O validador Web/Lite aprovou o PDF: ele está conforme PDF/A e ABNT/UFC?** Não necessariamente. O Web/Lite não certifica profundamente fontes incorporadas nem PDF/A, e nenhuma das ferramentas substitui uma inspeção normativa, visual e linguística. Utilize o CLI/Deep e as regras oficiais de depósito aplicáveis.
 
 ## Base normativa
 

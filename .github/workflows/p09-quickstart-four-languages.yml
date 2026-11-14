@@ -1,0 +1,110 @@
+name: P0.9 four-language executable quickstarts
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths:
+      - examples/quickstart/**
+      - README.md
+      - docs/USER-GUIDE.md
+      - .github/workflows/p09-quickstart-four-languages.yml
+  push:
+    branches: [main]
+    paths:
+      - examples/quickstart/**
+      - README.md
+      - docs/USER-GUIDE.md
+      - .github/workflows/p09-quickstart-four-languages.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: p09-quickstart-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  real-pdf:
+    name: TeX Live 2026 quickstart / ${{ matrix.locale }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {locale: pt, bcp: pt-BR}
+          - {locale: en, bcp: en-US}
+          - {locale: es, bcp: es-ES}
+          - {locale: fr, bcp: fr-FR}
+    steps:
+      - name: Checkout exact candidate
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - name: Compile and audit the actual PDF
+        uses: xu-cheng/texlive-action@22c04326a5d855880f9d39bb955138bf11c6df80 # v3
+        env:
+          SOURCE_COMMIT_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+          QUICKSTART_LOCALE: ${{ matrix.locale }}
+          QUICKSTART_BCP: ${{ matrix.bcp }}
+        with:
+          texlive_version: 2026
+          os: debian
+          run: |
+            # Export matrix values inside the TeX Live action container.
+            export QUICKSTART_LOCALE="${{ matrix.locale }}"
+            export QUICKSTART_BCP="${{ matrix.bcp }}"
+            export SOURCE_COMMIT_SHA="${{ github.event.pull_request.head.sha || github.sha }}"
+            set -eu
+            export DEBIAN_FRONTEND=noninteractive
+            apt-get update -y
+            apt-get install -y --no-install-recommends poppler-utils mupdf-tools
+            dest="artifacts/quickstart/$QUICKSTART_LOCALE"
+            mkdir -p "$dest"
+            for attempt in 1 2; do
+              pdflatex -interaction=nonstopmode -halt-on-error -file-line-error \
+                -output-directory="$dest" "examples/quickstart/$QUICKSTART_LOCALE.tex"
+            done
+            test -s "$dest/$QUICKSTART_LOCALE.pdf"
+            pdftotext -layout "$dest/$QUICKSTART_LOCALE.pdf" "$dest/$QUICKSTART_LOCALE.txt"
+            upper="$(printf %s "$QUICKSTART_LOCALE" | tr '[:lower:]' '[:upper:]')"
+            grep -F "QUICKSTART-$upper" "$dest/$QUICKSTART_LOCALE.txt"
+            mutool show "$dest/$QUICKSTART_LOCALE.pdf" trailer/Root/Lang > "$dest/pdf-lang.txt"
+            grep -F "$QUICKSTART_BCP" "$dest/pdf-lang.txt"
+            python3 - <<'PY'
+            import hashlib
+            import json
+            import os
+            from pathlib import Path
+
+            locale = os.environ["QUICKSTART_LOCALE"]
+            output = Path("artifacts/quickstart") / locale
+            source = Path("examples/quickstart") / f"{locale}.tex"
+            pdf = output / f"{locale}.pdf"
+            receipt = {
+                "status": "PASS_REAL_PDF_BOUNDED",
+                "source_commit_sha": os.environ["SOURCE_COMMIT_SHA"],
+                "locale": locale,
+                "pdf_lang": os.environ["QUICKSTART_BCP"],
+                "tex_sha256": hashlib.sha256(source.read_bytes()).hexdigest(),
+                "pdf_sha256": hashlib.sha256(pdf.read_bytes()).hexdigest(),
+                "human_normative_review": "PENDING",
+                "publication_authorized": False,
+            }
+            (output / "receipt.json").write_text(
+                json.dumps(receipt, indent=2) + "\n", encoding="utf-8"
+            )
+            print("P09-QUICKSTART-EVIDENCE " + json.dumps(receipt))
+            PY
+      - name: Preserve real PDFs and hashes
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: p09-quickstart-${{ matrix.locale }}-${{ github.run_id }}
+          path: |
+            examples/quickstart/${{ matrix.locale }}.tex
+            artifacts/quickstart/${{ matrix.locale }}/*.pdf
+            artifacts/quickstart/${{ matrix.locale }}/*.log
+            artifacts/quickstart/${{ matrix.locale }}/*.txt
+            artifacts/quickstart/${{ matrix.locale }}/receipt.json
+          retention-days: 21
+          if-no-files-found: error

@@ -362,7 +362,7 @@ Para utilizar o ambiente `ufcobject` com o importador público:
 \end{ufcobject}
 ```
 
-Essa correção **não se aplica automaticamente** ao comando nativo `\lstinputlisting` invocado diretamente dentro do `place` herdado. Listagens extensas que precisam quebrar entre páginas devem permanecer fora de `place`/`ufcobject`, porque esses ambientes utilizam caixas não divisíveis. A matriz de 64 casos é uma prova funcional delimitada: não substitui a revisão de posicionamento, paginação longa, referências cruzadas, conformidade UFC/ABNT ou aceite visual e linguístico. **A correção ainda pertence à PR [#592](https://github.com/tiagosombrra/abntexto-ufc/pull/592); a v3.1.0 não foi publicada.**
+Essa correção **não se aplica automaticamente** ao comando nativo `\lstinputlisting` invocado diretamente dentro do `place` herdado. Listagens extensas que precisam quebrar entre páginas devem permanecer fora de `place`/`ufcobject`, porque esses ambientes utilizam caixas não divisíveis. A matriz de 64 casos é uma prova funcional delimitada: não substitui a revisão de posicionamento, paginação longa, referências cruzadas, conformidade UFC/ABNT ou aceite visual e linguístico. **A correção da [PR #592](https://github.com/tiagosombrra/abntexto-ufc/pull/592) já foi integrada à `main` e passou pela matriz integrada pós-merge; ela ainda não faz parte da v3.0.5 publicada.**
 
 O arquivo `code/example.cpp` deve existir no projeto de compilação. Traduções de títulos e legendas não alteram automaticamente a linguagem de programação nem o conteúdo do arquivo; configure suas opções de `listings` explicitamente.
 
