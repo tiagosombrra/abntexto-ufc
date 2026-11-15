@@ -1,6 +1,6 @@
 # R8.1 — diagnóstico controlado e correção de paginação da tabela nativa
 
-**Estado:** defeito reproduzido no corpus original; correção editorial integrada na [PR #594](https://github.com/tiagosombrra/abntexto-ufc/pull/594) (merge `83dbaa6d1b3e6f431509c6b1bfaeb7b481044f0b`). Há recompilação e aceite **editorial/visual global delimitado** de 28 PDFs R5 posteriores, sob outro SHA e corpus de 80 linhas ([recibo do mantenedor](https://github.com/tiagosombrra/abntexto-ufc/pull/592#issuecomment-6868188102)); revisão individual por página e homologação normativa/institucional seguem pendentes.
+**Estado:** defeito reproduzido no corpus original; correção editorial integrada na [PR #594](https://github.com/tiagosombrra/abntexto-ufc/pull/594) (merge `83dbaa6d1b3e6f431509c6b1bfaeb7b481044f0b`). Há recompilação e aceite **editorial/visual global delimitado** de 28 PDFs R5 posteriores, sob outro SHA e corpus de 80 linhas ([recibo do mantenedor](https://github.com/tiagosombrra/abntexto-ufc/pull/592#issuecomment-6868188102)); revisão individual por página e homologação normativa e institucional seguem pendentes.
 
 ## Evidência imutável da R8.1
 
