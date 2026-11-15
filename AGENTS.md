@@ -23,7 +23,7 @@ Priority on disagreement: **current Git/GitHub facts > machine release receipt >
 | GitHub Release ID | `410584912` |
 | Canonical branch | `main`; resolve SHA dynamically |
 | Repository lifecycle | GitHub v3.0.5 `PUBLISHED` and fully certified on main `70398eb3a462e137433e217f0864da7d96ac4b44`; CTAN v3.0.5 `PUBLISHED/ACCEPTED` on the main CTAN server, 2026-10-13, verified by maintainer email and official catalogue, tracked in issue #484 |
-| Active development line | None selected since v3.0.5 publication; future changes require a new explicit line |
+| Active development line | `v3.1.0` — selected under issue #489, `UNRELEASED`; no release approval or authority to publish |
 | Completed GitHub release-control | issue #475 / PR #483; metadata correction issue #369 completed; source issue #471 / PR #472 historical |
 | Completed v3.0.4 release issue | issue #353 |
 | CTAN follow-up | issue #484 — v3.0.5 `PUBLISHED/ACCEPTED` (official CTAN team installation confirmation dated 2026-10-13 and catalogue listing Version 3.0.5; mirror propagation and announcement not independently confirmed), exact canonical GitHub asset ID `633747960` SHA256 `b57e2f4f17d5a707e93a30f5fe701f0f14606fc39c01d6f09b6e8a3781e652e8`; issue #356 is completed historical v3.0.4 |
