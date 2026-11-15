@@ -1,6 +1,6 @@
 # UFC Librarian Review — Consolidated 34-Point Contract
 
-Updated: 2026-09-09
+Original scoped reviewer-contract closure: 2026-09-09. Scope clarification: 2026-11-15 (no regrading or new normative source certification).
 
 ## Purpose
 
@@ -15,9 +15,9 @@ This document converts the union of the two annotated v1.1.1 review PDFs supplie
 
 ## Current summary
 
-The consolidated review state is **34 PASS, 0 PARTIAL, 0 FAIL, 0 NORMATIVE-REVIEW = 34 items**.
+The consolidated **historical v1.1.1 reviewer-contract** state is **34 PASS, 0 PARTIAL, 0 FAIL, 0 NORMATIVE-REVIEW = 34 items**. These are 34 named engineering correction/review items, **not** 34 independently recertified ABNT standards, complete UFC deposit criteria or a university homologation.
 
-All review items are reconciled against the applicable current technical/institutional authority and are represented by executable, rendered or manual-review evidence as appropriate. Current acceptance depends on the evidence referenced by this contract and on the repository's active validation gates.
+All 34 closure decisions retain their original source and regression boundaries, including item 33's directly reviewed NBR 6023:2025 clauses. Later changes must revalidate affected behaviors against their own source SHA. The separate [21-source normative currency audit](NORMATIVE-CURRENCY-AUDIT-2026-10-19.md) still reports unverified current ABNT publisher edition/corrigenda checks for ten technical standards; the current [v3.1.0 roadmap](https://github.com/tiagosombrra/abntexto-ufc/issues/489) and [human acceptance issue #507](https://github.com/tiagosombrra/abntexto-ufc/issues/507) control remaining review. A PASS here does **not** imply the 972 R8.1 page-level decisions, formal institutional acceptance, exhaustive normative conformance, or release approval.
 
 Item 33 was closed on 2026-09-09 after direct review of the primary ABNT NBR 6023:2025 text. The authoritative locators used for closure are sections **6.6**, **8.1.2**, **8.1.2.2–8.1.2.3**, **8.13**, and **9.1**, together with the standard's examples for online references, legal-person authorship/jurisdiction and repeated authorship. The resulting behavior is regression-tested in `tests/integration/citations/references-6023.sh` with controlled fixtures.
 
