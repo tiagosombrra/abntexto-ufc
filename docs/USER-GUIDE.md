@@ -164,7 +164,7 @@ Se o **PDF começa na capa externa** e só depois apresenta a folha de rosto, us
 python3 tools/validate-ufc-pdf.py tese-com-capa.pdf --profile portable --document-type doctoral-thesis --print-mode double-sided --page-accounting external-cover-first --format json
 ```
 
-O padrão `--page-accounting pdf-first-page` conserva a contagem física anterior (primeira página do PDF é o anverso interno). Na opção com capa externa, a página 1 continua sendo verificada quanto ao tamanho A4, mas fica fora da verificação das margens **internas**; a página 2 passa a ser o anverso interno. A ficha catalográfica, mesmo sem numeração impressa, continua ocupando seu lado físico dentro do miolo e **não** deve provocar outro deslocamento. Essa opção exige `double-sided` e pelo menos duas páginas no PDF. Os relatórios JSON registram `page_accounting`; o método mede margens horizontais, não valida automaticamente se o usuário escolheu o modelo correto.
+O padrão `--page-accounting pdf-first-page` conserva a contagem física anterior (primeira página do PDF é o anverso interno). Na opção com capa externa, a página 1 continua sendo verificada quanto ao tamanho A4, mas fica fora da verificação das margens **internas**; a página 2 passa a ser o anverso interno. Quando **incluída**, a ficha catalográfica, mesmo sem numeração impressa, ocupa seu lado físico dentro do miolo e **não** deve provocar outro deslocamento. A ficha visual é facultativa para TCC, dissertações e teses da UFC, conforme a [orientação vigente do Sistema de Bibliotecas](https://biblioteca.ufc.br/pt/perguntas-frequentes/ficha-catalografica-2/). A opção `external-cover-first` exige `double-sided` e pelo menos duas páginas no PDF. Os relatórios JSON registram `page_accounting`; o método mede margens horizontais, não valida automaticamente se o usuário escolheu o modelo correto.
 
 A verificação automática aqui mede somente limites **horizontais** do texto extraído. Não prova margens superior/inferior, organização semântica ou que o arquivo realmente foi composto para frente e verso.
 
@@ -262,7 +262,7 @@ O fluxo básico é:
 
 ### Folha de aprovação
 
-`\ufcPrintApprovalPage` usa `approval-date`, orientador, coorientador e membros da banca configurados. Para versões destinadas ao depósito digital, siga a política institucional vigente sobre assinaturas; a classe não deve ser usada para inserir imagens de assinaturas como substituto do procedimento oficial.
+`\ufcPrintApprovalPage` usa `approval-date`, orientador, coorientador e membros da banca configurados. Para divulgação no Repositório Institucional da UFC, as [regras de recebimento de TCC](https://biblioteca.ufc.br/pt/normas-sibi/normas-para-o-recebimento-de-tcc/) e de [teses e dissertações](https://biblioteca.ufc.br/pt/normas-sibi/normas-para-o-recebimento-de-teses-e-dissertacoes/) determinam que a folha de aprovação seja apresentada **sem as assinaturas dos membros da banca**. A classe não deve inserir imagens de assinaturas como substituto do procedimento institucional; confirme os trâmites com a secretaria responsável.
 
 ### Elementos pré-textuais opcionais
 
@@ -276,7 +276,7 @@ Os seguintes elementos são ativados apenas quando fizerem sentido no trabalho:
 \ufcPrintEpigraph{frontmatter/epigraph}
 ```
 
-A ficha catalográfica segue o procedimento institucional aplicável. Dedicatória, agradecimentos e epígrafe não precisam aparecer em todo trabalho. Quando houver financiamento sujeito à Portaria CAPES nº 206/2018, o agradecimento exigido deve ser incluído de acordo com a condição real do trabalho.
+**Ficha catalográfica visual facultativa na UFC:** a [Instrução Normativa Conjunta nº 2/2026](https://biblioteca.ufc.br/pt/servicos-e-produtos/recebimento-e-divulgacao-de-dissertacoes-teses-e-tccs/), conforme a [FAQ oficial do Sistema de Bibliotecas](https://biblioteca.ufc.br/pt/perguntas-frequentes/ficha-catalografica-2/), tornou facultativa sua inclusão em TCC, dissertações e teses; sua ausência não impede a aprovação nem o depósito institucional. O antigo módulo Catalog foi descontinuado. Portanto, use `\ufcPrintCatalogCard` apenas quando tiver uma ficha válida e desejar incluí-la; não considere sua ausência um erro de conformidade. Essa dispensa específica **não elimina** a coleta institucional de metadados nem altera outros requisitos de depósito. Dedicatória, agradecimentos e epígrafe também dependem da aplicabilidade ao trabalho. Quando houver financiamento sujeito à Portaria CAPES nº 206/2018, inclua o agradecimento exigido segundo a condição real do trabalho.
 
 ### Resumo, abstract e palavras-chave
 
@@ -479,7 +479,7 @@ O template declara os metadados PDF antes de `\documentclass`:
 }
 ```
 
-PDF/A-2b é o alvo técnico de certificação do projeto. A presença da declaração no fonte não é prova suficiente: a release valida o PDF efetivamente produzido, a incorporação de fontes e a estrutura disponível.
+PDF/A-2b é o **alvo técnico de certificação do projeto**, não um subtipo expressamente imposto pelas orientações públicas de depósito da UFC. Para TCC, teses e dissertações recebidos pelo Sistema de Bibliotecas da UFC, as páginas oficiais exigem o arquivo eletrônico em **PDF/A, da capa aos anexos** ([TCC](https://biblioteca.ufc.br/pt/normas-sibi/normas-para-o-recebimento-de-tcc/) e [pós-graduação](https://biblioteca.ufc.br/pt/normas-sibi/normas-para-o-recebimento-de-teses-e-dissertacoes/)). A presença de `pdfstandard = A-2b` no fonte **não comprova** que o arquivo gerado esteja conforme: valide o PDF efetivo, as fontes incorporadas e o relatório da ferramenta especializada, além da inspeção visual. Consulte a secretaria do curso ou programa para eventuais exigências adicionais de depósito.
 
 Para validação local profunda:
 

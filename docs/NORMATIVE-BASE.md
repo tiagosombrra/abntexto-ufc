@@ -117,6 +117,10 @@ The references guide cites superseded **NBR 6023:2018** and is inventoried as **
 | Catalog card | UFC Joint Instruction No. 2/2026, where applicable |
 | CAPES acknowledgment | CAPES Ordinance No. 206/2018, when applicable |
 
+**UFC institutional scope, checked against the public library guidance on 2026-11-15:** Under [Joint Instruction No. 2/2026](https://biblioteca.ufc.br/pt/servicos-e-produtos/recebimento-e-divulgacao-de-dissertacoes-teses-e-tccs/) and the [UFC library FAQ](https://biblioteca.ufc.br/pt/perguntas-frequentes/ficha-catalografica-2/), a *visual* catalog card is **optional** for TCCs, dissertations and theses; omitting it does not prevent approval or institutional deposit. The former Catalog module is discontinued. This is already represented as optional in the existing machine rule `deposit.catalog-card`; no parent normative rule or machine validation state is changed by this clarification. Distinguish the optional visual page from the separate institutional metadata-collection procedure.
+
+**Deposit format and signatures:** Current UFC [TCC receiving guidance](https://biblioteca.ufc.br/pt/normas-sibi/normas-para-o-recebimento-de-tcc/) and [thesis/dissertation guidance](https://biblioteca.ufc.br/pt/normas-sibi/normas-para-o-recebimento-de-teses-e-dissertacoes/) require an electronic **PDF/A covering front cover through annexes** and an approval sheet **without committee signatures** for repository dissemination. These public guidance pages do **not** specify PDF/A-2b in particular. The project targets PDF/A-2b as a technical engineering profile, not as an independently verified UFC-mandated subtype. Institutional deposit acceptance, edition-specific ABNT normative verification and signoff remain separate human/institutional gates.
+
 The project must distinguish mandatory requirements, recommendations, conditional requirements, manual checks, and technical certification policies. A green test does not by itself promote a requirement to fully proven normative status.
 
 ## Current runtime scope

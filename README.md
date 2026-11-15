@@ -202,6 +202,10 @@ O CLI/Deep usa ferramentas locais como Poppler e, quando disponível, veraPDF pa
 
 **Posso usar a v3.1.0 em um trabalho para entrega?** Ela ainda é uma prévia de desenvolvimento, sem Release ou CTAN próprios. Para depósito acadêmico, prefira a v3.0.5 publicada e confirme os requisitos atuais do curso e do programa.
 
+**A ficha catalográfica visual é obrigatória na UFC?** Não para TCC, dissertação e tese: segundo a [FAQ do Sistema de Bibliotecas](https://biblioteca.ufc.br/pt/perguntas-frequentes/ficha-catalografica-2/) e a Instrução Normativa Conjunta nº 2/2026, ela é **facultativa**; sua ausência não impede aprovação ou depósito. A classe oferece a inclusão opcional, mas não gera automaticamente a ficha institucional.
+
+**Qual PDF é exigido para depósito no Repositório Institucional da UFC?** As orientações para [TCC](https://biblioteca.ufc.br/pt/normas-sibi/normas-para-o-recebimento-de-tcc/) e [teses/dissertações](https://biblioteca.ufc.br/pt/normas-sibi/normas-para-o-recebimento-de-teses-e-dissertacoes/) exigem **PDF/A da capa aos anexos** e folha de aprovação sem assinaturas para divulgação. O PDF/A-2b é alvo técnico do projeto, não uma exigência de subtipo comprovada nessas páginas. A compilação ou o PASS Web/Lite não substitui a validação do PDF final e os procedimentos da secretaria.
+
 **A capa não mostra o brasão ou aparece erro de imagem ausente.** O exemplo mínimo usa `coat-of-arms=false` para não depender de um arquivo institucional. Os bundles Template e Overleaf trazem o brasão utilizado pelo tutorial e configuram `coat-of-arms=true`; quem trabalha com o pacote CTAN deve providenciar o ativo separadamente, se aplicável.
 
 **Citações ou referências aparecem como interrogações.** Confira `backmatter/references.bib`, as chaves de citação e a execução de Biber entre as passagens de LaTeX. Executar apenas uma vez `pdflatex` não reproduz necessariamente o resultado do tutorial completo.
