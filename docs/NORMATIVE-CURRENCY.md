@@ -1,6 +1,6 @@
 # Normative Currency Policy
 
-Updated: 2026-09-19
+Policy baseline: 2026-09-19. Scoped maintenance reconciliation: 2026-11-15 (documentation only; no new ABNT edition/corrigenda certification).
 
 `abntexto-ufc` follows the most recent applicable technical edition that is currently in force. An older ABNT edition does not govern an active requirement merely because it is cited by an older UFC guide.
 
@@ -10,7 +10,9 @@ The [dated 21-source ABNT/UFC/IBGE/CAPES cross-domain inventory](NORMATIVE-CURRE
 
 **This is a triage record, not a technical-standard recertification.** In particular, official per-item ABNT publisher status and licensed corrigenda/primary clause texts were **not** verified. Do not replace the existing `checked_at` timestamps or promote `table.ibge`, document-profile proofs, or any other active normative rule merely because a university bibliography or distributor listed an edition. Already-recorded UFC Instruction 2/2026 must not be duplicated.
 
-Engineering work now proceeds across the whole roadmap: (1) finish item-specific primary-source and UFC guide correction checks, (2) human-review all seven real-PDF profiles, (3) PT-default EN/ES/FR internationalization, (4) productive site/validator UX, and (5) accessibility/PDF-UA dependencies. The longstanding old `longabnttblr` intermediate footer-risk is deferred and documented in #501; it does not justify further table-only PRs automatically.
+The active roadmap in [issue #489](https://github.com/tiagosombrra/abntexto-ufc/issues/489) still requires item-specific primary ABNT edition/corrigenda and UFC-guide checks, human review bound to the final PDFs, and forthcoming P0.11 site/validator and P0.12 cross-surface acceptance. Previously completed multilingual development evidence is not institutional or linguistic signoff.
+
+**Long-table regression — bounded correction complete, not deferred:** [issue #501](https://github.com/tiagosombrra/abntexto-ufc/issues/501) was closed on 2026-10-24 after [PR #523](https://github.com/tiagosombrra/abntexto-ufc/pull/523) merged into `main=d65c4584269c46b02ebf90d829df9bf7c015d0e6`. The real seven-page default `longabnttblr` fixture with literal body `\\bottomrule` proved one terminal rule and **zero intermediate footer rules**; the uncorrected upstream-theme negative retained six premature rules. The postmerge [Static](https://github.com/tiagosombrra/abntexto-ufc/actions/runs/40117996036), [Linux Integration](https://github.com/tiagosombrra/abntexto-ufc/actions/runs/40117996031) (42/42), and [Linux Release Check](https://github.com/tiagosombrra/abntexto-ufc/actions/runs/40117996022) (38/38) passed at that exact SHA. The default adapter applies only under its class-owned theme; explicit `theme=...` overrides preserve the original behavior and require manual pagination review. This **does not** demonstrate full IBGE compliance for arbitrary long tables, all themes, source semantics or other pagination cases. The 29 parent normative rules and `table.ibge` partial proof boundary remain unchanged.
 
 ## Decision rule
 
