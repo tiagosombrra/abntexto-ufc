@@ -1,6 +1,6 @@
 # Linux Integration on main — continuity and mandatory coverage
 
-Status: v3.1.0 **UNRELEASED**, 2026-10-17. Tracking: [#502](https://github.com/tiagosombrra/abntexto-ufc/issues/502), [#489](https://github.com/tiagosombrra/abntexto-ufc/issues/489).
+Incident checkpoint: 2026-10-17; [issue #502](https://github.com/tiagosombrra/abntexto-ufc/issues/502) **CLOSED** on 2026-10-18. This file preserves the dated failure analysis and its acceptance criteria, not the current active-task queue. For current CI/release evidence consult [RELEASE-STATE.md](RELEASE-STATE.md) and [issue #489](https://github.com/tiagosombrra/abntexto-ufc/issues/489). v3.1.0 remains **UNRELEASED**.
 
 ## Verified source defect
 
@@ -14,11 +14,13 @@ Every `push` to `main` now starts Linux Integration regardless of changed paths,
 
 The mandatory static contract in `tests/checks/repository/linux_integration_suites.py` checks the workflow trigger and selector. Deliberately mutated trigger variants (an added `paths`, `paths-ignore`, and wrong branch) must fail. This is a static source contract for a consciously narrow YAML structure, not a general YAML parser or a substitute for a real GitHub Actions run.
 
-## Acceptance
+## Original acceptance checklist (2026-10-17)
+
+The `pkgcheck 4.1.2` reference below is the **historical gate version** for the original incident and is not a requirement to downgrade the current runner (subsequent P0.10 runs use 4.1.3).
 
 - PR exact-head Static PASS and full Linux Integration `SCOPE=complete PASS=42 FAIL=0 SKIP=0`, including productive browser Web/Lite E2E and retained real-PDF evidence.
 - SHA-guarded merge, no competing PRs or unresolved review threads.
 - On **the merge SHA**, Static PASS, Linux Integration **actually triggered** by `push`, `SCOPE=complete PASS=42 FAIL=0 SKIP=0`, Web/Lite E2E PASS, Linux Release `SCOPE=complete PASS=38 FAIL=0 SKIP=0`, CTAN pkgcheck 4.1.2 PASS and all evidence archives present.
 - If any main gate is not triggered or fails, never claim certification; correct the proven cause without weakening/silencing checks.
 
-The next scientific/normative work item is [#501](https://github.com/tiagosombrra/abntexto-ufc/issues/501), but only after the CI defect is integrated and same-SHA main certification succeeds. Keep the existing 29 parent normative rules, seven public document profiles, released v3.0.5 assets and v3.1.0 release prohibition intact.
+**Resolution and superseded next-step note:** the CI trigger defect in #502 was corrected and closed in October 2026. The formerly proposed subsequent work [#501](https://github.com/tiagosombrra/abntexto-ufc/issues/501) was **also completed** by [PR #523](https://github.com/tiagosombrra/abntexto-ufc/pull/523), with exact-main postmerge evidence recorded in [issue comment #6388179780](https://github.com/tiagosombrra/abntexto-ufc/issues/501#issuecomment-6388179780). It is **not** the current next work item. The active roadmap is #489; do not equate the bounded table regression fix with all IBGE obligations or full technical-norm recertification. Preserve the 29 parent normative rules, seven public profiles, immutable v3.0.5 release and v3.1.0 publication lock.
