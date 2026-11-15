@@ -58,7 +58,22 @@ def source_blob(commit: str) -> str:
         cwd=ROOT, text=True).strip()
 
 
+def ensure_original_proof_commit() -> None:
+    # Squash merging can remove the archived proof commit from the normal checkout graph.
+    # Recover its immutable ancestry via the closed PR ref without changing expected hashes.
+    probe = ["git", "cat-file", "-e", PROOF_SOURCE + "^{commit}"]
+    if subprocess.run(probe, cwd=ROOT, capture_output=True).returncode == 0:
+        return
+    subprocess.run(
+        ["git", "fetch", "--no-tags", "origin", "refs/pull/592/head"],
+        cwd=ROOT, check=True, capture_output=True, text=True,
+    )
+    require(subprocess.run(probe, cwd=ROOT, capture_output=True).returncode == 0,
+            "archived original proof commit is not reachable from merged PR #592")
+
+
 def verify_own_source() -> None:
+    ensure_original_proof_commit()
     current = subprocess.check_output(
         ["git", "hash-object", "abntexto-ufc.cls"],
         cwd=ROOT, text=True).strip()
