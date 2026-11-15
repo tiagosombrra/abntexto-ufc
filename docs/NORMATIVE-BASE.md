@@ -1,6 +1,7 @@
 # Normative Base
 
-Updated: 2026-10-13 (targeted UFC guide-source reconciliation; technical standard recertification pending)
+UFC guide-source reconciliation checkpoint: 2026-10-13 (targeted; not a complete normative recertification).
+Later scoped technical addenda: through 2026-10-24 (dated individually below; full technical-standard recertification remains pending).
 
 This document is the human-readable normative baseline for the current `abntexto-ufc` scope. Machine-readable evidence lives under `standards/`. This document does not create requirements by itself.
 
