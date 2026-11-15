@@ -33,6 +33,6 @@ Todos os PDFs carregam marcadores invariantes `R81ROW001`–`R81ROW085`. O workf
 - A PR #594, que adicionou a guarda editorial de quebra e o teste negativo para a última linha órfã, foi **integrada**; manter seus resultados dos 12 PDFs controlados associados às respectivas execuções e SHA, sem generalizá-los a outro corpus.
 - A matriz editorial R5 de 28 PDFs foi recompilada na [execução #43519592856](https://github.com/tiagosombrra/abntexto-ufc/actions/runs/43519592856), com **972 páginas** e tabela editorial de **80 linhas**, e recebeu [aceite editorial/visual global delimitado](https://github.com/tiagosombrra/abntexto-ufc/pull/592#issuecomment-6868188102). Esse conjunto não substitui a verificação separada do corpus R4 de **85 linhas**.
 - Preservar a identidade e os hashes dos artefatos anteriores (984 páginas) e dos novos (972 páginas); verificar integridade, layout, PDF/A-2b e regressões por fonte real, sem transferir aceite entre bytes diferentes.
-- A revisão por página, a revisão normativa/linguística formal e a homologação institucional permanecem pendentes. CI verde e aceite global editorial não constituem autorização de release.
+- A revisão por página, a revisão normativa e linguística formal e a homologação institucional permanecem pendentes. CI verde e aceite global editorial não constituem autorização de release.
 
 **Não confundir** correção da amostra de documentação com correção do runtime. A classe comum não apresentou causa raiz demonstrada neste defeito.
