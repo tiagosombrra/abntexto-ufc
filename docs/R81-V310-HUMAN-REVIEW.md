@@ -1,6 +1,6 @@
 # R8.1 — Solicitação de revisão humana dos 28 PDFs da classe corrigida
 
-**Situação: READY_FOR_HUMAN_REVIEW_NOT_ACCEPTED.** Este documento descreve a preparação da revisão da linha `v3.1.0` em desenvolvimento. Não concede aceitação visual, linguística, normativa ou institucional; `publication_authorized=false`. A [PR #592](https://github.com/tiagosombrra/abntexto-ufc/pull/592) continua draft até a conclusão dos gates apropriados.
+**Situação dos formulários R8.1 arquivados: READY_FOR_HUMAN_REVIEW_NOT_ACCEPTED (972 decisões individuais PENDING).** Este documento preserva o pedido de revisão dos PDFs originais da linha `v3.1.0` em desenvolvimento. Há um [aceite editorial/visual **global e delimitado** do mantenedor para os 28 PDFs R5 de origem identificada](https://github.com/tiagosombrra/abntexto-ufc/pull/592#issuecomment-6868188102), mas ele **não equivale** a 972 inspeções individuais, homologação UFC/ABNT, revisão linguística formal ou autorização de release (`publication_authorized=false`). A [PR #592](https://github.com/tiagosombrra/abntexto-ufc/pull/592) foi integrada em 2026-11-14 (merge `e0c2dcc567108b170e16ccc494244495470da63d`); já não está em draft.
 
 ## Identidade dos PDFs originais
 
@@ -12,7 +12,7 @@
 - Recebimentos originais: PT artifact `14059297908`, EN `14057939644`, ES `14059198079`, FR `14058644629`. O auditor verifica identidade, SHA-256 dos ZIPs, SHA-256 de cada PDF e fonte TeX, hashes dos recibos e contagens físicas de páginas, sem regravar os originais.
 - A verificação independente do **veraPDF-2b de desenvolvimento** sobre esses PDFs teve 28 conformes e 0 não conformes, sem constituir aprovação visual ou institucional. O antigo verificador R8.1 permanece deliberadamente incompatível com o blob da classe atual.
 
-**Atenção ao avanço da PR #592 após R8.1 #594:** a branch experimental já incorpora a `main` certificada `83dbaa6d...`. O corpus R4 mantém 85 linhas e o novo corpus R5 editorial mantém 80 linhas; ambos devem ter verificadores source-bound separados. Este pacote de 972 páginas é **evidência arquivada do commit `de99db...`**, não comprova a revisão visual nem normativa dos PDFs recompilados pelo HEAD posterior. Os PDFs gerados no novo HEAD exigem novos hashes, revisão e aceite próprios.
+**Relação entre as integrações:** a [PR #594](https://github.com/tiagosombrra/abntexto-ufc/pull/594) foi integrada no commit `83dbaa6d1b3e6f431509c6b1bfaeb7b481044f0b`, e a PR #592 foi integrada posteriormente no commit `e0c2dcc567108b170e16ccc494244495470da63d`. O corpus R4 mantém 85 linhas e o corpus R5 editorial mantém 80 linhas; ambos exigem verificadores source-bound separados. Este pacote de 972 páginas é **evidência arquivada do commit `de99db...`**, não comprova a revisão visual nem normativa dos PDFs recompilados pelo HEAD posterior. Os PDFs gerados no novo HEAD exigem novos hashes, revisão e aceite próprios.
 
 ## Gerar o pacote de revisão, sem aceite automático
 
@@ -50,8 +50,8 @@ Esse laudo comprova apenas PDF/A-2b nos arquivos originais; **não** atesta PDF/
 
 ## Portas de decisão
 
-Revisão humana por página: `PENDING`; revisão visual final: `PENDING`; revisão normativa e linguística: `PENDING`; autorização institucional: `PENDING`. Somente uma pessoa autorizada pode registrar um `ACCEPT` explícito, sempre vinculando o SHA da fonte e os arquivos realmente examinados.
+Aceite editorial/visual global dos **28 PDFs R5 originais** da PR #592: `ACCEPT` delimitado, registrado pelo mantenedor no comentário `6868188102` e vinculado ao corpus de 972 páginas no run `43519592856`. **Não** equivale a 972 decisões por página. Formulários individuais R8.1: `PENDING`; revisão normativa e linguística formal: `PENDING`; homologação institucional: `PENDING`. Qualquer novo `ACCEPT` deve identificar pessoa revisora, SHA da fonte e bytes dos PDFs realmente examinados.
 
-**Ainda não fazer:** merge protegido da PR #592, alteração do registro histórico da classe antiga, tag v3.1.0, GitHub Release ou envio CTAN. Para release, os gates de integração, fonte final e aceite humano precisam ser novamente certificados no commit aprovado.
+**Restrições remanescentes:** o merge protegido de desenvolvimento da PR #592 **já ocorreu**; não alterar o registro histórico da classe antiga nem promover o aceite global dos PDFs R5 a aprovação individual de 972 páginas. Não criar tag v3.1.0, GitHub Release ou enviar ao CTAN. Para release, os gates de fonte final e o aceite humano exigido devem ser certificados novamente para os bytes aprovados.
 
 Veja também [R5 — auditoria de artefatos](R5-ARTIFACT-REVIEW.md) e [Revisão de sete perfis](SEVEN-PROFILE-REVIEW.md).
