@@ -6,7 +6,7 @@ abntexto-ufc changelog
 
 - Integrates `ufcInputListing` nested-Listings regression correction with bounded original-byte 72-API proof; restores archived Git proof ancestry in the post-squash four-locale integration workflow (#592 and #595).
 - Certifies P0.9 author onboarding/documentation and four real TeX Live 2026 PT/EN/ES/FR quickstart PDFs in development, source-bound to the protected #596 merge; adds dedicated CI and precise published-versus-preview instructions.
-- Starts P0.10 active-document documentation consistency and Markdown link auditing; the last published release remains v3.0.5 and v3.1.0 is not publication-authorized.
+- Starts P0.10 active-document documentation consistency and Markdown link auditing; records current UFC institutional deposit guidance: optional visual catalog card under Joint Instruction 2/2026, PDF/A delivery and an unsigned approval sheet for repository dissemination, without treating PDF/A-2b as a university-specified subtype. The last published release remains v3.0.5 and v3.1.0 is not publication-authorized.
 - Opens a backward-compatible minor development line distinct from the immutable CTAN-published 3.0.5.
 - Fixes spaces lost in default institution, submission entity, and research-project type values under expl3.
 - Labels the development manual as a v3.1.0 preview instead of inheriting the published v3.0.5 manual's stale status.
