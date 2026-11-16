@@ -332,6 +332,27 @@ def main() -> None:
         if marker not in html:
             fail(f"normative-base UI marker is missing: {marker}")
 
+    # Keep the validator-to-homepage link localized and within the bundled origin.
+    locale_js = (VALIDATOR_ROOT / "ui-locales.js").read_text(encoding="utf-8")
+    for marker in (
+        'id="home-return" class="home-return" href="../?lang=pt-BR"',
+        '.home-return[hidden]{display:none}',
+        ':where(input,select,button,summary,.table-wrap,#home-return):focus-visible',
+    ):
+        if marker not in html:
+            fail(f"validator homepage return link contract missing: {marker}")
+    for marker in (
+        'returnHome: "#home-return"',
+        'homeReturn.setAttribute("href", "../?lang=" + encodeURIComponent(locale));',
+        'homeReturn.hidden = window.location.pathname === "/" || window.location.pathname === "/index.html";',
+        '"returnHome": "Voltar ao site"',
+        '"returnHome": "Back to website"',
+        '"returnHome": "Volver al sitio"',
+        '"returnHome": "Retour au site"',
+    ):
+        if marker not in locale_js:
+            fail(f"Web/Lite locale-safe homepage return contract missing: {marker}")
+
     # Prevent modal parser errors and stale exports from re-entering Web/Lite.
     for marker in (
         'id="validation-feedback"',
