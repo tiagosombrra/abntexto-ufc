@@ -731,6 +731,152 @@ def verify_ui_locales(browser: Browser, positive: Path, negative: Path, profile:
 
 
 
+
+def verify_recoverable_validation_feedback(
+    browser: Browser, positive: Path, profile: str,
+    canonical_positive: dict[str, Any], invalid: Path,
+) -> dict[str, Any]:
+    """Check that errors cannot expose or export a previous PDF report."""
+    current = browser.execute_async(
+        "const done=arguments[arguments.length-1];"
+        "import('./app.js').then(m=>done(m.getLastReport()))"
+        ".catch(e=>done({error:String(e)}));"
+    )
+    if not isinstance(current, dict) or not current.get("checks"):
+        fail("precondition: productive report missing before invalidation")
+    next_profile = "strict" if profile != "strict" else "portable"
+    browser.execute(
+        "window.__ufcTestAlert=null;"
+        "const p=document.querySelector('#profile');p.value=arguments[0];"
+        "p.dispatchEvent(new Event('change',{bubbles:true}));",
+        [next_profile],
+    )
+    reset = browser.execute("""return (() => {
+        const q=id=>document.querySelector('#'+id);
+        return {summaryHidden:q('summary').classList.contains('hidden'),
+          reportHidden:q('report-section').classList.contains('hidden'),
+          exportDisabled:['export-json','export-csv','print-report'].every(id=>q(id).disabled),
+          filterDisabled:q('report-filter').disabled,
+          status:q('validation-feedback').textContent,
+          errorHidden:q('validation-error').classList.contains('hidden')};
+    })()""")
+    if reset != {
+        "summaryHidden": True, "reportHidden": True, "exportDisabled": True,
+        "filterDisabled": True,
+        "status": "Arquivo ou opções alterados. Execute a validação novamente.",
+        "errorHidden": True,
+    }:
+        fail(f"validation-option change kept a stale visible/exportable report: {reset!r}")
+
+    browser.execute(
+        "const f=document.querySelector('#pdf-file');f.value='';"
+        "f.dispatchEvent(new Event('change',{bubbles:true}));"
+    )
+    browser.click("#analyze")
+    expected_missing = {
+        "pt-BR": "Selecione um arquivo PDF.",
+        "en": "Select a PDF file.",
+        "es": "Seleccione un archivo PDF.",
+        "fr": "Sélectionnez un fichier PDF.",
+    }
+    for locale, expected in expected_missing.items():
+        observed = browser.execute("""const q=document.querySelector('#ui-locale');
+            q.value=arguments[0];q.dispatchEvent(new Event('change',{bubbles:true}));
+            const e=document.querySelector('#validation-error');
+            return {lang:document.documentElement.lang,text:e.textContent,
+              visible:!e.classList.contains('hidden'),
+              role:e.getAttribute('role')};""", [locale])
+        if observed != {"lang": locale, "text": expected, "visible": True, "role": "alert"}:
+            fail(f"localized missing-file alert region is invalid: {observed!r}")
+
+    browser.execute(
+        "const q=document.querySelector('#ui-locale');q.value='pt-BR';"
+        "q.dispatchEvent(new Event('change',{bubbles:true}));"
+        "const p=document.querySelector('#profile');p.value=arguments[0];"
+        "p.dispatchEvent(new Event('change',{bubbles:true}));",
+        [profile],
+    )
+    invalid.write_bytes(b"Not a PDF. This deliberately invalid file must never produce a report.\n")
+    browser.send_file("#pdf-file", invalid)
+    browser.click("#analyze")
+    wait_for(
+        lambda: bool(browser.execute(
+            "return !document.querySelector('#analyze').disabled &&"
+            "!document.querySelector('#validation-error').classList.contains('hidden');"
+        )),
+        "localized invalid PDF recovery error",
+        timeout=50,
+    )
+    failed = browser.execute("""return (() => {
+        const q=id=>document.querySelector('#'+id), e=q('validation-error');
+        return {error:e.textContent,role:e.getAttribute('role'),
+          summaryHidden:q('summary').classList.contains('hidden'),
+          reportHidden:q('report-section').classList.contains('hidden'),
+          exportsDisabled:['export-json','export-csv','print-report'].every(id=>q(id).disabled),
+          filterDisabled:q('report-filter').disabled,
+          buttonEnabled:!q('analyze').disabled,
+          modalAlert:window.__ufcTestAlert};
+    })()""")
+    if failed != {
+        "error": "Não foi possível ler ou analisar este PDF. Verifique o arquivo e tente novamente.",
+        "role": "alert", "summaryHidden": True, "reportHidden": True,
+        "exportsDisabled": True, "filterDisabled": True,
+        "buttonEnabled": True, "modalAlert": None,
+    }:
+        fail(f"invalid PDF exposed stale report, technical details or modal: {failed!r}")
+    after_error = browser.execute_async(
+        "const done=arguments[arguments.length-1];"
+        "import('./app.js').then(m=>done(m.getLastReport()))"
+        ".catch(e=>done({error:String(e)}));"
+    )
+    if after_error is not None:
+        fail(f"invalid PDF retained canonical report: {after_error!r}")
+    english = browser.execute("""const q=document.querySelector('#ui-locale');
+        q.value='en';q.dispatchEvent(new Event('change',{bubbles:true}));
+        return document.querySelector('#validation-error').textContent;""")
+    if english != "This PDF could not be read or analyzed. Check the file and try again.":
+        fail(f"recovery error did not follow interface language: {english!r}")
+
+    browser.execute("""const q=document.querySelector('#ui-locale');
+        q.value='pt-BR';q.dispatchEvent(new Event('change',{bubbles:true}));""")
+    browser.send_file("#pdf-file", positive)
+    browser.click("#analyze")
+    wait_for(
+        lambda: bool(browser.execute(
+            "return !document.querySelector('#analyze').disabled &&"
+            "!document.querySelector('#summary').classList.contains('hidden') &&"
+            "document.querySelector('#file-name').textContent===arguments[0];",
+            [positive.name],
+        )),
+        "successful PDF recovery after invalid upload",
+    )
+    recovered = browser.execute_async(
+        "const done=arguments[arguments.length-1];"
+        "import('./app.js').then(m=>done(m.getLastReport()))"
+        ".catch(e=>done({error:String(e)}));"
+    )
+    canonical = lambda item: {key: value for key, value in item.items() if key != "generated_at"}
+    if not isinstance(recovered, dict) or canonical(recovered) != canonical(canonical_positive):
+        fail("successful recovery changed canonical PDF validation semantics")
+    done = browser.execute("""return (() => {
+        const q=id=>document.querySelector('#'+id);
+        return {status:q('validation-feedback').textContent,
+          errorHidden:q('validation-error').classList.contains('hidden'),
+          exportEnabled:['export-json','export-csv','print-report'].every(id=>!q(id).disabled)};
+    })()""")
+    if done != {
+        "status": "Relatório atualizado. Confira os resultados e os itens para revisão manual.",
+        "errorHidden": True, "exportEnabled": True,
+    }:
+        fail(f"recovered PDF report not usable or status not accessible: {done!r}")
+    print("WEB-LITE-RECOVERY-EVIDENCE status=PASS missing_file=LOCALIZED_4 "
+          "bad_pdf=INLINE_ARIA_ALERT stale_report=ABSENT exports=BLOCKED "
+          "successful_retry=PASS canonical_report=UNCHANGED modal_alert=ABSENT")
+    return {"status": "PASS", "missing_file_locales": 4, "invalid_pdf": True,
+            "old_report_export_blocked": True, "successful_retry": True,
+            "canonical_report_unchanged": True}
+
+
 def verify_responsive_keyboard(browser: Browser) -> dict[str, Any]:
     """Exercise productive report navigation at four actual Chromium CSS viewports."""
     widths = (320, 375, 768, 1440)
@@ -1068,6 +1214,9 @@ def main() -> None:
 
             locale_evidence = verify_ui_locales(browser, positive, negative, args.profile, positive_report, negative_report)
             responsive_evidence = verify_responsive_keyboard(browser)
+            recovery_evidence = verify_recoverable_validation_feedback(
+                browser, positive, args.profile, positive_report, Path(temp) / "invalid-upload.pdf"
+            )
 
             performance_entries = browser.logs("performance")
             requested_urls = performance_request_urls(performance_entries)
@@ -1102,6 +1251,7 @@ def main() -> None:
                 "ui_locale": "pt-BR",
                 "ui_locales": locale_evidence,
                 "responsive_keyboard": responsive_evidence,
+                "recoverable_validation": recovery_evidence,
                 "canonical_machine_values_preserved": True,
                 "normative_catalog": positive_report["normative_catalog"],
                 "network": {
@@ -1159,7 +1309,7 @@ def main() -> None:
                 "font_embedded=MANUAL_REVIEW pdfa_deep=MANUAL_REVIEW "
                 "productive_ui=true local_processing=true pages_package=true "
                 "external_network=DENIED external_http_requests=0 csp=PASS "
-                "report_filter=PASS csv_export=PASS responsive_keyboard=PASS full_report_unchanged=true ui_locale=pt-BR locales=4"
+                "report_filter=PASS csv_export=PASS responsive_keyboard=PASS error_recovery=PASS full_report_unchanged=true ui_locale=pt-BR locales=4"
             )
     finally:
         browser.stop()
