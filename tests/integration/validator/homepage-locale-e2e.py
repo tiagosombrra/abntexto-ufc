@@ -203,8 +203,7 @@ def main():
                 or any(entry["open"] or len(entry["answer"]) < 70 for entry in item["faq"])
             ):
                 fail("faq_missing_or_untranslated:"+locale)
-            if not all("v3.0.5" in item["faq"][0]["answer"] and
-                       "v3.1.0" in item["faq"][0]["answer"] for _ in [0]):
+            if "v3.0.5" not in item["faq"][0]["answer"] or "v3.1.0" not in item["faq"][0]["answer"]:
                 fail("published_development_boundary_lost:"+locale)
             # Native disclosure must actually expand in Chromium, not just exist in HTML.
             browser.click(".help details:first-of-type summary")
