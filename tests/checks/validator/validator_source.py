@@ -348,7 +348,9 @@ def main() -> None:
         'if(generation!==analysisGeneration)return;',
         'report=null;',
         'setFeedback("statusReady","selectFile")',
-        'setFeedback("statusReady","errorUnreadable")',
+        'setFeedback("statusChanged","errorCoverRequiresDuplex")',
+        '"errorCoverRequiresTwoPages":"errorUnreadable"',
+        'setFeedback("statusReady",errorKey)',
         '["#export-json","#export-csv","#print-report"].forEach',
     ):
         if marker not in app:
