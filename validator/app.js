@@ -197,6 +197,11 @@ $("#analyze").addEventListener("click",async()=>{
   const file=$("#pdf-file").files?.[0];
   clearReport();
   if(!file){setFeedback("statusReady","selectFile");return}
+  // Settings incompatibility is actionable and must not be reported as PDF corruption.
+  if($("#page-accounting").value==="external-cover-first" && $("#print-mode").value!=="double-sided") {
+    setFeedback("statusChanged","errorCoverRequiresDuplex");
+    return;
+  }
   const generation=++analysisGeneration;
   setFeedback("statusRunning");
   button.disabled=true;button.textContent=uiText("validating");
@@ -211,7 +216,10 @@ $("#analyze").addEventListener("click",async()=>{
     console.error(error);
     if(generation===analysisGeneration) {
       clearReport();
-      setFeedback("statusReady","errorUnreadable");
+      // Only a known class-owned precondition may select specific recovery copy.
+      const errorKey=error?.message==="External cover accounting requires at least two PDF pages"
+        ?"errorCoverRequiresTwoPages":"errorUnreadable";
+      setFeedback("statusReady",errorKey);
     }
   } finally {
     button.disabled=false;
