@@ -159,7 +159,13 @@ def main():
         browser.execute("""localStorage.setItem('abntexto-ufc.ui-locale','xx');""")
         browser.navigate(f"http://127.0.0.1:{server.server_port}/index.html")
         if snapshot(browser)["lang"] != "pt-BR":
-            fail("unsupported_stored_locale_fallback")
+            fail("unsupported_stored_homepage_locale_fallback")
+        browser.navigate(f"http://127.0.0.1:{server.server_port}/validator/")
+        bad_storage_validator=browser.execute("""return [document.documentElement.lang,
+            document.querySelector('#ui-locale').value];""")
+        if bad_storage_validator != ["pt-BR","pt-BR"]:
+            fail("unsupported_stored_validator_locale_fallback")
+        browser.navigate(f"http://127.0.0.1:{server.server_port}/index.html")
 
         # Storage denial must not break the visible UI or URL-based handoff.
         storage_block=browser.execute("""const original=Storage.prototype.setItem;
