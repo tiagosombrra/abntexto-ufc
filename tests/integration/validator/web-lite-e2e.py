@@ -740,7 +740,7 @@ def verify_recoverable_validation_feedback(
     current = browser.execute_async(
         "const done=arguments[arguments.length-1];"
         "import('./app.js').then(m=>done(m.getLastReport()))"
-        ".catch(e=>done({error:String(e)}));"
+        ".catch(e=>done({importError:String(e)}));"
     )
     if not isinstance(current, dict) or not current.get("checks"):
         fail("precondition: productive report missing before invalidation")
@@ -805,14 +805,14 @@ def verify_recoverable_validation_feedback(
     browser.click("#analyze")
     incompatible = browser.execute("""return (() => {
         const q=id=>document.querySelector('#'+id);
-        return {error:q('validation-error').textContent,
+        return {errorText:q('validation-error').textContent,
           shown:!q('validation-error').classList.contains('hidden'),
           reportHidden:q('report-section').classList.contains('hidden'),
           exportDisabled:q('export-json').disabled,
           modal:window.__ufcTestAlert};
     })()""")
     expected_incompatible = "A contagem com capa externa exige impressão em anverso e verso. Ajuste o modo de impressão ou a contagem."
-    if incompatible != {"error": expected_incompatible, "shown": True,
+    if incompatible != {"errorText": expected_incompatible, "shown": True,
                          "reportHidden": True, "exportDisabled": True, "modal": None}:
         fail(f"incompatible duplex setting misreported as a corrupt PDF: {incompatible!r}")
     english_duplex = browser.execute("""const q=document.querySelector('#ui-locale');
@@ -860,7 +860,7 @@ def verify_recoverable_validation_feedback(
     )
     failed = browser.execute("""return (() => {
         const q=id=>document.querySelector('#'+id), e=q('validation-error');
-        return {error:e.textContent,role:e.getAttribute('role'),
+        return {errorText:e.textContent,role:e.getAttribute('role'),
           summaryHidden:q('summary').classList.contains('hidden'),
           reportHidden:q('report-section').classList.contains('hidden'),
           exportsDisabled:['export-json','export-csv','print-report'].every(id=>q(id).disabled),
@@ -869,7 +869,7 @@ def verify_recoverable_validation_feedback(
           modalAlert:window.__ufcTestAlert};
     })()""")
     if failed != {
-        "error": "Não foi possível ler ou analisar este PDF. Verifique o arquivo e tente novamente.",
+        "errorText": "Não foi possível ler ou analisar este PDF. Verifique o arquivo e tente novamente.",
         "role": "alert", "summaryHidden": True, "reportHidden": True,
         "exportsDisabled": True, "filterDisabled": True,
         "buttonEnabled": True, "modalAlert": None,
@@ -878,7 +878,7 @@ def verify_recoverable_validation_feedback(
     after_error = browser.execute_async(
         "const done=arguments[arguments.length-1];"
         "import('./app.js').then(m=>done(m.getLastReport()))"
-        ".catch(e=>done({error:String(e)}));"
+        ".catch(e=>done({importError:String(e)}));"
     )
     if after_error is not None:
         fail(f"invalid PDF retained canonical report: {after_error!r}")
@@ -904,7 +904,7 @@ def verify_recoverable_validation_feedback(
     recovered = browser.execute_async(
         "const done=arguments[arguments.length-1];"
         "import('./app.js').then(m=>done(m.getLastReport()))"
-        ".catch(e=>done({error:String(e)}));"
+        ".catch(e=>done({importError:String(e)}));"
     )
     canonical = lambda item: {key: value for key, value in item.items() if key != "generated_at"}
     if not isinstance(recovered, dict) or canonical(recovered) != canonical(canonical_positive):
