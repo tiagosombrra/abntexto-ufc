@@ -721,6 +721,108 @@ def verify_ui_locales(browser: Browser, positive: Path, negative: Path, profile:
     return outcomes
 
 
+
+def verify_responsive_keyboard(browser: Browser) -> dict[str, Any]:
+    """Exercise productive report navigation at four actual Chromium CSS viewports."""
+    widths = (320, 375, 768, 1440)
+    outcomes: dict[str, Any] = {}
+    for width in widths:
+        # CDP overrides the CSS viewport; headless desktop window sizing can clamp at 500px.
+        browser.command("POST", "/goog/cdp/execute", {
+            "cmd": "Emulation.setDeviceMetricsOverride",
+            "params": {
+                "width": width,
+                "height": 900,
+                "deviceScaleFactor": 1,
+                "mobile": False,
+            },
+        })
+        snapshot = browser.execute("""return (() => {
+            const wrapper = document.querySelector('#report-section .table-wrap');
+            const shell = document.querySelector('.shell');
+            const style = getComputedStyle(wrapper);
+            return {
+              viewport: window.innerWidth,
+              documentWidth: document.documentElement.scrollWidth,
+              shellWidth: shell.getBoundingClientRect().width,
+              reportVisible: !document.querySelector('#report-section').classList.contains('hidden'),
+              regionRole: wrapper.getAttribute('role'),
+              regionLabel: wrapper.getAttribute('aria-label'),
+              regionTabIndex: wrapper.tabIndex,
+              wrapperWidth: wrapper.clientWidth,
+              tableWidth: wrapper.scrollWidth,
+              overflowX: style.overflowX,
+              locale: document.documentElement.lang
+            };
+        })()""")
+        if snapshot["viewport"] != width or snapshot["documentWidth"] > width + 1:
+            fail(f"responsive document overflow at {width}px: {snapshot!r}")
+        if not snapshot["reportVisible"] or snapshot["regionRole"] != "region" or snapshot["regionTabIndex"] != 0:
+            fail(f"report region not keyboard-accessible at {width}px: {snapshot!r}")
+        if not snapshot["regionLabel"] or snapshot["overflowX"] != "auto" or snapshot["locale"] != "pt-BR":
+            fail(f"report scroll-region identity drift at {width}px: {snapshot!r}")
+        if width <= 375 and snapshot["tableWidth"] <= snapshot["wrapperWidth"]:
+            fail(f"narrow viewport did not exercise horizontal report overflow: {snapshot!r}")
+        outcomes[str(width)] = {
+            "viewport": snapshot["viewport"],
+            "document_overflow": False,
+            "report_scroll_available": snapshot["tableWidth"] > snapshot["wrapperWidth"],
+            "region_label": snapshot["regionLabel"],
+        }
+
+    # Real WebDriver Tab moves from one control to the next, retaining visual focus.
+    browser.command("POST", "/goog/cdp/execute", {
+        "cmd": "Emulation.setDeviceMetricsOverride",
+        "params": {"width": 320, "height": 900, "deviceScaleFactor": 1, "mobile": False},
+    })
+    browser.execute("document.querySelector('#ui-locale').focus();")
+    browser.command("POST", "/actions", {"actions": [{
+        "type": "key", "id": "a11y-keyboard",
+        "actions": [
+            {"type": "keyDown", "value": "\ue004"},
+            {"type": "keyUp", "value": "\ue004"},
+        ],
+    }]})
+    focus = browser.execute("""return (() => {
+        const node = document.activeElement;
+        const style = getComputedStyle(node);
+        return {id: node.id, visible: node.matches(':focus-visible'),
+          outlineStyle: style.outlineStyle, outlineWidth: parseFloat(style.outlineWidth)};
+    })()""")
+    if (focus["id"] != "pdf-file" or not focus["visible"] or focus["outlineStyle"] == "none" or focus["outlineWidth"] < 2:
+        fail(f"keyboard tab focus missing explicit visible outline: {focus!r}")
+
+    # A screen-reader named, tabbable region must scroll using keyboard arrows.
+    browser.execute("const r=document.querySelector('.table-wrap');r.scrollLeft=0;r.focus();")
+    browser.command("POST", "/actions", {"actions": [{
+        "type": "key", "id": "a11y-keyboard",
+        "actions": [
+            {"type": "keyDown", "value": "\ue014"},
+            {"type": "keyUp", "value": "\ue014"},
+        ],
+    }]})
+    wait_for(
+        lambda: browser.execute("return document.querySelector('.table-wrap').scrollLeft;") > 0,
+        "keyboard horizontal report scroll",
+        timeout=8,
+    )
+    region_focus = browser.execute("""const r=document.querySelector('.table-wrap');
+        const s=getComputedStyle(r);
+        return {active:document.activeElement===r,visible:r.matches(':focus-visible'),
+          outlineStyle:s.outlineStyle,outlineWidth:parseFloat(s.outlineWidth),
+          scrollLeft:r.scrollLeft};""")
+    if not region_focus["active"] or region_focus["outlineStyle"] == "none" or region_focus["outlineWidth"] < 2:
+        fail(f"report scroll region lost keyboard focus outline: {region_focus!r}")
+    browser.command("POST", "/goog/cdp/execute", {
+        "cmd": "Emulation.clearDeviceMetricsOverride", "params": {},
+    })
+    print("WEB-LITE-A11Y-EVIDENCE status=PASS viewports=320,375,768,1440 "
+          "document_overflow=0 keyboard_tab_focus=PASS report_region=LABELED "
+          "keyboard_scroll=PASS localization=pt-BR")
+    return {"status": "PASS", "viewports": outcomes, "keyboard_tab_focus": focus,
+            "keyboard_scroll": region_focus, "horizontal_document_overflow": False}
+
+
 def analyze_through_ui_locale(browser: Browser, pdf: Path, profile: str) -> dict[str, Any]:
     """Read the productive analysis path without imposing the Portuguese display assertion."""
     browser.execute(
@@ -956,6 +1058,7 @@ def main() -> None:
                 )
 
             locale_evidence = verify_ui_locales(browser, positive, negative, args.profile, positive_report, negative_report)
+            responsive_evidence = verify_responsive_keyboard(browser)
 
             performance_entries = browser.logs("performance")
             requested_urls = performance_request_urls(performance_entries)
@@ -989,6 +1092,7 @@ def main() -> None:
                 "local_processing": True,
                 "ui_locale": "pt-BR",
                 "ui_locales": locale_evidence,
+                "responsive_keyboard": responsive_evidence,
                 "canonical_machine_values_preserved": True,
                 "normative_catalog": positive_report["normative_catalog"],
                 "network": {
@@ -1046,7 +1150,7 @@ def main() -> None:
                 "font_embedded=MANUAL_REVIEW pdfa_deep=MANUAL_REVIEW "
                 "productive_ui=true local_processing=true pages_package=true "
                 "external_network=DENIED external_http_requests=0 csp=PASS "
-                "report_filter=PASS csv_export=PASS full_report_unchanged=true ui_locale=pt-BR locales=4"
+                "report_filter=PASS csv_export=PASS responsive_keyboard=PASS full_report_unchanged=true ui_locale=pt-BR locales=4"
             )
     finally:
         browser.stop()
