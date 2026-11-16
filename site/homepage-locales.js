@@ -180,6 +180,16 @@ function rememberHomeLocale(locale) {
   }
 }
 
+function updateHomeLocaleUrl(locale) {
+  try {
+    const url = new URL(window.location.href);
+    url.searchParams.set("lang", locale);
+    window.history.replaceState(window.history.state, "", url.pathname + url.search + url.hash);
+  } catch {
+    // A restricted History API does not prevent changing the interface.
+  }
+}
+
 function applyHomeLocale(requested) {
   const locale = HOME_LOCALES.includes(requested) ? requested : "pt-BR";
   const copy = HOME_COPY[locale];
@@ -211,7 +221,9 @@ function initializeHomeLocale() {
   applyHomeLocale(locale);
   if (explicit && HOME_LOCALES.includes(requested)) rememberHomeLocale(locale);
   selector.addEventListener("change", () => {
-    rememberHomeLocale(applyHomeLocale(selector.value));
+    const locale = applyHomeLocale(selector.value);
+    rememberHomeLocale(locale);
+    updateHomeLocaleUrl(locale);
   });
 }
 if (typeof document !== "undefined") {
