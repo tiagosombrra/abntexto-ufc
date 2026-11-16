@@ -798,7 +798,7 @@ def verify_responsive_keyboard(browser: Browser) -> dict[str, Any]:
         return {id: node.id, visible: node.matches(':focus-visible'),
           outlineStyle: style.outlineStyle, outlineWidth: parseFloat(style.outlineWidth)};
     })()""")
-    if (focus["id"] != "pdf-file" or not focus["visible"] or focus["outlineStyle"] == "none" or focus["outlineWidth"] < 2:
+    if (focus["id"] != "pdf-file" or not focus["visible"] or focus["outlineStyle"] == "none" or focus["outlineWidth"] < 2):
         fail(f"keyboard tab focus missing explicit visible outline: {focus!r}")
 
     # A screen-reader named, tabbable region must scroll using keyboard arrows.
