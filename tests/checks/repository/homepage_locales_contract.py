@@ -106,8 +106,21 @@ if (
     raise SystemExit("HOMEPAGE-I18N-EVIDENCE status=FAIL unexpected_locale_storage_contract")
 # Both surfaces must agree on the same storage name without changing PDF data.
 validator_app = (ROOT / "validator/app.js").read_text(encoding="utf-8")
-if 'const UI_LOCALE_STORAGE_KEY = "abntexto-ufc.ui-locale";' not in validator_app:
-    raise SystemExit("HOMEPAGE-I18N-EVIDENCE status=FAIL mismatched_cross_page_locale_storage_key")
+allowed_validator_storage_calls = {
+    "window.localStorage.getItem(UI_LOCALE_STORAGE_KEY)",
+    "window.localStorage.setItem(UI_LOCALE_STORAGE_KEY, locale)",
+}
+actual_validator_storage_calls = set(re.findall(
+    r"window\.localStorage\.(?:getItem|setItem|removeItem|clear)\([^)]*\)",
+    validator_app,
+))
+if (
+    'const UI_LOCALE_STORAGE_KEY = "abntexto-ufc.ui-locale";' not in validator_app
+    or validator_app.count("localStorage") != 2
+    or actual_validator_storage_calls != allowed_validator_storage_calls
+    or 'SUPPORTED_LOCALES.includes(requested)' not in validator_app
+):
+    raise SystemExit("HOMEPAGE-I18N-EVIDENCE status=FAIL validator_locale_storage_or_whitelist")
 data = json.loads(subprocess.check_output(
     ["node", "-e", "const s=require('./site/homepage-locales.js');process.stdout.write(JSON.stringify({copies:s.HOME_COPY,locales:s.HOME_LOCALES}))"],
     cwd=ROOT, text=True
