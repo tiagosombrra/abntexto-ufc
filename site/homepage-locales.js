@@ -46,7 +46,7 @@ const HOME_COPY = {
     "faqCompileQuestion": "O que verificar se a compilação falhar?",
     "faqCompileAnswer": "Confira a versão da distribuição, TeX Live e dependências, o caminho de main.tex, a bibliografia e o log de compilação. Reproduza o problema com um exemplo mínimo antes de abrir uma issue.",
     "stableReleaseLink": "Baixar a v3.0.5 publicada",
-    "guideLink": "Guia completo (em português)",
+    "guideLink": "Guia da linha em desenvolvimento (em português)",
     "footerText": "LPPL 1.3c ou posterior · site publicado a partir do repositório canônico."
   },
   "en": {
@@ -94,7 +94,7 @@ const HOME_COPY = {
     "faqCompileQuestion": "What should I check if compilation fails?",
     "faqCompileAnswer": "Check the distribution version, TeX Live dependencies, the main.tex path, bibliography and compilation log. Reproduce the problem with a minimal example before opening an issue.",
     "stableReleaseLink": "Download published v3.0.5",
-    "guideLink": "Full user guide (Portuguese)",
+    "guideLink": "Development-branch guide (Portuguese)",
     "footerText": "LPPL 1.3c or later · website published from the canonical repository."
   },
   "es": {
@@ -142,7 +142,7 @@ const HOME_COPY = {
     "faqCompileQuestion": "¿Qué revisar si falla la compilación?",
     "faqCompileAnswer": "Compruebe la versión, TeX Live y sus dependencias, la ruta de main.tex, la bibliografía y el registro de compilación. Reproduzca el problema con un ejemplo mínimo antes de abrir una incidencia.",
     "stableReleaseLink": "Descargar v3.0.5 publicada",
-    "guideLink": "Guía completa (en portugués)",
+    "guideLink": "Guía de la rama en desarrollo (en portugués)",
     "footerText": "LPPL 1.3c o posterior · sitio publicado desde el repositorio canónico."
   },
   "fr": {
@@ -190,7 +190,7 @@ const HOME_COPY = {
     "faqCompileQuestion": "Que vérifier si la compilation échoue ?",
     "faqCompileAnswer": "Vérifiez la version, TeX Live et ses dépendances, le chemin de main.tex, la bibliographie et le journal de compilation. Reproduisez le problème avec un exemple minimal avant de créer un ticket.",
     "stableReleaseLink": "Télécharger la version publiée v3.0.5",
-    "guideLink": "Guide complet (en portugais)",
+    "guideLink": "Guide de la branche en développement (en portugais)",
     "footerText": "LPPL 1.3c ou ultérieure · site publié à partir du dépôt canonique."
   }
 };
