@@ -381,6 +381,16 @@ def main() -> None:
         if "      - tests/static.py" in matrix_source:
             fail(f"shared static runner must not trigger expensive {matrix} PDF matrix")
     release_pr_paths = release_workflow.split("  pull_request:", 1)[1].split("  workflow_dispatch:", 1)[0]
+    # Functional browser regressions must not bypass the release verification gate.
+    required_browser_release_paths = (
+        "      - 'site/**'",
+        "      - 'validator/**'",
+        "      - 'tests/integration/validator/**'",
+        "      - tools/ci/build-pages-site.sh",
+        "      - tools/ci/run-web-lite-e2e.sh",
+    )
+    if any(token not in release_pr_paths for token in required_browser_release_paths):
+        fail("Browser UI or productive E2E changes can bypass Linux Release Check")
     if "      - tests/integration/frontmatter/i18n-pretextual-api-evidence.py" in release_pr_paths:
         fail("standalone PDF auditor changes must not trigger full release packaging PR gate")
     if infer_suites(["abntexto-ufc.cls", pretextual_auditor]) != ("complete",):

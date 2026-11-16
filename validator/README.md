@@ -69,6 +69,12 @@ No PDF bytes, personal information, validation results, normative evidence or re
 
 The productive Chromium E2E exercises all four locales over the *same* real positive and non-A4 negative PDFs, comparing canonical checks and verdicts with the Portuguese baseline (apart from generation timestamps), checking localized labels and counters and rejecting invalid locale choices. A separate homepage browser test verifies **homepage → validator → homepage** transitions, reloads, invalid URL/storage values, storage-denied behavior, preserved canonical download links, and zero external HTTP/CSP violations. Only a non-draft PR triggers the full scoped Linux Integration; a green draft-only skip is **not** certification. The full `main` push still requires 42/42 complete checks.
 
+## Responsive layout and keyboard report navigation (v3.1.0 development)
+
+The productive Web/Lite result table is a **named, keyboard-focusable scroll region** (`role="region"`, `tabindex="0"`), because its six-column technical report can exceed a narrow mobile viewport. The accessible region name follows the active PT-BR/EN/ES/FR interface language, without translating normative source evidence or canonical JSON/CSV exports. Keyboard focus gets an explicit high-contrast outline on form controls, buttons, disclosure summaries and the scroll region. The form and result summary use minimum-zero responsive grid tracks, allow long filenames to wrap and prevent horizontal document overflow; the report itself remains horizontally scrollable.
+
+The productive Chromium checks on the assembled Pages package cover CSS viewport widths **320, 375, 768 and 1440 pixels**, visible controls and document overflow, actual WebDriver `Tab` focus progression, explicit focus indication, the named report region and arrow-key horizontal scrolling. The validator E2E still runs with real positive/negative PDFs, all four interface dictionaries and the deny-network/CSP monitors; the homepage smoke separately checks the same viewport matrix and CTA keyboard focus. These are **bounded browser regressions**, not a complete WCAG 2.2 contrast/reflow audit, assistive-technology certification, institutional approval or PDF/UA proof.
+
 ## Browser regression
 
 The Linux Integration `web-lite` scope compiles a real reference PDF, assembles the same `_site/validator` tree used by GitHub Pages, opens that productive package in headless Chrome, selects/uploads the PDF and runs the same `analyze` path used by the button. It then repeats the UI flow with a valid non-A4 negative PDF.

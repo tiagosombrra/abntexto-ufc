@@ -58,6 +58,56 @@ def snapshot(browser):
         fileNames: Array.from(document.querySelectorAll("code")).map(x=>x.textContent),
         contentReady: document.querySelectorAll("[data-i18n]").length
     }))()""")
+
+def verify_home_responsive_keyboard(browser, port):
+    """Check mobile layout and a real keyboard focus transition on the published homepage."""
+    browser.navigate(f"http://127.0.0.1:{port}/index.html?lang=pt-BR")
+    results={}
+    for width in (320,375,768,1440):
+        browser.command("POST", "/goog/cdp/execute", {
+            "cmd": "Emulation.setDeviceMetricsOverride",
+            "params": {"width":width,"height":900,"deviceScaleFactor":1,"mobile":False},
+        })
+        observed=browser.execute("""return (() => {
+            const selector=document.querySelector('#home-locale');
+            const action=document.querySelector('a[data-i18n="openValidator"]');
+            const rect=action.getBoundingClientRect();
+            return {viewport:innerWidth,bodyWidth:document.documentElement.scrollWidth,
+                locale:document.documentElement.lang,
+                selectorWidth:selector.getBoundingClientRect().width,
+                actionWidth:rect.width,actionLeft:rect.left,actionRight:rect.right};
+        })()""")
+        if (observed["viewport"] != width or observed["bodyWidth"] > width+1 or observed["locale"] != "pt-BR"):
+            fail(f"homepage responsive overflow at {width}px: {observed!r}")
+        if observed["actionLeft"] < -1 or observed["actionRight"] > width+1 or observed["selectorWidth"] < 50:
+            fail(f"homepage interactive controls outside viewport at {width}px: {observed!r}")
+        results[str(width)]={"viewport":width,"document_overflow":False,"cta_visible":True}
+    browser.command("POST", "/goog/cdp/execute", {
+        "cmd": "Emulation.setDeviceMetricsOverride",
+        "params": {"width":320,"height":900,"deviceScaleFactor":1,"mobile":False},
+    })
+    browser.execute("document.querySelector('#home-locale').focus();")
+    browser.command("POST", "/actions", {"actions": [{
+        "type":"key","id":"homepage-a11y-keyboard",
+        "actions":[
+            {"type":"keyDown","value":"\ue004"},
+            {"type":"keyUp","value":"\ue004"},
+        ],
+    }]})
+    focus=browser.execute("""return (() => {
+        const e=document.activeElement,style=getComputedStyle(e);
+        return {href:e.getAttribute('href'),visible:e.matches(':focus-visible'),
+            outlineStyle:style.outlineStyle,outlineWidth:parseFloat(style.outlineWidth)};
+    })()""")
+    if (focus["href"] != "./validator/?lang=pt-BR" or not focus["visible"] or focus["outlineStyle"] == "none" or focus["outlineWidth"] < 2):
+        fail(f"homepage keyboard focus visibility drift: {focus!r}")
+    browser.command("POST", "/goog/cdp/execute", {
+        "cmd": "Emulation.clearDeviceMetricsOverride","params":{},
+    })
+    print("HOMEPAGE-RESPONSIVE-EVIDENCE status=PASS viewports=320,375,768,1440 "
+          "document_overflow=0 keyboard_tab_focus=PASS cta=VISIBLE")
+    return {"status":"PASS","viewports":results,"keyboard_tab_focus":focus}
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--site-root", type=Path, required=True)
@@ -194,15 +244,16 @@ def main():
             } finally {Storage.prototype.setItem=original;}""")
         if denied_validator != [True,"en","en","en"]:
             fail("validator_storage_denied_not_safe")
+        responsive=verify_home_responsive_keyboard(browser,server.server_port)
         requests=performance_request_urls(browser.logs("performance"))
         external=external_http_requests(requests,server.server_port)
         if external:
             fail("external_network:"+",".join(external))
         if csp_log_violations(browser.logs("browser")):
             fail("csp_violation")
-        evidence={"status":"PASS","locales":samples,"selector_change":"PASS","cross_page_locale":"PASS","stored_preference":"PASS","invalid_locale_fallback":"pt-BR","invalid_storage_fallback":"pt-BR","storage_denial":"PASS","same_origin_assets":True,"external_http_requests":0,"csp":"PASS"}
+        evidence={"status":"PASS","locales":samples,"selector_change":"PASS","cross_page_locale":"PASS","stored_preference":"PASS","invalid_locale_fallback":"pt-BR","invalid_storage_fallback":"pt-BR","storage_denial":"PASS","responsive_keyboard":responsive,"same_origin_assets":True,"external_http_requests":0,"csp":"PASS"}
         args.evidence.write_text(json.dumps(evidence,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
-        print("HOMEPAGE-BROWSER-EVIDENCE status=PASS locales=4 selector_change=PASS cross_page=PASS storage=PASS invalid_fallback=PASS canonical_links=PASS external_network=DENIED csp=PASS")
+        print("HOMEPAGE-BROWSER-EVIDENCE status=PASS locales=4 selector_change=PASS cross_page=PASS storage=PASS invalid_fallback=PASS responsive_keyboard=PASS canonical_links=PASS external_network=DENIED csp=PASS")
     finally:
         browser.stop()
         server.shutdown();server.server_close();thread.join(timeout=5)
