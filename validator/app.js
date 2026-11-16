@@ -9,6 +9,7 @@ const PASS="PASS",FAIL="FAIL",WARN="WARNING",REVIEW="MANUAL REVIEW",NA="NOT APPL
 const MM=72/25.4,pageRule=normativeRules["page.a4"],rectoRule=normativeRules["margin.recto"],versoRule=normativeRules["margin.verso"];
 const A4=[pageRule.values.width_mm*MM,pageRule.values.height_mm*MM],TOL=pageRule.values.tolerance_pt??1.8;
 const $=s=>document.querySelector(s); let report=null;
+let analysisGeneration=0, feedbackStatusKey="statusReady", feedbackErrorKey=null;
 // Presentation-only translations never modify canonical report data.
 const displayStatus=s=>uiText("status"+s);
 const displayVerdict=s=>uiText("verdict"+s);
@@ -31,6 +32,34 @@ const CHECK_ID_ALIASES={"font.family":"font.literal","font.embedding":"font.embe
 const reportCheck=c=>({id:CHECK_ID_ALIASES[c.id]??c.id,category:c.category,rule:c.rule,source:c.source,status:c.status,evidence:c.evidence,correction:c.correction,mandatory:c.mandatory,level:c.level,normative_rule:c.normativeRule,locator:c.locator,normativity:c.normativity});
 
 function save(name,data,type){const b=new Blob([data],{type}),u=URL.createObjectURL(b),a=document.createElement("a");a.href=u;a.download=name;a.click();URL.revokeObjectURL(u)}
+// Keep validation feedback localized, without exposing parser internals in the UI.
+function renderFeedback() {
+  $("#validation-feedback").textContent=uiText(feedbackStatusKey);
+  const error=$("#validation-error");
+  error.textContent=feedbackErrorKey?uiText(feedbackErrorKey):"";
+  error.classList.toggle("hidden",!feedbackErrorKey);
+}
+function setFeedback(statusKey,errorKey=null) {
+  feedbackStatusKey=statusKey;feedbackErrorKey=errorKey;
+  renderFeedback();
+}
+function clearReport() {
+  // A stale report must never remain visible or exportable for another file or option.
+  report=null;
+  $("#summary").classList.add("hidden");
+  $("#report-section").classList.add("hidden");
+  $("#report-body").replaceChildren();
+  $("#report-filter").value="all";
+  $("#report-filter").disabled=true;
+  $("#filter-count").textContent="";
+  ["#export-json","#export-csv","#print-report"].forEach(s=>$(s).disabled=true);
+}
+function invalidateReport() {
+  // An in-flight result cannot overwrite a change to file or validation settings.
+  analysisGeneration++;
+  clearReport();
+  setFeedback($("#pdf-file").files?.length?"statusChanged":"statusReady");
+}
 function renderNormativeBase(){
  $("#norm-reviewed").textContent=normativeCatalog.reviewed_at;
  $("#norm-stats").textContent=uiText("rulesStats",normativeCatalog.rules.length,normativeCatalog.sources.length);
@@ -154,10 +183,49 @@ $("#ui-locale").addEventListener("change",event=>{
   updateValidatorLocaleUrl(locale);
   renderNormativeBase();
   if(report)render(report);
+  renderFeedback();
 });
 renderNormativeBase();
+renderFeedback();
 $("#report-filter").addEventListener("change",filterReport);
-$("#analyze").addEventListener("click",async()=>{const f=$("#pdf-file").files?.[0];if(!f)return alert(uiText("selectFile"));const b=$("#analyze");b.disabled=true;b.textContent=uiText("validating");try{report=await analyze(f,$("#profile").value,$("#document-type").value,$("#print-mode").value,$("#page-accounting").value);render(report)}catch(e){console.error(e);alert(uiText("validationFailed",e.message||e))}finally{b.disabled=false;b.textContent=uiText("analyze")}});
+for(const selector of ["#pdf-file","#profile","#document-type","#print-mode","#page-accounting"]) {
+  $(selector).addEventListener("change",invalidateReport);
+}
+$("#analyze").addEventListener("click",async()=>{
+  const button=$("#analyze");
+  if(button.disabled)return;
+  const file=$("#pdf-file").files?.[0];
+  clearReport();
+  if(!file){setFeedback("statusReady","selectFile");return}
+  // Settings incompatibility is actionable and must not be reported as PDF corruption.
+  if($("#page-accounting").value==="external-cover-first" && $("#print-mode").value!=="double-sided") {
+    setFeedback("statusChanged","errorCoverRequiresDuplex");
+    return;
+  }
+  const generation=++analysisGeneration;
+  setFeedback("statusRunning");
+  button.disabled=true;button.textContent=uiText("validating");
+  try {
+    const result=await analyze(file,$("#profile").value,$("#document-type").value,$("#print-mode").value,$("#page-accounting").value);
+    if(generation!==analysisGeneration)return;
+    report=result;
+    render(report);
+    setFeedback("statusComplete");
+  } catch(error) {
+    // Keep technical diagnostics local, but never expose raw PDF/parser text to users.
+    console.error(error);
+    if(generation===analysisGeneration) {
+      clearReport();
+      // Only a known class-owned precondition may select specific recovery copy.
+      const errorKey=error?.message==="External cover accounting requires at least two PDF pages"
+        ?"errorCoverRequiresTwoPages":"errorUnreadable";
+      setFeedback("statusReady",errorKey);
+    }
+  } finally {
+    button.disabled=false;
+    button.textContent=uiText("analyze");
+  }
+});
 $("#export-json").addEventListener("click",()=>report&&save("ufc-validation-report.json",JSON.stringify(report,null,2),"application/json;charset=utf-8"));
 $("#export-csv").addEventListener("click",()=>{if(!report)return;const h=["Status","Category","Rule","Source","Evidence","Correction","Level","Mandatory","Normative rule","Locator","Normativity"],rows=report.checks.map(c=>[c.status,c.category,c.rule,c.source,c.evidence,c.correction,c.level,c.mandatory?"yes":"no",c.normative_rule,c.locator,c.normativity]),data=csvRows([h,...rows]);save("ufc-validation-report.csv",`\ufeff${data}`,"text/csv;charset=utf-8")});
 $("#print-report").addEventListener("click",()=>window.print());
