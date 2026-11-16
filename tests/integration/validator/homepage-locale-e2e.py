@@ -34,6 +34,28 @@ EXPECTED = {
     "es": ("Primeros pasos", "Abrir validador Web/Lite", "Idioma del sitio"),
     "fr": ("Pour commencer", "Ouvrir le validateur Web/Lite", "Langue du site"),
 }
+FAQ_EXPECTED = {
+    "pt-BR": (
+        "Ajuda para começar e dúvidas frequentes",
+        ("Qual ZIP devo usar?", "Por que o validador pede revisão manual?", "O que verificar se a compilação falhar?"),
+        "Baixar a v3.0.5 publicada", "Guia completo (em português)",
+    ),
+    "en": (
+        "Getting started and frequently asked questions",
+        ("Which ZIP should I use?", "Why does the validator require manual review?", "What should I check if compilation fails?"),
+        "Download published v3.0.5", "Full user guide (Portuguese)",
+    ),
+    "es": (
+        "Primeros pasos y preguntas frecuentes",
+        ("¿Qué archivo ZIP debo utilizar?", "¿Por qué el validador solicita revisión manual?", "¿Qué revisar si falla la compilación?"),
+        "Descargar v3.0.5 publicada", "Guía completa (en portugués)",
+    ),
+    "fr": (
+        "Premiers pas et questions fréquentes",
+        ("Quelle archive ZIP utiliser ?", "Pourquoi le validateur demande-t-il une vérification manuelle ?", "Que vérifier si la compilation échoue ?"),
+        "Télécharger la version publiée v3.0.5", "Guide complet (en portugais)",
+    ),
+}
 def fail(reason):
     raise SystemExit("HOMEPAGE-BROWSER-EVIDENCE status=FAIL " + reason)
 def snapshot(browser):
@@ -56,6 +78,15 @@ def snapshot(browser):
         developmentVersion: document.querySelector('code[data-version="development"]').textContent,
         originalLinks: Array.from(document.querySelectorAll("a")).map(x=>x.getAttribute("href")),
         fileNames: Array.from(document.querySelectorAll("code")).map(x=>x.textContent),
+        helpHeading: document.querySelector('[data-i18n="helpHeading"]').textContent,
+        helpNavigationName: document.querySelector('.help-links').getAttribute('aria-labelledby'),
+        faq: Array.from(document.querySelectorAll('.help details')).map(node=>({
+          question:node.querySelector('summary').textContent,
+          answer:node.querySelector('p').textContent,
+          open:node.open
+        })),
+        stableReleaseLabel: document.querySelector('[data-i18n="stableReleaseLink"]').textContent,
+        guideLabel: document.querySelector('[data-i18n="guideLink"]').textContent,
         contentReady: document.querySelectorAll("[data-i18n]").length
     }))()""")
 
@@ -153,10 +184,35 @@ def main():
                 "https://github.com/tiagosombrra/abntexto-ufc",
                 "https://github.com/tiagosombrra/abntexto-ufc#readme",
                 "https://github.com/tiagosombrra/abntexto-ufc/issues",
+                "https://github.com/tiagosombrra/abntexto-ufc/releases/tag/v3.0.5",
+                "https://github.com/tiagosombrra/abntexto-ufc/blob/main/docs/USER-GUIDE.md",
             }:
                 fail("canonical_urls_changed:"+locale)
             if item["originalLinks"].count("./validator/?lang="+locale) != 2:
                 fail("validator_secondary_link_lost:"+locale)
+            expected_help, expected_questions, expected_release, expected_guide = FAQ_EXPECTED[locale]
+            if (item["helpHeading"],item["stableReleaseLabel"],item["guideLabel"]) != (
+                expected_help,expected_release,expected_guide
+            ):
+                fail("untranslated_onboarding_or_release_guide:"+locale)
+            if item["helpNavigationName"] != "help-heading":
+                fail("faq_navigation_has_untranslated_name:"+locale)
+            if (
+                len(item["faq"]) != 3
+                or tuple(entry["question"] for entry in item["faq"]) != expected_questions
+                or any(entry["open"] or len(entry["answer"]) < 70 for entry in item["faq"])
+            ):
+                fail("faq_missing_or_untranslated:"+locale)
+            if not all("v3.0.5" in item["faq"][0]["answer"] and
+                       "v3.1.0" in item["faq"][0]["answer"] for _ in [0]):
+                fail("published_development_boundary_lost:"+locale)
+            # Native disclosure must actually expand in Chromium, not just exist in HTML.
+            browser.click(".help details:first-of-type summary")
+            if browser.execute("return !document.querySelector('.help details').open;"):
+                fail("faq_disclosure_did_not_open:"+locale)
+            browser.click(".help details:first-of-type summary")
+            if browser.execute("return document.querySelector('.help details').open;"):
+                fail("faq_disclosure_did_not_close:"+locale)
             if "abntexto-ufc-reference.pdf" not in item["fileNames"]:
                 fail("canonical_filename_changed:"+locale)
             samples[locale]={"lang":item["lang"],"heading":item["heading"],"description":item["description"],"disclaimer":item["disclaimer"],"published":item["publishedVersion"],"development":item["developmentVersion"]}
@@ -251,9 +307,9 @@ def main():
             fail("external_network:"+",".join(external))
         if csp_log_violations(browser.logs("browser")):
             fail("csp_violation")
-        evidence={"status":"PASS","locales":samples,"selector_change":"PASS","cross_page_locale":"PASS","stored_preference":"PASS","invalid_locale_fallback":"pt-BR","invalid_storage_fallback":"pt-BR","storage_denial":"PASS","responsive_keyboard":responsive,"same_origin_assets":True,"external_http_requests":0,"csp":"PASS"}
+        evidence={"status":"PASS","locales":samples,"selector_change":"PASS","cross_page_locale":"PASS","stored_preference":"PASS","invalid_locale_fallback":"pt-BR","invalid_storage_fallback":"pt-BR","storage_denial":"PASS","responsive_keyboard":responsive,"onboarding_faq":"PASS","stable_guide_links":"PASS","same_origin_assets":True,"external_http_requests":0,"csp":"PASS"}
         args.evidence.write_text(json.dumps(evidence,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
-        print("HOMEPAGE-BROWSER-EVIDENCE status=PASS locales=4 selector_change=PASS cross_page=PASS storage=PASS invalid_fallback=PASS responsive_keyboard=PASS canonical_links=PASS external_network=DENIED csp=PASS")
+        print("HOMEPAGE-BROWSER-EVIDENCE status=PASS locales=4 selector_change=PASS cross_page=PASS storage=PASS invalid_fallback=PASS responsive_keyboard=PASS faq=LOCALIZED_4 disclosures=PASS stable_guide_links=PASS canonical_links=PASS external_network=DENIED csp=PASS")
     finally:
         browser.stop()
         server.shutdown();server.server_close();thread.join(timeout=5)
