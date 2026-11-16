@@ -75,7 +75,14 @@ The productive Web/Lite result table is a **named, keyboard-focusable scroll reg
 
 The productive Chromium checks on the assembled Pages package cover CSS viewport widths **320, 375, 768 and 1440 pixels**, visible controls and document overflow, actual WebDriver `Tab` focus progression, explicit focus indication, the named report region and arrow-key horizontal scrolling. The validator E2E still runs with real positive/negative PDFs, all four interface dictionaries and the deny-network/CSP monitors; the homepage smoke separately checks the same viewport matrix and CTA keyboard focus. These are **bounded browser regressions**, not a complete WCAG 2.2 contrast/reflow audit, assistive-technology certification, institutional approval or PDF/UA proof.
 
-## Browser regression
+## Recoverable validation and accessible error states (v3.1.0 development)
+
+The Web/Lite interface provides a localized **live status** (`role="status"`) and an **inline error message** (`role="alert"`) for all four interface languages. Missing-file and unreadable/invalid-PDF errors do not open browser-modal alerts. Parser exception messages are retained only in the local browser console; they are **not** copied into the page, exported, persisted or submitted to a server.
+
+Changing the PDF or any validation setting invalidates the prior report immediately, hides its summary/table, disables JSON/CSV/print exports and resets the filter. Starting another analysis also clears prior results. If a PDF cannot be parsed, its error is announced accessibly with a generic actionable message; the old report remains unavailable. Selecting a valid PDF again restores the report and its exports after a successful analysis. A monotonic analysis generation prevents an asynchronous result for an obsolete file or setting from replacing a newer user choice. Switching interface language translates the current status/error without changing canonical check IDs, verdicts or export schema.
+
+The real packed-Pages Chromium E2E covers a successful PDF followed by changed settings, no selected file (PT/EN/ES/FR), a deliberately unreadable PDF and recovery with the same source-bound real positive PDF. It asserts **zero stale exports**, no modal alerts or raw parser text, correct live/alert roles and unchanged recovered canonical machine results. This bounded recovery test does not certify arbitrary corrupt-PDF security, exhaustive parser fuzzing, official normative compliance or human accessibility acceptance.
+
 
 The Linux Integration `web-lite` scope compiles a real reference PDF, assembles the same `_site/validator` tree used by GitHub Pages, opens that productive package in headless Chrome, selects/uploads the PDF and runs the same `analyze` path used by the button. It then repeats the UI flow with a valid non-A4 negative PDF.
 
