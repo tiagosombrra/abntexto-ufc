@@ -29,6 +29,7 @@ const COPIES = {
     "summaryPages": "Páginas",
     "reportTitle": "Relatório",
     "filterAria": "Filtrar resultados do relatório",
+    "reportScrollLabel": "Tabela de verificações com rolagem horizontal",
     "filterLabel": "Exibir verificações",
     "colStatus": "Situação",
     "colCategory": "Categoria",
@@ -99,6 +100,7 @@ const COPIES = {
     "summaryPages": "Pages",
     "reportTitle": "Report",
     "filterAria": "Filter report results",
+    "reportScrollLabel": "Checks table with horizontal scrolling",
     "filterLabel": "Show checks",
     "colStatus": "Status",
     "colCategory": "Category",
@@ -169,6 +171,7 @@ const COPIES = {
     "summaryPages": "Páginas",
     "reportTitle": "Informe",
     "filterAria": "Filtrar resultados del informe",
+    "reportScrollLabel": "Tabla de verificaciones con desplazamiento horizontal",
     "filterLabel": "Mostrar verificaciones",
     "colStatus": "Estado",
     "colCategory": "Categoría",
@@ -239,6 +242,7 @@ const COPIES = {
     "summaryPages": "Pages",
     "reportTitle": "Rapport",
     "filterAria": "Filtrer les résultats du rapport",
+    "reportScrollLabel": "Tableau des vérifications avec défilement horizontal",
     "filterLabel": "Afficher les vérifications",
     "colStatus": "État",
     "colCategory": "Catégorie",
@@ -319,7 +323,7 @@ const OPTION_TARGETS = Object.freeze({
 const CANONICAL_STATUS = Object.freeze(["PASS", "FAIL", "WARNING", "MANUAL REVIEW", "NOT APPLICABLE"]);
 const CANONICAL_VERDICT = Object.freeze(["FAIL", "REVIEW REQUIRED", "AUTOMATED CHECKS PASSED WITH WARNINGS", "AUTOMATED CHECKS PASSED"]);
 const REQUIRED_KEYS = Object.freeze([
-  "pageTitle", "description", "privacyTitle", "privacyText", "filterAria",
+  "pageTitle", "description", "privacyTitle", "privacyText", "filterAria", "reportScrollLabel",
   "rulesStats", "showing", "selectFile", "validating", "validationFailed",
   ...Object.keys(STATIC_TARGETS),
   ...Object.values(OPTION_TARGETS).flat(),
@@ -382,6 +386,12 @@ export function setLocale(locale) {
   privacy.firstElementChild.textContent = uiText("privacyTitle");
   privacy.lastChild.textContent = uiText("privacyText");
   document.querySelector("#report-section .actions[role=group]").setAttribute("aria-label", uiText("filterAria"));
+  // Make horizontally scrollable results discoverable to keyboard and screen-reader users.
+  const reportScroll = document.querySelector("#report-section .table-wrap");
+  if (!reportScroll || reportScroll.getAttribute("role") !== "region" || reportScroll.tabIndex !== 0) {
+    throw new Error("Missing keyboard-accessible Web/Lite report region");
+  }
+  reportScroll.setAttribute("aria-label", uiText("reportScrollLabel"));
   for (const [selector, keys] of Object.entries(OPTION_TARGETS)) {
     const options = document.querySelector(selector).options;
     keys.forEach((key, i) => { options[i].textContent = uiText(key); });
