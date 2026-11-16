@@ -796,6 +796,57 @@ def verify_recoverable_validation_feedback(
         "p.dispatchEvent(new Event('change',{bubbles:true}));",
         [profile],
     )
+    # A real PDF with incompatible options must receive actionable settings guidance.
+    browser.send_file("#pdf-file", positive)
+    browser.execute("""const p=document.querySelector('#print-mode');
+        p.value='single-sided';p.dispatchEvent(new Event('change',{bubbles:true}));
+        const a=document.querySelector('#page-accounting');
+        a.value='external-cover-first';a.dispatchEvent(new Event('change',{bubbles:true}));""")
+    browser.click("#analyze")
+    incompatible = browser.execute("""return (() => {
+        const q=id=>document.querySelector('#'+id);
+        return {error:q('validation-error').textContent,
+          shown:!q('validation-error').classList.contains('hidden'),
+          reportHidden:q('report-section').classList.contains('hidden'),
+          exportDisabled:q('export-json').disabled,
+          modal:window.__ufcTestAlert};
+    })()""")
+    expected_incompatible = "A contagem com capa externa exige impressão em anverso e verso. Ajuste o modo de impressão ou a contagem."
+    if incompatible != {"error": expected_incompatible, "shown": True,
+                         "reportHidden": True, "exportDisabled": True, "modal": None}:
+        fail(f"incompatible duplex setting misreported as a corrupt PDF: {incompatible!r}")
+    english_duplex = browser.execute("""const q=document.querySelector('#ui-locale');
+        q.value='en';q.dispatchEvent(new Event('change',{bubbles:true}));
+        return document.querySelector('#validation-error').textContent;""")
+    if english_duplex != "External-cover page accounting requires double-sided printing. Change the print mode or page accounting.":
+        fail(f"duplex settings recovery not localized: {english_duplex!r}")
+    browser.execute("""const q=document.querySelector('#ui-locale');
+        q.value='pt-BR';q.dispatchEvent(new Event('change',{bubbles:true}));
+        const p=document.querySelector('#print-mode');p.value='double-sided';
+        p.dispatchEvent(new Event('change',{bubbles:true}));""")
+
+    # The same accounting mode requires a genuine PDF with at least two pages.
+    short_pdf = invalid.with_name("single-page-external-cover.pdf")
+    write_negative_pdf(short_pdf)
+    browser.send_file("#pdf-file", short_pdf)
+    browser.click("#analyze")
+    wait_for(
+        lambda: bool(browser.execute(
+            "return !document.querySelector('#analyze').disabled &&"
+            "!document.querySelector('#validation-error').classList.contains('hidden');"
+        )),
+        "single-page PDF external cover guidance",
+        timeout=50,
+    )
+    insufficient_pages = browser.execute(
+        "return document.querySelector('#validation-error').textContent;"
+    )
+    if insufficient_pages != "Para contar uma capa externa, o PDF precisa ter pelo menos duas páginas.":
+        fail(f"short duplex PDF lacked actionable page-count guidance: {insufficient_pages!r}")
+    browser.execute("""const a=document.querySelector('#page-accounting');
+        a.value='pdf-first-page';a.dispatchEvent(new Event('change',{bubbles:true}));
+        const p=document.querySelector('#print-mode');
+        p.value='single-sided';p.dispatchEvent(new Event('change',{bubbles:true}));""")
     invalid.write_bytes(b"Not a PDF. This deliberately invalid file must never produce a report.\n")
     browser.send_file("#pdf-file", invalid)
     browser.click("#analyze")
@@ -870,11 +921,13 @@ def verify_recoverable_validation_feedback(
     }:
         fail(f"recovered PDF report not usable or status not accessible: {done!r}")
     print("WEB-LITE-RECOVERY-EVIDENCE status=PASS missing_file=LOCALIZED_4 "
+          "settings_conflict=ACTIONABLE short_pdf=ACTIONABLE "
           "bad_pdf=INLINE_ARIA_ALERT stale_report=ABSENT exports=BLOCKED "
           "successful_retry=PASS canonical_report=UNCHANGED modal_alert=ABSENT")
-    return {"status": "PASS", "missing_file_locales": 4, "invalid_pdf": True,
-            "old_report_export_blocked": True, "successful_retry": True,
-            "canonical_report_unchanged": True}
+    return {"status": "PASS", "missing_file_locales": 4,
+            "incompatible_duplex_settings": "ACTIONABLE", "single_page_cover": "ACTIONABLE",
+            "invalid_pdf": True, "old_report_export_blocked": True,
+            "successful_retry": True, "canonical_report_unchanged": True}
 
 
 def verify_responsive_keyboard(browser: Browser) -> dict[str, Any]:
