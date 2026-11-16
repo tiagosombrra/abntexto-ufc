@@ -1,7 +1,7 @@
 import * as pdfjsLib from "./vendor/pdfjs/pdf.mjs";
 import {normativeCatalog,normativeRules,normativeSources} from "./normative-catalog.js";
 import {documentApplicability} from "./document-applicability.js";
-import {assertLocaleCoverage, setLocale, getLocale, uiText} from "./ui-locales.js";
+import {assertLocaleCoverage, setLocale, getLocale, uiText, SUPPORTED_LOCALES} from "./ui-locales.js";
 import {csvRows} from "./csv-export.js";
 pdfjsLib.GlobalWorkerOptions.workerSrc="./vendor/pdfjs/pdf.worker.mjs";
 
@@ -107,9 +107,54 @@ export async function analyze(file,profile,documentType="undergraduate-capstone"
 export function getLastReport(){return report}
 export {setLocale, getLocale, assertLocaleCoverage};
 
+const UI_LOCALE_STORAGE_KEY = "abntexto-ufc.ui-locale";
+function storedValidatorLocale() {
+  // Storage availability is optional, including file URLs and private browsing.
+  try {
+    const value = window.localStorage.getItem(UI_LOCALE_STORAGE_KEY);
+    return SUPPORTED_LOCALES.includes(value) ? value : null;
+  } catch {
+    return null;
+  }
+}
+function rememberValidatorLocale(locale) {
+  // Only the display locale is stored; canonical reports and PDFs stay local.
+  try {
+    window.localStorage.setItem(UI_LOCALE_STORAGE_KEY, locale);
+  } catch {
+    // Deep links still preserve the language without browser storage.
+  }
+}
+function updateValidatorLocaleUrl(locale) {
+  try {
+    const url = new URL(window.location.href);
+    url.searchParams.set("lang", locale);
+    window.history.replaceState(window.history.state, "", url.pathname + url.search + url.hash);
+  } catch {
+    // A blocked History API cannot prevent local validation.
+  }
+}
+function initialValidatorLocale() {
+  const query = new URLSearchParams(window.location.search);
+  const requested = query.get("lang");
+  // Explicit invalid choices fall back safely; never propagate untrusted input.
+  if (query.has("lang")) return SUPPORTED_LOCALES.includes(requested) ? requested : "pt-BR";
+  return storedValidatorLocale() || "pt-BR";
+}
 assertLocaleCoverage();
-setLocale("pt-BR");
-$("#ui-locale").addEventListener("change",event=>{setLocale(event.target.value);renderNormativeBase();if(report)render(report)});
+const initialInterfaceLocale = initialValidatorLocale();
+setLocale(initialInterfaceLocale);
+$("#ui-locale").value = initialInterfaceLocale;
+if (new URLSearchParams(window.location.search).get("lang") === initialInterfaceLocale) {
+  rememberValidatorLocale(initialInterfaceLocale);
+}
+$("#ui-locale").addEventListener("change",event=>{
+  const locale = setLocale(event.target.value);
+  rememberValidatorLocale(locale);
+  updateValidatorLocaleUrl(locale);
+  renderNormativeBase();
+  if(report)render(report);
+});
 renderNormativeBase();
 $("#report-filter").addEventListener("change",filterReport);
 $("#analyze").addEventListener("click",async()=>{const f=$("#pdf-file").files?.[0];if(!f)return alert(uiText("selectFile"));const b=$("#analyze");b.disabled=true;b.textContent=uiText("validating");try{report=await analyze(f,$("#profile").value,$("#document-type").value,$("#print-mode").value,$("#page-accounting").value);render(report)}catch(e){console.error(e);alert(uiText("validationFailed",e.message||e))}finally{b.disabled=false;b.textContent=uiText("analyze")}});
