@@ -274,6 +274,9 @@ def main():
             ) != "../?lang="+locale:
                 fail("roundtrip_return_link_lost_locale:"+locale)
             samples[locale]={"lang":item["lang"],"heading":item["heading"],"description":item["description"],"disclaimer":item["disclaimer"],"published":item["publishedVersion"],"development":item["developmentVersion"]}
+        # Continue the existing homepage selector tests from the homepage, not
+        # from the validator reached at the end of the round-trip matrix.
+        browser.navigate(f"http://127.0.0.1:{server.server_port}/index.html?lang=fr")
         # Changing the homepage selector updates the URL and both validator links.
         changed=browser.execute("""const s=document.getElementById('home-locale');
             s.value='en';s.dispatchEvent(new Event('change',{bubbles:true}));
