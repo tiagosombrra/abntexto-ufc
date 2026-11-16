@@ -88,8 +88,26 @@ EXPECTED_STATUS_LABELS = {
     "es": ("Estado de las versiones", "Versión publicada:", "En desarrollo:"),
     "fr": ("Statut des versions", "Version publiée :", "En développement :"),
 }
-if any(mark in JS for mark in ("fetch(", "XMLHttpRequest", "sendBeacon", "localStorage", "sessionStorage", "innerHTML")):
-    raise SystemExit("HOMEPAGE-I18N-EVIDENCE status=FAIL unexpected_network_storage_or_markup")
+if any(mark in JS for mark in ("fetch(", "XMLHttpRequest", "sendBeacon", "sessionStorage", "innerHTML")):
+    raise SystemExit("HOMEPAGE-I18N-EVIDENCE status=FAIL unexpected_network_or_markup")
+# The only newly allowed browser storage is a four-value display-locale preference.
+# Reject any additional storage call or a changed storage key/argument.
+allowed_storage_calls = {
+    "window.localStorage.getItem(HOME_LOCALE_STORAGE_KEY)",
+    "window.localStorage.setItem(HOME_LOCALE_STORAGE_KEY, locale)",
+}
+actual_storage_calls = set(re.findall(r"window\.localStorage\.(?:getItem|setItem|removeItem|clear)\([^)]*\)", JS))
+if (
+    'const HOME_LOCALE_STORAGE_KEY = "abntexto-ufc.ui-locale";' not in JS
+    or JS.count("localStorage") != 2
+    or actual_storage_calls != allowed_storage_calls
+    or 'const HOME_LOCALES = Object.freeze(["pt-BR", "en", "es", "fr"]);' not in JS
+):
+    raise SystemExit("HOMEPAGE-I18N-EVIDENCE status=FAIL unexpected_locale_storage_contract")
+# Both surfaces must agree on the same storage name without changing PDF data.
+validator_app = (ROOT / "validator/app.js").read_text(encoding="utf-8")
+if 'const UI_LOCALE_STORAGE_KEY = "abntexto-ufc.ui-locale";' not in validator_app:
+    raise SystemExit("HOMEPAGE-I18N-EVIDENCE status=FAIL mismatched_cross_page_locale_storage_key")
 data = json.loads(subprocess.check_output(
     ["node", "-e", "const s=require('./site/homepage-locales.js');process.stdout.write(JSON.stringify({copies:s.HOME_COPY,locales:s.HOME_LOCALES}))"],
     cwd=ROOT, text=True
