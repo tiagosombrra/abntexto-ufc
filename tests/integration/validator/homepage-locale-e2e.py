@@ -38,22 +38,22 @@ FAQ_EXPECTED = {
     "pt-BR": (
         "Ajuda para começar e dúvidas frequentes",
         ("Qual ZIP devo usar?", "Por que o validador pede revisão manual?", "O que verificar se a compilação falhar?"),
-        "Baixar a v3.0.5 publicada", "Guia completo (em português)",
+        "Baixar a v3.0.5 publicada", "Guia da linha em desenvolvimento (em português)",
     ),
     "en": (
         "Getting started and frequently asked questions",
         ("Which ZIP should I use?", "Why does the validator require manual review?", "What should I check if compilation fails?"),
-        "Download published v3.0.5", "Full user guide (Portuguese)",
+        "Download published v3.0.5", "Development-branch guide (Portuguese)",
     ),
     "es": (
         "Primeros pasos y preguntas frecuentes",
         ("¿Qué archivo ZIP debo utilizar?", "¿Por qué el validador solicita revisión manual?", "¿Qué revisar si falla la compilación?"),
-        "Descargar v3.0.5 publicada", "Guía completa (en portugués)",
+        "Descargar v3.0.5 publicada", "Guía de la rama en desarrollo (en portugués)",
     ),
     "fr": (
         "Premiers pas et questions fréquentes",
         ("Quelle archive ZIP utiliser ?", "Pourquoi le validateur demande-t-il une vérification manuelle ?", "Que vérifier si la compilation échoue ?"),
-        "Télécharger la version publiée v3.0.5", "Guide complet (en portugais)",
+        "Télécharger la version publiée v3.0.5", "Guide de la branche en développement (en portugais)",
     ),
 }
 def fail(reason):
