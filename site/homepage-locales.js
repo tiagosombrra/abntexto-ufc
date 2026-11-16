@@ -38,6 +38,15 @@ const HOME_COPY = {
     "documentationHeading": "Documentação",
     "readmeLink": "README completo",
     "supportHeading": "Suporte",
+    "helpHeading": "Ajuda para começar e dúvidas frequentes",
+    "faqPackageQuestion": "Qual ZIP devo usar?",
+    "faqPackageAnswer": "Na versão publicada v3.0.5, use abntexto-ufc-overleaf-3.0.5.zip no Overleaf ou abntexto-ufc-template-3.0.5.zip para uso local. Não misture arquivos da v3.0.5 com a linha de desenvolvimento v3.1.0.",
+    "faqValidationQuestion": "Por que o validador pede revisão manual?",
+    "faqValidationAnswer": "O Web/Lite faz verificações parciais no navegador. PDF/A, fontes e aspectos semânticos podem exigir CLI/Deep, inspeção humana ou conferência das exigências atuais da UFC. O resultado não equivale a homologação institucional.",
+    "faqCompileQuestion": "O que verificar se a compilação falhar?",
+    "faqCompileAnswer": "Confira a versão da distribuição, TeX Live e dependências, o caminho de main.tex, a bibliografia e o log de compilação. Reproduza o problema com um exemplo mínimo antes de abrir uma issue.",
+    "stableReleaseLink": "Baixar a v3.0.5 publicada",
+    "guideLink": "Guia completo (em português)",
     "footerText": "LPPL 1.3c ou posterior · site publicado a partir do repositório canônico."
   },
   "en": {
@@ -77,6 +86,15 @@ const HOME_COPY = {
     "documentationHeading": "Documentation",
     "readmeLink": "Full README",
     "supportHeading": "Support",
+    "helpHeading": "Getting started and frequently asked questions",
+    "faqPackageQuestion": "Which ZIP should I use?",
+    "faqPackageAnswer": "For the published v3.0.5, use abntexto-ufc-overleaf-3.0.5.zip on Overleaf or abntexto-ufc-template-3.0.5.zip locally. Do not mix v3.0.5 files with the unreleased v3.1.0 development branch.",
+    "faqValidationQuestion": "Why does the validator require manual review?",
+    "faqValidationAnswer": "Web/Lite performs partial browser checks. PDF/A, fonts and semantic requirements may need CLI/Deep, a human inspection or confirmation of current UFC rules. Its result is not institutional approval.",
+    "faqCompileQuestion": "What should I check if compilation fails?",
+    "faqCompileAnswer": "Check the distribution version, TeX Live dependencies, the main.tex path, bibliography and compilation log. Reproduce the problem with a minimal example before opening an issue.",
+    "stableReleaseLink": "Download published v3.0.5",
+    "guideLink": "Full user guide (Portuguese)",
     "footerText": "LPPL 1.3c or later · website published from the canonical repository."
   },
   "es": {
@@ -116,6 +134,15 @@ const HOME_COPY = {
     "documentationHeading": "Documentación",
     "readmeLink": "README completo",
     "supportHeading": "Soporte",
+    "helpHeading": "Primeros pasos y preguntas frecuentes",
+    "faqPackageQuestion": "¿Qué archivo ZIP debo utilizar?",
+    "faqPackageAnswer": "Para la versión publicada v3.0.5, utilice abntexto-ufc-overleaf-3.0.5.zip en Overleaf o abntexto-ufc-template-3.0.5.zip para uso local. No mezcle archivos de v3.0.5 con la versión v3.1.0 en desarrollo.",
+    "faqValidationQuestion": "¿Por qué el validador solicita revisión manual?",
+    "faqValidationAnswer": "Web/Lite realiza verificaciones parciales en el navegador. PDF/A, las fuentes y los requisitos semánticos pueden requerir CLI/Deep, inspección humana o comprobar las normas vigentes de la UFC. El resultado no es una homologación institucional.",
+    "faqCompileQuestion": "¿Qué revisar si falla la compilación?",
+    "faqCompileAnswer": "Compruebe la versión, TeX Live y sus dependencias, la ruta de main.tex, la bibliografía y el registro de compilación. Reproduzca el problema con un ejemplo mínimo antes de abrir una incidencia.",
+    "stableReleaseLink": "Descargar v3.0.5 publicada",
+    "guideLink": "Guía completa (en portugués)",
     "footerText": "LPPL 1.3c o posterior · sitio publicado desde el repositorio canónico."
   },
   "fr": {
@@ -155,6 +182,15 @@ const HOME_COPY = {
     "documentationHeading": "Documentation",
     "readmeLink": "README complet",
     "supportHeading": "Assistance",
+    "helpHeading": "Premiers pas et questions fréquentes",
+    "faqPackageQuestion": "Quelle archive ZIP utiliser ?",
+    "faqPackageAnswer": "Pour la version publiée v3.0.5, utilisez abntexto-ufc-overleaf-3.0.5.zip sur Overleaf ou abntexto-ufc-template-3.0.5.zip en local. Ne mélangez pas les fichiers v3.0.5 avec ceux de la version v3.1.0 encore en développement.",
+    "faqValidationQuestion": "Pourquoi le validateur demande-t-il une vérification manuelle ?",
+    "faqValidationAnswer": "Web/Lite effectue des contrôles partiels dans le navigateur. Le PDF/A, les polices et les exigences sémantiques peuvent nécessiter CLI/Deep, une inspection humaine ou une vérification des règles UFC en vigueur. Ce résultat ne constitue pas une homologation institutionnelle.",
+    "faqCompileQuestion": "Que vérifier si la compilation échoue ?",
+    "faqCompileAnswer": "Vérifiez la version, TeX Live et ses dépendances, le chemin de main.tex, la bibliographie et le journal de compilation. Reproduisez le problème avec un exemple minimal avant de créer un ticket.",
+    "stableReleaseLink": "Télécharger la version publiée v3.0.5",
+    "guideLink": "Guide complet (en portugais)",
     "footerText": "LPPL 1.3c ou ultérieure · site publié à partir du dépôt canonique."
   }
 };
