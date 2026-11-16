@@ -149,6 +149,10 @@ The current project-owned runtime is one canonical `abntexto-ufc.cls`. Runtime-s
 
 If a required fact cannot be established from current Git state, active machine state, current evidence or reviewed source material, record the ambiguity and stop that advancement. Automated success never substitutes for explicit maintainer visual approval when a release gate requires it.
 
+## Historical v3.0.5 prepublication decisions — nonoperative today
+
+The following dated Phase 10D entries reproduce original decision and CI evidence *before* v3.0.5 publication. They intentionally contain once-true phrases such as `UNPUBLISHED`, `NOT_FROZEN`, or “next gate”; **none overrides** the current `PUBLISHED/ACCEPTED` v3.0.5 table above, the live machine marker, or the independent v3.1.0 `UNRELEASED` publication prohibition. Do not execute historical tag/upload instructions a second time.
+
 ## v3.0.5 explicit maintainer ACCEPT receipt
 
 The maintainer explicitly recorded `ACCEPT` on 2026-10-09 for certified source `407f279a78df3824b27585d0e86d688c19cd90ee` and retained seven-profile review-pair artifact `11415094731` (digest `sha256:23193aaaacdb2af7b465e4ddae17428344d1ac1d65d5dcc1b7089cf7bb342fa4`). Issue #474 is closed; #475 owns freeze/tag/publication.
