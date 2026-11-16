@@ -70,9 +70,29 @@ expected_hrefs = (
     "https://github.com/tiagosombrra/abntexto-ufc",
     "https://github.com/tiagosombrra/abntexto-ufc#readme",
     "https://github.com/tiagosombrra/abntexto-ufc/issues",
+    "https://github.com/tiagosombrra/abntexto-ufc/releases/tag/v3.0.5",
+    "https://github.com/tiagosombrra/abntexto-ufc/blob/main/docs/USER-GUIDE.md",
 )
-if set(parser.hrefs) != set(expected_hrefs) or len(parser.hrefs) != 7:
+if set(parser.hrefs) != set(expected_hrefs) or len(parser.hrefs) != 9:
     raise SystemExit(f"HOMEPAGE-I18N-EVIDENCE status=FAIL canonical_hrefs={parser.hrefs}")
+# FAQ markup must expose accessible native disclosure, a localized heading, and
+# an explicit public v3.0.5 link without promoting development ZIPs.
+if (
+    '<section class="help" aria-labelledby="help-heading">' not in HTML
+    or '<nav class="help-links" aria-labelledby="help-heading">' not in HTML
+    or HTML.count("<details>") != 3
+    or HTML.count("</details>") != 3
+    or HTML.count("<summary data-i18n=") != 3
+):
+    raise SystemExit("HOMEPAGE-I18N-EVIDENCE status=FAIL accessible_onboarding_faq")
+required_help_keys = {
+    "helpHeading", "faqPackageQuestion", "faqPackageAnswer",
+    "faqValidationQuestion", "faqValidationAnswer",
+    "faqCompileQuestion", "faqCompileAnswer",
+    "stableReleaseLink", "guideLink",
+}
+if not required_help_keys.issubset(parser.tokens):
+    raise SystemExit("HOMEPAGE-I18N-EVIDENCE status=FAIL incomplete_onboarding_content")
 # The published archive and development branch must be visually distinct, not
 # inferred from a translated heading or a dynamically mutated download URL.
 version_tags = re.findall(
