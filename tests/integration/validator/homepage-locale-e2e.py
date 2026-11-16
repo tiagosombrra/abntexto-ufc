@@ -98,35 +98,111 @@ def main():
             if len(item["description"])<30 or not item["disclaimer"] or not item["footer"] or item["contentReady"]<30:
                 fail("incomplete_visible_translation:"+locale)
             if set(item["originalLinks"]) != {
-                "./validator/",
+                "./validator/?lang="+locale,
                 "https://github.com/tiagosombrra/abntexto-ufc/releases",
                 "https://github.com/tiagosombrra/abntexto-ufc",
                 "https://github.com/tiagosombrra/abntexto-ufc#readme",
                 "https://github.com/tiagosombrra/abntexto-ufc/issues",
             }:
                 fail("canonical_urls_changed:"+locale)
+            if item["originalLinks"].count("./validator/?lang="+locale) != 2:
+                fail("validator_secondary_link_lost:"+locale)
             if "abntexto-ufc-reference.pdf" not in item["fileNames"]:
                 fail("canonical_filename_changed:"+locale)
             samples[locale]={"lang":item["lang"],"heading":item["heading"],"description":item["description"],"disclaimer":item["disclaimer"],"published":item["publishedVersion"],"development":item["developmentVersion"]}
-        # Exercise an actual user-visible selector change without reloading.
+        # Changing the homepage selector updates the URL and both validator links.
         changed=browser.execute("""const s=document.getElementById('home-locale');
             s.value='en';s.dispatchEvent(new Event('change',{bubbles:true}));
-            return [document.documentElement.lang,s.value,document.querySelector('[data-i18n="startHeading"]').textContent];""")
-        if changed != ["en","en","Getting started"]:
+            return [document.documentElement.lang,s.value,
+                document.querySelector('[data-i18n="startHeading"]').textContent,
+                new URLSearchParams(window.location.search).get('lang')];""")
+        if changed != ["en","en","Getting started","en"]:
             fail("selector_change_not_productive")
-        # Unsupported deep-link locale must fail safely to the Portuguese baseline.
+        browser.navigate(f"http://127.0.0.1:{server.server_port}/index.html")
+        if snapshot(browser)["lang"] != "en":
+            fail("homepage_stored_locale_not_restored")
+
+        # A real same-origin navigation must carry locale into the validator.
+        validator_url=f"http://127.0.0.1:{server.server_port}/validator/?lang=en"
+        browser.navigate(validator_url)
+        validator=browser.execute("""return [document.documentElement.lang,
+            document.querySelector('#ui-locale').value,
+            new URLSearchParams(window.location.search).get('lang')];""")
+        if validator != ["en","en","en"]:
+            fail("homepage_to_validator_locale_lost")
+
+        # A change inside the validator must persist across return navigation.
+        validator_changed=browser.execute("""const s=document.querySelector('#ui-locale');
+            s.value='fr';s.dispatchEvent(new Event('change',{bubbles:true}));
+            return [document.documentElement.lang,s.value,
+                new URLSearchParams(window.location.search).get('lang')];""")
+        if validator_changed != ["fr","fr","fr"]:
+            fail("validator_locale_change_not_persisted")
+        browser.navigate(f"http://127.0.0.1:{server.server_port}/index.html")
+        if snapshot(browser)["lang"] != "fr":
+            fail("validator_to_homepage_locale_lost")
+
+        # An unsupported deep link must fall back to PT without poisoning storage.
         browser.navigate(f"http://127.0.0.1:{server.server_port}/index.html?lang=xx")
         if snapshot(browser)["lang"] != "pt-BR":
-            fail("unsupported_locale_fallback")
+            fail("unsupported_homepage_locale_fallback")
+        browser.navigate(f"http://127.0.0.1:{server.server_port}/validator/?lang=xx")
+        bad_validator=browser.execute("""return [document.documentElement.lang,
+            document.querySelector('#ui-locale').value];""")
+        if bad_validator != ["pt-BR","pt-BR"]:
+            fail("unsupported_validator_locale_fallback")
+        browser.navigate(f"http://127.0.0.1:{server.server_port}/index.html")
+        if snapshot(browser)["lang"] != "fr":
+            fail("invalid_deep_link_poisoned_stored_locale")
+
+        # Invalid stored values must not become an unsupported locale.
+        browser.execute("""localStorage.setItem('abntexto-ufc.ui-locale','xx');""")
+        browser.navigate(f"http://127.0.0.1:{server.server_port}/index.html")
+        if snapshot(browser)["lang"] != "pt-BR":
+            fail("unsupported_stored_homepage_locale_fallback")
+        browser.navigate(f"http://127.0.0.1:{server.server_port}/validator/")
+        bad_storage_validator=browser.execute("""return [document.documentElement.lang,
+            document.querySelector('#ui-locale').value];""")
+        if bad_storage_validator != ["pt-BR","pt-BR"]:
+            fail("unsupported_stored_validator_locale_fallback")
+        browser.navigate(f"http://127.0.0.1:{server.server_port}/index.html")
+
+        # Storage denial must not break the visible UI or URL-based handoff.
+        storage_block=browser.execute("""const original=Storage.prototype.setItem;
+            Storage.prototype.setItem=function(){throw Error('storage disabled');};
+            try {
+              let denied=false;
+              try {localStorage.setItem('abntexto-ufc.ui-locale','xx');} catch {denied=true;}
+              const s=document.querySelector('#home-locale');
+              s.value='es';s.dispatchEvent(new Event('change',{bubbles:true}));
+              return [denied,document.documentElement.lang,s.value,
+                new URLSearchParams(window.location.search).get('lang'),
+                document.querySelector('a[data-i18n="openValidator"]').getAttribute('href')];
+            } finally {Storage.prototype.setItem=original;}""")
+        if storage_block != [True,"es","es","es","./validator/?lang=es"]:
+            fail("homepage_storage_denied_not_safe")
+        browser.navigate(f"http://127.0.0.1:{server.server_port}/validator/?lang=es")
+        denied_validator=browser.execute("""const original=Storage.prototype.setItem;
+            Storage.prototype.setItem=function(){throw Error('storage disabled');};
+            try {
+              let denied=false;
+              try {localStorage.setItem('abntexto-ufc.ui-locale','xx');} catch {denied=true;}
+              const s=document.querySelector('#ui-locale');
+              s.value='en';s.dispatchEvent(new Event('change',{bubbles:true}));
+              return [denied,document.documentElement.lang,s.value,
+                new URLSearchParams(window.location.search).get('lang')];
+            } finally {Storage.prototype.setItem=original;}""")
+        if denied_validator != [True,"en","en","en"]:
+            fail("validator_storage_denied_not_safe")
         requests=performance_request_urls(browser.logs("performance"))
         external=external_http_requests(requests,server.server_port)
         if external:
             fail("external_network:"+",".join(external))
         if csp_log_violations(browser.logs("browser")):
             fail("csp_violation")
-        evidence={"status":"PASS","locales":samples,"selector_change":"PASS","invalid_locale_fallback":"pt-BR","same_origin_assets":True,"external_http_requests":0,"csp":"PASS"}
+        evidence={"status":"PASS","locales":samples,"selector_change":"PASS","cross_page_locale":"PASS","stored_preference":"PASS","invalid_locale_fallback":"pt-BR","invalid_storage_fallback":"pt-BR","storage_denial":"PASS","same_origin_assets":True,"external_http_requests":0,"csp":"PASS"}
         args.evidence.write_text(json.dumps(evidence,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
-        print("HOMEPAGE-BROWSER-EVIDENCE status=PASS locales=4 selector_change=PASS fallback=PASS canonical_links=PASS external_network=DENIED csp=PASS")
+        print("HOMEPAGE-BROWSER-EVIDENCE status=PASS locales=4 selector_change=PASS cross_page=PASS storage=PASS invalid_fallback=PASS canonical_links=PASS external_network=DENIED csp=PASS")
     finally:
         browser.stop()
         server.shutdown();server.server_close();thread.join(timeout=5)
