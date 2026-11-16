@@ -159,6 +159,27 @@ const HOME_COPY = {
   }
 };
 const HOME_LOCALES = Object.freeze(["pt-BR", "en", "es", "fr"]);
+const HOME_LOCALE_STORAGE_KEY = "abntexto-ufc.ui-locale";
+
+function storedHomeLocale() {
+  // Private browsing or strict storage policies must not prevent page rendering.
+  try {
+    const value = window.localStorage.getItem(HOME_LOCALE_STORAGE_KEY);
+    return HOME_LOCALES.includes(value) ? value : null;
+  } catch {
+    return null;
+  }
+}
+
+function rememberHomeLocale(locale) {
+  // Only a whitelisted interface locale is stored; never store PDF or report data.
+  try {
+    window.localStorage.setItem(HOME_LOCALE_STORAGE_KEY, locale);
+  } catch {
+    // The safe same-origin URL parameter still carries the user's language.
+  }
+}
+
 function applyHomeLocale(requested) {
   const locale = HOME_LOCALES.includes(requested) ? requested : "pt-BR";
   const copy = HOME_COPY[locale];
@@ -171,13 +192,27 @@ function applyHomeLocale(requested) {
   document.querySelector('meta[name="description"]').content = copy.metaDescription;
   const selector = document.getElementById("home-locale");
   selector.value = locale;
+  // Both navigation entry points must preserve the visible language in new tabs.
+  for (const link of document.querySelectorAll('a[href^="./validator/"]')) {
+    link.setAttribute("href", "./validator/?lang=" + encodeURIComponent(locale));
+  }
   return locale;
 }
+
 function initializeHomeLocale() {
   const selector = document.getElementById("home-locale");
   const query = new URLSearchParams(window.location.search);
-  applyHomeLocale(query.get("lang") || "pt-BR");
-  selector.addEventListener("change", () => applyHomeLocale(selector.value));
+  const explicit = query.has("lang");
+  const requested = query.get("lang");
+  // An invalid explicit URL is not allowed to silently reuse stored state.
+  const locale = explicit
+    ? (HOME_LOCALES.includes(requested) ? requested : "pt-BR")
+    : (storedHomeLocale() || "pt-BR");
+  applyHomeLocale(locale);
+  if (explicit && HOME_LOCALES.includes(requested)) rememberHomeLocale(locale);
+  selector.addEventListener("change", () => {
+    rememberHomeLocale(applyHomeLocale(selector.value));
+  });
 }
 if (typeof document !== "undefined") {
   if (document.readyState === "loading") {
