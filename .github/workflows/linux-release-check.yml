@@ -27,6 +27,12 @@ on:
       - CONTRIBUTING.md
       - SECURITY.md
       - 'docs/**'
+      # Browser-facing source and real E2E changes must receive release regression.
+      - 'site/**'
+      - 'validator/**'
+      - 'tests/integration/validator/**'
+      - tools/ci/build-pages-site.sh
+      - tools/ci/run-web-lite-e2e.sh
       - tests/static.py
       - 'tests/checks/repository/**'
       - release/v3-release-candidate.json
