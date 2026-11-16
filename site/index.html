@@ -26,6 +26,12 @@
     .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px}
     .card{background:#fff;border:1px solid #e3e8ef;border-radius:14px;padding:20px}
     .card h3{margin-top:0}.card a{color:#173f8a}
+    .help details{background:#fff;border:1px solid #e3e8ef;border-radius:12px;margin:10px 0;padding:14px 18px}
+    .help summary{font-weight:700;cursor:pointer;line-height:1.5}
+    .help summary:focus-visible{outline:3px solid #e0a21a;outline-offset:4px}
+    .help details p{margin-bottom:0;max-width:860px}
+    .help-links{display:flex;gap:18px;flex-wrap:wrap;margin-top:20px}
+    .help-links a{color:#173f8a;font-weight:650}
     code{background:#eef1f5;padding:2px 5px;border-radius:5px}
     footer{margin-top:52px;color:#67738a;font-size:.92rem}
   </style>
@@ -85,6 +91,26 @@
     <article class="card"><h3 data-i18n="downloadsHeading">Downloads</h3><p><a href="https://github.com/tiagosombrra/abntexto-ufc/releases">GitHub Releases</a></p></article>
     <article class="card"><h3 data-i18n="documentationHeading">Documentação</h3><p><a href="https://github.com/tiagosombrra/abntexto-ufc#readme" data-i18n="readmeLink">README completo</a></p></article>
     <article class="card"><h3 data-i18n="supportHeading">Suporte</h3><p><a href="https://github.com/tiagosombrra/abntexto-ufc/issues">Issues</a></p></article>
+  </section>
+
+  <section class="help" aria-labelledby="help-heading">
+    <h2 id="help-heading" data-i18n="helpHeading">Ajuda para começar e dúvidas frequentes</h2>
+    <details>
+      <summary data-i18n="faqPackageQuestion">Qual ZIP devo usar?</summary>
+      <p data-i18n="faqPackageAnswer">Na versão publicada v3.0.5, use abntexto-ufc-overleaf-3.0.5.zip no Overleaf ou abntexto-ufc-template-3.0.5.zip para uso local. Não misture arquivos da v3.0.5 com a linha de desenvolvimento v3.1.0.</p>
+    </details>
+    <details>
+      <summary data-i18n="faqValidationQuestion">Por que o validador pede revisão manual?</summary>
+      <p data-i18n="faqValidationAnswer">O Web/Lite faz verificações parciais no navegador. PDF/A, fontes e aspectos semânticos podem exigir CLI/Deep, inspeção humana ou conferência das exigências atuais da UFC. O resultado não equivale a homologação institucional.</p>
+    </details>
+    <details>
+      <summary data-i18n="faqCompileQuestion">O que verificar se a compilação falhar?</summary>
+      <p data-i18n="faqCompileAnswer">Confira a versão da distribuição, TeX Live e dependências, o caminho de main.tex, a bibliografia e o log de compilação. Reproduza o problema com um exemplo mínimo antes de abrir uma issue.</p>
+    </details>
+    <nav class="help-links" aria-label="Guias e versão estável">
+      <a href="https://github.com/tiagosombrra/abntexto-ufc/releases/tag/v3.0.5" data-i18n="stableReleaseLink">Baixar a v3.0.5 publicada</a>
+      <a href="https://github.com/tiagosombrra/abntexto-ufc/blob/main/docs/USER-GUIDE.md" data-i18n="guideLink">Guia completo (em português)</a>
+    </nav>
   </section>
 
   <footer>abntexto-ufc · <span data-i18n="footerText">LPPL 1.3c ou posterior · site publicado a partir do repositório canônico.</span></footer>
