@@ -659,6 +659,12 @@ def verify_ui_locales(browser: Browser, positive: Path, negative: Path, profile:
         "es": ("Validador de PDF UFC/ABNT", "Validar PDF", "Mostrando", "no se envía a ningún servidor", "PDF se procesa únicamente en este dispositivo", "Idioma de la interfaz", "Fallo"),
         "fr": ("Validateur de PDF UFC/ABNT", "Valider le PDF", "Affichage", "n’est pas envoyé à un serveur", "PDF est traité uniquement sur cet appareil", "Langue de l’interface", "Échec"),
     }
+    region_names = {
+        "pt-BR": "Tabela de verificações com rolagem horizontal",
+        "en": "Checks table with horizontal scrolling",
+        "es": "Tabla de verificaciones con desplazamiento horizontal",
+        "fr": "Tableau des vérifications avec défilement horizontal",
+    }
     canonical_keys = lambda report: {key: value for key, value in report.items() if key != "generated_at"}
     for locale, (heading, button, counter, lead_privacy, device_privacy, accessible_name, fail_label) in expected.items():
         observed = browser.execute(
@@ -675,6 +681,9 @@ def verify_ui_locales(browser: Browser, positive: Path, negative: Path, profile:
             "filters:[...document.querySelector('#report-filter').options].map(o=>o.value)};",
             [locale],
         )
+        region_label = browser.execute("return document.querySelector('.table-wrap')?.getAttribute('aria-label');")
+        if region_label != region_names[locale]:
+            fail(f"locale {locale} accessible scroll region untranslated: {region_label!r}")
         if observed["locale"] != locale or observed["selected"] != locale:
             fail(f"locale DOM selection mismatch: {observed!r}")
         if observed["heading"] != heading or observed["button"] != button:
