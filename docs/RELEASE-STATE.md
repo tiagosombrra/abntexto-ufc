@@ -38,6 +38,16 @@ The maintainer selected v3.1.0 as the next backward-compatible minor development
 
 First scoped source correction #487 restores word boundaries in default metadata created under `\\ExplSyntaxOn`, and validates PDF output for the new candidate. Draft documentation says `development preview`, never implying CTAN submission/approval. No historical published artifact may be rebuilt or retargeted.
 
+### P0.10 current-document reconciliation — #600–#602 POSTMERGE_CERTIFIED (2026-11-16 verification)
+
+The following protected-squash **documentation/evidence maintenance deliveries** each passed fresh checks on their own exact merged `main` SHA, without changing the published v3.0.5 source, machine release marker, runtime class, tags or release assets:
+
+- [PR #600](https://github.com/tiagosombrra/abntexto-ufc/pull/600): `main=425b0bdf1667f47031193afe58e2876dc6de5723`; [Static #43715774815](https://github.com/tiagosombrra/abntexto-ufc/actions/runs/43715774815) PASS, [Linux Integration #43715774816](https://github.com/tiagosombrra/abntexto-ufc/actions/runs/43715774816) 42/42, [Linux Release #43715774796](https://github.com/tiagosombrra/abntexto-ufc/actions/runs/43715774796) 38/38 + pkgcheck 4.1.3. Reconciled the #592/#594 R8.1 review record and restored immutable old Git proof ancestry without relaxing blob checks.
+- [PR #601](https://github.com/tiagosombrra/abntexto-ufc/pull/601): `main=ef40f57cde99abc9996a0714298b5aab91e28ce0`; [Static #43745741969](https://github.com/tiagosombrra/abntexto-ufc/actions/runs/43745741969) PASS, [Linux Integration #43745741984](https://github.com/tiagosombrra/abntexto-ufc/actions/runs/43745741984) 42/42, [Linux Release #43745742006](https://github.com/tiagosombrra/abntexto-ufc/actions/runs/43745742006) 38/38 + pkgcheck, [four real-language quickstarts #43745742025](https://github.com/tiagosombrra/abntexto-ufc/actions/runs/43745742025) PASS. Aligned UFC optional visual catalog card and PDF/A deposit language with official SiBi guidance.
+- [PR #602](https://github.com/tiagosombrra/abntexto-ufc/pull/602): `main=44909f992351419c8ac600ae98ce26254cf3ede0`; [Static #43753674648](https://github.com/tiagosombrra/abntexto-ufc/actions/runs/43753674648) PASS, [Linux Integration #43753674630](https://github.com/tiagosombrra/abntexto-ufc/actions/runs/43753674630) 42/42, [Linux Release #43753674631](https://github.com/tiagosombrra/abntexto-ufc/actions/runs/43753674631) 38/38 + pkgcheck 4.1.3, canonical PDF reproducibility PASS. Corrected historical/current confusion about closed #501/#502 and bounded the original 34-point librarian contract.
+
+At the `44909f9...` checkpoint, the [56 active-Markdown file and 166 external-link-occurrence inventory](https://github.com/tiagosombrra/abntexto-ufc/issues/489#issuecomment-6913331234) reconciled the **38 links added** since #599: **24 GitHub link occurrences** (19 distinct targets) individually resolvable, and **14 UFC link occurrences** (4 distinct official pages) directly accessible and consistent with the stated catalog-card/PDF/A scope. External link existence is **not** independent normative certification, and link retention/availability can change. The ten ABNT technical standards' per-item publisher/corrigenda verification and final source-bound human/institutional review remain outstanding under #488/#507. **P0.10 remains IN PROGRESS**, P0.11/P0.12 pending; v3.1.0 remains `UNRELEASED`, with `next_development_candidate.publication_authorized=false`. No v3.1.0 tag, GitHub Release or CTAN upload is authorized.
+
 ### P0.10 status-reconciliation follow-up — PR #599 POSTMERGE_CERTIFIED 2026-11-15
 
 [PR #599](https://github.com/tiagosombrra/abntexto-ufc/pull/599) was protected-squash merged into exact `main=5bdca831ee6a491ae5edf9f849413bf1279d7209` after reviewed head `33631ef4516c4a3b962f275d87b95c22621be50d`. That **new main SHA** passed [Static Contract #43703012684](https://github.com/tiagosombrra/abntexto-ufc/actions/runs/43703012684) (`STATIC-GATE-EVIDENCE status=PASS`, `DOCS-LINK-EVIDENCE status=PASS files=56 relative=104 fragments=1 external_unchecked=128 negative_cases=3`); [Linux Integration #43703012683](https://github.com/tiagosombrra/abntexto-ufc/actions/runs/43703012683) (`SCOPE=complete PASS=42 FAIL=0 SKIP=0`); and [Linux Release Check #43703012705](https://github.com/tiagosombrra/abntexto-ufc/actions/runs/43703012705) (`SCOPE=complete PASS=38 FAIL=0 SKIP=0`, CTAN pkgcheck 4.1.3 PASS, reproducibility and canonical reference PDF SHA-256 `23c08646726930b67ee3dd724d455d6641b79e809f09f6790172f8b1cdbc7bc4` PASS). [Exact-main receipt](https://github.com/tiagosombrra/abntexto-ufc/issues/489#issuecomment-6893871692).
@@ -133,6 +143,10 @@ When facts disagree, use this order:
 5. controlled historical evidence under `docs/history/v3/` and `release/history/v3/`.
 
 Closed Issues and historical release documents are audit evidence, not active authority.
+
+## Historical v3.0.5 prepublication decisions — nonoperative today
+
+The following dated Phase 10D excerpts were recorded *before* the v3.0.5 GitHub/CTAN publication. Old statements about a future tag, `UNPUBLISHED` candidate, missing approval or pending operator steps must not be interpreted as current instructions. The authoritative published-release table at the top of this file and `release/v3-release-candidate.json` take precedence. The original evidence text is preserved below without retroactive edits.
 
 ## Explicit v3.0.5 maintainer ACCEPT — 2026-10-09
 
