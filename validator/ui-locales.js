@@ -424,6 +424,8 @@ export function setLocale(locale) {
     throw new Error("Invalid Web/Lite homepage return destination");
   }
   homeReturn.setAttribute("href", "../?lang=" + encodeURIComponent(locale));
+  // A standalone validator served at the origin root has no bundled homepage.
+  homeReturn.hidden = window.location.pathname === "/" || window.location.pathname === "/index.html";
   privacy.firstElementChild.textContent = uiText("privacyTitle");
   privacy.lastChild.textContent = uiText("privacyText");
   document.querySelector("#report-section .actions[role=group]").setAttribute("aria-label", uiText("filterAria"));
