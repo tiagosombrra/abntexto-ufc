@@ -2,7 +2,7 @@
 
 This directory contains the current human-readable documentation for `abntexto-ufc`. For four source-bound minimum manuscript examples of unreleased v3.1.0, see the [PT/EN/ES/FR quickstarts](../examples/quickstart/README.md). Start with the [root README](../README.md) for download decisions and quick setup, then the [authoring guide](USER-GUIDE.md) for an end-to-end document. The latest **published** version is `v3.0.5`; `v3.1.0` is a **development preview** only.
 
-The documentation describes the current supported project only. Historical implementation phases, closed release work and retired API evidence are not user guidance and live under `docs/history/v3/` or `release/history/v3/` when they still have audit value.
+The user and engineering guides describe the supported project. Some long-lived **current control documents** — notably [RELEASE-STATE.md](RELEASE-STATE.md), [REPOSITORY-MAINTENANCE.md](REPOSITORY-MAINTENANCE.md) and [AGENTS.md](../AGENTS.md) — also retain **dated historical receipts inline**; these are evidence of what was true *at that time*, not instructions or release status for today. Other historical material lives under `docs/history/v3/` or `release/history/v3/`. Prefer the current-state sections at the top of those control documents and the root release machine marker; never interpret old statements such as “v3.0.5 not yet published” as present facts. The audit inventory and unresolved proof limits remain tracked in [issue #489](https://github.com/tiagosombrra/abntexto-ufc/issues/489).
 
 ## User documentation
 
