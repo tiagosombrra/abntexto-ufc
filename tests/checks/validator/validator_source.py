@@ -332,6 +332,30 @@ def main() -> None:
         if marker not in html:
             fail(f"normative-base UI marker is missing: {marker}")
 
+    # Prevent modal parser errors and stale exports from re-entering Web/Lite.
+    for marker in (
+        'id="validation-feedback"',
+        'role="status" aria-live="polite"',
+        'id="validation-error"',
+        'role="alert" aria-atomic="true"',
+    ):
+        if marker not in html:
+            fail(f"accessible recoverable PDF feedback marker missing: {marker}")
+    for marker in (
+        'function clearReport()',
+        'function invalidateReport()',
+        'analysisGeneration++',
+        'if(generation!==analysisGeneration)return;',
+        'report=null;',
+        'setFeedback("statusReady","selectFile")',
+        'setFeedback("statusReady","errorUnreadable")',
+        '["#export-json","#export-csv","#print-report"].forEach',
+    ):
+        if marker not in app:
+            fail(f"stale report or error recovery guard is missing: {marker}")
+    if 'alert(' in app:
+        fail("Web/Lite must use accessible inline feedback instead of modal alerts")
+
     readme_markers = (
         "https://tiagosombrra.github.io/abntexto-ufc/",
         "https://tiagosombrra.github.io/abntexto-ufc/validator/",
