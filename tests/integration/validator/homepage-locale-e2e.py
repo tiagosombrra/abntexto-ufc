@@ -99,7 +99,7 @@ def verify_home_responsive_keyboard(browser, port):
         return {href:e.getAttribute('href'),visible:e.matches(':focus-visible'),
             outlineStyle:style.outlineStyle,outlineWidth:parseFloat(style.outlineWidth)};
     })()""")
-    if (focus["href"] != "./validator/?lang=pt-BR" or not focus["visible"] or focus["outlineStyle"] == "none" or focus["outlineWidth"] < 2:
+    if (focus["href"] != "./validator/?lang=pt-BR" or not focus["visible"] or focus["outlineStyle"] == "none" or focus["outlineWidth"] < 2):
         fail(f"homepage keyboard focus visibility drift: {focus!r}")
     browser.command("POST", "/goog/cdp/execute", {
         "cmd": "Emulation.clearDeviceMetricsOverride","params":{},
