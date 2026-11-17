@@ -1,25 +1,17 @@
 #!/usr/bin/env python3
-"""Source-bound offline URL inventory and opt-in, bounded HTTP availability probe."""
+"""Source-bound, offline-only inventory of active Markdown HTTP(S) links."""
 from __future__ import annotations
 
 import argparse
 import hashlib
 import html
-import ipaddress
 import json
 import os
-import socket
-import ssl
 import subprocess
 import tempfile
-from concurrent.futures import ThreadPoolExecutor
 from collections import Counter, defaultdict
-from datetime import datetime, timezone
 from pathlib import Path
-from urllib.error import HTTPError, URLError
 from urllib.parse import urlsplit, urlunsplit
-from urllib.request import HTTPRedirectHandler, Request, build_opener
-from unittest.mock import patch
 
 from documentation_links_contract import (LINK, REFERENCE, ROOT, SCHEME,
                                           tracked_markdown, visible_text)
@@ -28,11 +20,15 @@ from documentation_links_contract import (LINK, REFERENCE, ROOT, SCHEME,
 def normalize_url(raw: str) -> str:
     """Retain HTTP resource identity, discarding only fragment and HTML escaping."""
     raw = html.unescape(raw.strip())
+    if any(ord(ch) < 32 or ord(ch) == 127 for ch in raw):
+        raise ValueError("URL contains control characters")
     if raw.startswith("//"):
         raw = "https:" + raw
     parsed = urlsplit(raw)
     if parsed.scheme.lower() not in ("http", "https") or not parsed.hostname:
         raise ValueError(f"non-HTTP or malformed external link: {raw}")
+    if any(ch.isspace() for ch in parsed.netloc):
+        raise ValueError(f"whitespace in URL authority: {raw}")
     if parsed.username is not None or parsed.password is not None:
         raise ValueError(f"credential-bearing external link: {raw}")
     try:
@@ -76,105 +72,8 @@ def inventory(root: Path, documents: list[Path]) -> dict:
             "links": entries}
 
 
-def public_hostname(hostname: str) -> None:
-    """Reject localhost, special domains, literal nonpublic IPs and DNS private answers."""
-    host = hostname.rstrip(".").lower()
-    if not host or "." not in host or host.endswith((".local", ".internal", ".localhost", ".test")):
-        raise ValueError("nonpublic hostname")
-    try:
-        literal = ipaddress.ip_address(host)
-    except ValueError:
-        literal = None
-    if literal is not None:
-        if not literal.is_global:
-            raise ValueError("nonpublic IP literal")
-        return
-    for answer in socket.getaddrinfo(host, None, type=socket.SOCK_STREAM):
-        if not ipaddress.ip_address(answer[4][0]).is_global:
-            raise ValueError("nonpublic DNS answer")
-
-
-class PublicRedirects(HTTPRedirectHandler):
-    """Prevent the probe from following redirects to nonpublic targets."""
-
-    def redirect_request(self, req, fp, code, msg, headers, newurl):
-        url = urlsplit(newurl)
-        if url.scheme not in ("http", "https") or not url.hostname:
-            raise ValueError("redirect target is not public HTTP(S)")
-        public_hostname(url.hostname)
-        return super().redirect_request(req, fp, code, msg, headers, newurl)
-
-
-def classify_status(code: int) -> str:
-    if 200 <= code < 400:
-        return "REACHABLE"
-    if code in (401, 403):
-        return "ACCESS_RESTRICTED"
-    if code == 404:
-        return "NOT_FOUND"
-    if code == 410:
-        return "GONE"
-    if code == 429:
-        return "RATE_LIMITED"
-    if 500 <= code:
-        return "SERVER_ERROR"
-    return "HTTP_OTHER"
-
-
-def classify_network_error(reason: object) -> str:
-    if isinstance(reason, socket.gaierror):
-        return "DNS_ERROR"
-    if isinstance(reason, (socket.timeout, TimeoutError)):
-        return "TIMEOUT"
-    if isinstance(reason, ssl.SSLError):
-        return "TLS_ERROR"
-    return "NETWORK_ERROR"
-
-
-def probe_one(url: str, timeout: float) -> dict:
-    """Perform HEAD, with a range-limited GET fallback only for HEAD rejection."""
-    parsed = urlsplit(url)
-    try:
-        if parsed.scheme not in ("http", "https") or not parsed.hostname:
-            raise ValueError("invalid URL")
-        public_hostname(parsed.hostname)
-        opener = build_opener(PublicRedirects())
-        for method in ("HEAD", "GET"):
-            headers = {"User-Agent": "abntexto-ufc-link-audit/1.0",
-                       "Accept": "*/*"}
-            if method == "GET":
-                headers["Range"] = "bytes=0-0"
-            request = Request(url, headers=headers, method=method)
-            try:
-                with opener.open(request, timeout=timeout) as response:
-                    return {"status": classify_status(response.status),
-                            "http_code": response.status, "method": method,
-                            "final_url": response.geturl()}
-            except HTTPError as error:
-                if method == "HEAD" and error.code in (403, 404, 405, 501):
-                    error.close()
-                    continue
-                result = {"status": classify_status(error.code),
-                          "http_code": error.code, "method": method,
-                          "final_url": error.geturl()}
-                error.close()
-                return result
-    except ValueError as error:
-        return {"status": "UNSAFE_TARGET", "detail": str(error)[:150]}
-    except socket.gaierror:
-        return {"status": "DNS_ERROR"}
-    except (socket.timeout, TimeoutError):
-        return {"status": "TIMEOUT"}
-    except ssl.SSLError as error:
-        return {"status": "TLS_ERROR", "detail": type(error).__name__}
-    except (URLError, OSError) as error:
-        reason = getattr(error, "reason", error)
-        return {"status": classify_network_error(reason),
-                "detail": type(reason).__name__}
-    return {"status": "HTTP_OTHER", "detail": "unsupported HEAD/GET sequence"}
-
-
 def selftest() -> None:
+    """Check deduplication, source positions, references and unsafe URI rejection."""
     with tempfile.TemporaryDirectory(prefix="p012-urls-") as directory:
         root = Path(directory)
         (root / "a.md").write_text(
@@ -190,65 +89,22 @@ def selftest() -> None:
         assert by_url["https://example.org/x"] == [
             {"file": "a.md", "line": 1}, {"file": "a.md", "line": 2}]
         assert "https://example.net/a?x=1&y=2" in by_url
-        for bad in ("javascript:alert", "file:///etc/passwd", "https://name:pw@example.org"):
+        for bad in ("javascript:alert", "file:///etc/passwd",
+                    "https://name:pw@example.org", "https://example.org:bad/path",
+                    "https://example.org:\n443/path", "https://example.org/a\nb"):
             try:
                 normalize_url(bad)
             except ValueError:
                 pass
             else:
-                raise AssertionError("unsafe scheme/userinfo accepted")
-        for bad in ("localhost", "127.0.0.1", "10.1.2.3", "[::1]"):
-            try:
-                public_hostname(bad.strip("[]"))
-            except ValueError:
-                pass
-            else:
-                raise AssertionError("nonpublic hostname accepted")
-        assert classify_status(403) == "ACCESS_RESTRICTED"
-        assert classify_status(404) == "NOT_FOUND"
-        assert classify_status(429) == "RATE_LIMITED"
-        assert classify_status(200) == "REACHABLE"
-        assert classify_network_error(socket.gaierror(-2, "no host")) == "DNS_ERROR"
-        assert classify_network_error(ssl.SSLError("tls")) == "TLS_ERROR"
-        assert classify_network_error(TimeoutError()) == "TIMEOUT"
-
-        # Some servers reject HEAD but allow GET; do not mislabel these as 403.
-        methods = []
-        class FakeResponse:
-            status = 200
-            def __enter__(self):
-                return self
-            def __exit__(self, *_):
-                return None
-            def geturl(self):
-                return "https://example.org/a"
-        class FakeOpener:
-            def open(self, request, timeout):
-                methods.append(request.get_method())
-                if request.get_method() == "HEAD":
-                    raise HTTPError(request.full_url, 403, "Blocked HEAD", None, None)
-                return FakeResponse()
-        with patch(__name__ + ".public_hostname"), patch(
-                __name__ + ".build_opener", return_value=FakeOpener()):
-            assert probe_one("https://example.org/a", 1)["status"] == "REACHABLE"
-        assert methods == ["HEAD", "GET"]
-
+                raise AssertionError("unsafe scheme, authority or control accepted")
+        assert normalize_url("//example.org/a#f") == "https://example.org/a"
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--probe", action="store_true",
-                        help="Perform opt-in HTTP requests (never run in Static)")
     parser.add_argument("--report", type=Path,
-                        help="Write source-bound JSON receipt (required for --probe)")
-    parser.add_argument("--limit", type=int, default=0,
-                        help="Max unique URLs for a partial probe; zero means all")
-    parser.add_argument("--timeout", type=float, default=5.0)
-    parser.add_argument("--workers", type=int, default=4)
+                        help="Write source-bound JSON inventory without making network requests")
     args = parser.parse_args()
-    if args.probe and args.report is None:
-        parser.error("--probe requires --report to preserve a bounded receipt")
-    if args.limit < 0 or not (0.5 <= args.timeout <= 15) or not (1 <= args.workers <= 8):
-        parser.error("limit >= 0, timeout in [0.5,15], workers in [1,8] required")
     selftest()
     result = inventory(ROOT, tracked_markdown())
     # Pull-request workflows may check out a synthetic merge commit, not the PR head.
@@ -262,18 +118,6 @@ def main() -> None:
             result["pull_request_head_sha"] = pr_head
     if not result["links"]:
         raise SystemExit("P012-EXTERNAL-LINK-EVIDENCE status=FAIL no_external_links")
-    if args.probe:
-        selected = result["links"][:args.limit or None]
-        result["observed_at_utc"] = datetime.now(timezone.utc).isoformat()
-        with ThreadPoolExecutor(max_workers=args.workers) as pool:
-            responses = list(pool.map(lambda item: probe_one(item["url"], args.timeout),
-                                      selected))
-        result["probe"] = [{"url": item["url"], **response}
-                           for item, response in zip(selected, responses)]
-        result["probe_scope"] = ("COMPLETE" if len(selected) == result["unique_urls"]
-                                 else "PARTIAL")
-        result["probe_counts"] = dict(sorted(Counter(
-            item["status"] for item in result["probe"]).items()))
     if args.report:
         args.report.parent.mkdir(parents=True, exist_ok=True)
         args.report.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n",
@@ -284,10 +128,8 @@ def main() -> None:
           f" files={result['files']}"
           f" occurrences={result['occurrences']} unique={result['unique_urls']}"
           f" sha256={result['fingerprint_sha256']}"
-          f" http={'PROBED' if args.probe else 'NOT_CHECKED'}"
-          f" scope={result.get('probe_scope', 'OFFLINE')}"
-          f" results={result.get('probe_counts', {})}"
-          " selftest=PASS network_opt_in=true release_authorization=NONE")
+          " http=NOT_CHECKED scope=OFFLINE"
+          " selftest=PASS network_opt_in=false release_authorization=NONE")
 
 
 if __name__ == "__main__":
