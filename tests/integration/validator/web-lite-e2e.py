@@ -930,6 +930,50 @@ def verify_recoverable_validation_feedback(
             "successful_retry": True, "canonical_report_unchanged": True}
 
 
+
+def wcag_contrast_ratio(foreground: str, background: str) -> float:
+    """Measure opaque computed CSS rgb() colors with the WCAG relative luminance formula."""
+    def relative_luminance(css: str) -> float:
+        match = re.fullmatch(r"rgb\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*\)", css)
+        if not match:
+            raise ValueError(f"Non-opaque or unsupported computed CSS color: {css!r}")
+        values = [int(channel) for channel in match.groups()]
+        if any(value > 255 for value in values):
+            raise ValueError(f"Out-of-range CSS color: {css!r}")
+        linear = [
+            (value / 255.0) / 12.92 if value / 255.0 <= 0.04045
+            else ((value / 255.0 + 0.055) / 1.055) ** 2.4
+            for value in values
+        ]
+        return sum(weight * value for weight, value in zip((0.2126, 0.7152, 0.0722), linear))
+
+    light, dark = sorted(
+        (relative_luminance(foreground), relative_luminance(background)), reverse=True
+    )
+    return (light + 0.05) / (dark + 0.05)
+
+
+def assert_wcag_contrast_samples(samples: list[dict[str, Any]], surface: str) -> dict[str, float]:
+    """Fail closed on sampled rendered text and control/focus contrast violations."""
+    if not samples:
+        fail(f"{surface} contrast sampling produced no targets")
+    result: dict[str, float] = {}
+    for sample in samples:
+        label = str(sample["name"])
+        minimum = float(sample["minimum"])
+        if label in result or minimum not in (3.0, 4.5):
+            fail(f"{surface} invalid contrast sample: {sample!r}")
+        try:
+            actual = wcag_contrast_ratio(sample["foreground"], sample["background"])
+        except (ValueError, KeyError) as error:
+            fail(f"{surface} missing/transparent contrast source for {label}: {error}")
+        if actual + 1e-6 < minimum:
+            fail(f"{surface} contrast below {minimum}: {label}={actual:.3f}:1 "
+                 f"foreground={sample['foreground']} background={sample['background']}")
+        result[label] = round(actual, 3)
+    return result
+
+
 def verify_responsive_keyboard(browser: Browser) -> dict[str, Any]:
     """Exercise productive report navigation at four actual Chromium CSS viewports."""
     widths = (320, 375, 768, 1440)
@@ -1000,6 +1044,28 @@ def verify_responsive_keyboard(browser: Browser) -> dict[str, Any]:
     if (focus["id"] != "pdf-file" or not focus["visible"] or focus["outlineStyle"] == "none" or focus["outlineWidth"] < 2):
         fail(f"keyboard tab focus missing explicit visible outline: {focus!r}")
 
+    # Read actual rendered CSS colors; browser width/focus checks alone miss low contrast.
+    contrast_samples = browser.execute("""return (() => {
+        const node = selector => document.querySelector(selector);
+        const css = selector => getComputedStyle(node(selector));
+        const panel = css('.panel').backgroundColor;
+        const page = css('html').backgroundColor;
+        const sample = (name, foreground, background, minimum) =>
+          ({name, foreground, background, minimum});
+        return [
+          sample('validator.lead',css('.lead').color,page,4.5),
+          sample('validator.note',css('.note').color,panel,4.5),
+          sample('validator.summary-label',css('.summary span').color,panel,4.5),
+          sample('validator.locale-label',css('#locale-field > span').color,panel,4.5),
+          sample('validator.action-text',css('#analyze').color,css('#analyze').backgroundColor,4.5),
+          sample('validator.return-link',css('#home-return').color,page,4.5),
+          sample('validator.locale-border',css('#ui-locale').borderTopColor,css('#ui-locale').backgroundColor,3),
+          sample('validator.file-border',css('#pdf-file').borderTopColor,css('#pdf-file').backgroundColor,3),
+          sample('validator.focus-outline',getComputedStyle(document.activeElement).outlineColor,panel,3)
+        ];
+    })()""")
+    contrast = assert_wcag_contrast_samples(contrast_samples, "validator")
+
     # A screen-reader named, tabbable region must scroll using keyboard arrows.
     browser.execute("const r=document.querySelector('.table-wrap');r.scrollLeft=0;r.focus();")
     browser.command("POST", "/actions", {"actions": [{
@@ -1027,8 +1093,11 @@ def verify_responsive_keyboard(browser: Browser) -> dict[str, Any]:
     print("WEB-LITE-A11Y-EVIDENCE status=PASS viewports=320,375,768,1440 "
           "document_overflow=0 keyboard_tab_focus=PASS report_region=LABELED "
           "keyboard_scroll=PASS localization=pt-BR")
+    print(f"WEB-LITE-CONTRAST-EVIDENCE status=PASS samples={len(contrast)} "
+          "text_min=4.5 control_focus_min=3.0")
     return {"status": "PASS", "viewports": outcomes, "keyboard_tab_focus": focus,
-            "keyboard_scroll": region_focus, "horizontal_document_overflow": False}
+            "keyboard_scroll": region_focus, "contrast": contrast,
+            "horizontal_document_overflow": False}
 
 
 def analyze_through_ui_locale(browser: Browser, pdf: Path, profile: str) -> dict[str, Any]:

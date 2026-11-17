@@ -19,6 +19,7 @@ performance_request_urls = browser_utils["performance_request_urls"]
 external_http_requests = browser_utils["external_http_requests"]
 csp_log_violations = browser_utils["csp_log_violations"]
 wait_for = browser_utils["wait_for"]
+wcag_contrast_ratio = browser_utils["wcag_contrast_ratio"]
 
 READMES = {"pt-BR": "README completo", "en": "Full README", "es": "README completo", "fr": "README complet"}
 
@@ -139,12 +140,48 @@ def verify_home_responsive_keyboard(browser, port):
     })()""")
     if (focus["href"] != "./validator/?lang=pt-BR" or not focus["visible"] or focus["outlineStyle"] == "none" or focus["outlineWidth"] < 2):
         fail(f"homepage keyboard focus visibility drift: {focus!r}")
+    # The original light-gold focus ring was below the 3:1 non-text threshold.
+    # Measure actual rendered foreground/background colors in the productive page.
+    samples = browser.execute("""return (() => {
+        const node = selector => document.querySelector(selector);
+        const css = selector => getComputedStyle(node(selector));
+        const root = css('html').backgroundColor;
+        const header = css('header').backgroundColor;
+        const sample = (name, foreground, background, minimum) =>
+            ({name, foreground, background, minimum});
+        const cta = document.activeElement;
+        return [
+          sample('homepage.footer-text',css('footer').color,root,4.5),
+          sample('homepage.lead',css('.lead').color,header,4.5),
+          sample('homepage.selector-label',css('label[for="home-locale"]').color,header,4.5),
+          sample('homepage.selector-border',css('#home-locale').borderTopColor,css('#home-locale').backgroundColor,3),
+          sample('homepage.primary-cta',css('.button').color,css('.button').backgroundColor,4.5),
+          sample('homepage.secondary-cta',css('.button.secondary').color,css('.button.secondary').backgroundColor,4.5),
+          sample('homepage.faq-question',css('.help summary').color,css('.help details').backgroundColor,4.5),
+          sample('homepage.focus-outline',getComputedStyle(cta).outlineColor,header,3)
+        ];
+    })()""")
+    contrast = {}
+    for sample in samples:
+        if sample["name"] in contrast or sample["minimum"] not in (3, 4.5):
+            fail("invalid_homepage_contrast_sample")
+        try:
+            current = wcag_contrast_ratio(sample["foreground"], sample["background"])
+        except ValueError as error:
+            fail("homepage_contrast_color_not_opaque:"+str(error))
+        if current + 1e-6 < sample["minimum"]:
+            fail(f"homepage_contrast_too_low:{sample['name']}:{current:.3f}"
+                 f":expected={sample['minimum']}")
+        contrast[sample["name"]] = round(current, 3)
+    print(f"HOMEPAGE-CONTRAST-EVIDENCE status=PASS samples={len(contrast)} "
+          "text_min=4.5 control_focus_min=3.0")
+
     browser.command("POST", "/goog/cdp/execute", {
         "cmd": "Emulation.clearDeviceMetricsOverride","params":{},
     })
     print("HOMEPAGE-RESPONSIVE-EVIDENCE status=PASS viewports=320,375,768,1440 "
           "document_overflow=0 keyboard_tab_focus=PASS cta=VISIBLE")
-    return {"status":"PASS","viewports":results,"keyboard_tab_focus":focus}
+    return {"status":"PASS","viewports":results,"keyboard_tab_focus":focus,"contrast":contrast}
 
 def main():
     parser = argparse.ArgumentParser()
@@ -370,7 +407,7 @@ def main():
             fail("csp_violation")
         evidence={"status":"PASS","locales":samples,"selector_change":"PASS","cross_page_locale":"PASS","stored_preference":"PASS","invalid_locale_fallback":"pt-BR","invalid_storage_fallback":"pt-BR","storage_denial":"PASS","responsive_keyboard":responsive,"return_navigation":"PASS","onboarding_faq":"PASS","stable_guide_links":"PASS","same_origin_assets":True,"external_http_requests":0,"csp":"PASS"}
         args.evidence.write_text(json.dumps(evidence,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
-        print("HOMEPAGE-BROWSER-EVIDENCE status=PASS locales=4 selector_change=PASS cross_page=PASS storage=PASS invalid_fallback=PASS responsive_keyboard=PASS return_roundtrip=LOCALIZED_4 keyboard_return=PASS faq=LOCALIZED_4 disclosures=PASS stable_guide_links=PASS canonical_links=PASS external_network=DENIED csp=PASS")
+        print("HOMEPAGE-BROWSER-EVIDENCE status=PASS locales=4 selector_change=PASS cross_page=PASS storage=PASS invalid_fallback=PASS responsive_keyboard=PASS contrast=PASS return_roundtrip=LOCALIZED_4 keyboard_return=PASS faq=LOCALIZED_4 disclosures=PASS stable_guide_links=PASS canonical_links=PASS external_network=DENIED csp=PASS")
     finally:
         browser.stop()
         server.shutdown();server.server_close();thread.join(timeout=5)
