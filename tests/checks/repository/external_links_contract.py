@@ -18,6 +18,7 @@ from pathlib import Path
 from urllib.error import HTTPError, URLError
 from urllib.parse import urlsplit, urlunsplit
 from urllib.request import HTTPRedirectHandler, Request, build_opener
+from unittest.mock import patch
 
 from documentation_links_contract import (LINK, REFERENCE, ROOT, SCHEME,
                                           tracked_markdown, visible_text)
@@ -139,7 +140,7 @@ def probe_one(url: str, timeout: float) -> dict:
                             "http_code": response.status, "method": method,
                             "final_url": response.geturl()}
             except HTTPError as error:
-                if method == "HEAD" and error.code in (405, 501):
+                if method == "HEAD" and error.code in (403, 404, 405, 501):
                     error.close()
                     continue
                 result = {"status": classify_status(error.code),
@@ -149,6 +150,8 @@ def probe_one(url: str, timeout: float) -> dict:
                 return result
     except ValueError as error:
         return {"status": "UNSAFE_TARGET", "detail": str(error)[:150]}
+    except socket.gaierror:
+        return {"status": "DNS_ERROR"}
     except (socket.timeout, TimeoutError):
         return {"status": "TIMEOUT"}
     except ssl.SSLError as error:
@@ -193,6 +196,27 @@ def selftest() -> None:
         assert classify_status(404) == "NOT_FOUND"
         assert classify_status(429) == "RATE_LIMITED"
         assert classify_status(200) == "REACHABLE"
+
+        # Some servers reject HEAD but allow GET; do not mislabel these as 403.
+        methods = []
+        class FakeResponse:
+            status = 200
+            def __enter__(self):
+                return self
+            def __exit__(self, *_):
+                return None
+            def geturl(self):
+                return "https://example.org/a"
+        class FakeOpener:
+            def open(self, request, timeout):
+                methods.append(request.get_method())
+                if request.get_method() == "HEAD":
+                    raise HTTPError(request.full_url, 403, "Blocked HEAD", None, None)
+                return FakeResponse()
+        with patch(__name__ + ".public_hostname"), patch(
+                __name__ + ".build_opener", return_value=FakeOpener()):
+            assert probe_one("https://example.org/a", 1)["status"] == "REACHABLE"
+        assert methods == ["HEAD", "GET"]
 
 
 def main() -> None:
