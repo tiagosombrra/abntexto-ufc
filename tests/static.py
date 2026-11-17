@@ -37,6 +37,7 @@ SOURCE_CHECK_NAMES = (
     "librarian_review_contract.py",
     "internationalization_docs_contract.py",
     "documentation_links_contract.py",
+    "external_links_contract.py",
     "mesh_study.py",  # Pure-Python reproducibility; no network or TeX dependency.
     "homepage_locales_contract.py",
     "p012_cross_surface_contract.py",
