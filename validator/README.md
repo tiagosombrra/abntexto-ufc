@@ -84,6 +84,14 @@ Changing the PDF or any validation setting invalidates the prior report immediat
 The real packed-Pages Chromium E2E covers a successful PDF followed by changed settings, no selected file (PT/EN/ES/FR), incompatible cover/printing options, a real one-page cover-accounting negative, a deliberately unreadable PDF and recovery with the same source-bound real positive PDF. It asserts **zero stale exports**, no modal alerts or raw parser text, correct live/alert roles and unchanged recovered canonical machine results. This bounded recovery test does not certify arbitrary corrupt-PDF security, exhaustive parser fuzzing, official normative compliance or human accessibility acceptance.
 
 
+## Bidirectional site navigation (v3.1.0 development)
+
+In the published Pages **development site**, the Web/Lite header offers a native keyboard-accessible **return to project website** link. Its same-origin relative URL is `../?lang=<locale>`, with the locale always selected from the four whitelisted interface codes PT-BR, EN, ES and FR. Switching the validator's interface language updates its link text and destination immediately; a direct `validator/?lang=` link also sets the correct return URL on first render. The homepage's existing two language-aware validator links complete the round trip. The return link never adds user document data, report output or settings to the URL, and navigation is initiated **only** when the user activates the link.
+
+A validator served standalone at its own origin root (`/` or `/index.html`, without the bundled project homepage) automatically **hides** the unavailable return link; local PDF validation remains operational. Other deployments that preserve the `validator/` folder hierarchy should serve the homepage at the parent path to activate the return link.
+
+The packaged Pages Chromium test exercises site → validator → site → validator in all four languages using real link clicks, same-origin and whitelisted query assertions, a visible keyboard focus outline, and unchanged locale storage/CSP/no-external-network rules. This verifies the browser route and accessibility attributes, **not** independent assistive-technology or full WCAG certification. The validator's report, JSON/CSV machine schema, normative catalog and PDF data flow are unaffected.
+
 ## Browser regression
 
 The Linux Integration `web-lite` scope compiles a real reference PDF, assembles the same `_site/validator` tree used by GitHub Pages, opens that productive package in headless Chrome, selects/uploads the PDF and runs the same `analyze` path used by the button. It then repeats the UI flow with a valid non-A4 negative PDF.

@@ -18,6 +18,7 @@ QuietHandler = browser_utils["QuietHandler"]
 performance_request_urls = browser_utils["performance_request_urls"]
 external_http_requests = browser_utils["external_http_requests"]
 csp_log_violations = browser_utils["csp_log_violations"]
+wait_for = browser_utils["wait_for"]
 
 READMES = {"pt-BR": "README completo", "en": "Full README", "es": "README completo", "fr": "README complet"}
 
@@ -33,6 +34,12 @@ EXPECTED = {
     "en": ("Getting started", "Open Web/Lite validator", "Website language"),
     "es": ("Primeros pasos", "Abrir validador Web/Lite", "Idioma del sitio"),
     "fr": ("Pour commencer", "Ouvrir le validateur Web/Lite", "Langue du site"),
+}
+RETURN_LABELS = {
+    "pt-BR": "Voltar ao site",
+    "en": "Back to website",
+    "es": "Volver al sitio",
+    "fr": "Retour au site",
 }
 FAQ_EXPECTED = {
     "pt-BR": (
@@ -214,7 +221,62 @@ def main():
                 fail("faq_disclosure_did_not_close:"+locale)
             if "abntexto-ufc-reference.pdf" not in item["fileNames"]:
                 fail("canonical_filename_changed:"+locale)
+            # A deep-linked validator must expose a same-origin, keyboard-reachable return.
+            browser.navigate(f"http://127.0.0.1:{server.server_port}/validator/?lang={locale}")
+            back=browser.execute("""return (() => {
+                const a=document.querySelector('#home-return');
+                const destination=new URL(a.href,window.location.href);
+                return {lang:document.documentElement.lang,
+                  text:a.textContent,href:a.getAttribute('href'),
+                  sameOrigin:destination.origin===window.location.origin,
+                  pathname:destination.pathname,language:destination.searchParams.get('lang'),
+                  hidden:a.hidden};
+            })()""")
+            if back != {
+                "lang":locale,"text":RETURN_LABELS[locale],
+                "href":"../?lang="+locale,"sameOrigin":True,"pathname":"/",
+                "language":locale,"hidden":False,
+            }:
+                fail(f"localized_validator_home_return_invalid:{locale}:{back!r}")
+            browser.command("POST", "/actions", {"actions": [{
+                "type":"key","id":"validator-return-tab",
+                "actions":[{"type":"keyDown","value":"\ue004"},
+                           {"type":"keyUp","value":"\ue004"}],
+            }]})
+            focus=browser.execute("""const a=document.querySelector('#home-return');
+                const style=getComputedStyle(a);
+                return {active:document.activeElement===a,
+                  visible:a.matches(':focus-visible'),
+                  outlineStyle:style.outlineStyle,
+                  outlineWidth:parseFloat(style.outlineWidth)};""")
+            if not focus["active"] or not focus["visible"] or focus["outlineStyle"] == "none" or focus["outlineWidth"] < 2:
+                fail(f"validator_return_keyboard_focus_missing:{locale}:{focus!r}")
+            browser.click("#home-return")
+            wait_for(
+                lambda: browser.execute(
+                    "return document.querySelector('#home-locale')?.value || null;"
+                ) == locale,
+                "validator to homepage return "+locale,timeout=15,
+            )
+            if browser.execute(
+                "return new URLSearchParams(location.search).get('lang');"
+            ) != locale:
+                fail("return_route_lost_locale:"+locale)
+            browser.click('a[data-i18n="openValidator"]')
+            wait_for(
+                lambda: browser.execute(
+                    "return document.querySelector('#ui-locale')?.value || null;"
+                ) == locale,
+                "homepage to validator roundtrip "+locale,timeout=15,
+            )
+            if browser.execute(
+                "return document.querySelector('#home-return').getAttribute('href');"
+            ) != "../?lang="+locale:
+                fail("roundtrip_return_link_lost_locale:"+locale)
             samples[locale]={"lang":item["lang"],"heading":item["heading"],"description":item["description"],"disclaimer":item["disclaimer"],"published":item["publishedVersion"],"development":item["developmentVersion"]}
+        # Continue the existing homepage selector tests from the homepage, not
+        # from the validator reached at the end of the round-trip matrix.
+        browser.navigate(f"http://127.0.0.1:{server.server_port}/index.html?lang=fr")
         # Changing the homepage selector updates the URL and both validator links.
         changed=browser.execute("""const s=document.getElementById('home-locale');
             s.value='en';s.dispatchEvent(new Event('change',{bubbles:true}));
@@ -306,9 +368,9 @@ def main():
             fail("external_network:"+",".join(external))
         if csp_log_violations(browser.logs("browser")):
             fail("csp_violation")
-        evidence={"status":"PASS","locales":samples,"selector_change":"PASS","cross_page_locale":"PASS","stored_preference":"PASS","invalid_locale_fallback":"pt-BR","invalid_storage_fallback":"pt-BR","storage_denial":"PASS","responsive_keyboard":responsive,"onboarding_faq":"PASS","stable_guide_links":"PASS","same_origin_assets":True,"external_http_requests":0,"csp":"PASS"}
+        evidence={"status":"PASS","locales":samples,"selector_change":"PASS","cross_page_locale":"PASS","stored_preference":"PASS","invalid_locale_fallback":"pt-BR","invalid_storage_fallback":"pt-BR","storage_denial":"PASS","responsive_keyboard":responsive,"return_navigation":"PASS","onboarding_faq":"PASS","stable_guide_links":"PASS","same_origin_assets":True,"external_http_requests":0,"csp":"PASS"}
         args.evidence.write_text(json.dumps(evidence,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
-        print("HOMEPAGE-BROWSER-EVIDENCE status=PASS locales=4 selector_change=PASS cross_page=PASS storage=PASS invalid_fallback=PASS responsive_keyboard=PASS faq=LOCALIZED_4 disclosures=PASS stable_guide_links=PASS canonical_links=PASS external_network=DENIED csp=PASS")
+        print("HOMEPAGE-BROWSER-EVIDENCE status=PASS locales=4 selector_change=PASS cross_page=PASS storage=PASS invalid_fallback=PASS responsive_keyboard=PASS return_roundtrip=LOCALIZED_4 keyboard_return=PASS faq=LOCALIZED_4 disclosures=PASS stable_guide_links=PASS canonical_links=PASS external_network=DENIED csp=PASS")
     finally:
         browser.stop()
         server.shutdown();server.server_close();thread.join(timeout=5)

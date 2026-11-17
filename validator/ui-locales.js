@@ -5,6 +5,7 @@ const COPIES = {
     "description": "Validação local de PDFs acadêmicos conforme regras UFC/ABNT e verificações de acessibilidade.",
     "eyebrow": "abntexto-ufc · validador local",
     "heading": "Validador de PDF UFC/ABNT",
+    "returnHome": "Voltar ao site",
     "lead": "Analisa o PDF no navegador. No modo Web/Lite, o arquivo não é enviado a um servidor. O resultado não substitui a análise oficial do Sistema de Bibliotecas da UFC.",
     "normTitle": "Base normativa",
     "normNote": "As verificações são carregadas de um catálogo normativo versionado. Normas ABNT vigentes e fontes UFC mais recentes prevalecem sobre referências antigas dos guias. Atualizações normativas exigem auditoria antes de alterar resultados.",
@@ -83,6 +84,7 @@ const COPIES = {
     "description": "Local academic PDF checks against UFC/ABNT rules and accessibility criteria.",
     "eyebrow": "abntexto-ufc · local validator",
     "heading": "UFC/ABNT PDF Validator",
+    "returnHome": "Back to website",
     "lead": "Analyzes PDFs in your browser. In Web/Lite mode, the file is not uploaded to a server. This result does not replace an official assessment by the UFC Library System.",
     "normTitle": "Normative basis",
     "normNote": "Checks use a versioned normative catalog. Current ABNT standards and recent UFC sources take precedence over superseded guidance. Normative updates require an audit before results change.",
@@ -161,6 +163,7 @@ const COPIES = {
     "description": "Validación local de PDF académicos según reglas UFC/ABNT y criterios de accesibilidad.",
     "eyebrow": "abntexto-ufc · validador local",
     "heading": "Validador de PDF UFC/ABNT",
+    "returnHome": "Volver al sitio",
     "lead": "Analiza archivos PDF en el navegador. En el modo Web/Lite, el archivo no se envía a ningún servidor. El resultado no sustituye la evaluación oficial del Sistema de Bibliotecas de la UFC.",
     "normTitle": "Base normativa",
     "normNote": "Las comprobaciones utilizan un catálogo normativo versionado. Las normas ABNT vigentes y las fuentes UFC recientes prevalecen sobre las guías anteriores. Las actualizaciones normativas requieren una auditoría antes de cambiar los resultados.",
@@ -239,6 +242,7 @@ const COPIES = {
     "description": "Vérification locale de PDF universitaires selon les règles UFC/ABNT et des critères d’accessibilité.",
     "eyebrow": "abntexto-ufc · validateur local",
     "heading": "Validateur de PDF UFC/ABNT",
+    "returnHome": "Retour au site",
     "lead": "Analyse les PDF dans le navigateur. En mode Web/Lite, le fichier n’est pas envoyé à un serveur. Le résultat ne remplace pas une évaluation officielle du Service des bibliothèques de l’UFC.",
     "normTitle": "Référentiel normatif",
     "normNote": "Les contrôles utilisent un catalogue normatif versionné. Les normes ABNT en vigueur et les sources UFC récentes prévalent sur les guides anciens. Toute mise à jour normative exige un audit avant de modifier les résultats.",
@@ -318,6 +322,7 @@ let activeLocale = "pt-BR";
 
 const STATIC_TARGETS = Object.freeze({
   eyebrow: "header .eyebrow", heading: "header h1", lead: "header .lead",
+  returnHome: "#home-return",
   normTitle: "#normative-base h2", normNote: "#normative-base p.note",
   normReviewed: "#normative-base .norm-meta > div:first-child > span",
   normCoverage: "#normative-base .norm-meta > div:nth-child(2) > span",
@@ -413,6 +418,14 @@ export function setLocale(locale) {
   for (const [key, selector] of Object.entries(STATIC_TARGETS)) {
     document.querySelector(selector).textContent = uiText(key);
   }
+  // Whitelist the route parameter through the existing locale contract.
+  const homeReturn = document.querySelector("#home-return");
+  if (homeReturn.getAttribute("href")?.startsWith("../?lang=") !== true) {
+    throw new Error("Invalid Web/Lite homepage return destination");
+  }
+  homeReturn.setAttribute("href", "../?lang=" + encodeURIComponent(locale));
+  // A standalone validator served at the origin root has no bundled homepage.
+  homeReturn.hidden = window.location.pathname === "/" || window.location.pathname === "/index.html";
   privacy.firstElementChild.textContent = uiText("privacyTitle");
   privacy.lastChild.textContent = uiText("privacyText");
   document.querySelector("#report-section .actions[role=group]").setAttribute("aria-label", uiText("filterAria"));
