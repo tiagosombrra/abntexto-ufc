@@ -7,6 +7,7 @@ import hashlib
 import html
 import ipaddress
 import json
+import os
 import socket
 import ssl
 import subprocess
@@ -236,8 +237,15 @@ def main() -> None:
         parser.error("limit >= 0, timeout in [0.5,15], workers in [1,8] required")
     selftest()
     result = inventory(ROOT, tracked_markdown())
-    result["commit_sha"] = subprocess.check_output(
+    # Pull-request workflows may check out a synthetic merge commit, not the PR head.
+    result["checkout_sha"] = subprocess.check_output(
         ["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip()
+    event_path = os.environ.get("GITHUB_EVENT_PATH")
+    if event_path:
+        event = json.loads(Path(event_path).read_text(encoding="utf-8"))
+        pr_head = (event.get("pull_request") or {}).get("head", {}).get("sha")
+        if pr_head:
+            result["pull_request_head_sha"] = pr_head
     if not result["links"]:
         raise SystemExit("P012-EXTERNAL-LINK-EVIDENCE status=FAIL no_external_links")
     if args.probe:
@@ -257,7 +265,9 @@ def main() -> None:
         args.report.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n",
                                encoding="utf-8")
     print("P012-EXTERNAL-LINK-EVIDENCE status=PASS"
-          f" commit={result['commit_sha'][:12]} files={result['files']}"
+          f" checkout={result['checkout_sha'][:12]}"
+          f" pr_head={result.get('pull_request_head_sha', 'N/A')[:12]}"
+          f" files={result['files']}"
           f" occurrences={result['occurrences']} unique={result['unique_urls']}"
           f" sha256={result['fingerprint_sha256']}"
           f" http={'PROBED' if args.probe else 'NOT_CHECKED'}"
