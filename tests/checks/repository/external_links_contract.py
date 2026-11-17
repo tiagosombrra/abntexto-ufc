@@ -121,6 +121,16 @@ def classify_status(code: int) -> str:
     return "HTTP_OTHER"
 
 
+def classify_network_error(reason: object) -> str:
+    if isinstance(reason, socket.gaierror):
+        return "DNS_ERROR"
+    if isinstance(reason, (socket.timeout, TimeoutError)):
+        return "TIMEOUT"
+    if isinstance(reason, ssl.SSLError):
+        return "TLS_ERROR"
+    return "NETWORK_ERROR"
+
+
 def probe_one(url: str, timeout: float) -> dict:
     """Perform HEAD, with a range-limited GET fallback only for HEAD rejection."""
     parsed = urlsplit(url)
@@ -159,7 +169,8 @@ def probe_one(url: str, timeout: float) -> dict:
         return {"status": "TLS_ERROR", "detail": type(error).__name__}
     except (URLError, OSError) as error:
         reason = getattr(error, "reason", error)
-        return {"status": "NETWORK_ERROR", "detail": type(reason).__name__}
+        return {"status": classify_network_error(reason),
+                "detail": type(reason).__name__}
     return {"status": "HTTP_OTHER", "detail": "unsupported HEAD/GET sequence"}
 
 
@@ -197,6 +208,9 @@ def selftest() -> None:
         assert classify_status(404) == "NOT_FOUND"
         assert classify_status(429) == "RATE_LIMITED"
         assert classify_status(200) == "REACHABLE"
+        assert classify_network_error(socket.gaierror(-2, "no host")) == "DNS_ERROR"
+        assert classify_network_error(ssl.SSLError("tls")) == "TLS_ERROR"
+        assert classify_network_error(TimeoutError()) == "TIMEOUT"
 
         # Some servers reject HEAD but allow GET; do not mislabel these as 403.
         methods = []
