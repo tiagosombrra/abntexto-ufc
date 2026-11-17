@@ -1056,7 +1056,7 @@ def verify_responsive_keyboard(browser: Browser) -> dict[str, Any]:
           sample('validator.lead',css('.lead').color,page,4.5),
           sample('validator.note',css('.note').color,panel,4.5),
           sample('validator.summary-label',css('.summary span').color,panel,4.5),
-          sample('validator.locale-label',css('label[for="ui-locale"]').color,panel,4.5),
+          sample('validator.locale-label',css('#locale-field > span').color,panel,4.5),
           sample('validator.action-text',css('#analyze').color,css('#analyze').backgroundColor,4.5),
           sample('validator.return-link',css('#home-return').color,page,4.5),
           sample('validator.locale-border',css('#ui-locale').borderTopColor,css('#ui-locale').backgroundColor,3),
