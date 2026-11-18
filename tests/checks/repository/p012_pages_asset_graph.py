@@ -191,7 +191,7 @@ def main() -> None:
     print("P012-PAGES-ASSET-EVIDENCE status=PASS"
           f" checkout={sha[:12]}"
           f" pages={result['deployed_documents']}"
-          f" local={result['local_references']}"
+          f" bundled={result['local_references']}"
           f" external_anchors_unchecked={result['external_anchors_unchecked']}"
           f" modules={result['modules']} workers={result['workers']}"
           f" negative_cases={negatives}"
