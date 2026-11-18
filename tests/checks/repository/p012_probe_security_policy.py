@@ -17,6 +17,8 @@ from urllib.parse import urljoin, urlsplit, urlunsplit
 HEX40 = re.compile(r"[0-9a-f]{40}\Z")
 HEX64 = re.compile(r"[0-9a-f]{64}\Z")
 DNS_LABEL = re.compile(r"[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\Z")
+# inet_aton-style numbers can resolve to loopback, even when ipaddress rejects them.
+LEGACY_IPV4 = re.compile(r"(?:0x[0-9a-f]+|0[0-7]+|[0-9]+)(?:\.(?:0x[0-9a-f]+|0[0-7]+|[0-9]+)){0,3}\Z")
 DENIED_SUFFIXES = (
     ".localhost", ".local", ".lan", ".internal", ".home.arpa",
     ".test", ".invalid", ".onion", ".example", ".localdomain",
@@ -70,8 +72,8 @@ def _host(host: str) -> str:
     else:
         raise UnsafeTarget("direct IP literals are not supported")
     labels = host.split(".")
-    if len(labels) < 2 or all(part.isdecimal() for part in labels):
-        raise UnsafeTarget("single-label or numeric hostname")
+    if len(labels) < 2 or labels[-1].isdecimal() or LEGACY_IPV4.fullmatch(host):
+        raise UnsafeTarget("single-label or legacy numeric IPv4 hostname")
     if any(not DNS_LABEL.fullmatch(label) for label in labels):
         raise UnsafeTarget("invalid DNS label")
     return host
@@ -114,8 +116,9 @@ def bind_public_addresses(target: Target, dns_answers: tuple[str, ...]) -> Pinne
             ip = ipaddress.ip_address(raw)
         except ValueError as error:
             raise UnsafeTarget("DNS response is not an IP address") from error
-        if not ip.is_global or ip.is_multicast or ip.is_unspecified:
-            raise UnsafeTarget("DNS response contains a non-global address")
+        if (not ip.is_global or ip.is_multicast or ip.is_unspecified
+                or (isinstance(ip, ipaddress.IPv6Address) and ip.is_site_local)):
+            raise UnsafeTarget("DNS response contains a non-global or site-local address")
         # Reject IPv4-mapped IPv6 if its embedded IPv4 address is not globally routable.
         if isinstance(ip, ipaddress.IPv6Address) and ip.ipv4_mapped:
             if not ip.ipv4_mapped.is_global:
@@ -209,10 +212,16 @@ def selftest() -> int:
         "https://example.org/a b", "javascript:alert(1)",
     ):
         must_reject(target_from_url, raw, hosts)
+    # Test numeric aliases even when the caller explicitly allows the exact spelling.
+    for numeric in ("0x7f.1", "0x7f.0x0.1", "0177.0.0.1",
+                    "0x7f000001", "127.0x0.0.1", "0X7F.1"):
+        must_reject(target_from_url, "https://" + numeric + "/",
+                    frozenset({numeric.lower()}))
     for answers in (
         (), ("8.8.8.8", "127.0.0.1"), ("169.254.169.254",),
         ("10.1.2.3",), ("::1",), ("fe80::1",),
-        ("fc00::1",), ("not-an-IP",),
+        ("fc00::1",), ("fec0::1",), ("8.8.8.8", "fec0::1"),
+        ("not-an-IP",),
     ):
         must_reject(bind_public_addresses, safe, answers)
     must_reject(follow_redirect, safe, "https://evil.org/", hosts, (safe.url,))
