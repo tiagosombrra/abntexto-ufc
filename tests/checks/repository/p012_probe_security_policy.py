@@ -112,6 +112,10 @@ def bind_public_addresses(target: Target, dns_answers: tuple[str, ...]) -> Pinne
         raise UnsafeTarget("DNS response contains no addresses")
     approved: set[str] = set()
     for raw in dns_answers:
+        # Reject scope identifiers and non-string values before IP parsing.
+        # Scoped IPv6 literals can change the selected local network interface.
+        if not isinstance(raw, str) or "%" in raw:
+            raise UnsafeTarget("DNS answer is not an unscoped IP literal")
         try:
             ip = ipaddress.ip_address(raw)
         except ValueError as error:
@@ -234,6 +238,8 @@ def selftest() -> int:
         ("fc00::1",), ("fec0::1",), ("8.8.8.8", "fec0::1"),
         ("::2",), ("4000::1",), ("8.8.8.8", "::2"),
         ("8.8.8.8", "4000::1"), ("::ffff:127.0.0.1",),
+        ("2001:4860:4860::8888%eth0",), ("::ffff:8.8.8.8%lo",),
+        ("8.8.8.8", "2001:4860:4860::8888%eth0"),
         ("not-an-IP",),
     ):
         must_reject(bind_public_addresses, safe, answers)
