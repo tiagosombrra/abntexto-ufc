@@ -64,8 +64,9 @@ def deployed_files(root: Path) -> set[str]:
         raise ValueError("Pages builder copy operations changed; re-audit deployment graph")
     result: set[str] = set()
     for name in ("index.html", "homepage-locales.js"):
-        if not (root / "site" / name).is_file():
-            raise ValueError(f"missing source asset: site/{name}")
+        asset = root / "site" / name
+        if asset.is_symlink() or not asset.is_file():
+            raise ValueError(f"missing or symlinked source asset: site/{name}")
         result.add(name)
     source = root / "validator"
     for item in source.rglob("*"):
@@ -225,6 +226,11 @@ def selftest() -> int:
         write("validator/vendor/pdfjs/pdf.mjs", "// Local PDF.js module")
         write("validator/vendor/pdfjs/pdf.worker.mjs", "// Local PDF.js worker")
         assert scan(root)["modules"] == 1
+        # An existing side-effect import must count as a real dependency.
+        write("validator/optional.js", "// Existing side-effect module")
+        write("validator/app.js", 'import "./optional.js";\n' + original_app)
+        assert scan(root)["modules"] == 2
+        write("validator/app.js", original_app)
         negative_scans = (
             ("site/index.html", home + '<script src="./not-published.js"></script>'),
             ("validator/app.js", 'import "./missing.js";\n' + original_app),
