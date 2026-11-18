@@ -14,9 +14,18 @@ from urllib.parse import unquote, urlsplit
 ROOT = Path(__file__).resolve().parents[3]
 DOCUMENTS = ("index.html", "validator/index.html")
 JS_MODULE = "validator/app.js"
+# Match both named/default imports and side-effect imports. Unsupported
+# multiline or unusual declarations fail closed instead of being overlooked.
 MODULE_IMPORT = re.compile(
-    r"""(?m)^\s*import\s+.+?\s+from\s+["']([^"']+)["']\s*;?\s*$"""
+    r"""(?m)^[ \t]*import[ \t]+(?:[^\n;]+?[ \t]+from[ \t]+)?["']([^"'\n]+)["'][ \t]*;?[ \t]*$"""
 )
+IMPORT_DECLARATION = re.compile(r"(?m)^[ \t]*import\b")
+# These are the exact three copy operations in the tracked Pages builder.
+PAGES_COPY = {
+    "cp site/index.html _site/index.html",
+    "cp site/homepage-locales.js _site/homepage-locales.js",
+    "cp -a validator/. _site/validator/",
+}
 WORKER = re.compile(
     r"""GlobalWorkerOptions\.workerSrc\s*=\s*["']([^"']+)["']"""
 )
@@ -45,16 +54,25 @@ class References(HTMLParser):
 
 
 def deployed_files(root: Path) -> set[str]:
-    """Map the tracked site and validator trees into the Pages deployment root."""
+    """Mirror the builder's copy manifest, not every file in site/."""
+    builder = (root / "tools/ci/build-pages-site.sh").read_text(encoding="utf-8")
+    copy_lines = {
+        line.strip() for line in builder.splitlines()
+        if re.match(r"^\s*cp\s", line)
+    }
+    if copy_lines != PAGES_COPY:
+        raise ValueError("Pages builder copy operations changed; re-audit deployment graph")
     result: set[str] = set()
-    for directory, prefix in (("site", ""), ("validator", "validator/")):
-        source = root / directory
-        for item in source.rglob("*"):
-            if not item.is_file():
-                continue
-            if not item.resolve().is_relative_to(root.resolve()):
-                raise ValueError(f"asset escapes repository: {item}")
-            result.add(prefix + item.relative_to(source).as_posix())
+    for name in ("index.html", "homepage-locales.js"):
+        if not (root / "site" / name).is_file():
+            raise ValueError(f"missing source asset: site/{name}")
+        result.add(name)
+    source = root / "validator"
+    for item in source.rglob("*"):
+        if item.is_symlink():
+            raise ValueError(f"symlink cannot be certified in Pages graph: {item}")
+        if item.is_file():
+            result.add("validator/" + item.relative_to(source).as_posix())
     return result
 
 
@@ -63,6 +81,8 @@ def resolve_reference(owner: str, raw: str, kind: str,
     """Resolve against the deployment root, never against a local machine path."""
     if not raw or any(ord(char) < 32 or ord(char) == 127 for char in raw):
         raise ValueError(f"{owner}: missing/control-character {kind} URL")
+    if kind == "module" and not raw.startswith(("./", "../")):
+        raise ValueError(f"{owner}: bare/remote module specifier: {raw}")
     parsed = urlsplit(raw)
     if parsed.scheme or parsed.netloc:
         if (kind == "a" and parsed.scheme == "https" and parsed.netloc
@@ -107,6 +127,8 @@ def scan(root: Path) -> dict:
                           "scope": scope, "target": target})
     app = (root / JS_MODULE).read_text(encoding="utf-8")
     imports = MODULE_IMPORT.findall(app)
+    if len(imports) != len(IMPORT_DECLARATION.findall(app)) or "import(" in app:
+        raise ValueError("unrecognized module import; update source-bound parser")
     workers = WORKER.findall(app)
     if not imports or len(workers) != 1:
         raise ValueError("missing app imports or unique PDF.js worker")
@@ -147,7 +169,9 @@ def scan(root: Path) -> dict:
 
 
 def selftest() -> int:
-    """Exercise valid relative traversal and six negative resource/scheme cases."""
+    """Prove graph invariants, including real scan-level regression mutants."""
+    import tempfile
+
     paths = {"index.html", "validator/index.html", "validator/app.js",
              "homepage-locales.js"}
     assert resolve_reference("index.html", "./validator/", "a", paths) == (
@@ -167,6 +191,7 @@ def selftest() -> int:
         ("index.html", "javascript:alert(1)", "a"),
         ("index.html", "https://example.org:bad/path", "a"),
         ("index.html", "https://name:password@example.org/a", "a"),
+        ("validator/app.js", "vendor/pdfjs/pdf.mjs", "module"),
     )
     for owner, uri, kind in invalid:
         try:
@@ -177,7 +202,59 @@ def selftest() -> int:
     parser = References()
     parser.feed('<script src="./app.js"></script><a href="./"></a>')
     assert parser.refs == [("script", "./app.js"), ("a", "./")]
-    return len(invalid)
+
+    with tempfile.TemporaryDirectory(prefix="p012-pages-graph-") as temp:
+        root = Path(temp)
+
+        def write(name: str, body: str) -> None:
+            dest = root / name
+            dest.parent.mkdir(parents=True, exist_ok=True)
+            dest.write_text(body, encoding="utf-8")
+
+        write("tools/ci/build-pages-site.sh", "\n".join(sorted(PAGES_COPY)) + "\n")
+        home = '<script src="./homepage-locales.js"></script><a href="./validator/">Open</a>'
+        validator = '<a href="../?lang=pt-BR">Home</a><script src="app.js"></script>'
+        original_app = (
+            'import * as pdfjsLib from "./vendor/pdfjs/pdf.mjs";\n'
+            'pdfjsLib.GlobalWorkerOptions.workerSrc="./vendor/pdfjs/pdf.worker.mjs";\n'
+        )
+        write("site/index.html", home)
+        write("site/homepage-locales.js", "// Local homepage labels")
+        write("validator/index.html", validator)
+        write("validator/app.js", original_app)
+        write("validator/vendor/pdfjs/pdf.mjs", "// Local PDF.js module")
+        write("validator/vendor/pdfjs/pdf.worker.mjs", "// Local PDF.js worker")
+        assert scan(root)["modules"] == 1
+        negative_scans = (
+            ("site/index.html", home + '<script src="./not-published.js"></script>'),
+            ("validator/app.js", 'import "./missing.js";\n' + original_app),
+            ("validator/app.js", 'import "https://example.org/extra.js";\n' + original_app),
+            ("validator/app.js", 'import "vendor/pdfjs/pdf.mjs";\n' + original_app),
+            ("validator/app.js", 'import {x} from "./missing.js";\n' + original_app),
+        )
+        write("site/not-published.js", "// Exists in source but not in Pages")
+        for name, altered in negative_scans:
+            original = (root / name).read_text(encoding="utf-8")
+            write(name, altered)
+            try:
+                scan(root)
+            except ValueError:
+                pass
+            else:
+                raise AssertionError(f"scan accepted mutated asset graph: {name}")
+            finally:
+                write(name, original)
+        write("tools/ci/build-pages-site.sh",
+              "\n".join(sorted(PAGES_COPY | {
+                  "cp site/not-published.js _site/not-published.js"
+              })) + "\n")
+        try:
+            scan(root)
+        except ValueError:
+            pass
+        else:
+            raise AssertionError("builder copy manifest drift was not rejected")
+    return len(invalid) + len(negative_scans) + 1
 
 
 def main() -> None:
