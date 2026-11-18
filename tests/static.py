@@ -41,6 +41,7 @@ SOURCE_CHECK_NAMES = (
     "mesh_study.py",  # Pure-Python reproducibility; no network or TeX dependency.
     "homepage_locales_contract.py",
     "p012_cross_surface_contract.py",
+    "p012_pages_asset_graph.py",
 )
 
 # Resolved repository-relative paths remain exported for integrity/audit tooling.
