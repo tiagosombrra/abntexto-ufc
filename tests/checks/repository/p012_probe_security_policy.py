@@ -63,7 +63,7 @@ def _host(host: str) -> str:
     if not host or not host.isascii() or len(host) > 253 or host.endswith("."):
         raise UnsafeTarget("non-canonical hostname")
     host = host.lower()
-    if host in {"localhost", "localdomain"} or host.endswith(DENIED_SUFFIXES):
+    if host in {"localhost", "localdomain", "home.arpa"} or host.endswith(DENIED_SUFFIXES):
         raise UnsafeTarget("internal or reserved hostname")
     try:
         ipaddress.ip_address(host)
@@ -116,13 +116,17 @@ def bind_public_addresses(target: Target, dns_answers: tuple[str, ...]) -> Pinne
             ip = ipaddress.ip_address(raw)
         except ValueError as error:
             raise UnsafeTarget("DNS response is not an IP address") from error
-        if (not ip.is_global or ip.is_multicast or ip.is_unspecified
-                or (isinstance(ip, ipaddress.IPv6Address) and ip.is_site_local)):
-            raise UnsafeTarget("DNS response contains a non-global or site-local address")
-        # Reject IPv4-mapped IPv6 if its embedded IPv4 address is not globally routable.
         if isinstance(ip, ipaddress.IPv6Address) and ip.ipv4_mapped:
-            if not ip.ipv4_mapped.is_global:
+            # IPv4-mapped IPv6 is allowed only when its embedded IPv4 is public.
+            # Classify the embedded address explicitly across Python versions.
+            mapped = ip.ipv4_mapped
+            if (not mapped.is_global or mapped.is_reserved
+                    or mapped.is_multicast or mapped.is_unspecified):
                 raise UnsafeTarget("non-global IPv4-mapped IPv6 address")
+        elif (not ip.is_global or ip.is_multicast or ip.is_unspecified
+              or ip.is_reserved
+              or (isinstance(ip, ipaddress.IPv6Address) and ip.is_site_local)):
+            raise UnsafeTarget("DNS response contains a non-global, reserved or site-local address")
         approved.add(str(ip))
     return PinnedEndpoint(target, tuple(sorted(approved)))
 
@@ -135,7 +139,11 @@ def follow_redirect(current: Target, location: str,
     if (not isinstance(location, str) or not location or not location.isascii()
             or any(ord(c) < 33 or ord(c) > 126 or c == "\\" for c in location)):
         raise UnsafeTarget("empty or unsafe redirect target")
-    candidate = target_from_url(urljoin(current.url, location), allowed_hosts)
+    try:
+        resolved = urljoin(current.url, location)
+    except ValueError as error:
+        raise UnsafeTarget("malformed redirect URL") from error
+    candidate = target_from_url(resolved, allowed_hosts)
     if candidate.url in visited:
         raise UnsafeTarget("redirect cycle")
     # The caller must resolve, validate and pin fresh DNS addresses on EVERY hop.
@@ -191,6 +199,8 @@ def selftest() -> int:
     assert safe.hostname == "example.org" and safe.tls_port == 443
     pinned = bind_public_addresses(safe, ("8.8.8.8", "2001:4860:4860::8888"))
     assert len(pinned.public_ips) == 2 and pinned.target == safe
+    # A public IPv4-mapped IPv6 address is deliberately allowed when embedded IPv4 is public.
+    assert bind_public_addresses(safe, ("::ffff:8.8.8.8",)).public_ips
     redirected = follow_redirect(safe, "/b", hosts, (safe.url,))
     assert redirected.url == "https://example.org/b"
     assert Deadline(102.0).remaining(100.0) == 2.0
@@ -217,16 +227,22 @@ def selftest() -> int:
                     "0x7f000001", "127.0x0.0.1", "0X7F.1"):
         must_reject(target_from_url, "https://" + numeric + "/",
                     frozenset({numeric.lower()}))
+    must_reject(target_from_url, "https://home.arpa/", frozenset({"home.arpa"}))
     for answers in (
         (), ("8.8.8.8", "127.0.0.1"), ("169.254.169.254",),
         ("10.1.2.3",), ("::1",), ("fe80::1",),
         ("fc00::1",), ("fec0::1",), ("8.8.8.8", "fec0::1"),
+        ("::2",), ("4000::1",), ("8.8.8.8", "::2"),
+        ("8.8.8.8", "4000::1"), ("::ffff:127.0.0.1",),
         ("not-an-IP",),
     ):
         must_reject(bind_public_addresses, safe, answers)
     must_reject(follow_redirect, safe, "https://evil.org/", hosts, (safe.url,))
     must_reject(follow_redirect, safe, "http://example.org/a", hosts, (safe.url,))
     must_reject(follow_redirect, safe, "https://example.org/a\nb", hosts, (safe.url,))
+    must_reject(follow_redirect, safe, "https://[", hosts, (safe.url,))
+    must_reject(follow_redirect, safe, "https://[not-ip]/", hosts, (safe.url,))
+    must_reject(follow_redirect, safe, "https://example.org:bad/", hosts, (safe.url,))
     must_reject(follow_redirect, safe, "/b", hosts, (safe.url, redirected.url))
     must_reject(follow_redirect, safe, "/c", hosts,
                 (safe.url, "https://example.org/x", "https://example.org/y",
