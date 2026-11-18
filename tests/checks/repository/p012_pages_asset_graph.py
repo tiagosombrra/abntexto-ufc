@@ -81,7 +81,7 @@ def resolve_reference(owner: str, raw: str, kind: str,
     else:
         target = posixpath.normpath(posixpath.join(posixpath.dirname(owner), decoded))
         if decoded.endswith("/"):
-            target = posixpath.join(target, "index.html")
+            target = posixpath.normpath(posixpath.join(target, "index.html"))
     if target == ".." or target.startswith("../") or target.startswith("/"):
         raise ValueError(f"{owner}: URL escapes deployed site: {raw}")
     if target not in available:
