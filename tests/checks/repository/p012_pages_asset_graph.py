@@ -76,9 +76,6 @@ def resolve_reference(owner: str, raw: str, kind: str,
     decoded = unquote(parsed.path)
     if decoded.startswith("/") or "\\" in decoded:
         raise ValueError(f"{owner}: absolute/non-portable URL: {raw}")
-    if any(part in (".", "..") for part in decoded.split("/")):
-        # Permit ordinary ./ and ../ paths only after containment validation.
-        pass
     if not decoded:
         target = owner
     else:
