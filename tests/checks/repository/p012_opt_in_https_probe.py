@@ -78,11 +78,18 @@ def trusted_source_inventory(root: Path = ROOT) -> dict:
     A clean git status is insufficient: skip-worktree and assume-unchanged
     allow an edited Markdown file to evade status while HEAD stays constant.
     """
+    # Git can transparently call "fetch" for promised missing blobs in a
+    # partial clone. Deny that before any source inventory read.
+    git_env = os.environ.copy()
+    git_env["GIT_NO_LAZY_FETCH"] = "1"
+    git_env["GIT_TERMINAL_PROMPT"] = "0"
     head = subprocess.check_output(
-        ["git", "--no-replace-objects", "rev-parse", "HEAD"], cwd=root, text=True,
+        ["git", "--no-replace-objects", "rev-parse", "HEAD"],
+        cwd=root, text=True, env=git_env,
     ).strip()
     raw_tree = subprocess.check_output(
-        ["git", "--no-replace-objects", "ls-tree", "-r", "--name-only", "-z", head], cwd=root,
+        ["git", "--no-replace-objects", "ls-tree", "-r", "--name-only", "-z", head],
+        cwd=root, env=git_env,
     )
     documents = []
     for raw_path in raw_tree.split(b"\0"):
@@ -107,7 +114,8 @@ def trusted_source_inventory(root: Path = ROOT) -> dict:
         for path in documents:
             # git show reads the pinned commit object, never skip-worktree bytes.
             content = subprocess.check_output(
-                ["git", "--no-replace-objects", "show", head + ":" + path.as_posix()], cwd=root,
+                ["git", "--no-replace-objects", "show", head + ":" + path.as_posix()],
+                cwd=root, env=git_env,
             )
             destination = snapshot_root / path
             destination.parent.mkdir(parents=True, exist_ok=True)
@@ -837,7 +845,22 @@ def selftest() -> int:
         unprotected = subprocess.check_output(
             ["git", "show", "HEAD:a.md"], cwd=gitroot)
         assert b"https://example.org/replaced" in unprotected
-        protected = trusted_source_inventory(gitroot)
+
+        # Verify every identity-establishing Git read explicitly forbids
+        # promisor lazy-fetch, without contacting a remote in this fixture.
+        original_check_output = subprocess.check_output
+        checked_git_reads = [0]
+        def guarded_git_read(args, **kwargs):
+            if (isinstance(args, list) and len(args) > 1
+                    and args[:2] == ["git", "--no-replace-objects"]):
+                assert kwargs["env"]["GIT_NO_LAZY_FETCH"] == "1"
+                assert kwargs["env"]["GIT_TERMINAL_PROMPT"] == "0"
+                checked_git_reads[0] += 1
+            return original_check_output(args, **kwargs)
+        with patch.object(subprocess, "check_output",
+                          side_effect=guarded_git_read):
+            protected = trusted_source_inventory(gitroot)
+        assert checked_git_reads[0] >= 3
         choose_inventory_url(protected, "https://example.org/original",
                              frozenset({"example.org"}))
         try:
