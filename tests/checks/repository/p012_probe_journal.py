@@ -20,6 +20,8 @@ import time
 from datetime import datetime, timezone
 from pathlib import Path
 
+# Isolated fixture processes (-I) omit the script directory from sys.path.
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 from p012_probe_security_policy import UnsafeTarget, receipt_urls
 
 SCHEMA = 1
