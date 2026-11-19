@@ -296,6 +296,12 @@ def abort_on_sigterm(signum: int, _frame: object) -> None:
     raise SystemExit(128 + signum)
 
 
+def abort_on_sigint(_signum: int, _frame: object) -> None:
+    """Unwind Ctrl+C only once, leaving worker cleanup uninterrupted."""
+    signal.signal(signal.SIGINT, signal.SIG_IGN)
+    raise KeyboardInterrupt
+
+
 def isolated_worker(url: str, hosts: tuple[str, ...], seconds: float,
                     expected_sha: str, expected_fingerprint: str) -> dict:
     """Run one URL in a child whose entire lifecycle is guarded by the parent."""
@@ -316,10 +322,10 @@ def isolated_worker(url: str, hosts: tuple[str, ...], seconds: float,
         if use_session:
             if not hasattr(signal, "pthread_sigmask"):
                 raise UnsafeTarget("SIGTERM-safe POSIX worker launch unavailable")
-            # Block SIGTERM BEFORE spawning and until process is guarded by
-            # this outer try/finally. The child unblocks it at entry.
+            # Block SIGTERM and SIGINT BEFORE spawning. Both can otherwise
+            # interrupt Popen after fork but before its child is assigned.
             previous_mask = signal.pthread_sigmask(
-                signal.SIG_BLOCK, {signal.SIGTERM})
+                signal.SIG_BLOCK, {signal.SIGTERM, signal.SIGINT})
         try:
             process = subprocess.Popen(
                 args, cwd=ROOT, stdin=subprocess.DEVNULL, stdout=subprocess.PIPE,
@@ -330,8 +336,8 @@ def isolated_worker(url: str, hosts: tuple[str, ...], seconds: float,
             return {"outcome": "WORKER_ERROR", "status": None, "url": url,
                     "observed_at": utc_now()}
         if previous_mask is not None:
-            # Any pending SIGTERM is delivered inside the protected try,
-            # so the finally below still kills and reaps the worker.
+            # Any pending SIGTERM/SIGINT is delivered inside the protected
+            # try, so the finally below still kills and reaps the worker.
             signal.pthread_sigmask(signal.SIG_SETMASK, previous_mask)
             previous_mask = None
         try:
@@ -359,9 +365,9 @@ def isolated_worker(url: str, hosts: tuple[str, ...], seconds: float,
     finally:
         cleanup_mask = None
         if use_session and hasattr(signal, "pthread_sigmask"):
-            # Repeated SIGTERM must not interrupt killpg()/wait() cleanup.
+            # Repeated SIGTERM/SIGINT cannot interrupt killpg()/wait().
             cleanup_mask = signal.pthread_sigmask(
-                signal.SIG_BLOCK, {signal.SIGTERM})
+                signal.SIG_BLOCK, {signal.SIGTERM, signal.SIGINT})
         try:
             if process is not None:
                 if process.poll() is None:
@@ -1065,8 +1071,9 @@ def main() -> None:
 
     if args._worker:
         if os.name == "posix" and hasattr(signal, "pthread_sigmask"):
-            # The parent intentionally masks SIGTERM across child creation.
-            signal.pthread_sigmask(signal.SIG_UNBLOCK, {signal.SIGTERM})
+            # The parent intentionally masks SIGTERM/SIGINT during creation.
+            signal.pthread_sigmask(signal.SIG_UNBLOCK,
+                                   {signal.SIGTERM, signal.SIGINT})
         if len(args.url) != 1:
             parser.error("worker requires exactly one selected URL")
         try:
@@ -1085,7 +1092,9 @@ def main() -> None:
     if args.journal.resolve().is_relative_to(Path(ROOT).resolve()):
         parser.error("--journal must be outside the Git working tree")
     previous_term = signal.getsignal(signal.SIGTERM)
+    previous_int = signal.getsignal(signal.SIGINT)
     signal.signal(signal.SIGTERM, abort_on_sigterm)
+    signal.signal(signal.SIGINT, abort_on_sigint)
     try:
         with RealJournal(args.journal, source, tuple(args.url)) as journal:
             for url in args.url:
@@ -1095,6 +1104,7 @@ def main() -> None:
             journal.finish()
     finally:
         signal.signal(signal.SIGTERM, previous_term)
+        signal.signal(signal.SIGINT, previous_int)
     print("P012-LIVE-HTTPS-PROBE status=COMPLETE"
           f" urls={len(args.url)} journal={args.journal}"
           " source_bound=RECOMPUTED_FROM_CLEAN_GIT_CHECKOUT"
