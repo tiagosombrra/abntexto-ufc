@@ -39,6 +39,7 @@ from documentation_links_contract import EXCLUDED_PARENTS, ROOT
 MAX_SELECTED = 5
 MAX_HOPS = 3
 MAX_RESPONSE_HEADER = 8192
+MAX_INFORMATIONAL = 4
 MAX_CHILD_OUTPUT = 8192
 MAX_URL_LENGTH = 2048
 SCHEMA = 2
@@ -133,10 +134,11 @@ def resolve_all(hostname: str) -> tuple[str, ...]:
     return tuple(answer[4][0] for answer in answers)
 
 
-def header_from_socket(tls_socket: ssl.SSLSocket, deadline: float) -> bytes:
+def header_from_socket(tls_socket: ssl.SSLSocket, deadline: float,
+                       remaining_bytes: int = MAX_RESPONSE_HEADER) -> bytes:
     """Stop exactly at the FIRST terminator without consuming response body."""
     data = bytearray()
-    while len(data) < MAX_RESPONSE_HEADER:
+    while len(data) < remaining_bytes:
         tls_socket.settimeout(checked_budget(deadline))
         byte = tls_socket.recv(1)
         if not byte:
@@ -189,16 +191,31 @@ def exchange(target, numeric_ip: str, method: str, deadline: float) -> tuple[int
                        f"{extra}Connection: close\r\n\r\n").encode("ascii")
             tls.settimeout(checked_budget(deadline))
             tls.sendall(request)
-            raw_headers = header_from_socket(tls, deadline)
-            # This proof is populated by actual local socket/TLS operations;
-            # inspect_proof remains a parser/consistency check, not a TLS verifier.
-            observation = HopProof(
-                connected_ip=str(ip), peer_ip=peer, sni=target.hostname,
-                certificate_hostname=target.hostname,
-                certificate_validated=True, host_header=target.hostname,
-                proxy_used=False, header_bytes=raw_headers, body_bytes_consumed=0,
-            )
-            return inspect_proof(observation, target, str(ip))
+            remaining_headers = MAX_RESPONSE_HEADER
+            for interim in range(MAX_INFORMATIONAL + 1):
+                # A single aggregate header cap applies across 100/102/103
+                # responses and the final status block, not per block.
+                raw_headers = header_from_socket(tls, deadline,
+                                                 remaining_headers)
+                remaining_headers -= len(raw_headers)
+                # Data comes from the actual verified TLS session. HopProof
+                # checks consistency and HTTP syntax, not TLS cryptography.
+                observation = HopProof(
+                    connected_ip=str(ip), peer_ip=peer, sni=target.hostname,
+                    certificate_hostname=target.hostname,
+                    certificate_validated=True, host_header=target.hostname,
+                    proxy_used=False, header_bytes=raw_headers,
+                    body_bytes_consumed=0,
+                )
+                status, headers = inspect_proof(observation, target, str(ip))
+                if status == 101:
+                    raise UnsafeTarget("HTTP protocol upgrade unsupported")
+                if 100 <= status < 200:
+                    if interim >= MAX_INFORMATIONAL or remaining_headers <= 0:
+                        raise UnsafeTarget("too many informational HTTP headers")
+                    continue
+                return status, headers
+            raise UnsafeTarget("final HTTP status not received")
 
 
 def actual_probe(receipt: dict, url: str, allowed: frozenset[str],
