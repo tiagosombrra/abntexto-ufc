@@ -4,7 +4,7 @@
 
 ## Delivered and deliberately excluded
 
-`tests/checks/repository/p012_pinned_tls_contract.py` defines a **pure offline contract** for URL authorization, all-address DNS vetting, pinned numeric destination identity, TLS SNI/peer certificate hostname, HTTP Host identity, no proxy path, bounded HTTP/1 headers, conservative HEAD status mapping, same logical deadline and redirected-host DNS revalidation. Its resolver and connector are **simulated functions supplied by local tests**, not real operating-system services.
+`tests/checks/repository/p012_pinned_tls_contract.py` defines a **pure offline contract** for URL authorization, all-address DNS vetting, pinned numeric destination identity, TLS SNI/peer certificate hostname, HTTP Host identity, no proxy path, bounded HTTP/1 headers **with the first CRLF-CRLF terminator required at the very end of the simulated header block (no body bytes parsed as headers)**, conservative HEAD status mapping, same logical deadline and redirected-host DNS revalidation. Its resolver and connector are **simulated functions supplied by local tests**, not real operating-system services.
 
 The contract may refuse inconsistent simulated evidence, but **the evidence fields are not authenticated by an actual TLS handshake**. A hostile real adapter could forge them. Treat `HopProof` as a test assertion mechanism, never production security evidence. This code contains no socket, DNS resolver, SSL context, HTTP client, worker launcher or command-line option to use a network.
 
