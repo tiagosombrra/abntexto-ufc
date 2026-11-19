@@ -554,6 +554,87 @@ def selftest() -> int:
               "links": [{"url": "https://example.org/a",
                          "references": [{"file": "a.md", "line": 1}]}]}
     url = "https://example.org/a"
+
+    # Exercise the real orchestration logic with fully injected fake DNS and
+    # exchange functions: no operating-system resolver or network is called.
+    secure_hosts = frozenset({"example.org", "second.org"})
+    dns_log = []
+    exchange_log = []
+    dns_map = {"example.org": ("8.8.8.8",), "second.org": ("1.1.1.1",)}
+    response_map = {"example.org": (200, {}), "second.org": (200, {})}
+
+    def fake_dns(host):
+        dns_log.append(host)
+        return dns_map[host]
+
+    def fake_exchange(destination, ip, method, _deadline):
+        exchange_log.append((destination.hostname, ip, method))
+        return response_map[destination.hostname]
+
+    with patch(__name__ + ".resolve_all", side_effect=fake_dns), \
+            patch(__name__ + ".exchange", side_effect=fake_exchange):
+        valid = actual_probe(sample, url, secure_hosts, time.monotonic() + 5)
+        assert valid["outcome"] == "REACHABLE" and valid["hops"] == 1
+        assert exchange_log == [("example.org", "8.8.8.8", "HEAD")]
+        dns_log.clear()
+        exchange_log.clear()
+
+        # An unsafe DNS answer poisons the entire set before any TCP attempt.
+        dns_map["example.org"] = ("8.8.8.8", "10.0.0.1")
+        try:
+            actual_probe(sample, url, secure_hosts, time.monotonic() + 5)
+        except UnsafeTarget:
+            negative += 1
+        else:
+            raise AssertionError("mixed public/private DNS was accepted")
+        assert not exchange_log
+        dns_map["example.org"] = ("8.8.8.8",)
+        dns_log.clear()
+
+        # A redirect to a second allowlisted hostname must re-resolve and
+        # pin a distinct numeric address before its next exchange.
+        response_map["example.org"] = (302, {"location": "https://second.org/z"})
+        rerouted = actual_probe(sample, url, secure_hosts, time.monotonic() + 5)
+        assert rerouted["hops"] == 2 and rerouted["outcome"] == "REACHABLE"
+        assert dns_log == ["example.org", "second.org"]
+        assert exchange_log == [("example.org", "8.8.8.8", "HEAD"),
+                                ("second.org", "1.1.1.1", "HEAD")]
+        dns_log.clear()
+        exchange_log.clear()
+
+        dns_map["second.org"] = ("1.1.1.1", "169.254.169.254")
+        try:
+            actual_probe(sample, url, secure_hosts, time.monotonic() + 5)
+        except UnsafeTarget:
+            negative += 1
+        else:
+            raise AssertionError("redirect poisoned with link-local IP was accepted")
+        assert exchange_log == [("example.org", "8.8.8.8", "HEAD")]
+        dns_map["second.org"] = ("1.1.1.1",)
+        exchange_log.clear()
+
+        response_map["example.org"] = (302, {"location": "https://evil.org/secret"})
+        try:
+            actual_probe(sample, url, secure_hosts, time.monotonic() + 5)
+        except UnsafeTarget:
+            negative += 1
+        else:
+            raise AssertionError("redirect to unauthorized host was accepted")
+        assert exchange_log == [("example.org", "8.8.8.8", "HEAD")]
+        exchange_log.clear()
+
+        # A 405 HEAD response triggers exactly one bounded GET request at
+        # the approved numeric IP, without another hostname-based connect.
+        response_map["example.org"] = (405, {})
+        def fake_head_get(destination, ip, method, _deadline):
+            exchange_log.append((destination.hostname, ip, method))
+            return (405, {}) if method == "HEAD" else (206, {})
+        with patch(__name__ + ".exchange", side_effect=fake_head_get):
+            fallback = actual_probe(sample, url, secure_hosts, time.monotonic() + 5)
+        assert fallback["outcome"] == "REACHABLE"
+        assert exchange_log == [("example.org", "8.8.8.8", "HEAD"),
+                                ("example.org", "8.8.8.8", "GET")]
+
     with tempfile.TemporaryDirectory(prefix="p012-real-fixture-") as directory:
         file = Path(directory) / "results.jsonl"
         with RealJournal(file, sample, (url,)) as journal:
