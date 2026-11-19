@@ -77,6 +77,9 @@ def inspect_proof(proof: HopProof, target, pinned_ip: str) -> tuple[int, dict[st
     if (not isinstance(raw, bytes) or len(raw) > MAX_HEADER_BYTES
             or not raw.endswith(b"\r\n\r\n") or b"\x00" in raw):
         raise UnsafeTarget("unbounded or malformed response headers")
+    # The FIRST header terminator must be the end; never parse a body as headers.
+    if raw.find(b"\r\n\r\n") != len(raw) - 4:
+        raise UnsafeTarget("bytes after the HTTP header terminator")
     lines = raw[:-2].split(b"\r\n")
     match = STATUS_LINE.fullmatch(lines[0] + b"\r\n")
     if not match:
@@ -257,6 +260,7 @@ def selftest() -> int:
         ("body_bytes_consumed", 100),
         ("header_bytes", b"HTTP/1.1 200 OK\r\nA: " + b"x" * 9000 + b"\r\n\r\n"),
         ("header_bytes", b"HTTP/1.1 302 Found\r\nLocation: /x\r\nLocation: /y\r\n\r\n"),
+        ("header_bytes", b"HTTP/1.1 302 Found\r\n\r\nLocation: /body-not-header\r\n\r\n"),
         ("header_bytes", b"HTTP/1.1 200 OK\r\nBad header\r\n\r\n"),
     ):
         edits["example.org"] = {property_name: value}
