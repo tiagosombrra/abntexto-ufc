@@ -31,7 +31,7 @@ from p012_pinned_tls_contract import HopProof, classify, inspect_proof
 from p012_probe_journal import MAX_RECORD_BYTES, ZERO_SHA, _encode, _safe_fd, _sync_directory
 from p012_probe_security_policy import (
     Deadline, UnsafeTarget, _host, bind_public_addresses, choose_inventory_url,
-    follow_redirect,
+    follow_redirect, target_from_url,
 )
 from external_links_contract import inventory
 from documentation_links_contract import ROOT, tracked_markdown
@@ -457,6 +457,98 @@ def selftest() -> int:
         else:
             raise AssertionError("malformed/oversized HTTP header accepted")
 
+    # Assert that the live transport construction itself chooses a numeric
+    # sockaddr, checks the peer, passes the hostname to TLS, and sends Host.
+    class FakeRaw:
+        def __init__(self, peer="8.8.8.8"):
+            self.peer = peer
+            self.destination = None
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *_args):
+            return None
+
+        def settimeout(self, _timeout):
+            return None
+
+        def connect(self, address):
+            self.destination = address
+
+        def getpeername(self):
+            return (self.peer, 443)
+
+    class FakeVerifiedTLS(FakeTLS):
+        def __init__(self, payload, peer="8.8.8.8", certificate=True):
+            super().__init__(payload)
+            self.peer = peer
+            self.certificate = certificate
+            self.handshaken = False
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *_args):
+            return None
+
+        def do_handshake(self):
+            self.handshaken = True
+
+        def getpeercert(self):
+            return {"subject": (("CN", "example.org"),)} if self.certificate else {}
+
+        def getpeername(self):
+            return (self.peer, 443)
+
+        def sendall(self, payload):
+            self.sent = payload
+
+    class FakeContext:
+        def __init__(self, wrapped):
+            self.wrapped = wrapped
+            self.sni = None
+            self.check_hostname = False
+            self.verify_mode = ssl.CERT_NONE
+
+        def wrap_socket(self, _raw, *, server_hostname, do_handshake_on_connect):
+            assert do_handshake_on_connect is False
+            self.sni = server_hostname
+            return self.wrapped
+
+    target = target_from_url("https://example.org/a?b=1",
+                             frozenset({"example.org"}))
+    raw = FakeRaw()
+    verified = FakeVerifiedTLS(b"HTTP/1.1 200 OK\r\n\r\nEXTRA")
+    context = FakeContext(verified)
+    with patch.object(socket, "socket", return_value=raw), \
+            patch.object(ssl, "create_default_context", return_value=context), \
+            patch(__name__ + ".checked_budget", return_value=2), \
+            patch.dict(os.environ, {"HTTPS_PROXY": "http://127.0.0.1:9999"}):
+        status, headers = exchange(target, "8.8.8.8", "HEAD", 100)
+    assert status == 200 and headers == {}
+    assert raw.destination == ("8.8.8.8", 443)
+    assert context.sni == "example.org" and verified.handshaken
+    assert context.check_hostname and context.verify_mode == ssl.CERT_REQUIRED
+    assert b"HEAD /a?b=1 HTTP/1.1\r\n" in verified.sent
+    assert b"Host: example.org\r\n" in verified.sent
+    assert verified.data == b"EXTRA"
+
+    for peer, certificate in (("127.0.0.1", True), ("8.8.8.8", False)):
+        bad_raw = FakeRaw(peer)
+        bad_tls = FakeVerifiedTLS(b"HTTP/1.1 200 OK\r\n\r\n",
+                                  certificate=certificate)
+        with patch.object(socket, "socket", return_value=bad_raw), \
+                patch.object(ssl, "create_default_context",
+                             return_value=FakeContext(bad_tls)), \
+                patch(__name__ + ".checked_budget", return_value=2):
+            try:
+                exchange(target, "8.8.8.8", "HEAD", 100)
+            except (UnsafeTarget, ssl.SSLError):
+                negative += 1
+            else:
+                raise AssertionError("unsafe socket peer or missing certificate accepted")
+
     sample = {"schema": 1, "checkout_sha": "a" * 40,
               "fingerprint_sha256": "b" * 64, "unique_urls": 1,
               "links": [{"url": "https://example.org/a",
@@ -560,6 +652,8 @@ def main() -> None:
 
     if args.journal is None or not args.journal.is_absolute():
         parser.error("--journal must be a new absolute path")
+    if args.journal.resolve().is_relative_to(Path(ROOT).resolve()):
+        parser.error("--journal must be outside the Git working tree")
     with RealJournal(args.journal, source, tuple(args.url)) as journal:
         for url in args.url:
             journal.result(isolated_worker(url, tuple(sorted(allowed)), args.timeout))
