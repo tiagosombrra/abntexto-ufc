@@ -720,6 +720,36 @@ def selftest() -> int:
                 raise AssertionError("SIGTERM did not abort the worker")
     assert aborted.waited and aborted.killed
 
+    if os.name == "posix":
+        # Reproduce SIGTERM delivered *during* spawn, before communicate().
+        # The parent must mask it, then deliver it while cleanup is protected.
+        initial_mask = signal.pthread_sigmask(signal.SIG_BLOCK, set())
+        aborted = FakeTerminatedWorker()
+
+        def terminate_during_spawn(*_args, **_kwargs):
+            current = signal.pthread_sigmask(signal.SIG_BLOCK, set())
+            assert signal.SIGTERM in current
+            os.kill(os.getpid(), signal.SIGTERM)
+            return aborted
+
+        previous_handler = signal.signal(signal.SIGTERM, abort_on_sigterm)
+        try:
+            with patch.object(subprocess, "Popen",
+                              side_effect=terminate_during_spawn), \
+                    patch.object(os, "killpg", side_effect=fake_killgroup):
+                try:
+                    isolated_worker("https://example.org/a", ("example.org",),
+                                    1.0, "a" * 40, "b" * 64)
+                except SystemExit as error:
+                    assert error.code == 128 + signal.SIGTERM
+                    negative += 1
+                else:
+                    raise AssertionError("SIGTERM race did not interrupt worker")
+            assert aborted.waited and aborted.killed
+        finally:
+            signal.signal(signal.SIGTERM, previous_handler)
+        assert signal.pthread_sigmask(signal.SIG_BLOCK, set()) == initial_mask
+
     sample = {"schema": 1, "checkout_sha": "a" * 40,
               "fingerprint_sha256": "b" * 64, "unique_urls": 1,
               "links": [{"url": "https://example.org/a",
