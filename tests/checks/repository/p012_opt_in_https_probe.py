@@ -225,10 +225,13 @@ def worker_result(receipt: dict, url: str, allowed: frozenset[str],
     return result
 
 
-def isolated_worker(url: str, hosts: tuple[str, ...], seconds: float) -> dict:
+def isolated_worker(url: str, hosts: tuple[str, ...], seconds: float,
+                    expected_sha: str, expected_fingerprint: str) -> dict:
     """Hard-stop a worker even when DNS or TLS blocks without a socket timeout."""
     args = [sys.executable, "-I", str(Path(__file__).resolve()),
             "--_worker", "--network-opt-in", "--timeout", str(seconds),
+            "--_expected-sha", expected_sha,
+            "--_expected-fingerprint", expected_fingerprint,
             "--url", url]
     for host in hosts:
         args += ["--host", host]
@@ -257,6 +260,8 @@ def isolated_worker(url: str, hosts: tuple[str, ...], seconds: float) -> dict:
             return {"outcome": "WORKER_ERROR", "status": None, "url": url,
                     "observed_at": utc_now()}
         if (not isinstance(result, dict) or result.get("url") != url
+                or result.get("checkout_sha") != expected_sha
+                or result.get("fingerprint_sha256") != expected_fingerprint
                 or result.get("outcome") not in STATUS_CODES
                 or not isinstance(result.get("observed_at"), str)):
             return {"outcome": "WORKER_ERROR", "status": None, "url": url,
@@ -698,6 +703,8 @@ def main() -> None:
     parser.add_argument("--journal", type=Path)
     parser.add_argument("--timeout", type=float, default=8.0)
     parser.add_argument("--_worker", action="store_true", help=argparse.SUPPRESS)
+    parser.add_argument("--_expected-sha", help=argparse.SUPPRESS)
+    parser.add_argument("--_expected-fingerprint", help=argparse.SUPPRESS)
     args = parser.parse_args()
     if not args.network_opt_in:
         number = selftest()
@@ -727,7 +734,12 @@ def main() -> None:
     if args._worker:
         if len(args.url) != 1:
             parser.error("worker requires exactly one selected URL")
+        if (args._expected_sha != source["checkout_sha"]
+                or args._expected_fingerprint != source["fingerprint_sha256"]):
+            parser.error("source inventory changed since parent authorization")
         result = worker_result(source, args.url[0], allowed, args.timeout)
+        result["checkout_sha"] = source["checkout_sha"]
+        result["fingerprint_sha256"] = source["fingerprint_sha256"]
         print(json.dumps(result, ensure_ascii=True, separators=(",", ":")))
         return
 
@@ -737,7 +749,9 @@ def main() -> None:
         parser.error("--journal must be outside the Git working tree")
     with RealJournal(args.journal, source, tuple(args.url)) as journal:
         for url in args.url:
-            journal.result(isolated_worker(url, tuple(sorted(allowed)), args.timeout))
+            journal.result(isolated_worker(url, tuple(sorted(allowed)), args.timeout,
+                                           source["checkout_sha"],
+                                           source["fingerprint_sha256"]))
         journal.finish()
     print("P012-LIVE-HTTPS-PROBE status=COMPLETE"
           f" urls={len(args.url)} journal={args.journal}"
