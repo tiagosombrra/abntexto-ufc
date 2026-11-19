@@ -622,11 +622,112 @@ def selftest() -> int:
             else:
                 raise AssertionError("unsafe socket peer or missing certificate accepted")
 
+    # Informational responses are not final responses; the last block must
+    # determine the actual HTTP status without fetching any body.
+    hints = FakeVerifiedTLS(
+        b"HTTP/1.1 103 Early Hints\r\nLink: </a>\r\n\r\n"
+        b"HTTP/1.1 404 Not Found\r\n\r\nEXTRA")
+    with patch.object(socket, "socket", return_value=FakeRaw()), \
+            patch.object(ssl, "create_default_context",
+                         return_value=FakeContext(hints)), \
+            patch(__name__ + ".checked_budget", return_value=2):
+        final_status, _ = exchange(target, "8.8.8.8", "HEAD", 100)
+    assert final_status == 404 and hints.data == b"EXTRA"
+    for response in (
+        b"HTTP/1.1 101 Switching Protocols\r\n\r\n",
+        b"HTTP/1.1 103 Early Hints\r\n\r\n" * (MAX_INFORMATIONAL + 1)
+        + b"HTTP/1.1 200 OK\r\n\r\n",
+    ):
+        with patch.object(socket, "socket", return_value=FakeRaw()), \
+                patch.object(ssl, "create_default_context",
+                             return_value=FakeContext(FakeVerifiedTLS(response))), \
+                patch(__name__ + ".checked_budget", return_value=2):
+            try:
+                exchange(target, "8.8.8.8", "HEAD", 100)
+            except UnsafeTarget:
+                negative += 1
+            else:
+                raise AssertionError("invalid HTTP informational chain accepted")
+
+    # A parent SIGTERM must unwind the active worker's finally block.
+    class FakeTerminatedWorker:
+        pid = 789123
+        waited = False
+        killed = False
+
+        def communicate(self, timeout):
+            assert timeout > 0
+            abort_on_sigterm(signal.SIGTERM, None)
+
+        def poll(self):
+            return None
+
+        def kill(self):
+            self.killed = True
+
+        def wait(self):
+            self.waited = True
+
+    aborted = FakeTerminatedWorker()
+    def fake_killgroup(_pid, _signal):
+        aborted.killed = True
+
+    with patch.object(subprocess, "Popen", return_value=aborted):
+        if os.name == "posix":
+            with patch.object(os, "killpg", side_effect=fake_killgroup):
+                try:
+                    isolated_worker("https://example.org/a", ("example.org",),
+                                    1.0, "a" * 40, "b" * 64)
+                except SystemExit as error:
+                    assert error.code == 128 + signal.SIGTERM
+                    negative += 1
+                else:
+                    raise AssertionError("SIGTERM did not abort the worker")
+        else:
+            try:
+                isolated_worker("https://example.org/a", ("example.org",),
+                                1.0, "a" * 40, "b" * 64)
+            except SystemExit as error:
+                assert error.code == 128 + signal.SIGTERM
+                negative += 1
+            else:
+                raise AssertionError("SIGTERM did not abort the worker")
+    assert aborted.waited and aborted.killed
+
     sample = {"schema": 1, "checkout_sha": "a" * 40,
               "fingerprint_sha256": "b" * 64, "unique_urls": 1,
               "links": [{"url": "https://example.org/a",
                          "references": [{"file": "a.md", "line": 1}]}]}
     url = "https://example.org/a"
+    # Git skip-worktree can hide edited Markdown from status; inventory must
+    # be derived from immutable HEAD objects, not this modified worktree.
+    with tempfile.TemporaryDirectory(prefix="p012-git-source-") as folder:
+        gitroot = Path(folder)
+        subprocess.run(["git", "init", "-q"], cwd=gitroot, check=True)
+        document = gitroot / "a.md"
+        document.write_text("[old](https://example.org/original)\n",
+                            encoding="utf-8")
+        subprocess.run(["git", "add", "a.md"], cwd=gitroot, check=True)
+        subprocess.run(["git", "-c", "user.name=Fixture",
+                        "-c", "user.email=fixture@example.invalid",
+                        "-c", "commit.gpgsign=false", "commit", "-q",
+                        "-m", "source fixture"], cwd=gitroot, check=True)
+        subprocess.run(["git", "update-index", "--skip-worktree", "a.md"],
+                       cwd=gitroot, check=True)
+        document.write_text("[changed](https://example.org/forged)\n",
+                            encoding="utf-8")
+        assert not subprocess.check_output(
+            ["git", "status", "--porcelain=v1", "-z"], cwd=gitroot)
+        original = trusted_source_inventory(gitroot)
+        choose_inventory_url(original, "https://example.org/original",
+                             frozenset({"example.org"}))
+        try:
+            choose_inventory_url(original, "https://example.org/forged",
+                                 frozenset({"example.org"}))
+        except UnsafeTarget:
+            negative += 1
+        else:
+            raise AssertionError("skip-worktree mutated link spoofed Git HEAD")
     require_source_identity(sample, "a" * 40, "b" * 64)
     for mismatch_sha, mismatch_fingerprint in (
         ("f" * 40, "b" * 64), ("a" * 40, "f" * 64),
