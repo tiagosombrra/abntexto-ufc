@@ -118,6 +118,14 @@ def classify(status: int) -> str:
     return "HTTP_OTHER"
 
 
+def _remaining_as_timeout(deadline: Deadline, now: float) -> float:
+    """Classify an expired total deadline as timeout, not unsafe routing."""
+    try:
+        return deadline.remaining(now)
+    except UnsafeTarget as error:
+        raise TimeoutError("simulated total deadline exhausted") from error
+
+
 def inspect_route_simulation(
     receipt: dict, url: str, allowed_hosts: frozenset[str],
     resolve: Callable[[str], tuple[str, ...]],
@@ -138,15 +146,15 @@ def inspect_route_simulation(
             if target.url in seen:
                 raise UnsafeTarget("redirect cycle")
             seen.append(target.url)
-            budget.remaining(clock())
+            _remaining_as_timeout(budget, clock())
             answers = resolve(target.hostname)
             pinned = bind_public_addresses(target, answers)
             # A later socket implementation MUST use this pinned numeric IP,
             # not the hostname or a client that resolves the name again.
             chosen_ip = pinned.public_ips[0]
             proof = simulated_connect(target.hostname, chosen_ip,
-                                      budget.remaining(clock()))
-            budget.remaining(clock())
+                                      _remaining_as_timeout(budget, clock()))
+            _remaining_as_timeout(budget, clock())
             status, headers = inspect_proof(proof, target, chosen_ip)
             if 300 <= status <= 399:
                 if hop >= MAX_HOPS:
