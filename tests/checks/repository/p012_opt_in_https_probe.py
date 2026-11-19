@@ -804,6 +804,67 @@ def selftest() -> int:
             signal.signal(signal.SIGTERM, previous_handler)
         assert signal.pthread_sigmask(signal.SIG_BLOCK, set()) == initial_mask
 
+        # Ctrl+C delivered during Popen is also deferred until the child is
+        # safely assigned and protected by the parent's cleanup block.
+        aborted = FakeTerminatedWorker()
+        def interrupt_during_spawn(*_args, **_kwargs):
+            current = signal.pthread_sigmask(signal.SIG_BLOCK, set())
+            assert signal.SIGINT in current
+            os.kill(os.getpid(), signal.SIGINT)
+            return aborted
+
+        previous_handler = signal.signal(signal.SIGINT, abort_on_sigint)
+        try:
+            with patch.object(subprocess, "Popen",
+                              side_effect=interrupt_during_spawn), \
+                    patch.object(os, "killpg", side_effect=fake_killgroup):
+                try:
+                    isolated_worker("https://example.org/a", ("example.org",),
+                                    1.0, "a" * 40, "b" * 64)
+                except KeyboardInterrupt:
+                    negative += 1
+                else:
+                    raise AssertionError("SIGINT spawn race was not caught")
+            assert aborted.killed and aborted.waited
+        finally:
+            signal.signal(signal.SIGINT, previous_handler)
+        assert signal.pthread_sigmask(signal.SIG_BLOCK, set()) == initial_mask
+
+        # A second SIGINT at cleanup entry cannot interrupt worker reaping.
+        class FakeInterruptedWorker(FakeTerminatedWorker):
+            def communicate(self, timeout):
+                assert timeout > 0
+                abort_on_sigint(signal.SIGINT, None)
+
+        aborted = FakeInterruptedWorker()
+        unpatched_mask = signal.pthread_sigmask
+        blocked_calls = [0]
+        def repeat_int_at_cleanup(how, mask):
+            if how == signal.SIG_BLOCK and signal.SIGINT in mask:
+                blocked_calls[0] += 1
+                if blocked_calls[0] == 2:
+                    assert signal.getsignal(signal.SIGINT) == signal.SIG_IGN
+                    os.kill(os.getpid(), signal.SIGINT)
+            return unpatched_mask(how, mask)
+
+        previous_handler = signal.signal(signal.SIGINT, abort_on_sigint)
+        try:
+            with patch.object(subprocess, "Popen", return_value=aborted), \
+                    patch.object(os, "killpg", side_effect=fake_killgroup), \
+                    patch.object(signal, "pthread_sigmask",
+                                 side_effect=repeat_int_at_cleanup):
+                try:
+                    isolated_worker("https://example.org/a", ("example.org",),
+                                    1.0, "a" * 40, "b" * 64)
+                except KeyboardInterrupt:
+                    negative += 1
+                else:
+                    raise AssertionError("repeated SIGINT bypassed cleanup")
+            assert blocked_calls[0] == 2 and aborted.killed and aborted.waited
+        finally:
+            signal.signal(signal.SIGINT, previous_handler)
+        assert signal.pthread_sigmask(signal.SIG_BLOCK, set()) == initial_mask
+
     sample = {"schema": 1, "checkout_sha": "a" * 40,
               "fingerprint_sha256": "b" * 64, "unique_urls": 1,
               "links": [{"url": "https://example.org/a",
