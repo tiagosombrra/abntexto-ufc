@@ -22,7 +22,7 @@ from pathlib import Path
 
 # Isolated fixture processes (-I) omit the script directory from sys.path.
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from p012_probe_security_policy import UnsafeTarget, receipt_urls
+from p012_probe_security_policy import HEX40, HEX64, UnsafeTarget, receipt_urls
 
 SCHEMA = 1
 MAX_RECORD_BYTES = 16384
@@ -61,8 +61,10 @@ class Journal:
 
     def __init__(self, path: Path, inventory: dict, selected: tuple[str, ...]):
         known_urls = receipt_urls(inventory)
-        if not selected or len(selected) != len(set(selected)):
-            raise UnsafeTarget("selection must be nonempty and unique")
+        if (not isinstance(selected, tuple) or not selected
+                or any(not isinstance(url, str) for url in selected)
+                or len(selected) != len(set(selected))):
+            raise UnsafeTarget("selection must contain unique URL strings")
         if not set(selected).issubset(known_urls):
             raise UnsafeTarget("selection includes a URL not in the inventory")
         self.path = path
@@ -104,7 +106,8 @@ class Journal:
         """Persist one outcome before advancing to another URL."""
         if url not in self.selected or url in self.completed:
             raise UnsafeTarget("result URL absent or already recorded")
-        if simulated_outcome not in SIMULATIONS:
+        if (not isinstance(simulated_outcome, str)
+                or simulated_outcome not in SIMULATIONS):
             raise UnsafeTarget("only explicit simulated outcomes are allowed")
         self._append({
             "kind": "result", "url": url, "outcome": simulated_outcome,
@@ -166,8 +169,12 @@ def inspect(path: Path) -> dict:
     first = entries[0]
     if first.get("schema") != SCHEMA or first.get("mode") != "SIMULATED_ONLY":
         raise UnsafeTarget("unknown journal schema or evidence mode")
+    if (not HEX40.fullmatch(str(first.get("checkout_sha", "")))
+            or not HEX64.fullmatch(str(first.get("fingerprint_sha256", "")))):
+        raise UnsafeTarget("journal is missing its source-bound inventory identity")
     selected = first.get("selected_urls")
     if (not isinstance(selected, list) or not selected
+            or any(not isinstance(url, str) for url in selected)
             or selected != sorted(set(selected))):
         raise UnsafeTarget("invalid journal selection")
     completed: set[str] = set()
@@ -177,8 +184,9 @@ def inspect(path: Path) -> dict:
             raise UnsafeTarget("entries after journal finish")
         if entry.get("kind") == "result":
             url = entry.get("url")
-            if (url not in selected or url in completed
-                    or entry.get("outcome") not in SIMULATIONS
+            outcome = entry.get("outcome")
+            if (not isinstance(url, str) or url not in selected or url in completed
+                    or not isinstance(outcome, str) or outcome not in SIMULATIONS
                     or entry.get("network") != "NOT_EXECUTED"):
                 raise UnsafeTarget("unrecognized or duplicated simulated result")
             completed.add(url)
@@ -259,6 +267,12 @@ def selftest() -> None:
                 pass
             else:
                 raise AssertionError("duplicate result unexpectedly accepted")
+            try:
+                journal.record(urls[1], ["SIMULATED_OK"])
+            except UnsafeTarget:
+                pass
+            else:
+                raise AssertionError("non-string result was not rejected")
             journal.record(urls[1], "SIMULATED_TIMEOUT")
             journal.finish()
         completed = inspect(receipt)
@@ -285,6 +299,28 @@ def selftest() -> None:
         else:
             raise AssertionError("URL outside inventory unexpectedly accepted")
         assert not other.exists()
+        # Reject malformed journal metadata and type-confused selections.
+        bad = root / "invalid-selection.jsonl"
+        invalid = {"kind": "start", "schema": SCHEMA, "mode": "SIMULATED_ONLY",
+                   "sequence": 0, "previous_sha256": ZERO_SHA,
+                   "checkout_sha": "a" * 40, "fingerprint_sha256": "b" * 64,
+                   "selected_urls": [[1]]}
+        bad.write_bytes(_encode(invalid))
+        try:
+            inspect(bad)
+        except UnsafeTarget:
+            pass
+        else:
+            raise AssertionError("nested URL selection was accepted")
+        invalid["selected_urls"] = list(urls)
+        invalid.pop("checkout_sha")
+        bad.write_bytes(_encode(invalid))
+        try:
+            inspect(bad)
+        except UnsafeTarget:
+            pass
+        else:
+            raise AssertionError("missing source SHA was accepted")
         assert fixture_worker("pass", 5) == "SIMULATED_OK"
         assert fixture_worker("fail", 5) == "SIMULATED_UNSAFE"
         assert fixture_worker("sleep", 0.1) == "SIMULATED_TIMEOUT"
