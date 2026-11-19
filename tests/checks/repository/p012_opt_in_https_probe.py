@@ -79,10 +79,10 @@ def trusted_source_inventory(root: Path = ROOT) -> dict:
     allow an edited Markdown file to evade status while HEAD stays constant.
     """
     head = subprocess.check_output(
-        ["git", "rev-parse", "HEAD"], cwd=root, text=True,
+        ["git", "--no-replace-objects", "rev-parse", "HEAD"], cwd=root, text=True,
     ).strip()
     raw_tree = subprocess.check_output(
-        ["git", "ls-tree", "-r", "--name-only", "-z", head], cwd=root,
+        ["git", "--no-replace-objects", "ls-tree", "-r", "--name-only", "-z", head], cwd=root,
     )
     documents = []
     for raw_path in raw_tree.split(b"\0"):
@@ -107,7 +107,7 @@ def trusted_source_inventory(root: Path = ROOT) -> dict:
         for path in documents:
             # git show reads the pinned commit object, never skip-worktree bytes.
             content = subprocess.check_output(
-                ["git", "show", head + ":" + path.as_posix()], cwd=root,
+                ["git", "--no-replace-objects", "show", head + ":" + path.as_posix()], cwd=root,
             )
             destination = snapshot_root / path
             destination.parent.mkdir(parents=True, exist_ok=True)
@@ -728,6 +728,29 @@ def selftest() -> int:
             negative += 1
         else:
             raise AssertionError("skip-worktree mutated link spoofed Git HEAD")
+        # Git replace refs can also rewrite a blob without changing HEAD SHA.
+        old_blob = subprocess.check_output(
+            ["git", "--no-replace-objects", "rev-parse", "HEAD:a.md"],
+            cwd=gitroot, text=True).strip()
+        replacement_blob = subprocess.check_output(
+            ["git", "hash-object", "-w", "--stdin"], cwd=gitroot,
+            input=b"[replaced](https://example.org/replaced)\n",
+        ).decode("ascii").strip()
+        subprocess.run(["git", "replace", old_blob, replacement_blob],
+                       cwd=gitroot, check=True)
+        unprotected = subprocess.check_output(
+            ["git", "show", "HEAD:a.md"], cwd=gitroot)
+        assert b"https://example.org/replaced" in unprotected
+        protected = trusted_source_inventory(gitroot)
+        choose_inventory_url(protected, "https://example.org/original",
+                             frozenset({"example.org"}))
+        try:
+            choose_inventory_url(protected, "https://example.org/replaced",
+                                 frozenset({"example.org"}))
+        except UnsafeTarget:
+            negative += 1
+        else:
+            raise AssertionError("Git replace ref spoofed the original HEAD")
     require_source_identity(sample, "a" * 40, "b" * 64)
     for mismatch_sha, mismatch_fingerprint in (
         ("f" * 40, "b" * 64), ("a" * 40, "f" * 64),
