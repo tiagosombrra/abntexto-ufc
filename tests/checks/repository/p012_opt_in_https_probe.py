@@ -28,7 +28,7 @@ from urllib.parse import urlsplit
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from p012_pinned_tls_contract import HopProof, classify, inspect_proof
-from p012_probe_journal import ZERO_SHA, _encode, _safe_fd, _sync_directory
+from p012_probe_journal import MAX_RECORD_BYTES, ZERO_SHA, _encode, _safe_fd, _sync_directory
 from p012_probe_security_policy import (
     Deadline, UnsafeTarget, _host, bind_public_addresses, choose_inventory_url,
     follow_redirect,
@@ -275,6 +275,9 @@ class RealJournal:
     """Exclusive-create, fsynced REAL_HTTP records, not simulated receipts."""
 
     def __init__(self, path: Path, receipt: dict, urls: tuple[str, ...]):
+        if (not urls or len(urls) != len(set(urls))
+                or any(not isinstance(url, str) for url in urls)):
+            raise UnsafeTarget("journal selection must contain unique URLs")
         self.fd = _safe_fd(path)
         self.previous = ZERO_SHA
         self.count = 0
@@ -282,6 +285,7 @@ class RealJournal:
         self.finished = False
         self.receipt = receipt
         self.urls = urls
+        self.completed: set[str] = set()
         try:
             self.append({"kind": "start", "schema": SCHEMA, "mode": "REAL_HTTP",
                          "checkout_sha": receipt["checkout_sha"],
@@ -310,14 +314,22 @@ class RealJournal:
         self.count += 1
 
     def result(self, outcome: dict) -> None:
-        if outcome.get("outcome") not in STATUS_CODES:
+        if not isinstance(outcome, dict) or outcome.get("outcome") not in STATUS_CODES:
             raise UnsafeTarget("not an approved REAL_HTTP result")
-        if outcome.get("url") not in self.urls:
-            raise UnsafeTarget("result not selected from the inventory")
+        url = outcome.get("url")
+        if not isinstance(url, str) or url not in self.urls or url in self.completed:
+            raise UnsafeTarget("result not selected, or URL already completed")
+        if (not isinstance(outcome.get("observed_at"), str)
+                or outcome.get("status") is not None
+                and (type(outcome["status"]) is not int or not 100 <= outcome["status"] <= 599)):
+            raise UnsafeTarget("invalid result timestamp or status")
         self.append({"kind": "result", **outcome})
+        self.completed.add(url)
 
     def finish(self) -> None:
-        self.append({"kind": "finish", "completed": self.count - 1,
+        if self.completed != set(self.urls):
+            raise UnsafeTarget("incomplete URL journal cannot be finalized")
+        self.append({"kind": "finish", "completed": len(self.completed),
                      "finished_at": utc_now()})
         self.finished = True
 
@@ -331,6 +343,79 @@ class RealJournal:
 
     def __exit__(self, *_exc):
         self.close()
+
+
+def inspect_real_journal(path: Path) -> dict:
+    """Verify every complete JSONL record; preserve partial but report torn tails."""
+    entries = []
+    previous = ZERO_SHA
+    torn_tail = False
+    with path.open("rb") as handle:
+        while True:
+            raw = handle.readline(MAX_RECORD_BYTES + 1)
+            if not raw:
+                break
+            if len(raw) > MAX_RECORD_BYTES:
+                raise UnsafeTarget("overlong REAL_HTTP journal line")
+            if not raw.endswith(b"\n"):
+                torn_tail = True
+                break
+            try:
+                entry = json.loads(raw)
+            except (UnicodeDecodeError, json.JSONDecodeError) as error:
+                raise UnsafeTarget("corrupt complete REAL_HTTP journal entry") from error
+            if not isinstance(entry, dict):
+                raise UnsafeTarget("invalid REAL_HTTP journal entry type")
+            checksum = entry.get("record_sha256")
+            unsigned = {key: val for key, val in entry.items()
+                        if key != "record_sha256"}
+            if (not isinstance(checksum, str)
+                    or hashlib.sha256(_encode(unsigned)).hexdigest() != checksum
+                    or entry.get("sequence") != len(entries)
+                    or entry.get("previous_sha256") != previous):
+                raise UnsafeTarget("REAL_HTTP journal checksum or chain mismatch")
+            previous = hashlib.sha256(raw).hexdigest()
+            entries.append(entry)
+    if not entries or entries[0].get("kind") != "start":
+        raise UnsafeTarget("REAL_HTTP journal has no start receipt")
+    start = entries[0]
+    if (start.get("schema") != SCHEMA or start.get("mode") != "REAL_HTTP"
+            or not isinstance(start.get("checkout_sha"), str)
+            or len(start["checkout_sha"]) != 40
+            or not isinstance(start.get("fingerprint_sha256"), str)
+            or len(start["fingerprint_sha256"]) != 64):
+        raise UnsafeTarget("unsupported or source-unbound REAL_HTTP journal")
+    urls = start.get("urls")
+    if (not isinstance(urls, list) or not urls
+            or any(not isinstance(url, str) for url in urls)
+            or len(set(urls)) != len(urls)):
+        raise UnsafeTarget("invalid REAL_HTTP URL selection")
+    completed = set()
+    finished = False
+    for entry in entries[1:]:
+        if finished:
+            raise UnsafeTarget("unexpected event after REAL_HTTP finish")
+        if entry.get("kind") == "result":
+            url = entry.get("url")
+            outcome = entry.get("outcome")
+            if (not isinstance(url, str) or url not in urls or url in completed
+                    or not isinstance(outcome, str) or outcome not in STATUS_CODES):
+                raise UnsafeTarget("invalid or duplicated REAL_HTTP URL result")
+            completed.add(url)
+        elif entry.get("kind") == "finish":
+            if completed != set(urls) or entry.get("completed") != len(completed):
+                raise UnsafeTarget("premature REAL_HTTP finish")
+            finished = True
+        else:
+            raise UnsafeTarget("invalid REAL_HTTP journal event")
+    if torn_tail and finished:
+        raise UnsafeTarget("unexpected torn data following completed journal")
+    return {"state": "COMPLETE" if finished else "PARTIAL",
+            "integrity": "TRUNCATED_TAIL" if torn_tail else "CHAIN_OK",
+            "recorded": len(completed), "selected": len(urls),
+            "checkout_sha": start["checkout_sha"],
+            "fingerprint_sha256": start["fingerprint_sha256"]}
+
 
 
 def selftest() -> int:
@@ -386,7 +471,31 @@ def selftest() -> int:
             assert b'"mode":"REAL_HTTP"' in saved
             assert b'"outcome":"TIMEOUT"' in saved
             assert b'"record_sha256"' in saved
+            assert inspect_real_journal(file)["state"] == "PARTIAL"
+            try:
+                journal.result({"url": url, "outcome": "TIMEOUT",
+                                "status": None, "observed_at": utc_now()})
+            except UnsafeTarget:
+                negative += 1
+            else:
+                raise AssertionError("duplicate REAL_HTTP receipt accepted")
             journal.finish()
+        assert inspect_real_journal(file)["state"] == "COMPLETE"
+        last = file.read_bytes()
+        tampered = Path(directory) / "tampered.jsonl"
+        tampered.write_bytes(last.replace(b'"outcome":"TIMEOUT"',
+                                          b'"outcome":"GONE"', 1))
+        try:
+            inspect_real_journal(tampered)
+        except UnsafeTarget:
+            negative += 1
+        else:
+            raise AssertionError("mutated REAL_HTTP receipt accepted")
+        partial = Path(directory) / "interrupted.jsonl"
+        partial.write_bytes(b"".join(last.splitlines(keepends=True)[:2]))
+        assert inspect_real_journal(partial)["state"] == "PARTIAL"
+        partial.write_bytes(partial.read_bytes() + b'{"kind":"result",')
+        assert inspect_real_journal(partial)["integrity"] == "TRUNCATED_TAIL"
         try:
             RealJournal(file, sample, (url,))
         except FileExistsError:
@@ -421,7 +530,8 @@ def main() -> None:
         number = selftest()
         print("P012-LIVE-HTTPS-TRANSPORT-EVIDENCE status=PASS"
               f" negative_cases={number} offline_default=PASS"
-              " simulated_reader=PASS journal=LOCAL_ONLY network=0"
+              " simulated_reader=PASS journal=LOCAL_ONLY"
+          " journal_partial=PASS record_integrity=PASS network=0"
               " dns=NOT_EXECUTED tls=NOT_EXECUTED http=NOT_EXECUTED"
               " live_security_review=PENDING release_authorization=NONE")
         return
