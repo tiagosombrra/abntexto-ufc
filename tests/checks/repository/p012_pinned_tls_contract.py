@@ -20,7 +20,7 @@ from p012_probe_security_policy import (
 
 MAX_HEADER_BYTES = 8192
 MAX_HOPS = 3
-STATUS_LINE = re.compile(rb"HTTP/1\.[01] ([1-5][0-9][0-9])(?: [^\r\n]*)?\r\n")
+STATUS_LINE = re.compile(rb"HTTP/1\.[01] ([1-5][0-9][0-9])(?: [\x20-\x7e]*)?\r\n")
 HEADER_NAME = re.compile(rb"[!#$%&'*+\-.^_`|~0-9A-Za-z]+")
 SUCCESS_STATUSES = frozenset(range(200, 300))
 
@@ -261,6 +261,11 @@ def selftest() -> int:
         ("header_bytes", b"HTTP/1.1 200 OK\r\nA: " + b"x" * 9000 + b"\r\n\r\n"),
         ("header_bytes", b"HTTP/1.1 302 Found\r\nLocation: /x\r\nLocation: /y\r\n\r\n"),
         ("header_bytes", b"HTTP/1.1 302 Found\r\n\r\nLocation: /body-not-header\r\n\r\n"),
+        # The reason phrase must not accept control bytes, DEL, TAB or non-ASCII.
+        ("header_bytes", b"HTTP/1.1 200 OK\x01\r\n\r\n"),
+        ("header_bytes", b"HTTP/1.1 200 OK\x7f\r\n\r\n"),
+        ("header_bytes", b"HTTP/1.1 200 OK\tbad\r\n\r\n"),
+        ("header_bytes", b"HTTP/1.1 200 OK\x80\r\n\r\n"),
         ("header_bytes", b"HTTP/1.1 200 OK\r\nBad header\r\n\r\n"),
     ):
         edits["example.org"] = {property_name: value}
