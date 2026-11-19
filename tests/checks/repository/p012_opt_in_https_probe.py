@@ -287,7 +287,7 @@ def abort_on_sigterm(signum: int, _frame: object) -> None:
 
 def isolated_worker(url: str, hosts: tuple[str, ...], seconds: float,
                     expected_sha: str, expected_fingerprint: str) -> dict:
-    """Hard-stop a worker even when DNS or TLS blocks without a socket timeout."""
+    """Run one URL in a child whose entire lifecycle is guarded by the parent."""
     args = [sys.executable, "-I", str(Path(__file__).resolve()),
             "--_worker", "--network-opt-in", "--timeout", str(seconds),
             "--_expected-sha", expected_sha,
@@ -295,20 +295,34 @@ def isolated_worker(url: str, hosts: tuple[str, ...], seconds: float,
             "--url", url]
     for host in hosts:
         args += ["--host", host]
-    # No proxy, SSL_CERT_FILE, PYTHONPATH or user-supplied environment is inherited.
+    # The child inherits no proxy or user-supplied trust-store variables.
     environment = {"PYTHONDONTWRITEBYTECODE": "1"}
     use_session = os.name == "posix"
     deadline = time.monotonic() + seconds
+    process = None
+    previous_mask = None
     try:
-        process = subprocess.Popen(
-            args, cwd=ROOT, stdin=subprocess.DEVNULL, stdout=subprocess.PIPE,
-            stderr=subprocess.DEVNULL, env=environment, close_fds=True,
-            start_new_session=use_session,
-        )
-    except OSError:
-        return {"outcome": "WORKER_ERROR", "status": None, "url": url,
-                "observed_at": utc_now()}
-    try:
+        if use_session:
+            if not hasattr(signal, "pthread_sigmask"):
+                raise UnsafeTarget("SIGTERM-safe POSIX worker launch unavailable")
+            # Block SIGTERM BEFORE spawning and until process is guarded by
+            # this outer try/finally. The child unblocks it at entry.
+            previous_mask = signal.pthread_sigmask(
+                signal.SIG_BLOCK, {signal.SIGTERM})
+        try:
+            process = subprocess.Popen(
+                args, cwd=ROOT, stdin=subprocess.DEVNULL, stdout=subprocess.PIPE,
+                stderr=subprocess.DEVNULL, env=environment, close_fds=True,
+                start_new_session=use_session,
+            )
+        except OSError:
+            return {"outcome": "WORKER_ERROR", "status": None, "url": url,
+                    "observed_at": utc_now()}
+        if previous_mask is not None:
+            # Any pending SIGTERM is delivered inside the protected try,
+            # so the finally below still kills and reaps the worker.
+            signal.pthread_sigmask(signal.SIG_SETMASK, previous_mask)
+            previous_mask = None
         try:
             out, _ = process.communicate(
                 timeout=max(.001, deadline - time.monotonic()))
@@ -332,16 +346,28 @@ def isolated_worker(url: str, hosts: tuple[str, ...], seconds: float,
                     "observed_at": utc_now()}
         return result
     finally:
-        if process.poll() is None:
-            try:
-                if use_session:
-                    os.killpg(process.pid, signal.SIGKILL)
-                else:
-                    process.kill()
-            except ProcessLookupError:
-                # The child can exit between poll and the termination signal.
-                pass
-        process.wait()
+        cleanup_mask = None
+        if use_session and hasattr(signal, "pthread_sigmask"):
+            # Repeated SIGTERM must not interrupt killpg()/wait() cleanup.
+            cleanup_mask = signal.pthread_sigmask(
+                signal.SIG_BLOCK, {signal.SIGTERM})
+        try:
+            if process is not None:
+                if process.poll() is None:
+                    try:
+                        if use_session:
+                            os.killpg(process.pid, signal.SIGKILL)
+                        else:
+                            process.kill()
+                    except ProcessLookupError:
+                        # The process might have exited between poll and kill.
+                        pass
+                process.wait()
+        finally:
+            if cleanup_mask is not None:
+                signal.pthread_sigmask(
+                    signal.SIG_SETMASK,
+                    previous_mask if previous_mask is not None else cleanup_mask)
 
 
 class RealJournal:
@@ -945,6 +971,9 @@ def main() -> None:
         parser.error(f"inventory or host validation failed: {error}")
 
     if args._worker:
+        if os.name == "posix" and hasattr(signal, "pthread_sigmask"):
+            # The parent intentionally masks SIGTERM across child creation.
+            signal.pthread_sigmask(signal.SIG_UNBLOCK, {signal.SIGTERM})
         if len(args.url) != 1:
             parser.error("worker requires exactly one selected URL")
         try:
