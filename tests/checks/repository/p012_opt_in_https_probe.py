@@ -87,6 +87,13 @@ def trusted_source_inventory() -> dict:
     return links
 
 
+def require_source_identity(receipt: dict, sha: str, fingerprint: str) -> None:
+    """Ensure a worker cannot silently switch the selected source snapshot."""
+    if (receipt.get("checkout_sha") != sha
+            or receipt.get("fingerprint_sha256") != fingerprint):
+        raise UnsafeTarget("source SHA or inventory fingerprint changed")
+
+
 def resolve_all(hostname: str) -> tuple[str, ...]:
     """Obtain all addresses; the parent worker timeout bounds slow DNS."""
     try:
@@ -559,6 +566,16 @@ def selftest() -> int:
               "links": [{"url": "https://example.org/a",
                          "references": [{"file": "a.md", "line": 1}]}]}
     url = "https://example.org/a"
+    require_source_identity(sample, "a" * 40, "b" * 64)
+    for mismatch_sha, mismatch_fingerprint in (
+        ("f" * 40, "b" * 64), ("a" * 40, "f" * 64),
+    ):
+        try:
+            require_source_identity(sample, mismatch_sha, mismatch_fingerprint)
+        except UnsafeTarget:
+            negative += 1
+        else:
+            raise AssertionError("changed inventory identity passed worker admission")
 
     # Exercise the real orchestration logic with fully injected fake DNS and
     # exchange functions: no operating-system resolver or network is called.
@@ -734,9 +751,11 @@ def main() -> None:
     if args._worker:
         if len(args.url) != 1:
             parser.error("worker requires exactly one selected URL")
-        if (args._expected_sha != source["checkout_sha"]
-                or args._expected_fingerprint != source["fingerprint_sha256"]):
-            parser.error("source inventory changed since parent authorization")
+        try:
+            require_source_identity(source, args._expected_sha,
+                                    args._expected_fingerprint)
+        except UnsafeTarget as error:
+            parser.error(str(error))
         result = worker_result(source, args.url[0], allowed, args.timeout)
         result["checkout_sha"] = source["checkout_sha"]
         result["fingerprint_sha256"] = source["fingerprint_sha256"]
