@@ -248,11 +248,15 @@ def isolated_worker(url: str, hosts: tuple[str, ...], seconds: float,
     environment = {"PYTHONDONTWRITEBYTECODE": "1"}
     use_session = os.name == "posix"
     deadline = time.monotonic() + seconds
-    process = subprocess.Popen(
-        args, cwd=ROOT, stdin=subprocess.DEVNULL, stdout=subprocess.PIPE,
-        stderr=subprocess.DEVNULL, env=environment, close_fds=True,
-        start_new_session=use_session,
-    )
+    try:
+        process = subprocess.Popen(
+            args, cwd=ROOT, stdin=subprocess.DEVNULL, stdout=subprocess.PIPE,
+            stderr=subprocess.DEVNULL, env=environment, close_fds=True,
+            start_new_session=use_session,
+        )
+    except OSError:
+        return {"outcome": "WORKER_ERROR", "status": None, "url": url,
+                "observed_at": utc_now()}
     try:
         try:
             out, _ = process.communicate(
@@ -278,10 +282,14 @@ def isolated_worker(url: str, hosts: tuple[str, ...], seconds: float,
         return result
     finally:
         if process.poll() is None:
-            if use_session:
-                os.killpg(process.pid, signal.SIGKILL)
-            else:
-                process.kill()
+            try:
+                if use_session:
+                    os.killpg(process.pid, signal.SIGKILL)
+                else:
+                    process.kill()
+            except ProcessLookupError:
+                # The child can exit between poll and the termination signal.
+                pass
         process.wait()
 
 
