@@ -24,6 +24,9 @@ from datetime import datetime, timezone
 from pathlib import Path
 from urllib.parse import urlsplit
 
+# Python -I excludes the script directory; resolve only the trusted local module dir.
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
 from p012_pinned_tls_contract import HopProof, classify, inspect_proof
 from p012_probe_journal import ZERO_SHA, _encode, _safe_fd, _sync_directory
 from p012_probe_security_policy import (
@@ -52,7 +55,10 @@ def utc_now() -> str:
 
 def checked_budget(deadline: float) -> float:
     """Use a single monotonic budget across all socket/TLS operations."""
-    left = Deadline(deadline).remaining(time.monotonic())
+    try:
+        left = Deadline(deadline).remaining(time.monotonic())
+    except UnsafeTarget as error:
+        raise TimeoutError("per-URL monotonic deadline exhausted") from error
     return min(left, 10.0)
 
 
@@ -68,7 +74,7 @@ def validated_ip(value: str) -> str:
 def trusted_source_inventory() -> dict:
     """Recompute inventory from a clean tracked working tree at actual HEAD."""
     dirty = subprocess.check_output(
-        ["git", "status", "--porcelain=v1", "-z", "--untracked-files=no"],
+        ["git", "status", "--porcelain=v1", "-z", "--untracked-files=all"],
         cwd=ROOT,
     )
     if dirty:
