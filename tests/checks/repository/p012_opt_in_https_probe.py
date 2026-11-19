@@ -280,6 +280,11 @@ def worker_result(receipt: dict, url: str, allowed: frozenset[str],
     return result
 
 
+def abort_on_sigterm(signum: int, _frame: object) -> None:
+    """Raise through Python finally blocks so child groups are terminated."""
+    raise SystemExit(128 + signum)
+
+
 def isolated_worker(url: str, hosts: tuple[str, ...], seconds: float,
                     expected_sha: str, expected_fingerprint: str) -> dict:
     """Hard-stop a worker even when DNS or TLS blocks without a socket timeout."""
@@ -833,12 +838,17 @@ def main() -> None:
         parser.error("--journal must be a new absolute path")
     if args.journal.resolve().is_relative_to(Path(ROOT).resolve()):
         parser.error("--journal must be outside the Git working tree")
-    with RealJournal(args.journal, source, tuple(args.url)) as journal:
-        for url in args.url:
-            journal.result(isolated_worker(url, tuple(sorted(allowed)), args.timeout,
-                                           source["checkout_sha"],
-                                           source["fingerprint_sha256"]))
-        journal.finish()
+    previous_term = signal.getsignal(signal.SIGTERM)
+    signal.signal(signal.SIGTERM, abort_on_sigterm)
+    try:
+        with RealJournal(args.journal, source, tuple(args.url)) as journal:
+            for url in args.url:
+                journal.result(isolated_worker(
+                    url, tuple(sorted(allowed)), args.timeout,
+                    source["checkout_sha"], source["fingerprint_sha256"]))
+            journal.finish()
+    finally:
+        signal.signal(signal.SIGTERM, previous_term)
     print("P012-LIVE-HTTPS-PROBE status=COMPLETE"
           f" urls={len(args.url)} journal={args.journal}"
           " source_bound=RECOMPUTED_FROM_CLEAN_GIT_CHECKOUT"
