@@ -44,6 +44,7 @@ SOURCE_CHECK_NAMES = (
     "p012_pages_asset_graph.py",
     "p012_probe_security_policy.py",  # Offline-only security preflight; no HTTP transport.
     "p012_probe_journal.py",  # Offline simulated receipts and killable local fixtures.
+    "p012_pinned_tls_contract.py",  # Fake-only pinned-IP/TLS/redirect contract; no sockets.
 )
 
 # Resolved repository-relative paths remain exported for integrity/audit tooling.
