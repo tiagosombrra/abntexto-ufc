@@ -45,6 +45,7 @@ SOURCE_CHECK_NAMES = (
     "p012_probe_security_policy.py",  # Offline-only security preflight; no HTTP transport.
     "p012_probe_journal.py",  # Offline simulated receipts and killable local fixtures.
     "p012_pinned_tls_contract.py",  # Fake-only pinned-IP/TLS/redirect contract; no sockets.
+    "p012_opt_in_https_probe.py",  # Offline defaults; live transport only by explicit CLI opt-in.
 )
 
 # Resolved repository-relative paths remain exported for integrity/audit tooling.
