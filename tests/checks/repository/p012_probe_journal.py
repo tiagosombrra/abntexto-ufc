@@ -43,6 +43,21 @@ def _encode(entry: dict) -> bytes:
     return data
 
 
+def _sync_directory(path: Path) -> None:
+    """Durably persist the directory entry on POSIX, or fail closed."""
+    if os.name != "posix":
+        # Directory fsync is not portable to Windows; do not claim power-loss guarantees.
+        return
+    flags = os.O_RDONLY | getattr(os, "O_DIRECTORY", 0)
+    if hasattr(os, "O_NOFOLLOW"):
+        flags |= os.O_NOFOLLOW
+    fd = os.open(path.parent, flags)
+    try:
+        os.fsync(fd)
+    finally:
+        os.close(fd)
+
+
 def _safe_fd(path: Path) -> int:
     """Create a new private receipt, refusing overwrite and symbolic links."""
     flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL
@@ -82,6 +97,8 @@ class Journal:
                 "selected_urls": self.selected,
                 "started_at": observed_at(),
             })
+            # File fsync alone does not durably create its directory entry.
+            _sync_directory(path)
         except BaseException:
             os.close(self.fd)
             self.closed = True
@@ -91,7 +108,9 @@ class Journal:
         if self.closed:
             raise UnsafeTarget("journal is closed")
         payload = {**record, "sequence": self.sequence, "previous_sha256": self.previous}
-        data = _encode(payload)
+        # Each complete entry carries its own checksum, including a last partial result.
+        checksum = hashlib.sha256(_encode(payload)).hexdigest()
+        data = _encode({**payload, "record_sha256": checksum})
         remaining = memoryview(data)
         while remaining:
             written = os.write(self.fd, remaining)
@@ -159,6 +178,13 @@ def inspect(path: Path) -> dict:
                 raise UnsafeTarget("corrupt complete journal record") from error
             if not isinstance(record, dict):
                 raise UnsafeTarget("journal record is not an object")
+            stored_checksum = record.get("record_sha256")
+            unsigned = {key: value for key, value in record.items()
+                        if key != "record_sha256"}
+            if (not isinstance(stored_checksum, str)
+                    or len(stored_checksum) != 64
+                    or hashlib.sha256(_encode(unsigned)).hexdigest() != stored_checksum):
+                raise UnsafeTarget("journal record checksum mismatch")
             if (record.get("sequence") != len(entries)
                     or record.get("previous_sha256") != previous):
                 raise UnsafeTarget("journal chain mismatch")
@@ -291,6 +317,18 @@ def selftest() -> None:
             pass
         else:
             raise AssertionError("hash-chained tampering unexpectedly accepted")
+        partial_path = root / "interrupted.jsonl"
+        with Journal(partial_path, sample, urls) as interrupted:
+            interrupted.record(urls[0], "SIMULATED_OK")
+        # The very last complete record must be checked even without a successor.
+        partial_path.write_bytes(partial_path.read_bytes().replace(
+            b"SIMULATED_OK", b"SIMULATED_NO", 1))
+        try:
+            inspect(partial_path)
+        except UnsafeTarget:
+            pass
+        else:
+            raise AssertionError("last partial record checksum was not validated")
         other = root / "not-authorized.jsonl"
         try:
             Journal(other, sample, ("https://evil.org/",))
@@ -344,6 +382,8 @@ def main() -> None:
     print("P012-PROBE-JOURNAL-EVIDENCE status=PASS"
           " simulated_receipts=PASS recovery=PARTIAL"
           " torn_tail=DETECTED chain_mutation=REJECTED"
+          " final_record_checksum=PASS"
+          " directory_fsync=POSIX_REQUIRED"
           " worker_pass=PASS worker_failure=CLASSIFIED worker_timeout=KILLED"
           " source=OFFLINE_INVENTORY network=0"
           " dns=NOT_EXECUTED http=NOT_IMPLEMENTED"
