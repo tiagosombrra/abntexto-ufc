@@ -179,6 +179,8 @@ def actual_probe(receipt: dict, url: str, allowed: frozenset[str],
     seen: list[str] = []
     for hop in range(MAX_HOPS + 1):
         checked_budget(total_deadline)
+        if len(target.url) > MAX_URL_LENGTH:
+            raise UnsafeTarget("redirect exceeds the maximum URL length")
         if target.url in seen:
             raise UnsafeTarget("redirect cycle")
         seen.append(target.url)
@@ -642,6 +644,17 @@ def selftest() -> int:
             negative += 1
         else:
             raise AssertionError("redirect to unauthorized host was accepted")
+        assert exchange_log == [("example.org", "8.8.8.8", "HEAD")]
+        exchange_log.clear()
+
+        response_map["example.org"] = (
+            302, {"location": "https://second.org/" + "x" * (MAX_URL_LENGTH + 1)})
+        try:
+            actual_probe(sample, url, secure_hosts, time.monotonic() + 5)
+        except UnsafeTarget:
+            negative += 1
+        else:
+            raise AssertionError("oversized redirect was accepted")
         assert exchange_log == [("example.org", "8.8.8.8", "HEAD")]
         exchange_log.clear()
 
