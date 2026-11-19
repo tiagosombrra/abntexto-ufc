@@ -34,7 +34,7 @@ from p012_probe_security_policy import (
     follow_redirect, target_from_url,
 )
 from external_links_contract import inventory
-from documentation_links_contract import ROOT, tracked_markdown
+from documentation_links_contract import EXCLUDED_PARENTS, ROOT
 
 MAX_SELECTED = 5
 MAX_HOPS = 3
@@ -71,18 +71,47 @@ def validated_ip(value: str) -> str:
         raise UnsafeTarget("invalid socket peer IP") from error
 
 
-def trusted_source_inventory() -> dict:
-    """Recompute inventory from a clean tracked working tree at actual HEAD."""
-    dirty = subprocess.check_output(
-        ["git", "status", "--porcelain=v1", "-z", "--untracked-files=all"],
-        cwd=ROOT,
-    )
-    if dirty:
-        raise UnsafeTarget("tracked source changes make inventory identity ambiguous")
+def trusted_source_inventory(root: Path = ROOT) -> dict:
+    """Derive every Markdown link from immutable Git HEAD tree blobs, not files.
+
+    A clean git status is insufficient: skip-worktree and assume-unchanged
+    allow an edited Markdown file to evade status while HEAD stays constant.
+    """
     head = subprocess.check_output(
-        ["git", "rev-parse", "HEAD"], cwd=ROOT, text=True,
+        ["git", "rev-parse", "HEAD"], cwd=root, text=True,
     ).strip()
-    links = inventory(ROOT, tracked_markdown())
+    raw_tree = subprocess.check_output(
+        ["git", "ls-tree", "-r", "--name-only", "-z", head], cwd=root,
+    )
+    documents = []
+    for raw_path in raw_tree.split(b"\0"):
+        if not raw_path:
+            continue
+        try:
+            path = Path(raw_path.decode("utf-8"))
+        except UnicodeDecodeError as error:
+            raise UnsafeTarget("non-UTF8 tracked path in Git HEAD") from error
+        if (path.is_absolute() or ".." in path.parts or
+                (path.parts and path.parts[0] == ".git")):
+            raise UnsafeTarget("unsafe path in Git HEAD tree")
+        if path.suffix.lower() != ".md":
+            continue
+        if tuple(path.parts[:2]) in EXCLUDED_PARENTS:
+            continue
+        documents.append(path)
+    if not documents:
+        raise UnsafeTarget("Git HEAD has no active Markdown documents")
+    with tempfile.TemporaryDirectory(prefix="p012-head-objects-") as folder:
+        snapshot_root = Path(folder)
+        for path in documents:
+            # git show reads the pinned commit object, never skip-worktree bytes.
+            content = subprocess.check_output(
+                ["git", "show", head + ":" + path.as_posix()], cwd=root,
+            )
+            destination = snapshot_root / path
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            destination.write_bytes(content)
+        links = inventory(snapshot_root, documents)
     links["checkout_sha"] = head
     return links
 
