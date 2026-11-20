@@ -383,6 +383,10 @@ def isolated_worker(url: str, hosts: tuple[str, ...], seconds: float,
             if not (hasattr(signal, "pthread_sigmask") and
                     hasattr(os, "waitid") and hasattr(os, "WNOWAIT")):
                 raise UnsafeTarget("safe POSIX process supervision is unavailable")
+            # Ignored SIGCHLD auto-reaps the session leader and releases its
+            # PID/PGID before our anchored killpg() cleanup can run.
+            if signal.getsignal(signal.SIGCHLD) == signal.SIG_IGN:
+                raise UnsafeTarget("SIGCHLD ignored: safe worker supervision unavailable")
             # Block both cancellation signals before handing responsibility
             # for the new session's lifetime to this guarding try/finally.
             previous_mask = signal.pthread_sigmask(
@@ -882,6 +886,27 @@ def selftest() -> int:
             verify_signal_cleanup(spawn, waiting, cleaning)
             negative += 1
 
+    # SIGCHLD=SIG_IGN automatically reaps a departed leader on POSIX.
+    # Refuse the configuration BEFORE launching a worker: the PID/PGID
+    # otherwise becomes reusable before the group SIGKILL.
+    if os.name == "posix":
+        previous_sigchld = signal.getsignal(signal.SIGCHLD)
+        try:
+            signal.signal(signal.SIGCHLD, signal.SIG_IGN)
+            with patch.object(subprocess, "Popen",
+                              side_effect=AssertionError(
+                                  "worker spawned with SIGCHLD ignored")):
+                try:
+                    isolated_worker("https://example.org/a",
+                                    ("example.org",), 1.0,
+                                    "a" * 40, "b" * 64)
+                except UnsafeTarget:
+                    negative += 1
+                else:
+                    raise AssertionError("ignored SIGCHLD was accepted")
+        finally:
+            signal.signal(signal.SIGCHLD, previous_sigchld)
+
     # A fast worker with no descendants closes stdout before cleanup. Even
     # then the supervisor must keep its zombie PID reserved until killpg().
     if os.name == "posix" and hasattr(os, "WNOWAIT"):
@@ -963,14 +988,24 @@ def selftest() -> int:
                     "a descendant survived after its leader exited")
                 negative += 1
             finally:
-                # Never leak the fixture's background child, even if a test
-                # assertion fails before the supervisor's cleanup completes.
-                if launched[0] is not None:
+                # The normal supervisor already kills the group and reaps the
+                # leader; its PID may now belong to an unrelated group.
+                # Signal only if the DIRECT child is still unreaped, which
+                # pins the PID/PGID until the emergency killpg() completes.
+                leader = launched[0]
+                if leader is not None and leader.returncode is None:
                     try:
-                        os.killpg(launched[0].pid, signal.SIGKILL)
-                    except ProcessLookupError:
+                        os.waitid(os.P_PID, leader.pid,
+                                  os.WEXITED | os.WNOHANG | os.WNOWAIT)
+                    except ChildProcessError:
+                        # Already reaped: never signal this reusable PGID.
                         pass
-                    launched[0].wait()
+                    else:
+                        try:
+                            os.killpg(leader.pid, signal.SIGKILL)
+                        except ProcessLookupError:
+                            pass
+                        leader.wait()
 
     sample = {"schema": 1, "checkout_sha": "a" * 40,
               "fingerprint_sha256": "b" * 64, "unique_urls": 1,
