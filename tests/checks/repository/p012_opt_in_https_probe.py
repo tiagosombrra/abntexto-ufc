@@ -772,6 +772,7 @@ def selftest() -> int:
     class FakeWaitingWorker:
         pid = 789123
         returncode = None
+        stdout = None
 
         def __init__(self, interrupt_during_communicate=()):
             self.interrupt_during_communicate = tuple(
@@ -832,9 +833,18 @@ def selftest() -> int:
                 assert pid == child.pid and signum == signal.SIGKILL
                 child.killed = True
 
+            def fake_nonreaping_reader(worker, _deadline):
+                try:
+                    worker.communicate(timeout=0.001)
+                except subprocess.TimeoutExpired:
+                    return None
+                raise AssertionError("offline signal fixture must stay pending")
+
             try:
                 with patch.object(subprocess, "Popen",
                                   side_effect=inject_in_spawn), \
+                        patch(__name__ + "._read_unreaped_posix",
+                              side_effect=fake_nonreaping_reader), \
                         patch.object(os, "killpg", side_effect=fake_killpg), \
                         patch.object(signal, "pthread_sigmask",
                                      side_effect=inject_before_cleanup_mask):
