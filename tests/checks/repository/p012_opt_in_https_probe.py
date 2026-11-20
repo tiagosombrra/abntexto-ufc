@@ -288,40 +288,40 @@ def worker_result(receipt: dict, url: str, allowed: frozenset[str],
     return result
 
 
-def _begin_cancellation() -> bool:
-    """Ensure SIGTERM and SIGINT share one cancellation and cleanup boundary."""
-    global _cancellation_started
-    if _cancellation_started:
-        return False
-    # Mark cancellation BEFORE modifying either handler, so a cross-signal
-    # delivery cannot trigger a second exception during worker cleanup.
-    _cancellation_started = True
-    signal.signal(signal.SIGTERM, signal.SIG_IGN)
-    signal.signal(signal.SIGINT, signal.SIG_IGN)
-    return True
+_cancellation_signal: int | None = None
 
 
-_cancellation_started = False
+def _record_cancellation(signum: int) -> None:
+    """Record a requested cancellation without raising inside a signal handler."""
+    global _cancellation_signal
+    if _cancellation_signal is None:
+        _cancellation_signal = signum
 
 
 def abort_on_sigterm(signum: int, _frame: object) -> None:
-    """Cancel once, ignoring any mixed SIGTERM/SIGINT during cleanup."""
-    if _begin_cancellation():
-        raise SystemExit(128 + signum)
+    """Defer SIGTERM until the worker supervisor can safely unwind."""
+    _record_cancellation(signum)
 
 
-def abort_on_sigint(_signum: int, _frame: object) -> None:
-    """Cancel once, ignoring any mixed SIGINT/SIGTERM during cleanup."""
-    if _begin_cancellation():
+def abort_on_sigint(signum: int, _frame: object) -> None:
+    """Defer SIGINT until the worker supervisor can safely unwind."""
+    _record_cancellation(signum)
+
+
+def _raise_if_cancelled() -> None:
+    """Propagate cancellation synchronously, never from a Python signal handler."""
+    if _cancellation_signal == signal.SIGTERM:
+        raise SystemExit(128 + signal.SIGTERM)
+    if _cancellation_signal == signal.SIGINT:
         raise KeyboardInterrupt
 
 
 def isolated_worker(url: str, hosts: tuple[str, ...], seconds: float,
                     expected_sha: str, expected_fingerprint: str) -> dict:
     """Run one URL in a child whose entire lifecycle is guarded by the parent."""
-    global _cancellation_started
-    # Each URL starts a fresh supervised worker lifecycle.
-    _cancellation_started = False
+    # Signal handlers only record cancellation; do not clear a previously
+    # requested cancel when advancing from one URL to another.
+    _raise_if_cancelled()
     args = [sys.executable, "-I", str(Path(__file__).resolve()),
             "--_worker", "--network-opt-in", "--timeout", str(seconds),
             "--_expected-sha", expected_sha,
@@ -353,16 +353,25 @@ def isolated_worker(url: str, hosts: tuple[str, ...], seconds: float,
             return {"outcome": "WORKER_ERROR", "status": None, "url": url,
                     "observed_at": utc_now()}
         if previous_mask is not None:
-            # Any pending SIGTERM/SIGINT is delivered inside the protected
-            # try, so the finally below still kills and reaps the worker.
+            # Pending signals are recorded, not raised. The child is already
+            # assigned to the guarding try/finally before unmasking.
             signal.pthread_sigmask(signal.SIG_SETMASK, previous_mask)
             previous_mask = None
-        try:
-            out, _ = process.communicate(
-                timeout=max(.001, deadline - time.monotonic()))
-        except subprocess.TimeoutExpired:
-            return {"outcome": "TIMEOUT", "status": None, "url": url,
-                    "observed_at": utc_now()}
+        _raise_if_cancelled()
+        while True:
+            _raise_if_cancelled()
+            remaining = deadline - time.monotonic()
+            if remaining <= 0:
+                return {"outcome": "TIMEOUT", "status": None, "url": url,
+                        "observed_at": utc_now()}
+            try:
+                # Short bounded waits make a nonthrowing signal handler
+                # responsive without ever interrupting finally cleanup.
+                out, _ = process.communicate(timeout=min(0.1, remaining))
+            except subprocess.TimeoutExpired:
+                continue
+            _raise_if_cancelled()
+            break
         if process.returncode != 0 or len(out) > MAX_CHILD_OUTPUT:
             return {"outcome": "WORKER_ERROR", "status": None, "url": url,
                     "observed_at": utc_now()}
@@ -402,6 +411,9 @@ def isolated_worker(url: str, hosts: tuple[str, ...], seconds: float,
                 signal.pthread_sigmask(
                     signal.SIG_SETMASK,
                     previous_mask if previous_mask is not None else cleanup_mask)
+        # This check runs only AFTER killpg()/wait(). A first signal that
+        # arrives at the first cleanup instruction cannot orphan the child.
+        _raise_if_cancelled()
 
 
 class RealJournal:
@@ -1219,8 +1231,8 @@ def main() -> None:
         parser.error("--journal must be a new absolute path")
     if args.journal.resolve().is_relative_to(Path(ROOT).resolve()):
         parser.error("--journal must be outside the Git working tree")
-    global _cancellation_started
-    _cancellation_started = False
+    global _cancellation_signal
+    _cancellation_signal = None
     previous_term = signal.getsignal(signal.SIGTERM)
     previous_int = signal.getsignal(signal.SIGINT)
     signal.signal(signal.SIGTERM, abort_on_sigterm)
@@ -1228,9 +1240,13 @@ def main() -> None:
     try:
         with RealJournal(args.journal, source, tuple(args.url)) as journal:
             for url in args.url:
-                journal.result(isolated_worker(
+                _raise_if_cancelled()
+                result = isolated_worker(
                     url, tuple(sorted(allowed)), args.timeout,
-                    source["checkout_sha"], source["fingerprint_sha256"]))
+                    source["checkout_sha"], source["fingerprint_sha256"])
+                _raise_if_cancelled()
+                journal.result(result)
+            _raise_if_cancelled()
             journal.finish()
     finally:
         signal.signal(signal.SIGTERM, previous_term)
