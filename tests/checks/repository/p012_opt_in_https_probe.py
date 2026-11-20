@@ -721,15 +721,26 @@ def selftest() -> int:
             else:
                 raise AssertionError("invalid HTTP informational chain accepted")
 
-    # A parent SIGTERM must unwind the active worker's finally block.
-    class FakeTerminatedWorker:
+    # Test signals during spawn, communicate, and the FIRST cleanup line.
+    # Handlers must never throw asynchronously: cancellation is checked
+    # synchronously after the supervised child has been killed and reaped.
+    class FakeWaitingWorker:
         pid = 789123
-        waited = False
-        killed = False
+        returncode = None
+
+        def __init__(self, interrupt_during_communicate=()):
+            self.interrupt_during_communicate = tuple(
+                interrupt_during_communicate)
+            self.killed = False
+            self.waited = False
 
         def communicate(self, timeout):
             assert timeout > 0
-            abort_on_sigterm(signal.SIGTERM, None)
+            signals = self.interrupt_during_communicate
+            self.interrupt_during_communicate = ()
+            for signum in signals:
+                os.kill(os.getpid(), signum)
+            raise subprocess.TimeoutExpired("offline-fixture", timeout)
 
         def poll(self):
             return None
@@ -740,209 +751,81 @@ def selftest() -> int:
         def wait(self):
             self.waited = True
 
-    aborted = FakeTerminatedWorker()
-    def fake_killgroup(_pid, _signal):
-        aborted.killed = True
-
-    original_sigterm_handler = signal.getsignal(signal.SIGTERM)
-    try:
-        with patch.object(subprocess, "Popen", return_value=aborted):
-            if os.name == "posix":
-                with patch.object(os, "killpg", side_effect=fake_killgroup):
-                    try:
-                        isolated_worker("https://example.org/a", ("example.org",),
-                                        1.0, "a" * 40, "b" * 64)
-                    except SystemExit as error:
-                        assert error.code == 128 + signal.SIGTERM
-                        negative += 1
-                    else:
-                        raise AssertionError("SIGTERM did not abort the worker")
-            else:
-                try:
-                    isolated_worker("https://example.org/a", ("example.org",),
-                                    1.0, "a" * 40, "b" * 64)
-                except SystemExit as error:
-                    assert error.code == 128 + signal.SIGTERM
-                    negative += 1
-                else:
-                    raise AssertionError("SIGTERM did not abort the worker")
-        assert aborted.waited and aborted.killed
-    finally:
-        signal.signal(signal.SIGTERM, original_sigterm_handler)
-
     if os.name == "posix":
-        # Reproduce SIGTERM delivered *during* spawn, before communicate().
-        # The parent must mask it, then deliver it while cleanup is protected.
-        initial_mask = signal.pthread_sigmask(signal.SIG_BLOCK, set())
-        aborted = FakeTerminatedWorker()
+        original_mask = signal.pthread_sigmask
+        initial_mask = original_mask(signal.SIG_BLOCK, set())
 
-        def terminate_during_spawn(*_args, **_kwargs):
-            current = signal.pthread_sigmask(signal.SIG_BLOCK, set())
-            assert signal.SIGTERM in current
-            os.kill(os.getpid(), signal.SIGTERM)
-            return aborted
+        def verify_signal_cleanup(spawn_signals=(), wait_signals=(),
+                                  cleanup_signals=()):
+            """Reproduce signal delivery at three distinct lifecycle stages."""
+            global _cancellation_signal
+            _cancellation_signal = None
+            child = FakeWaitingWorker(wait_signals)
+            blocked = [0]
+            previous_term = signal.signal(signal.SIGTERM, abort_on_sigterm)
+            previous_int = signal.signal(signal.SIGINT, abort_on_sigint)
 
-        previous_handler = signal.signal(signal.SIGTERM, abort_on_sigterm)
-        try:
-            with patch.object(subprocess, "Popen",
-                              side_effect=terminate_during_spawn), \
-                    patch.object(os, "killpg", side_effect=fake_killgroup):
-                try:
-                    isolated_worker("https://example.org/a", ("example.org",),
-                                    1.0, "a" * 40, "b" * 64)
-                except SystemExit as error:
-                    assert error.code == 128 + signal.SIGTERM
-                    negative += 1
-                else:
-                    raise AssertionError("SIGTERM race did not interrupt worker")
-            assert aborted.waited and aborted.killed
-        finally:
-            signal.signal(signal.SIGTERM, previous_handler)
-        assert signal.pthread_sigmask(signal.SIG_BLOCK, set()) == initial_mask
+            def inject_in_spawn(*_args, **_kwargs):
+                mask = original_mask(signal.SIG_BLOCK, set())
+                assert signal.SIGTERM in mask and signal.SIGINT in mask
+                for signum in spawn_signals:
+                    os.kill(os.getpid(), signum)
+                return child
 
-        # A *second* SIGTERM at the first cleanup instruction must not
-        # prevent killpg() and wait() after the first signal starts unwind.
-        aborted = FakeTerminatedWorker()
-        unpatched_mask = signal.pthread_sigmask
-        blocked_calls = [0]
+            def inject_before_cleanup_mask(how, signals):
+                if (how == signal.SIG_BLOCK and
+                        {signal.SIGTERM, signal.SIGINT}.issubset(signals)):
+                    blocked[0] += 1
+                    if blocked[0] == 2:
+                        # The initial cancellation may occur here AFTER a
+                        # plain timeout, before cleanup has masked signals.
+                        for signum in cleanup_signals:
+                            os.kill(os.getpid(), signum)
+                return original_mask(how, signals)
 
-        def repeat_term_at_cleanup(how, mask):
-            if how == signal.SIG_BLOCK and signal.SIGTERM in mask:
-                blocked_calls[0] += 1
-                if blocked_calls[0] == 2:
-                    assert signal.getsignal(signal.SIGTERM) == signal.SIG_IGN
-                    os.kill(os.getpid(), signal.SIGTERM)
-            return unpatched_mask(how, mask)
+            def fake_killpg(pid, signum):
+                assert pid == child.pid and signum == signal.SIGKILL
+                child.killed = True
 
-        previous_handler = signal.signal(signal.SIGTERM, abort_on_sigterm)
-        try:
-            with patch.object(subprocess, "Popen", return_value=aborted), \
-                    patch.object(os, "killpg", side_effect=fake_killgroup), \
-                    patch.object(signal, "pthread_sigmask",
-                                 side_effect=repeat_term_at_cleanup):
-                try:
-                    isolated_worker("https://example.org/a", ("example.org",),
-                                    1.0, "a" * 40, "b" * 64)
-                except SystemExit as error:
-                    assert error.code == 128 + signal.SIGTERM
-                    negative += 1
-                else:
-                    raise AssertionError("repeated SIGTERM bypassed cleanup")
-            assert blocked_calls[0] == 2 and aborted.killed and aborted.waited
-        finally:
-            signal.signal(signal.SIGTERM, previous_handler)
-        assert signal.pthread_sigmask(signal.SIG_BLOCK, set()) == initial_mask
-
-        # Ctrl+C delivered during Popen is also deferred until the child is
-        # safely assigned and protected by the parent's cleanup block.
-        aborted = FakeTerminatedWorker()
-        def interrupt_during_spawn(*_args, **_kwargs):
-            current = signal.pthread_sigmask(signal.SIG_BLOCK, set())
-            assert signal.SIGINT in current
-            os.kill(os.getpid(), signal.SIGINT)
-            return aborted
-
-        previous_handler = signal.signal(signal.SIGINT, abort_on_sigint)
-        try:
-            with patch.object(subprocess, "Popen",
-                              side_effect=interrupt_during_spawn), \
-                    patch.object(os, "killpg", side_effect=fake_killgroup):
-                try:
-                    isolated_worker("https://example.org/a", ("example.org",),
-                                    1.0, "a" * 40, "b" * 64)
-                except KeyboardInterrupt:
-                    negative += 1
-                else:
-                    raise AssertionError("SIGINT spawn race was not caught")
-            assert aborted.killed and aborted.waited
-        finally:
-            signal.signal(signal.SIGINT, previous_handler)
-        assert signal.pthread_sigmask(signal.SIG_BLOCK, set()) == initial_mask
-
-        # A second SIGINT at cleanup entry cannot interrupt worker reaping.
-        class FakeInterruptedWorker(FakeTerminatedWorker):
-            def communicate(self, timeout):
-                assert timeout > 0
-                abort_on_sigint(signal.SIGINT, None)
-
-        aborted = FakeInterruptedWorker()
-        unpatched_mask = signal.pthread_sigmask
-        blocked_calls = [0]
-        def repeat_int_at_cleanup(how, mask):
-            if how == signal.SIG_BLOCK and signal.SIGINT in mask:
-                blocked_calls[0] += 1
-                if blocked_calls[0] == 2:
-                    assert signal.getsignal(signal.SIGINT) == signal.SIG_IGN
-                    os.kill(os.getpid(), signal.SIGINT)
-            return unpatched_mask(how, mask)
-
-        previous_handler = signal.signal(signal.SIGINT, abort_on_sigint)
-        try:
-            with patch.object(subprocess, "Popen", return_value=aborted), \
-                    patch.object(os, "killpg", side_effect=fake_killgroup), \
-                    patch.object(signal, "pthread_sigmask",
-                                 side_effect=repeat_int_at_cleanup):
-                try:
-                    isolated_worker("https://example.org/a", ("example.org",),
-                                    1.0, "a" * 40, "b" * 64)
-                except KeyboardInterrupt:
-                    negative += 1
-                else:
-                    raise AssertionError("repeated SIGINT bypassed cleanup")
-            assert blocked_calls[0] == 2 and aborted.killed and aborted.waited
-        finally:
-            signal.signal(signal.SIGINT, previous_handler)
-        assert signal.pthread_sigmask(signal.SIG_BLOCK, set()) == initial_mask
-
-        # Alternate cancellation signal kinds at the vulnerable first
-        # cleanup instruction. Either order must still kill and reap.
-        for initial_signal, second_signal in (
-            (signal.SIGTERM, signal.SIGINT),
-            (signal.SIGINT, signal.SIGTERM),
-        ):
-            class FakeMixedWorker(FakeTerminatedWorker):
-                def communicate(self, timeout):
-                    assert timeout > 0
-                    if initial_signal == signal.SIGTERM:
-                        abort_on_sigterm(signal.SIGTERM, None)
-                    else:
-                        abort_on_sigint(signal.SIGINT, None)
-
-            aborted = FakeMixedWorker()
-            unpatched_mask = signal.pthread_sigmask
-            calls = [0]
-            def send_mixed_signal_at_cleanup(how, mask):
-                if (how == signal.SIG_BLOCK
-                        and {signal.SIGTERM, signal.SIGINT}.issubset(mask)):
-                    calls[0] += 1
-                    if calls[0] == 2:
-                        assert signal.getsignal(signal.SIGTERM) == signal.SIG_IGN
-                        assert signal.getsignal(signal.SIGINT) == signal.SIG_IGN
-                        os.kill(os.getpid(), second_signal)
-                return unpatched_mask(how, mask)
-
-            old_term = signal.signal(signal.SIGTERM, abort_on_sigterm)
-            old_int = signal.signal(signal.SIGINT, abort_on_sigint)
             try:
-                with patch.object(subprocess, "Popen", return_value=aborted), \
-                        patch.object(os, "killpg",
-                                     side_effect=fake_killgroup), \
+                with patch.object(subprocess, "Popen",
+                                  side_effect=inject_in_spawn), \
+                        patch.object(os, "killpg", side_effect=fake_killpg), \
                         patch.object(signal, "pthread_sigmask",
-                                     side_effect=send_mixed_signal_at_cleanup):
+                                     side_effect=inject_before_cleanup_mask):
                     try:
+                        # A short local fixture deadline; never a socket.
                         isolated_worker("https://example.org/a",
-                                        ("example.org",), 1.0,
+                                        ("example.org",), 0.02,
                                         "a" * 40, "b" * 64)
                     except (SystemExit, KeyboardInterrupt):
-                        negative += 1
+                        if not (spawn_signals or wait_signals or cleanup_signals):
+                            raise AssertionError("unexpected cancellation")
                     else:
-                        raise AssertionError(
-                            "mixed SIGTERM/SIGINT bypassed worker cleanup")
-                assert calls[0] == 2 and aborted.killed and aborted.waited
+                        if spawn_signals or wait_signals or cleanup_signals:
+                            raise AssertionError("worker cancellation was ignored")
+                assert blocked[0] == 2
+                assert child.killed and child.waited
+                assert original_mask(signal.SIG_BLOCK, set()) == initial_mask
             finally:
-                signal.signal(signal.SIGTERM, old_term)
-                signal.signal(signal.SIGINT, old_int)
-            assert signal.pthread_sigmask(signal.SIG_BLOCK, set()) == initial_mask
+                signal.signal(signal.SIGTERM, previous_term)
+                signal.signal(signal.SIGINT, previous_int)
+                _cancellation_signal = None
+
+        for spawn, waiting, cleaning in (
+            ((), (signal.SIGTERM,), ()),
+            ((), (signal.SIGINT,), ()),
+            ((signal.SIGTERM,), (), ()),
+            ((signal.SIGINT,), (), ()),
+            ((), (), (signal.SIGTERM,)),
+            ((), (), (signal.SIGINT,)),
+            ((), (signal.SIGTERM,), (signal.SIGINT,)),
+            ((), (signal.SIGINT,), (signal.SIGTERM,)),
+            ((), (signal.SIGTERM,), (signal.SIGTERM,)),
+            ((), (signal.SIGINT,), (signal.SIGINT,)),
+        ):
+            verify_signal_cleanup(spawn, waiting, cleaning)
+            negative += 1
 
     sample = {"schema": 1, "checkout_sha": "a" * 40,
               "fingerprint_sha256": "b" * 64, "unique_urls": 1,
