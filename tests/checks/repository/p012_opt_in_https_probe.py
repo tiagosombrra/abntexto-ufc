@@ -13,6 +13,7 @@ import ipaddress
 import json
 import math
 import os
+import selectors
 import signal
 import socket
 import ssl
@@ -316,11 +317,53 @@ def _raise_if_cancelled() -> None:
         raise KeyboardInterrupt
 
 
+def _read_unreaped_posix(process: subprocess.Popen, deadline: float) -> bytes | None:
+    """Read child stdout without reaping its session leader before killpg().
+
+    Popen.communicate() calls wait() after EOF, allowing the leader's PID/PGID
+    to be reused before our final killpg(). Keep its zombie PID as an identity
+    anchor using waitid(WNOWAIT), and reap only AFTER signaling the group.
+    """
+    if not (hasattr(os, "waitid") and hasattr(os, "WNOWAIT")):
+        raise UnsafeTarget("non-reaping POSIX worker inspection is unavailable")
+    if process.stdout is None:
+        raise UnsafeTarget("POSIX worker stdout pipe is missing")
+    output = bytearray()
+    with selectors.DefaultSelector() as selector:
+        selector.register(process.stdout, selectors.EVENT_READ)
+        while True:
+            _raise_if_cancelled()
+            remaining = deadline - time.monotonic()
+            if remaining <= 0:
+                return None
+            events = selector.select(timeout=min(0.1, remaining))
+            for _key, _mask in events:
+                chunk = os.read(process.stdout.fileno(), 4096)
+                if not chunk:
+                    selector.unregister(process.stdout)
+                else:
+                    output.extend(chunk)
+                    if len(output) > MAX_CHILD_OUTPUT:
+                        return bytes(output)
+            if not selector.get_map():
+                # Do not call process.poll(), communicate(), or wait() here:
+                # every one of them may reap the leader and release its PGID.
+                while True:
+                    _raise_if_cancelled()
+                    remaining = deadline - time.monotonic()
+                    if remaining <= 0:
+                        return None
+                    status = os.waitid(
+                        os.P_PID, process.pid,
+                        os.WEXITED | os.WNOHANG | os.WNOWAIT)
+                    if status is not None:
+                        return bytes(output)
+                    time.sleep(min(0.01, remaining))
+
+
 def isolated_worker(url: str, hosts: tuple[str, ...], seconds: float,
                     expected_sha: str, expected_fingerprint: str) -> dict:
     """Run one URL in a child whose entire lifecycle is guarded by the parent."""
-    # Signal handlers only record cancellation; do not clear a previously
-    # requested cancel when advancing from one URL to another.
     _raise_if_cancelled()
     args = [sys.executable, "-I", str(Path(__file__).resolve()),
             "--_worker", "--network-opt-in", "--timeout", str(seconds),
@@ -329,18 +372,19 @@ def isolated_worker(url: str, hosts: tuple[str, ...], seconds: float,
             "--url", url]
     for host in hosts:
         args += ["--host", host]
-    # The child inherits no proxy or user-supplied trust-store variables.
     environment = {"PYTHONDONTWRITEBYTECODE": "1"}
     use_session = os.name == "posix"
     deadline = time.monotonic() + seconds
     process = None
     previous_mask = None
+    output = None
     try:
         if use_session:
-            if not hasattr(signal, "pthread_sigmask"):
-                raise UnsafeTarget("SIGTERM-safe POSIX worker launch unavailable")
-            # Block SIGTERM and SIGINT BEFORE spawning. Both can otherwise
-            # interrupt Popen after fork but before its child is assigned.
+            if not (hasattr(signal, "pthread_sigmask") and
+                    hasattr(os, "waitid") and hasattr(os, "WNOWAIT")):
+                raise UnsafeTarget("safe POSIX process supervision is unavailable")
+            # Block both cancellation signals before handing responsibility
+            # for the new session's lifetime to this guarding try/finally.
             previous_mask = signal.pthread_sigmask(
                 signal.SIG_BLOCK, {signal.SIGTERM, signal.SIGINT})
         try:
@@ -353,76 +397,69 @@ def isolated_worker(url: str, hosts: tuple[str, ...], seconds: float,
             return {"outcome": "WORKER_ERROR", "status": None, "url": url,
                     "observed_at": utc_now()}
         if previous_mask is not None:
-            # Pending signals are recorded, not raised. The child is already
-            # assigned to the guarding try/finally before unmasking.
             signal.pthread_sigmask(signal.SIG_SETMASK, previous_mask)
             previous_mask = None
         _raise_if_cancelled()
-        while True:
-            _raise_if_cancelled()
-            remaining = deadline - time.monotonic()
-            if remaining <= 0:
-                return {"outcome": "TIMEOUT", "status": None, "url": url,
-                        "observed_at": utc_now()}
-            try:
-                # Short bounded waits make a nonthrowing signal handler
-                # responsive without ever interrupting finally cleanup.
-                out, _ = process.communicate(timeout=min(0.1, remaining))
-            except subprocess.TimeoutExpired:
-                continue
-            _raise_if_cancelled()
-            break
-        if process.returncode != 0 or len(out) > MAX_CHILD_OUTPUT:
-            return {"outcome": "WORKER_ERROR", "status": None, "url": url,
-                    "observed_at": utc_now()}
-        try:
-            result = json.loads(out)
-        except (ValueError, UnicodeDecodeError):
-            return {"outcome": "WORKER_ERROR", "status": None, "url": url,
-                    "observed_at": utc_now()}
-        if (not isinstance(result, dict) or result.get("url") != url
-                or result.get("checkout_sha") != expected_sha
-                or result.get("fingerprint_sha256") != expected_fingerprint
-                or result.get("outcome") not in STATUS_CODES
-                or not isinstance(result.get("observed_at"), str)):
-            return {"outcome": "WORKER_ERROR", "status": None, "url": url,
-                    "observed_at": utc_now()}
-        return result
+        if use_session:
+            output = _read_unreaped_posix(process, deadline)
+        else:
+            while True:
+                _raise_if_cancelled()
+                remaining = deadline - time.monotonic()
+                if remaining <= 0:
+                    break
+                try:
+                    stdout, _ = process.communicate(timeout=min(0.1, remaining))
+                except subprocess.TimeoutExpired:
+                    continue
+                output = stdout
+                break
     finally:
         cleanup_mask = None
         if use_session and hasattr(signal, "pthread_sigmask"):
-            # Repeated SIGTERM/SIGINT cannot interrupt killpg()/wait().
             cleanup_mask = signal.pthread_sigmask(
                 signal.SIG_BLOCK, {signal.SIGTERM, signal.SIGINT})
         try:
             if process is not None:
-                if use_session:
-                    # The session/process group outlives its leader while
-                    # descendants remain. Always kill the group, even when
-                    # poll() reports that the leader already exited.
-                    try:
+                try:
+                    if use_session:
+                        # The leader has NOT been reaped: its PID/PGID cannot
+                        # be reused to target an unrelated process group.
                         os.killpg(process.pid, signal.SIGKILL)
-                    except ProcessLookupError:
-                        # The entire process group may already be gone.
-                        pass
-                elif process.poll() is None:
-                    try:
+                    elif process.poll() is None:
                         process.kill()
-                    except ProcessLookupError:
-                        # The child can exit between poll() and kill().
-                        pass
-                # Only the direct worker is wait()-able by this parent;
-                # SIGKILL ends remaining group members, not their reaping.
-                process.wait()
+                except ProcessLookupError:
+                    pass
+                finally:
+                    if process.stdout is not None:
+                        process.stdout.close()
+                    # Reap direct leader only AFTER group termination.
+                    process.wait()
         finally:
             if cleanup_mask is not None:
                 signal.pthread_sigmask(
                     signal.SIG_SETMASK,
                     previous_mask if previous_mask is not None else cleanup_mask)
-        # This check runs only AFTER killpg()/wait(). A first signal that
-        # arrives at the first cleanup instruction cannot orphan the child.
-        _raise_if_cancelled()
-
+    _raise_if_cancelled()
+    if output is None:
+        return {"outcome": "TIMEOUT", "status": None, "url": url,
+                "observed_at": utc_now()}
+    if process.returncode != 0 or len(output) > MAX_CHILD_OUTPUT:
+        return {"outcome": "WORKER_ERROR", "status": None, "url": url,
+                "observed_at": utc_now()}
+    try:
+        result = json.loads(output)
+    except (ValueError, UnicodeDecodeError):
+        return {"outcome": "WORKER_ERROR", "status": None, "url": url,
+                "observed_at": utc_now()}
+    if (not isinstance(result, dict) or result.get("url") != url
+            or result.get("checkout_sha") != expected_sha
+            or result.get("fingerprint_sha256") != expected_fingerprint
+            or result.get("outcome") not in STATUS_CODES
+            or not isinstance(result.get("observed_at"), str)):
+        return {"outcome": "WORKER_ERROR", "status": None, "url": url,
+                "observed_at": utc_now()}
+    return result
 
 class RealJournal:
     """Exclusive-create, fsynced REAL_HTTP records, not simulated receipts."""
