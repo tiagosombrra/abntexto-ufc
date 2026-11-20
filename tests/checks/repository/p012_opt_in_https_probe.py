@@ -835,6 +835,58 @@ def selftest() -> int:
             verify_signal_cleanup(spawn, waiting, cleaning)
             negative += 1
 
+    # Regress the real POSIX process-group orphan: the worker leader exits
+    # successfully, but its background descendant retains the stdout pipe.
+    # communicate() times out with poll() == 0; cleanup must STILL killpg().
+    if (os.name == "posix" and Path("/bin/sh").is_file()
+            and Path("/bin/sleep").is_file()):
+        with tempfile.TemporaryDirectory(prefix="p012-descendant-") as folder:
+            child_pid = Path(folder) / "descendant.pid"
+            heartbeat = Path(folder) / "heartbeat"
+            shell_fixture = (
+                '(while :; do printf x >> "$2"; /bin/sleep 0.05; done) & '
+                'printf "%s\n" "$!" > "$1"; exit 0'
+            )
+            actual_popen = subprocess.Popen
+            launched = [None]
+
+            def spawn_exiting_leader(_args, **kwargs):
+                assert kwargs["start_new_session"] is True
+                leader = actual_popen(
+                    ["/bin/sh", "-c", shell_fixture, "offline-fixture",
+                     str(child_pid), str(heartbeat)], **kwargs)
+                launched[0] = leader
+                return leader
+
+            try:
+                with patch.object(subprocess, "Popen",
+                                  side_effect=spawn_exiting_leader):
+                    outcome = isolated_worker(
+                        "https://example.org/a", ("example.org",), 1.0,
+                        "a" * 40, "b" * 64)
+                assert outcome["outcome"] == "TIMEOUT"
+                assert launched[0] is not None
+                assert launched[0].returncode == 0
+                assert child_pid.is_file() and heartbeat.is_file()
+                descendant_pid = int(child_pid.read_text().strip())
+                assert descendant_pid != launched[0].pid
+                ticks = heartbeat.read_bytes()
+                assert len(ticks) > 0
+                # A still-running descendant keeps writing the heartbeat.
+                time.sleep(0.2)
+                assert heartbeat.read_bytes() == ticks, (
+                    "a descendant survived after its leader exited")
+                negative += 1
+            finally:
+                # Never leak the fixture's background child, even if a test
+                # assertion fails before the supervisor's cleanup completes.
+                if launched[0] is not None:
+                    try:
+                        os.killpg(launched[0].pid, signal.SIGKILL)
+                    except ProcessLookupError:
+                        pass
+                    launched[0].wait()
+
     sample = {"schema": 1, "checkout_sha": "a" * 40,
               "fingerprint_sha256": "b" * 64, "unique_urls": 1,
               "links": [{"url": "https://example.org/a",
