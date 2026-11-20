@@ -288,18 +288,32 @@ def worker_result(receipt: dict, url: str, allowed: frozenset[str],
     return result
 
 
-def abort_on_sigterm(signum: int, _frame: object) -> None:
-    """Unwind only once; repeated SIGTERM must never preempt worker cleanup."""
-    # Disable reentry before raising: a second SIGTERM may arrive on the
-    # first instruction of finally, before its explicit mask is active.
+def _begin_cancellation() -> bool:
+    """Ensure SIGTERM and SIGINT share one cancellation and cleanup boundary."""
+    global _cancellation_started
+    if _cancellation_started:
+        return False
+    # Mark cancellation BEFORE modifying either handler, so a cross-signal
+    # delivery cannot trigger a second exception during worker cleanup.
+    _cancellation_started = True
     signal.signal(signal.SIGTERM, signal.SIG_IGN)
-    raise SystemExit(128 + signum)
+    signal.signal(signal.SIGINT, signal.SIG_IGN)
+    return True
+
+
+_cancellation_started = False
+
+
+def abort_on_sigterm(signum: int, _frame: object) -> None:
+    """Cancel once, ignoring any mixed SIGTERM/SIGINT during cleanup."""
+    if _begin_cancellation():
+        raise SystemExit(128 + signum)
 
 
 def abort_on_sigint(_signum: int, _frame: object) -> None:
-    """Unwind Ctrl+C only once, leaving worker cleanup uninterrupted."""
-    signal.signal(signal.SIGINT, signal.SIG_IGN)
-    raise KeyboardInterrupt
+    """Cancel once, ignoring any mixed SIGINT/SIGTERM during cleanup."""
+    if _begin_cancellation():
+        raise KeyboardInterrupt
 
 
 def isolated_worker(url: str, hosts: tuple[str, ...], seconds: float,
@@ -1152,6 +1166,8 @@ def main() -> None:
         parser.error("--journal must be a new absolute path")
     if args.journal.resolve().is_relative_to(Path(ROOT).resolve()):
         parser.error("--journal must be outside the Git working tree")
+    global _cancellation_started
+    _cancellation_started = False
     previous_term = signal.getsignal(signal.SIGTERM)
     previous_int = signal.getsignal(signal.SIGINT)
     signal.signal(signal.SIGTERM, abort_on_sigterm)
