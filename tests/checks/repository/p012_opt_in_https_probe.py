@@ -319,6 +319,9 @@ def abort_on_sigint(_signum: int, _frame: object) -> None:
 def isolated_worker(url: str, hosts: tuple[str, ...], seconds: float,
                     expected_sha: str, expected_fingerprint: str) -> dict:
     """Run one URL in a child whose entire lifecycle is guarded by the parent."""
+    global _cancellation_started
+    # Each URL starts a fresh supervised worker lifecycle.
+    _cancellation_started = False
     args = [sys.executable, "-I", str(Path(__file__).resolve()),
             "--_worker", "--network-opt-in", "--timeout", str(seconds),
             "--_expected-sha", expected_sha,
