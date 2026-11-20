@@ -396,15 +396,23 @@ def isolated_worker(url: str, hosts: tuple[str, ...], seconds: float,
                 signal.SIG_BLOCK, {signal.SIGTERM, signal.SIGINT})
         try:
             if process is not None:
-                if process.poll() is None:
+                if use_session:
+                    # The session/process group outlives its leader while
+                    # descendants remain. Always kill the group, even when
+                    # poll() reports that the leader already exited.
                     try:
-                        if use_session:
-                            os.killpg(process.pid, signal.SIGKILL)
-                        else:
-                            process.kill()
+                        os.killpg(process.pid, signal.SIGKILL)
                     except ProcessLookupError:
-                        # The process might have exited between poll and kill.
+                        # The entire process group may already be gone.
                         pass
+                elif process.poll() is None:
+                    try:
+                        process.kill()
+                    except ProcessLookupError:
+                        # The child can exit between poll() and kill().
+                        pass
+                # Only the direct worker is wait()-able by this parent;
+                # SIGKILL ends remaining group members, not their reaping.
                 process.wait()
         finally:
             if cleanup_mask is not None:
