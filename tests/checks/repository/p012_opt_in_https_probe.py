@@ -882,6 +882,44 @@ def selftest() -> int:
             verify_signal_cleanup(spawn, waiting, cleaning)
             negative += 1
 
+    # A fast worker with no descendants closes stdout before cleanup. Even
+    # then the supervisor must keep its zombie PID reserved until killpg().
+    if os.name == "posix" and hasattr(os, "WNOWAIT"):
+        response = {
+            "url": "https://example.org/a", "outcome": "REACHABLE",
+            "checkout_sha": "a" * 40, "fingerprint_sha256": "b" * 64,
+            "observed_at": utc_now(),
+        }
+        child_program = ("import sys; sys.stdout.write("
+                         + repr(json.dumps(response)) + " + '\\n')")
+        real_popen = subprocess.Popen
+        real_killpg = os.killpg
+        saw_unreaped = []
+
+        def spawn_fast_child(_arguments, **kwargs):
+            assert kwargs["start_new_session"] is True
+            return real_popen([sys.executable, "-I", "-c", child_program],
+                              **kwargs)
+
+        def ensure_group_identity(group_id, sig):
+            # WNOWAIT verifies the exited leader has NOT been reaped yet.
+            status = os.waitid(
+                os.P_PID, group_id,
+                os.WEXITED | os.WNOHANG | os.WNOWAIT)
+            assert status is not None
+            saw_unreaped.append(group_id)
+            return real_killpg(group_id, sig)
+
+        with patch.object(subprocess, "Popen",
+                          side_effect=spawn_fast_child), \
+                patch.object(os, "killpg",
+                             side_effect=ensure_group_identity):
+            outcome = isolated_worker(
+                "https://example.org/a", ("example.org",), 2.0,
+                "a" * 40, "b" * 64)
+        assert outcome["outcome"] == "REACHABLE" and saw_unreaped
+        negative += 1
+
     # Regress the real POSIX process-group orphan: the worker leader exits
     # successfully, but its background descendant retains the stdout pipe.
     # communicate() times out with poll() == 0; cleanup must STILL killpg().
