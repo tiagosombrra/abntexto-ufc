@@ -882,6 +882,56 @@ def selftest() -> int:
             signal.signal(signal.SIGINT, previous_handler)
         assert signal.pthread_sigmask(signal.SIG_BLOCK, set()) == initial_mask
 
+        # Alternate cancellation signal kinds at the vulnerable first
+        # cleanup instruction. Either order must still kill and reap.
+        for initial_signal, second_signal in (
+            (signal.SIGTERM, signal.SIGINT),
+            (signal.SIGINT, signal.SIGTERM),
+        ):
+            class FakeMixedWorker(FakeTerminatedWorker):
+                def communicate(self, timeout):
+                    assert timeout > 0
+                    if initial_signal == signal.SIGTERM:
+                        abort_on_sigterm(signal.SIGTERM, None)
+                    else:
+                        abort_on_sigint(signal.SIGINT, None)
+
+            aborted = FakeMixedWorker()
+            unpatched_mask = signal.pthread_sigmask
+            calls = [0]
+            def send_mixed_signal_at_cleanup(how, mask):
+                if (how == signal.SIG_BLOCK
+                        and {signal.SIGTERM, signal.SIGINT}.issubset(mask)):
+                    calls[0] += 1
+                    if calls[0] == 2:
+                        assert signal.getsignal(signal.SIGTERM) == signal.SIG_IGN
+                        assert signal.getsignal(signal.SIGINT) == signal.SIG_IGN
+                        os.kill(os.getpid(), second_signal)
+                return unpatched_mask(how, mask)
+
+            old_term = signal.signal(signal.SIGTERM, abort_on_sigterm)
+            old_int = signal.signal(signal.SIGINT, abort_on_sigint)
+            try:
+                with patch.object(subprocess, "Popen", return_value=aborted), \
+                        patch.object(os, "killpg",
+                                     side_effect=fake_killgroup), \
+                        patch.object(signal, "pthread_sigmask",
+                                     side_effect=send_mixed_signal_at_cleanup):
+                    try:
+                        isolated_worker("https://example.org/a",
+                                        ("example.org",), 1.0,
+                                        "a" * 40, "b" * 64)
+                    except (SystemExit, KeyboardInterrupt):
+                        negative += 1
+                    else:
+                        raise AssertionError(
+                            "mixed SIGTERM/SIGINT bypassed worker cleanup")
+                assert calls[0] == 2 and aborted.killed and aborted.waited
+            finally:
+                signal.signal(signal.SIGTERM, old_term)
+                signal.signal(signal.SIGINT, old_int)
+            assert signal.pthread_sigmask(signal.SIG_BLOCK, set()) == initial_mask
+
     sample = {"schema": 1, "checkout_sha": "a" * 40,
               "fingerprint_sha256": "b" * 64, "unique_urls": 1,
               "links": [{"url": "https://example.org/a",
