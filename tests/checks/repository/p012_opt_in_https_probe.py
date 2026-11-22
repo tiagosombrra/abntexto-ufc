@@ -566,8 +566,15 @@ def isolated_worker(url: str, hosts: tuple[str, ...], seconds: float,
                 finally:
                     if process.stdout is not None:
                         process.stdout.close()
-                    # Reap direct leader only AFTER group termination.
-                    process.wait()
+                    # Reap only after group termination, with a bounded
+                    # cleanup grace independent of the network deadline.
+                    # A timeout leaves the REAL_HTTP journal PARTIAL rather
+                    # than pretending that process-tree cleanup succeeded.
+                    try:
+                        process.wait(timeout=1.0)
+                    except subprocess.TimeoutExpired as error:
+                        raise UnsafeTarget(
+                            "worker cleanup not confirmed after SIGKILL") from error
         finally:
             if cleanup_mask is not None:
                 signal.pthread_sigmask(
@@ -997,7 +1004,8 @@ def selftest() -> int:
         def kill(self):
             self.killed = True
 
-        def wait(self):
+        def wait(self, timeout=None):
+            assert timeout is None or timeout > 0
             self.waited = True
 
     if os.name == "posix":
@@ -1084,6 +1092,29 @@ def selftest() -> int:
         ):
             verify_signal_cleanup(spawn, waiting, cleaning)
             negative += 1
+
+    # An unkillable/reaping-stalled leader must never keep the parent in an
+    # unbounded wait, nor yield a misleading COMPLETE REAL_HTTP receipt.
+    if os.name == "posix":
+        class FakeStuckWorker(FakeWaitingWorker):
+            def wait(self, timeout=None):
+                assert timeout == 1.0
+                raise subprocess.TimeoutExpired("unreaped-worker", timeout)
+
+        with patch.object(subprocess, "Popen",
+                          return_value=FakeStuckWorker()), \
+                patch(__name__ + "._read_unreaped_posix",
+                      return_value=None), \
+                patch.object(os, "killpg", return_value=None):
+            try:
+                isolated_worker("https://example.org/a",
+                                ("example.org",), 1.0,
+                                "a" * 40, "b" * 64, "c" * 64)
+            except UnsafeTarget as error:
+                assert "cleanup not confirmed" in str(error)
+                negative += 1
+            else:
+                raise AssertionError("unbounded worker cleanup was accepted")
 
     # SIGCHLD=SIG_IGN automatically reaps a departed leader on POSIX.
     # Refuse the configuration BEFORE launching a worker: the PID/PGID
