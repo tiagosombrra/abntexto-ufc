@@ -387,16 +387,20 @@ def _read_unreaped_posix(process: subprocess.Popen, deadline: float) -> bytes | 
 
 
 def _parent_capability(url: str, hosts: tuple[str, ...], expected_sha: str,
-                       expected_fingerprint: str, journal_start: str) -> bytes:
+                       expected_fingerprint: str, journal_start: str,
+                       journal_file: str) -> bytes:
     """Bind an isolated worker's private pipe to a parent-owned journal."""
     if (len(journal_start) != 64 or journal_start == ZERO_SHA
             or any(c not in "0123456789abcdef" for c in journal_start)):
         raise UnsafeTarget("missing parent journal start checksum")
+    if not isinstance(journal_file, str) or not Path(journal_file).is_absolute():
+        raise UnsafeTarget("missing absolute parent journal file")
     payload = {
         "version": 1, "url": url, "hosts": list(hosts),
         "checkout_sha": expected_sha,
         "fingerprint_sha256": expected_fingerprint,
         "journal_start_sha256": journal_start,
+        "journal_file": journal_file,
         "parent_pid": os.getpid(),
     }
     raw = (json.dumps(payload, sort_keys=True, separators=(",", ":"))
@@ -433,7 +437,8 @@ def verify_parent_capability(fd: int, url: str, hosts: tuple[str, ...],
     if (not isinstance(payload, dict)
             or set(payload) != {
                 "version", "url", "hosts", "checkout_sha",
-                "fingerprint_sha256", "journal_start_sha256", "parent_pid",
+                "fingerprint_sha256", "journal_start_sha256",
+                "journal_file", "parent_pid",
             }
             or payload["version"] != 1
             or payload["url"] != url or payload["hosts"] != list(hosts)
@@ -447,12 +452,53 @@ def verify_parent_capability(fd: int, url: str, hosts: tuple[str, ...],
     if (not isinstance(journal_start, str) or len(journal_start) != 64
             or journal_start == ZERO_SHA
             or any(c not in "0123456789abcdef" for c in journal_start)):
-        raise UnsafeTarget("parent-owned journal receipt not authenticated")
+        raise UnsafeTarget("invalid parent journal start checksum")
+
+    # A syntactically valid hash does not prove a journal exists. Independently
+    # inspect the O_EXCL journal start receipt on disk before touching Git,
+    # DNS or TLS. The same-UID local operator remains in the trust boundary.
+    journal_file = payload["journal_file"]
+    if not isinstance(journal_file, str) or not Path(journal_file).is_absolute():
+        raise UnsafeTarget("missing absolute parent journal file")
+    open_flags = os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0)
+    try:
+        journal_fd = os.open(journal_file, open_flags)
+        with os.fdopen(journal_fd, "rb") as handle:
+            metadata = os.fstat(handle.fileno())
+            if (not stat.S_ISREG(metadata.st_mode) or metadata.st_nlink != 1
+                    or metadata.st_uid != os.getuid()
+                    or metadata.st_mode & 0o077):
+                raise UnsafeTarget("parent journal is not a private regular file")
+            first = handle.readline(MAX_RECORD_BYTES + 1)
+    except OSError as error:
+        raise UnsafeTarget("parent journal receipt is unavailable") from error
+    if (not first.endswith(b"\\n") or len(first) > MAX_RECORD_BYTES
+            or hashlib.sha256(first).hexdigest() != journal_start):
+        raise UnsafeTarget("parent journal start does not match capability")
+    try:
+        receipt = json.loads(first)
+        unsigned = {key: value for key, value in receipt.items()
+                    if key != "record_sha256"}
+        valid_signature = (
+            hashlib.sha256(_encode(unsigned)).hexdigest()
+            == receipt.get("record_sha256"))
+    except (ValueError, TypeError, AttributeError) as error:
+        raise UnsafeTarget("invalid parent journal start receipt") from error
+    if (not valid_signature or receipt.get("kind") != "start"
+            or receipt.get("mode") != "REAL_HTTP"
+            or receipt.get("schema") != SCHEMA
+            or receipt.get("sequence") != 0
+            or receipt.get("previous_sha256") != ZERO_SHA
+            or receipt.get("checkout_sha") != expected_sha
+            or receipt.get("fingerprint_sha256") != expected_fingerprint
+            or not isinstance(receipt.get("urls"), list)
+            or url not in receipt["urls"]):
+        raise UnsafeTarget("parent journal source or selection mismatch")
 
 
 def isolated_worker(url: str, hosts: tuple[str, ...], seconds: float,
                     expected_sha: str, expected_fingerprint: str,
-                    journal_start: str) -> dict:
+                    journal_start: str, journal_file: str) -> dict:
     """Run one URL in a child whose entire lifecycle is guarded by the parent."""
     _raise_if_cancelled()
     args = [sys.executable, "-I", str(Path(__file__).resolve()),
@@ -492,7 +538,8 @@ def isolated_worker(url: str, hosts: tuple[str, ...], seconds: float,
         # receipt was fsynced. Give the worker a private anonymous pipe
         # instead of treating hidden CLI flags as authorization.
         capability = _parent_capability(
-            url, hosts, expected_sha, expected_fingerprint, journal_start)
+            url, hosts, expected_sha, expected_fingerprint, journal_start,
+            journal_file)
         read_fd, write_fd = os.pipe()
         args.extend(["--_parent-fd", str(read_fd)])
         try:
@@ -618,6 +665,7 @@ class RealJournal:
         if (not urls or len(urls) != len(set(urls))
                 or any(not isinstance(url, str) for url in urls)):
             raise UnsafeTarget("journal selection must contain unique URLs")
+        self.path = path
         self.fd = _safe_fd(path)
         self.previous = ZERO_SHA
         self.count = 0
@@ -1627,7 +1675,7 @@ def main() -> None:
                 result = isolated_worker(
                     url, tuple(sorted(allowed)), args.timeout,
                     source["checkout_sha"], source["fingerprint_sha256"],
-                    journal.previous)
+                    journal.previous, str(journal.path))
                 _raise_if_cancelled()
                 journal.result(result)
             _raise_if_cancelled()
