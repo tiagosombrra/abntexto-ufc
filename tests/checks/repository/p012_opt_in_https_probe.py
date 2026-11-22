@@ -472,7 +472,7 @@ def verify_parent_capability(fd: int, url: str, hosts: tuple[str, ...],
             first = handle.readline(MAX_RECORD_BYTES + 1)
     except OSError as error:
         raise UnsafeTarget("parent journal receipt is unavailable") from error
-    if (not first.endswith(b"\\n") or len(first) > MAX_RECORD_BYTES
+    if (not first.endswith(b"\n") or len(first) > MAX_RECORD_BYTES
             or hashlib.sha256(first).hexdigest() != journal_start):
         raise UnsafeTarget("parent journal start does not match capability")
     try:
@@ -979,38 +979,64 @@ def selftest() -> int:
     assert b"internal worker requires parent-owned pipe" in naked_worker.stderr
     negative += 1
 
-    # Positive inherited-pipe admission is supported only on POSIX. The
-    # offline Static suite must remain operational on Windows as well.
+    # Real parent-journal admission must verify the fsynced start receipt,
+    # not merely trust a caller-supplied checksum-shaped string.
     if os.name == "posix":
-        # A private pipe binds URL/host/commit to the parent journal receipt.
-        # No live worker or network is started by these fixture cases.
-        for approved in (True, False):
-            read_fd, write_fd = os.pipe()
-            try:
-                raw = _parent_capability(
-                    "https://example.org/a", ("example.org",),
-                    "a" * 40, "b" * 64, "c" * 64)
-                os.write(write_fd, raw)
-            finally:
-                os.close(write_fd)
-            if approved:
-                verify_parent_capability(
-                    read_fd, "https://example.org/a", ("example.org",),
-                    "a" * 40, "b" * 64, parent_pid=os.getpid())
-            else:
+        with tempfile.TemporaryDirectory(prefix="p012-ipc-journal-") as folder:
+            receipt = {
+                "checkout_sha": "a" * 40,
+                "fingerprint_sha256": "b" * 64,
+            }
+            with RealJournal(Path(folder) / "receipt.jsonl", receipt,
+                             ("https://example.org/a",)) as journal:
+                for approved in (True, False):
+                    read_fd, write_fd = os.pipe()
+                    try:
+                        raw = _parent_capability(
+                            "https://example.org/a", ("example.org",),
+                            "a" * 40, "b" * 64, journal.previous,
+                            str(journal.path))
+                        os.write(write_fd, raw)
+                    finally:
+                        os.close(write_fd)
+                    if approved:
+                        verify_parent_capability(
+                            read_fd, "https://example.org/a",
+                            ("example.org",), "a" * 40, "b" * 64,
+                            parent_pid=os.getpid())
+                    else:
+                        try:
+                            verify_parent_capability(
+                                read_fd, "https://example.org/unauthorized",
+                                ("example.org",), "a" * 40, "b" * 64,
+                                parent_pid=os.getpid())
+                        except UnsafeTarget:
+                            negative += 1
+                        else:
+                            raise AssertionError(
+                                "mismatched parent capability accepted")
+                negative += 1
+                # A valid-looking hash without an actual journal must fail.
+                read_fd, write_fd = os.pipe()
+                try:
+                    forged = _parent_capability(
+                        "https://example.org/a", ("example.org",),
+                        "a" * 40, "b" * 64, "c" * 64, str(journal.path))
+                    os.write(write_fd, forged)
+                finally:
+                    os.close(write_fd)
                 try:
                     verify_parent_capability(
-                        read_fd, "https://example.org/unauthorized",
-                        ("example.org",), "a" * 40, "b" * 64,
-                        parent_pid=os.getpid())
+                        read_fd, "https://example.org/a", ("example.org",),
+                        "a" * 40, "b" * 64, parent_pid=os.getpid())
                 except UnsafeTarget:
                     negative += 1
                 else:
-                    raise AssertionError("mismatched parent capability accepted")
-        negative += 1
+                    raise AssertionError(
+                        "fabricated journal checksum was accepted")
     else:
-        # Non-POSIX live supervision is deliberately fail-closed; offline
-        # self-tests should verify denial rather than attempt POSIX admission.
+        # The offline Static suite remains available on Windows even though
+        # its live worker admission is explicitly unsupported.
         for descriptor in (-1, 3):
             try:
                 verify_parent_capability(
@@ -1122,7 +1148,9 @@ def selftest() -> int:
                         # A short local fixture deadline; never a socket.
                         isolated_worker("https://example.org/a",
                                         ("example.org",), 0.02,
-                                        "a" * 40, "b" * 64, "c" * 64)
+                                        "a" * 40, "b" * 64, "c" * 64,
+                                str(Path(tempfile.gettempdir()) /
+                                    "p012-offline-no-network.jsonl"))
                     except (SystemExit, KeyboardInterrupt):
                         if not (spawn_signals or wait_signals or cleanup_signals):
                             raise AssertionError("unexpected cancellation")
@@ -1169,7 +1197,9 @@ def selftest() -> int:
             try:
                 isolated_worker("https://example.org/a",
                                 ("example.org",), 1.0,
-                                "a" * 40, "b" * 64, "c" * 64)
+                                "a" * 40, "b" * 64, "c" * 64,
+                                str(Path(tempfile.gettempdir()) /
+                                    "p012-offline-no-network.jsonl"))
             except UnsafeTarget as error:
                 assert "cleanup not confirmed" in str(error)
                 negative += 1
@@ -1189,7 +1219,9 @@ def selftest() -> int:
                 try:
                     isolated_worker("https://example.org/a",
                                     ("example.org",), 1.0,
-                                    "a" * 40, "b" * 64, "c" * 64)
+                                    "a" * 40, "b" * 64, "c" * 64,
+                                str(Path(tempfile.gettempdir()) /
+                                    "p012-offline-no-network.jsonl"))
                 except UnsafeTarget:
                     negative += 1
                 else:
@@ -1209,7 +1241,9 @@ def selftest() -> int:
                 try:
                     isolated_worker("https://example.org/a",
                                     ("example.org",), 1.0,
-                                    "a" * 40, "b" * 64, "c" * 64)
+                                    "a" * 40, "b" * 64, "c" * 64,
+                                str(Path(tempfile.gettempdir()) /
+                                    "p012-offline-no-network.jsonl"))
                 except UnsafeTarget:
                     negative += 1
                 else:
@@ -1232,7 +1266,9 @@ def selftest() -> int:
             try:
                 isolated_worker("https://example.org/a",
                                 ("example.org",), 1.0,
-                                "a" * 40, "b" * 64, "c" * 64)
+                                "a" * 40, "b" * 64, "c" * 64,
+                                str(Path(tempfile.gettempdir()) /
+                                    "p012-offline-no-network.jsonl"))
             except UnsafeTarget as error:
                 assert "reaped externally" in str(error)
                 negative += 1
@@ -1273,7 +1309,9 @@ def selftest() -> int:
                              side_effect=ensure_group_identity):
             outcome = isolated_worker(
                 "https://example.org/a", ("example.org",), 2.0,
-                "a" * 40, "b" * 64, "c" * 64)
+                "a" * 40, "b" * 64, "c" * 64,
+                                str(Path(tempfile.gettempdir()) /
+                                    "p012-offline-no-network.jsonl"))
         assert outcome["outcome"] == "REACHABLE" and saw_unreaped
         negative += 1
 
@@ -1305,7 +1343,9 @@ def selftest() -> int:
                                   side_effect=spawn_exiting_leader):
                     outcome = isolated_worker(
                         "https://example.org/a", ("example.org",), 1.0,
-                        "a" * 40, "b" * 64, "c" * 64)
+                        "a" * 40, "b" * 64, "c" * 64,
+                                str(Path(tempfile.gettempdir()) /
+                                    "p012-offline-no-network.jsonl"))
                 assert outcome["outcome"] == "TIMEOUT"
                 assert launched[0] is not None
                 assert launched[0].returncode == 0
