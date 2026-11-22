@@ -396,9 +396,9 @@ def verify_parent_capability(fd: int, url: str, hosts: tuple[str, ...],
     if os.name != "posix" or type(fd) is not int or fd < 3:
         raise UnsafeTarget("worker requires inherited POSIX parent pipe")
     try:
-        if not stat.S_ISFIFO(os.fstat(fd).st_mode):
-            raise UnsafeTarget("worker capability is not an inherited pipe")
         with os.fdopen(fd, "rb") as handle:
+            if not stat.S_ISFIFO(os.fstat(handle.fileno()).st_mode):
+                raise UnsafeTarget("worker capability is not an inherited pipe")
             raw = handle.readline(MAX_CHILD_OUTPUT + 1)
             if (not raw.endswith(b"\n")
                     or len(raw) > MAX_CHILD_OUTPUT):
@@ -862,6 +862,48 @@ def selftest() -> int:
             else:
                 raise AssertionError("invalid HTTP informational chain accepted")
 
+    # The hidden --_worker flag is not sufficient to authorize networking.
+    # It must fail before Git/DNS/socket access without an inherited parent FD.
+    naked_worker = subprocess.run(
+        [sys.executable, "-I", str(Path(__file__).resolve()),
+         "--network-opt-in", "--_worker", "--url", "https://example.org/a",
+         "--host", "example.org", "--timeout", "1",
+         "--_expected-sha", "a" * 40,
+         "--_expected-fingerprint", "b" * 64],
+        cwd=ROOT, env={"PYTHONDONTWRITEBYTECODE": "1"}, check=False,
+        capture_output=True, timeout=5,
+    )
+    assert naked_worker.returncode != 0
+    assert b"internal worker requires parent-owned pipe" in naked_worker.stderr
+    negative += 1
+
+    # A private inherited pipe binds the exact URL/host/commit to the
+    # parent journal-chain receipt. No real worker or network is started.
+    for approved in (True, False):
+        read_fd, write_fd = os.pipe()
+        try:
+            raw = _parent_capability(
+                "https://example.org/a", ("example.org",),
+                "a" * 40, "b" * 64, "c" * 64)
+            os.write(write_fd, raw)
+        finally:
+            os.close(write_fd)
+        if approved:
+            verify_parent_capability(
+                read_fd, "https://example.org/a", ("example.org",),
+                "a" * 40, "b" * 64, parent_pid=os.getpid())
+        else:
+            try:
+                verify_parent_capability(
+                    read_fd, "https://example.org/unauthorized",
+                    ("example.org",), "a" * 40, "b" * 64,
+                    parent_pid=os.getpid())
+            except UnsafeTarget:
+                negative += 1
+            else:
+                raise AssertionError("mismatched parent capability accepted")
+    negative += 1
+
     # Test signals during spawn, communicate, and the FIRST cleanup line.
     # Handlers must never throw asynchronously: cancellation is checked
     # synchronously after the supervised child has been killed and reaped.
@@ -948,7 +990,7 @@ def selftest() -> int:
                         # A short local fixture deadline; never a socket.
                         isolated_worker("https://example.org/a",
                                         ("example.org",), 0.02,
-                                        "a" * 40, "b" * 64)
+                                        "a" * 40, "b" * 64, "c" * 64)
                     except (SystemExit, KeyboardInterrupt):
                         if not (spawn_signals or wait_signals or cleanup_signals):
                             raise AssertionError("unexpected cancellation")
@@ -991,7 +1033,7 @@ def selftest() -> int:
                 try:
                     isolated_worker("https://example.org/a",
                                     ("example.org",), 1.0,
-                                    "a" * 40, "b" * 64)
+                                    "a" * 40, "b" * 64, "c" * 64)
                 except UnsafeTarget:
                     negative += 1
                 else:
@@ -1033,7 +1075,7 @@ def selftest() -> int:
                              side_effect=ensure_group_identity):
             outcome = isolated_worker(
                 "https://example.org/a", ("example.org",), 2.0,
-                "a" * 40, "b" * 64)
+                "a" * 40, "b" * 64, "c" * 64)
         assert outcome["outcome"] == "REACHABLE" and saw_unreaped
         negative += 1
 
@@ -1065,7 +1107,7 @@ def selftest() -> int:
                                   side_effect=spawn_exiting_leader):
                     outcome = isolated_worker(
                         "https://example.org/a", ("example.org",), 1.0,
-                        "a" * 40, "b" * 64)
+                        "a" * 40, "b" * 64, "c" * 64)
                 assert outcome["outcome"] == "TIMEOUT"
                 assert launched[0] is not None
                 assert launched[0].returncode == 0
