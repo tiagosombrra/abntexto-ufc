@@ -890,32 +890,47 @@ def selftest() -> int:
     assert b"internal worker requires parent-owned pipe" in naked_worker.stderr
     negative += 1
 
-    # A private inherited pipe binds the exact URL/host/commit to the
-    # parent journal-chain receipt. No real worker or network is started.
-    for approved in (True, False):
-        read_fd, write_fd = os.pipe()
-        try:
-            raw = _parent_capability(
-                "https://example.org/a", ("example.org",),
-                "a" * 40, "b" * 64, "c" * 64)
-            os.write(write_fd, raw)
-        finally:
-            os.close(write_fd)
-        if approved:
-            verify_parent_capability(
-                read_fd, "https://example.org/a", ("example.org",),
-                "a" * 40, "b" * 64, parent_pid=os.getpid())
-        else:
+    # Positive inherited-pipe admission is supported only on POSIX. The
+    # offline Static suite must remain operational on Windows as well.
+    if os.name == "posix":
+        # A private pipe binds URL/host/commit to the parent journal receipt.
+        # No live worker or network is started by these fixture cases.
+        for approved in (True, False):
+            read_fd, write_fd = os.pipe()
+            try:
+                raw = _parent_capability(
+                    "https://example.org/a", ("example.org",),
+                    "a" * 40, "b" * 64, "c" * 64)
+                os.write(write_fd, raw)
+            finally:
+                os.close(write_fd)
+            if approved:
+                verify_parent_capability(
+                    read_fd, "https://example.org/a", ("example.org",),
+                    "a" * 40, "b" * 64, parent_pid=os.getpid())
+            else:
+                try:
+                    verify_parent_capability(
+                        read_fd, "https://example.org/unauthorized",
+                        ("example.org",), "a" * 40, "b" * 64,
+                        parent_pid=os.getpid())
+                except UnsafeTarget:
+                    negative += 1
+                else:
+                    raise AssertionError("mismatched parent capability accepted")
+        negative += 1
+    else:
+        # Non-POSIX live supervision is deliberately fail-closed; offline
+        # self-tests should verify denial rather than attempt POSIX admission.
+        for descriptor in (-1, 3):
             try:
                 verify_parent_capability(
-                    read_fd, "https://example.org/unauthorized",
-                    ("example.org",), "a" * 40, "b" * 64,
-                    parent_pid=os.getpid())
+                    descriptor, "https://example.org/a", ("example.org",),
+                    "a" * 40, "b" * 64, parent_pid=os.getpid())
             except UnsafeTarget:
                 negative += 1
             else:
-                raise AssertionError("mismatched parent capability accepted")
-    negative += 1
+                raise AssertionError("non-POSIX parent admission was accepted")
 
     # Test signals during spawn, communicate, and the FIRST cleanup line.
     # Handlers must never throw asynchronously: cancellation is checked
