@@ -361,8 +361,74 @@ def _read_unreaped_posix(process: subprocess.Popen, deadline: float) -> bytes | 
                     time.sleep(min(0.01, remaining))
 
 
+
+def _parent_capability(url: str, hosts: tuple[str, ...], expected_sha: str,
+                       expected_fingerprint: str, journal_start: str) -> bytes:
+    """Bind an isolated worker's private pipe to a parent-owned journal."""
+    if (len(journal_start) != 64 or journal_start == ZERO_SHA
+            or any(c not in "0123456789abcdef" for c in journal_start)):
+        raise UnsafeTarget("missing parent journal start checksum")
+    payload = {
+        "version": 1, "url": url, "hosts": list(hosts),
+        "checkout_sha": expected_sha,
+        "fingerprint_sha256": expected_fingerprint,
+        "journal_start_sha256": journal_start,
+        "parent_pid": os.getpid(),
+    }
+    raw = (json.dumps(payload, sort_keys=True, separators=(",", ":"))
+           + "\n").encode("ascii")
+    if len(raw) > MAX_CHILD_OUTPUT:
+        raise UnsafeTarget("parent worker capability exceeds byte budget")
+    return raw
+
+
+def verify_parent_capability(fd: int, url: str, hosts: tuple[str, ...],
+                             expected_sha: str, expected_fingerprint: str,
+                             parent_pid: int | None = None) -> None:
+    """Reject a naked internal CLI before ANY DNS, TLS or HTTP operations.
+
+    An inherited anonymous pipe is a process-lifecycle capability, not a
+    cryptographic defense against an arbitrary program running as the same
+    local user. The parent only creates it after opening its O_EXCL journal.
+    """
+    import stat
+
+    if os.name != "posix" or type(fd) is not int or fd < 3:
+        raise UnsafeTarget("worker requires inherited POSIX parent pipe")
+    try:
+        if not stat.S_ISFIFO(os.fstat(fd).st_mode):
+            raise UnsafeTarget("worker capability is not an inherited pipe")
+        with os.fdopen(fd, "rb") as handle:
+            raw = handle.readline(MAX_CHILD_OUTPUT + 1)
+            if (not raw.endswith(b"\n")
+                    or len(raw) > MAX_CHILD_OUTPUT):
+                raise UnsafeTarget("invalid or oversized parent capability")
+            payload = json.loads(raw)
+    except (OSError, ValueError, UnicodeDecodeError) as error:
+        raise UnsafeTarget("missing or corrupt parent worker capability") from error
+    if (not isinstance(payload, dict)
+            or set(payload) != {
+                "version", "url", "hosts", "checkout_sha",
+                "fingerprint_sha256", "journal_start_sha256", "parent_pid",
+            }
+            or payload["version"] != 1
+            or payload["url"] != url or payload["hosts"] != list(hosts)
+            or payload["checkout_sha"] != expected_sha
+            or payload["fingerprint_sha256"] != expected_fingerprint
+            or type(payload["parent_pid"]) is not int
+            or payload["parent_pid"] != (
+                os.getppid() if parent_pid is None else parent_pid)):
+        raise UnsafeTarget("parent capability does not match selected request")
+    journal_start = payload["journal_start_sha256"]
+    if (not isinstance(journal_start, str) or len(journal_start) != 64
+            or journal_start == ZERO_SHA
+            or any(c not in "0123456789abcdef" for c in journal_start)):
+        raise UnsafeTarget("parent-owned journal receipt not authenticated")
+
+
 def isolated_worker(url: str, hosts: tuple[str, ...], seconds: float,
-                    expected_sha: str, expected_fingerprint: str) -> dict:
+                    expected_sha: str, expected_fingerprint: str,
+                    journal_start: str) -> dict:
     """Run one URL in a child whose entire lifecycle is guarded by the parent."""
     _raise_if_cancelled()
     args = [sys.executable, "-I", str(Path(__file__).resolve()),
@@ -378,7 +444,11 @@ def isolated_worker(url: str, hosts: tuple[str, ...], seconds: float,
     process = None
     previous_mask = None
     output = None
+    read_fd = None
+    write_fd = None
     try:
+        if not use_session:
+            raise UnsafeTarget("live worker parent channel requires POSIX")
         if use_session:
             if not (hasattr(signal, "pthread_sigmask") and
                     hasattr(os, "waitid") and hasattr(os, "WNOWAIT")):
@@ -391,15 +461,32 @@ def isolated_worker(url: str, hosts: tuple[str, ...], seconds: float,
             # for the new session's lifetime to this guarding try/finally.
             previous_mask = signal.pthread_sigmask(
                 signal.SIG_BLOCK, {signal.SIGTERM, signal.SIGINT})
+        # The parent is invoked only inside RealJournal, after its start
+        # receipt was fsynced. Give the worker a private anonymous pipe
+        # instead of treating hidden CLI flags as authorization.
+        capability = _parent_capability(
+            url, hosts, expected_sha, expected_fingerprint, journal_start)
+        read_fd, write_fd = os.pipe()
+        args.extend(["--_parent-fd", str(read_fd)])
         try:
             process = subprocess.Popen(
                 args, cwd=ROOT, stdin=subprocess.DEVNULL, stdout=subprocess.PIPE,
                 stderr=subprocess.DEVNULL, env=environment, close_fds=True,
-                start_new_session=use_session,
+                start_new_session=True, pass_fds=(read_fd,),
             )
         except OSError:
             return {"outcome": "WORKER_ERROR", "status": None, "url": url,
                     "observed_at": utc_now()}
+        os.close(read_fd)
+        read_fd = None
+        pending = memoryview(capability)
+        while pending:
+            written = os.write(write_fd, pending)
+            if written <= 0:
+                raise OSError("parent worker capability write failed")
+            pending = pending[written:]
+        os.close(write_fd)
+        write_fd = None
         if previous_mask is not None:
             signal.pthread_sigmask(signal.SIG_SETMASK, previous_mask)
             previous_mask = None
@@ -419,6 +506,11 @@ def isolated_worker(url: str, hosts: tuple[str, ...], seconds: float,
                 output = stdout
                 break
     finally:
+        # Closing the capability pipe cannot be postponed until after wait:
+        # the child might otherwise remain blocked on its parent handshake.
+        for descriptor in (read_fd, write_fd):
+            if descriptor is not None:
+                os.close(descriptor)
         cleanup_mask = None
         if use_session and hasattr(signal, "pthread_sigmask"):
             cleanup_mask = signal.pthread_sigmask(
@@ -1246,6 +1338,7 @@ def main() -> None:
     parser.add_argument("--_worker", action="store_true", help=argparse.SUPPRESS)
     parser.add_argument("--_expected-sha", help=argparse.SUPPRESS)
     parser.add_argument("--_expected-fingerprint", help=argparse.SUPPRESS)
+    parser.add_argument("--_parent-fd", type=int, help=argparse.SUPPRESS)
     args = parser.parse_args()
     if not args.network_opt_in:
         number = selftest()
@@ -1257,8 +1350,24 @@ def main() -> None:
               " live_security_review=PENDING release_authorization=NONE")
         return
 
+    # Authenticate the internal child branch BEFORE any Git inventory,
+    # DNS, TLS or HTTP operation. Hiding an argparse flag is not a guard.
+    if args._worker:
+        if args._parent_fd is None:
+            parser.error("internal worker requires parent-owned pipe capability")
+        try:
+            verify_parent_capability(
+                args._parent_fd, args.url[0] if len(args.url) == 1 else "",
+                tuple(sorted(args.host)), args._expected_sha,
+                args._expected_fingerprint)
+        except UnsafeTarget as error:
+            parser.error(str(error))
+    elif args._parent_fd is not None:
+        parser.error("parent descriptor allowed only for internal worker")
+
     if (not math.isfinite(args.timeout) or not 1 <= args.timeout <= 30
             or not args.host or not args.url or len(args.url) > MAX_SELECTED
+            or len(args.host) > 16
             or len(args.url) != len(set(args.url))
             or any(len(url) > MAX_URL_LENGTH for url in args.url)):
         parser.error("explicit hosts, unique inventoried URLs and 1-30s budget required")
@@ -1306,7 +1415,8 @@ def main() -> None:
                 _raise_if_cancelled()
                 result = isolated_worker(
                     url, tuple(sorted(allowed)), args.timeout,
-                    source["checkout_sha"], source["fingerprint_sha256"])
+                    source["checkout_sha"], source["fingerprint_sha256"],
+                    journal.previous)
                 _raise_if_cancelled()
                 journal.result(result)
             _raise_if_cancelled()
