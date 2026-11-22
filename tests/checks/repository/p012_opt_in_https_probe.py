@@ -1261,12 +1261,31 @@ def selftest() -> int:
         def guarded_git_read(args, **kwargs):
             if (isinstance(args, list) and len(args) > 1
                     and args[:2] == ["git", "--no-replace-objects"]):
-                assert kwargs["env"]["GIT_NO_LAZY_FETCH"] == "1"
-                assert kwargs["env"]["GIT_TERMINAL_PROMPT"] == "0"
+                environment = kwargs["env"]
+                assert environment["GIT_NO_LAZY_FETCH"] == "1"
+                assert environment["GIT_TERMINAL_PROMPT"] == "0"
+                assert environment["GIT_CONFIG_NOSYSTEM"] == "1"
+                assert environment["GIT_CONFIG_GLOBAL"] == os.devnull
+                assert "GIT_CONFIG_COUNT" not in environment
+                assert "GIT_OBJECT_DIRECTORY" not in environment
+                assert "GIT_ALTERNATE_OBJECT_DIRECTORIES" not in environment
+                assert args[2:4] == ["-c", "core.fsmonitor=false"]
+                if os.name == "posix":
+                    assert environment["PATH"] == os.defpath
                 checked_git_reads[0] += 1
             return original_check_output(args, **kwargs)
-        with patch.object(subprocess, "check_output",
-                          side_effect=guarded_git_read):
+        # Inject dangerous inherited Git knobs and verify that none reaches
+        # Git when the inventory establishes the checkout's identity.
+        inherited_git_knobs = {
+            "GIT_CONFIG_COUNT": "1",
+            "GIT_CONFIG_KEY_0": "core.fsmonitor",
+            "GIT_CONFIG_VALUE_0": "/bin/false",
+            "GIT_OBJECT_DIRECTORY": "/untrusted/objects",
+            "GIT_ALTERNATE_OBJECT_DIRECTORIES": "/untrusted/alternates",
+        }
+        with patch.dict(os.environ, inherited_git_knobs), \
+                patch.object(subprocess, "check_output",
+                             side_effect=guarded_git_read):
             protected = trusted_source_inventory(gitroot)
         assert checked_git_reads[0] >= 3
         choose_inventory_url(protected, "https://example.org/original",
