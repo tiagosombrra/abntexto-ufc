@@ -932,6 +932,19 @@ def selftest() -> int:
             else:
                 raise AssertionError("non-POSIX parent admission was accepted")
 
+    # Exercise the non-POSIX admission guard even on Linux CI, without a
+    # network call or an actual Windows runner. Real Windows Static is still
+    # a separate, platform-specific acceptance question.
+    with patch.object(os, "name", "nt"):
+        try:
+            verify_parent_capability(
+                3, "https://example.org/a", ("example.org",),
+                "a" * 40, "b" * 64, parent_pid=os.getpid())
+        except UnsafeTarget:
+            negative += 1
+        else:
+            raise AssertionError("non-POSIX worker capability was accepted")
+
     # Test signals during spawn, communicate, and the FIRST cleanup line.
     # Handlers must never throw asynchronously: cancellation is checked
     # synchronously after the supervised child has been killed and reaped.
