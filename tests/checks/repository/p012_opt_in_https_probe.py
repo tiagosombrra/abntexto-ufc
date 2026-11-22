@@ -477,10 +477,13 @@ def isolated_worker(url: str, hosts: tuple[str, ...], seconds: float,
             if not (hasattr(signal, "pthread_sigmask") and
                     hasattr(os, "waitid") and hasattr(os, "WNOWAIT")):
                 raise UnsafeTarget("safe POSIX process supervision is unavailable")
-            # Ignored SIGCHLD auto-reaps the session leader and releases its
-            # PID/PGID before our anchored killpg() cleanup can run.
-            if signal.getsignal(signal.SIGCHLD) == signal.SIG_IGN:
-                raise UnsafeTarget("SIGCHLD ignored: safe worker supervision unavailable")
+            # A caller's SIGCHLD handler may reap unrelated children and
+            # invalidate our waitid(WNOWAIT) PID/PGID identity guarantee.
+            # Only a dedicated CLI with the default child disposition is
+            # supported; embedding into a custom child reaper fails closed.
+            if signal.getsignal(signal.SIGCHLD) != signal.SIG_DFL:
+                raise UnsafeTarget(
+                    "nondefault SIGCHLD: safe worker supervision unavailable")
             # Block both cancellation signals before handing responsibility
             # for the new session's lifetime to this guarding try/finally.
             previous_mask = signal.pthread_sigmask(
@@ -556,8 +559,15 @@ def isolated_worker(url: str, hosts: tuple[str, ...], seconds: float,
             if process is not None:
                 try:
                     if use_session:
-                        # The leader has NOT been reaped: its PID/PGID cannot
-                        # be reused to target an unrelated process group.
+                        # A child unexpectedly reaped by another actor has a
+                        # reusable PID. Never send SIGKILL to that group ID.
+                        # WNOWAIT preserves our own child's identity.
+                        try:
+                            os.waitid(os.P_PID, process.pid,
+                                      os.WEXITED | os.WNOHANG | os.WNOWAIT)
+                        except ChildProcessError as error:
+                            raise UnsafeTarget(
+                                "worker was reaped externally before cleanup") from error
                         os.killpg(process.pid, signal.SIGKILL)
                     elif process.poll() is None:
                         process.kill()
@@ -1057,6 +1067,7 @@ def selftest() -> int:
                         patch(__name__ + "._read_unreaped_posix",
                               side_effect=fake_nonreaping_reader), \
                         patch.object(os, "killpg", side_effect=fake_killpg), \
+                        patch.object(os, "waitid", return_value=None), \
                         patch.object(signal, "pthread_sigmask",
                                      side_effect=inject_before_cleanup_mask):
                     try:
@@ -1105,7 +1116,8 @@ def selftest() -> int:
                           return_value=FakeStuckWorker()), \
                 patch(__name__ + "._read_unreaped_posix",
                       return_value=None), \
-                patch.object(os, "killpg", return_value=None):
+                patch.object(os, "killpg", return_value=None), \
+                patch.object(os, "waitid", return_value=None):
             try:
                 isolated_worker("https://example.org/a",
                                 ("example.org",), 1.0,
@@ -1136,6 +1148,48 @@ def selftest() -> int:
                     raise AssertionError("ignored SIGCHLD was accepted")
         finally:
             signal.signal(signal.SIGCHLD, previous_sigchld)
+
+    # A custom SIGCHLD handler may reap children behind the supervisor's
+    # back, releasing its PGID before killpg(). Reject it before spawning.
+    if os.name == "posix":
+        previous_child_handler = signal.getsignal(signal.SIGCHLD)
+        try:
+            signal.signal(signal.SIGCHLD, lambda *_ignored: None)
+            with patch.object(subprocess, "Popen",
+                              side_effect=AssertionError(
+                                  "worker spawned with custom SIGCHLD reaper")):
+                try:
+                    isolated_worker("https://example.org/a",
+                                    ("example.org",), 1.0,
+                                    "a" * 40, "b" * 64, "c" * 64)
+                except UnsafeTarget:
+                    negative += 1
+                else:
+                    raise AssertionError("custom SIGCHLD was accepted")
+        finally:
+            signal.signal(signal.SIGCHLD, previous_child_handler)
+
+    # If a third party reaps the leader anyway, fail without sending SIGKILL
+    # to a potentially reused group ID. This uses fake processes only.
+    if os.name == "posix":
+        stolen = FakeWaitingWorker()
+        with patch.object(subprocess, "Popen", return_value=stolen), \
+                patch(__name__ + "._read_unreaped_posix",
+                      return_value=None), \
+                patch.object(os, "waitid",
+                             side_effect=ChildProcessError("reaped by another")), \
+                patch.object(os, "killpg",
+                             side_effect=AssertionError(
+                                 "unsafe reused PGID was signalled")):
+            try:
+                isolated_worker("https://example.org/a",
+                                ("example.org",), 1.0,
+                                "a" * 40, "b" * 64, "c" * 64)
+            except UnsafeTarget as error:
+                assert "reaped externally" in str(error)
+                negative += 1
+            else:
+                raise AssertionError("external child reaping was accepted")
 
     # A fast worker with no descendants closes stdout before cleanup. Even
     # then the supervisor must keep its zombie PID reserved until killpg().
