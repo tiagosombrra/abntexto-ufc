@@ -12,6 +12,12 @@ Example command for a reviewed, egress-controlled environment only (illustrative
 
 The hostname and URL are illustrations, not a claim that this URL exists in this repository's inventory.
 
+### Internal worker journal admission (#620)
+
+The internal `--_worker` CLI mode is **not an operator entry point**. Under POSIX it now requires a private anonymous pipe descriptor explicitly inherited by the child with `pass_fds`. The parent creates this pipe **only after opening the exclusive REAL_HTTP journal and fsyncing its start record**. It transmits a bounded request capability identifying the exact URL, allowed host tuple, checkout SHA, inventory fingerprint, current journal-chain SHA-256 and parent PID. The worker verifies the pipe type and the complete binding **before** recomputing the inventory or issuing DNS/TLS/HTTP. Direct `--_worker` calls without the inherited descriptor fail closed; the parent uses bounded nonblocking IPC writes and retains responsibility for the child's lifecycle. Normal `--network-opt-in` entry still requires the parent-owned absolute journal path.
+
+This is a process-lifecycle control, **not a cryptographic proof against hostile code running as the same OS user**. A sufficiently privileged local process could deliberately create a forged pipe or modify the Python source. Do not claim this authenticates a remote requester or replaces system egress filtering. The current transport requires POSIX process supervision; on non-POSIX systems the live parent-worker operation fails closed until equivalent guarantees are independently reviewed. The Static suite includes an offline direct-worker rejection and parent-capability positive/negative fixtures.
+
 ## Exact network construction
 
 - The worker checks every DNS answer with the merged public-IP policy. A single private, reserved or scoped answer rejects the entire response. The worker chooses one numeric global IP and never passes a DNS hostname into the TCP connect operation.
