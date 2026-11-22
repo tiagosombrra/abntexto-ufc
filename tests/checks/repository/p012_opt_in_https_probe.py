@@ -74,48 +74,73 @@ def validated_ip(value: str) -> str:
 
 
 def trusted_source_inventory(root: Path = ROOT) -> dict:
-    """Derive every Markdown link from immutable Git HEAD tree blobs, not files.
+    """Derive Markdown links from immutable HEAD blobs with isolated Git state.
 
-    A clean git status is insufficient: skip-worktree and assume-unchanged
-    allow an edited Markdown file to evade status while HEAD stays constant.
+    The repository is untrusted for link selection, and inherited Git options
+    must not inject alternate object directories, config, fsmonitor commands,
+    or an unexpected network fetch during the identity-establishing reads.
     """
-    # Git can transparently call "fetch" for promised missing blobs in a
-    # partial clone. Deny that before any source inventory read.
-    git_env = os.environ.copy()
-    git_env["GIT_NO_LAZY_FETCH"] = "1"
-    git_env["GIT_TERMINAL_PROMPT"] = "0"
-    head = subprocess.check_output(
-        ["git", "--no-replace-objects", "rev-parse", "HEAD"],
-        cwd=root, text=True, env=git_env,
-    ).strip()
-    raw_tree = subprocess.check_output(
-        ["git", "--no-replace-objects", "ls-tree", "-r", "--name-only", "-z", head],
-        cwd=root, env=git_env,
-    )
-    documents = []
-    for raw_path in raw_tree.split(b"\0"):
-        if not raw_path:
-            continue
-        try:
-            path = Path(raw_path.decode("utf-8"))
-        except UnicodeDecodeError as error:
-            raise UnsafeTarget("non-UTF8 tracked path in Git HEAD") from error
-        if (path.is_absolute() or ".." in path.parts or
-                (path.parts and path.parts[0] == ".git")):
-            raise UnsafeTarget("unsafe path in Git HEAD tree")
-        if path.suffix.lower() != ".md":
-            continue
-        if tuple(path.parts[:2]) in EXCLUDED_PARENTS:
-            continue
-        documents.append(path)
-    if not documents:
-        raise UnsafeTarget("Git HEAD has no active Markdown documents")
+    # A dedicated scratch HOME and XDG directory isolate user configuration.
+    # On POSIX, use the system default search path instead of inherited PATH.
+    # Windows retains PATH only for the offline Git fixture (live is denied).
     with tempfile.TemporaryDirectory(prefix="p012-head-objects-") as folder:
-        snapshot_root = Path(folder)
+        scratch = Path(folder)
+        config_home = scratch / "git-config-home"
+        config_home.mkdir()
+        git_env = {
+            "PATH": os.defpath if os.name == "posix" else os.environ.get("PATH", ""),
+            "HOME": str(config_home),
+            "XDG_CONFIG_HOME": str(config_home),
+            "GIT_CONFIG_NOSYSTEM": "1",
+            "GIT_CONFIG_GLOBAL": os.devnull,
+            "GIT_CONFIG_SYSTEM": os.devnull,
+            "GIT_NO_LAZY_FETCH": "1",
+            "GIT_TERMINAL_PROMPT": "0",
+            "GIT_PROTOCOL_FROM_USER": "0",
+            "GIT_OPTIONAL_LOCKS": "0",
+            "LC_ALL": "C",
+        }
+        if os.name == "nt":
+            # Windows system DLL/loader paths are needed for offline fixtures;
+            # they are never used for the POSIX-only live probe.
+            for name in ("SYSTEMROOT", "WINDIR", "PATHEXT", "TMP", "TEMP"):
+                if name in os.environ:
+                    git_env[name] = os.environ[name]
+        # The raw Git commands never run checkout hooks or file filters.
+        # Explicitly disable fsmonitor even if repository config defines it.
+        git_prefix = ["git", "--no-replace-objects",
+                      "-c", "core.fsmonitor=false"]
+        head = subprocess.check_output(
+            [*git_prefix, "rev-parse", "HEAD"],
+            cwd=root, text=True, env=git_env,
+        ).strip()
+        raw_tree = subprocess.check_output(
+            [*git_prefix, "ls-tree", "-r", "--name-only", "-z", head],
+            cwd=root, env=git_env,
+        )
+        documents = []
+        for raw_path in raw_tree.split(b"\0"):
+            if not raw_path:
+                continue
+            try:
+                path = Path(raw_path.decode("utf-8"))
+            except UnicodeDecodeError as error:
+                raise UnsafeTarget("non-UTF8 tracked path in Git HEAD") from error
+            if (path.is_absolute() or ".." in path.parts or
+                    (path.parts and path.parts[0] == ".git")):
+                raise UnsafeTarget("unsafe path in Git HEAD tree")
+            if path.suffix.lower() != ".md":
+                continue
+            if tuple(path.parts[:2]) in EXCLUDED_PARENTS:
+                continue
+            documents.append(path)
+        if not documents:
+            raise UnsafeTarget("Git HEAD has no active Markdown documents")
+        snapshot_root = scratch / "snapshot"
+        snapshot_root.mkdir()
         for path in documents:
-            # git show reads the pinned commit object, never skip-worktree bytes.
             content = subprocess.check_output(
-                ["git", "--no-replace-objects", "show", head + ":" + path.as_posix()],
+                [*git_prefix, "show", head + ":" + path.as_posix()],
                 cwd=root, env=git_env,
             )
             destination = snapshot_root / path
@@ -124,7 +149,6 @@ def trusted_source_inventory(root: Path = ROOT) -> dict:
         links = inventory(snapshot_root, documents)
     links["checkout_sha"] = head
     return links
-
 
 def require_source_identity(receipt: dict, sha: str, fingerprint: str) -> None:
     """Ensure a worker cannot silently switch the selected source snapshot."""
