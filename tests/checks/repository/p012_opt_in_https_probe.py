@@ -477,16 +477,29 @@ def isolated_worker(url: str, hosts: tuple[str, ...], seconds: float,
         except OSError:
             return {"outcome": "WORKER_ERROR", "status": None, "url": url,
                     "observed_at": utc_now()}
-        os.close(read_fd)
-        read_fd = None
+        # Keep our read end temporarily open: a fast-exiting worker cannot
+        # turn a parent write into SIGPIPE. Use nonblocking writes plus the
+        # single worker deadline so a non-reading child cannot hang the parent.
+        os.set_blocking(write_fd, False)
         pending = memoryview(capability)
         while pending:
-            written = os.write(write_fd, pending)
+            _raise_if_cancelled()
+            remaining = deadline - time.monotonic()
+            if remaining <= 0:
+                return {"outcome": "TIMEOUT", "status": None, "url": url,
+                        "observed_at": utc_now()}
+            try:
+                written = os.write(write_fd, pending)
+            except BlockingIOError:
+                time.sleep(min(0.01, remaining))
+                continue
             if written <= 0:
                 raise OSError("parent worker capability write failed")
             pending = pending[written:]
         os.close(write_fd)
         write_fd = None
+        os.close(read_fd)
+        read_fd = None
         if previous_mask is not None:
             signal.pthread_sigmask(signal.SIG_SETMASK, previous_mask)
             previous_mask = None
