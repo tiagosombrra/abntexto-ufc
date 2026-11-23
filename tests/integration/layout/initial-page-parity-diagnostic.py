@@ -72,7 +72,11 @@ def run_case(work: Path, engine: str, initial: int, cover: bool, control: bool) 
         latex_source(initial=initial, cover=cover, control=control), encoding="utf-8")
     command = [engine, "-interaction=nonstopmode", "-halt-on-error", "-file-line-error",
                f"-jobname={name}", f"{name}.tex"]
-    result = subprocess.run(command, cwd=work, capture_output=True, text=True, timeout=150)
+    tex_env = dict(os.environ)
+    tex_env["TEXINPUTS"] = (str(Path.cwd().resolve()) + os.pathsep
+                            + tex_env.get("TEXINPUTS", ""))
+    result = subprocess.run(command, cwd=work, env=tex_env,
+                            capture_output=True, text=True, timeout=150)
     (work / f"{name}.console.log").write_text(
         result.stdout + "\n" + result.stderr, encoding="utf-8")
     if result.returncode:
