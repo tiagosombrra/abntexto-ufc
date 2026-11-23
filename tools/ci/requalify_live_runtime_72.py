@@ -15,8 +15,11 @@ import os
 from pathlib import Path
 import re
 import subprocess
+import sys
 import urllib.request
 
+# Support direct CLI execution and package imports from repository CI preflights.
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 from requalify_current_runtime_72 import (
     CLASS_BLOB, GROUP_COUNTS, OPTIONAL, PROOFS,
     canonical_groups, git, positive_pair, require, scoped_row,
