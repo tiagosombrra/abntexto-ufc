@@ -80,7 +80,8 @@ def run_case(work: Path, engine: str, initial: int, cover: bool, control: bool) 
     (work / f"{name}.console.log").write_text(
         result.stdout + "\n" + result.stderr, encoding="utf-8")
     if result.returncode:
-        raise RuntimeError(f"Compilation failed: {name} (see {name}.console.log)")
+        tail = "\n".join(result.stdout.splitlines()[-35:])
+        raise RuntimeError(f"Compilation failed: {name}\n{tail}")
     xs, pages = extract_markers(work / f"{name}.pdf")
     expected = list(EXPECTED_X_CM)
     matches = [abs(measured-reference) <= TOLERANCE_CM
