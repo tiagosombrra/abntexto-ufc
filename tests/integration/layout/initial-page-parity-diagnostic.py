@@ -37,7 +37,7 @@ def latex_source(*, initial: int, cover: bool, control: bool) -> str:
                     "  location={Fortaleza}, year={2026}\n"
                     "}\n")
         # The profile selects duplex geometry, but the base class applies it on explicit layout entry.
-        start = "\\begin{document}\n\\twosidelayout\n" + ("\\ufcPrintCover\n" if cover else "")
+        start = "\\begin{document}\n\\twosidelayout\n" + ("\\ufcPrintCover\n" if cover else "") + "\\ufcPretextualBreak\n"
     return (preamble + start
             + "\\noindent \\texttt{" + MARKERS[0] + "}\\par\n"
             + "\\clearpage\n"
@@ -87,9 +87,12 @@ def run_case(work: Path, engine: str, initial: int, cover: bool, control: bool) 
     expected = list(EXPECTED_X_CM)
     matches = [abs(measured-reference) <= TOLERANCE_CM
                for measured, reference in zip(xs, expected)]
+    expected_pages = [2, 3] if cover and not control else [1, 2]
+    physical_pages_match = pages == expected_pages
     return dict(case=name, engine=engine, initial_page=initial, cover=cover, control=control,
-                physical_marker_pages=pages, left_x_cm=xs, expected_x_cm=expected,
-                expected_match=all(matches))
+                physical_marker_pages=pages, expected_marker_pages=expected_pages,
+                left_x_cm=xs, expected_x_cm=expected,
+                expected_match=all(matches) and physical_pages_match)
 
 
 def main() -> int:
