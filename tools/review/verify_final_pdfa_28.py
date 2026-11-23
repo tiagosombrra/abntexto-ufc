@@ -122,8 +122,12 @@ def prepare():
             ["git", "rev-parse", "HEAD"], text=True).strip()
         class_at_commit = subprocess.check_output(
             ["git", "rev-parse", "HEAD:abntexto-ufc.cls"], text=True).strip()
-        require(os.environ.get("GITHUB_EVENT_NAME") == "pull_request",
-                "Development PDF/A evidence requires a pull request")
+        event = os.environ.get("GITHUB_EVENT_NAME")
+        ref = os.environ.get("GITHUB_REF")
+        # A manual development certification must target main, not an arbitrary ref.
+        require(event == "pull_request"
+                or (event == "workflow_dispatch" and ref == "refs/heads/main"),
+                "Development PDF/A requires a pull request or explicit main dispatch")
         require(manifest["source_class_git_blob"] == class_at_commit,
                 "Development PDF/A source/class provenance mismatch")
         if SCOPE == "development":
