@@ -21,6 +21,7 @@ on:
     paths:
       # P0.10 governance: automatically validate active documentation,
       # Markdown contracts and current release-state changes on exact PR HEAD.
+      - abntexto-ufc.cls
       - README.md
       - AGENTS.md
       - CHANGELOG.md

@@ -24,6 +24,10 @@ PROFILES = {
     "anonymized-research-project", "scientific-article",
 }
 LOCALES = ("pt", "en", "es", "fr")
+# Only these exact development runtime blobs have an established source-bound
+# PDF comparison; original archived evidence remains tied to its own class.
+BASELINE_DEVELOPMENT_CLASS_BLOB = "299293e273dcefb80256eed2e17d2557db6aae52"
+ISSUE598_DEVELOPMENT_CLASS_BLOB = "4f3b266e8fce9204577565961d35c3066fd59cee"
 
 
 def require(condition, message):
@@ -161,8 +165,22 @@ def prepare():
                 require(original_blob == frozen_blob,
                         f"Archived R8.1 original source changed: {producer}")
             manifest["original_pdf_artifact_run_id"] = 43467471975
-        require(class_at_commit == "299293e273dcefb80256eed2e17d2557db6aae52",
-                "Development PDF/A source class changed; requalification required")
+        if SCOPE == "development":
+            # The new candidate must match the exact class proven by the issue 598
+            # duplex parity regression and the 28-PDF comparison, not an arbitrary blob.
+            require(class_at_commit in (
+                BASELINE_DEVELOPMENT_CLASS_BLOB,
+                ISSUE598_DEVELOPMENT_CLASS_BLOB,
+            ), "Development PDF/A source class changed; requalification required")
+            manifest["development_class_evidence"] = (
+                "ISSUE598_R5_DIFFERENTIAL_972_PAGES"
+                if class_at_commit == ISSUE598_DEVELOPMENT_CLASS_BLOB
+                else "BASELINE_R5_972_PAGES"
+            )
+        else:
+            # Preserve the immutable archival verifier's original runtime identity.
+            require(class_at_commit == BASELINE_DEVELOPMENT_CLASS_BLOB,
+                    "Archived R8.1 original class changed; no approval transfer")
         manifest["certification_scope"] = (
             "ARCHIVED_DEVELOPMENT_ORIGINAL_PDF_BYTES_ONLY"
             if SCOPE == "archived-development" else "DEVELOPMENT_UNRELEASED_ONLY"

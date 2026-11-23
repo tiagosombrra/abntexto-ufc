@@ -1034,15 +1034,35 @@
     }
   }
 
-\cs_new_protected:Npn \ufc_layout_two_sided:
+% The logical page counter may start at an even number on a physical recto.
+% Keep the established physical binding margins, independent of that offset.
+\dim_const:Nn \c_ufc_duplex_inner_margin_dim { 3cm }
+\dim_const:Nn \c_ufc_duplex_outer_margin_dim { 2cm }
+
+\cs_new_protected:Npn \ufc_apply_duplex_geometry:nn #1#2
   {
     \newgeometry{
       twoside = true,
-      inner = 3cm,
-      outer = 2cm,
+      inner = #1,
+      outer = #2,
       top = 3cm,
       bottom = 2cm
     }
+  }
+
+\cs_new_protected:Npn \ufc_layout_two_sided:
+  {
+    \bool_if:NTF \g_ufc_physical_parity_inverted_bool
+      {
+        \ufc_apply_duplex_geometry:nn
+          { \dim_use:N \c_ufc_duplex_outer_margin_dim }
+          { \dim_use:N \c_ufc_duplex_inner_margin_dim }
+      }
+      {
+        \ufc_apply_duplex_geometry:nn
+          { \dim_use:N \c_ufc_duplex_inner_margin_dim }
+          { \dim_use:N \c_ufc_duplex_outer_margin_dim }
+      }
   }
 
 \cs_new_protected:Npn \ufc_blank_page:
@@ -1060,11 +1080,22 @@
       { \int_if_odd:nF { \value{page} } { \ufc_blank_page: } }
   }
 
+% Catalog sheets can advance the physical leaf without advancing \c@page.
+% Swap the two existing layout registers without \newgeometry's page break.
+\cs_new_protected:Npn \ufc_swap_duplex_margin_registers:
+  {
+    \dim_set:Nn \l_tmpa_dim { \oddsidemargin }
+    \dim_gset:Nn \oddsidemargin { \evensidemargin }
+    \dim_gset:Nn \evensidemargin { \l_tmpa_dim }
+  }
+
 \cs_new_protected:Npn \ufc_register_uncounted_physical_page:
   {
     \bool_if:NTF \g_ufc_physical_parity_inverted_bool
       { \bool_gset_false:N \g_ufc_physical_parity_inverted_bool }
       { \bool_gset_true:N \g_ufc_physical_parity_inverted_bool }
+    \str_if_eq:VnT \g_ufc_print_mode_tl { double-sided }
+      { \ufc_swap_duplex_margin_registers: }
   }
 
 \cs_new_protected:Npn \ufc_primary_section_break:
@@ -2116,7 +2147,13 @@
     initial-page .code:n =
       {
         \int_compare:nNnTF {#1} > {0}
-          { \int_gset:Nn \g_ufc_initial_page_int {#1} }
+          {
+            \int_gset:Nn \g_ufc_initial_page_int {#1}
+            % A new logical even page must not reverse the physical sheet.
+            \int_if_odd:nTF {#1}
+              { \bool_gset_false:N \g_ufc_physical_parity_inverted_bool }
+              { \bool_gset_true:N \g_ufc_physical_parity_inverted_bool }
+          }
           {
             \ClassError{abntexto-ufc}
               {Invalid~initial-page~'#1'}

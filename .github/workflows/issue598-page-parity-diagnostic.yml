@@ -1,0 +1,56 @@
+name: Issue 598 physical duplex parity diagnostic
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths:
+      - .github/workflows/issue598-page-parity-diagnostic.yml
+      - tests/integration/layout/initial-page-parity-diagnostic.py
+      - abntexto-ufc.cls
+
+permissions:
+  contents: read
+
+concurrency:
+  group: issue598-parity-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  initial-page-parity:
+    name: TL2026 PDF margin parity / issue 598 (diagnostic, not a fix)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - name: Checkout exact candidate source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+
+      - name: Compile isolated positive and negative PDF parity probes
+        uses: xu-cheng/texlive-action@22c04326a5d855880f9d39bb955138bf11c6df80 # v3
+        with:
+          texlive_version: 2026
+          os: debian
+          run: |
+            set -eu
+            export DEBIAN_FRONTEND=noninteractive
+            apt-get update -y
+            apt-get install -y --no-install-recommends poppler-utils
+            git config --global --add safe.directory "$PWD"
+            export SOURCE_COMMIT_SHA="${{ github.event.pull_request.head.sha || github.sha }}"
+            test "$(git rev-parse HEAD)" = "$SOURCE_COMMIT_SHA"
+            python3 tests/integration/layout/initial-page-parity-diagnostic.py \
+              --strict \
+              --evidence artifacts/validation/issue598-parity.json
+
+      - name: Retain source-bound diagnostic evidence
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: issue598-parity-${{ github.run_id }}
+          path: artifacts/validation/issue598-parity.json
+          if-no-files-found: warn
+          retention-days: 21

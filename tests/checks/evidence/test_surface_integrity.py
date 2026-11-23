@@ -43,6 +43,7 @@ PERMANENT_WORKFLOWS = (
     ROOT / ".github/workflows/static-contract.yml",
     ROOT / ".github/workflows/linux-integration.yml",
     ROOT / ".github/workflows/linux-release-check.yml",
+    ROOT / ".github/workflows/issue598-page-parity-diagnostic.yml",
     ROOT / ".github/workflows/pages.yml",
 )
 
