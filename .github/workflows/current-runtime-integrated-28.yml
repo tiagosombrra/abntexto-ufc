@@ -41,7 +41,7 @@ jobs:
         run: |
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$SOURCE_COMMIT_SHA"
-          python3 -c "from tools.ci.requalify_current_runtime_72 import original_sources_unchanged; original_sources_unchanged()"
+          python3 -c "from tools.ci.requalify_live_runtime_72 import verify_current_class_scope; verify_current_class_scope()"
 
       - name: Run canonical API and integrated source contracts
         run: |
