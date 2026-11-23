@@ -42,7 +42,7 @@ def latex_source(*, initial: int, cover: bool, control: bool, catalog: bool = Fa
         if catalog:
             # Include an uncounted catalog sheet between the title and internal recto.
             start += "\\ufcPrintTitlePage\n\\ufcPrintCatalogCard{catalog-card}\n"
-        start += "\\ufcPretextualBreak\n
+        start += "\\ufcPretextualBreak\n"
     return (preamble + start
             + "\\noindent \\texttt{" + MARKERS[0] + "}\\par\n"
             + "\\clearpage\n"
