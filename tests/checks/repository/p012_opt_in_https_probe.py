@@ -679,6 +679,8 @@ class RealJournal:
                          "checkout_sha": receipt["checkout_sha"],
                          "fingerprint_sha256": receipt["fingerprint_sha256"],
                          "urls": urls, "started_at": utc_now()})
+            # Keep a stable admission anchor; previous is the moving chain tail.
+            self.start_sha256 = self.previous
             _sync_directory(path)
         except BaseException:
             self.close()
@@ -1016,6 +1018,55 @@ def selftest() -> int:
                             raise AssertionError(
                                 "mismatched parent capability accepted")
                 negative += 1
+                # Multiple selected URLs retain one immutable start hash
+                # even after the per-result journal chain advances.
+                two_urls = ("https://example.org/a", "https://example.org/b")
+                with RealJournal(Path(folder) / "two-results.jsonl",
+                                 receipt, two_urls) as multi_journal:
+                    initial_hash = multi_journal.start_sha256
+                    multi_journal.result({
+                        "url": two_urls[0], "outcome": "TIMEOUT",
+                        "status": None, "observed_at": utc_now()})
+                    assert multi_journal.previous != initial_hash
+                    assert multi_journal.start_sha256 == initial_hash
+                    read_fd, write_fd = os.pipe()
+                    try:
+                        raw = _parent_capability(
+                            two_urls[1], ("example.org",),
+                            "a" * 40, "b" * 64, multi_journal.start_sha256,
+                            str(multi_journal.path))
+                        os.write(write_fd, raw)
+                    finally:
+                        os.close(write_fd)
+                    verify_parent_capability(
+                        read_fd, two_urls[1], ("example.org",),
+                        "a" * 40, "b" * 64, parent_pid=os.getpid())
+                    multi_journal.result({
+                        "url": two_urls[1], "outcome": "TIMEOUT",
+                        "status": None, "observed_at": utc_now()})
+                    multi_journal.finish()
+                assert inspect_real_journal(
+                    Path(folder) / "two-results.jsonl")["state"] == "COMPLETE"
+                # The mutable tail is not an admissible start record hash.
+                read_fd, write_fd = os.pipe()
+                try:
+                    bogus = _parent_capability(
+                        two_urls[1], ("example.org",),
+                        "a" * 40, "b" * 64, multi_journal.previous,
+                        str(multi_journal.path))
+                    os.write(write_fd, bogus)
+                finally:
+                    os.close(write_fd)
+                try:
+                    verify_parent_capability(
+                        read_fd, two_urls[1], ("example.org",),
+                        "a" * 40, "b" * 64, parent_pid=os.getpid())
+                except UnsafeTarget:
+                    negative += 1
+                else:
+                    raise AssertionError(
+                        "mutable journal chain tail used as start receipt")
+
                 # A valid-looking hash without an actual journal must fail.
                 read_fd, write_fd = os.pipe()
                 try:
@@ -1715,7 +1766,7 @@ def main() -> None:
                 result = isolated_worker(
                     url, tuple(sorted(allowed)), args.timeout,
                     source["checkout_sha"], source["fingerprint_sha256"],
-                    journal.previous, str(journal.path))
+                    journal.start_sha256, str(journal.path))
                 _raise_if_cancelled()
                 journal.result(result)
             _raise_if_cancelled()
