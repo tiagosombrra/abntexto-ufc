@@ -8,8 +8,15 @@ on:
       - tools/ci/requalify_current_runtime_72.py
       - tools/ci/requalify_live_runtime_72.py
       - tests/integration/frontmatter/**
+      - tests/integration/objects/**
+      - tests/integration/layout/font-config.sh
+      - tests/fixtures/**
       - standards/api/public-api.json
       - standards/api/i18n-v310-runtime-proof-candidate.json
+      - standards/api/i18n-functional-evidence-crosswalk.json
+      - standards/api/i18n-v310-bounded-functional-qualified.json
+      - standards/api/i18n-per-identifier-proof-status.json
+      - tests/checks/evidence/test_surface_integrity.py
       - .github/workflows/current-runtime-integrated-28.yml
   workflow_dispatch:
 
