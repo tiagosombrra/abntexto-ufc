@@ -43,6 +43,7 @@ jobs:
             export SOURCE_COMMIT_SHA="${{ github.event.pull_request.head.sha || github.sha }}"
             test "$(git rev-parse HEAD)" = "$SOURCE_COMMIT_SHA"
             python3 tests/integration/layout/initial-page-parity-diagnostic.py \
+              --strict \
               --evidence artifacts/validation/issue598-parity.json
 
       - name: Retain source-bound diagnostic evidence
