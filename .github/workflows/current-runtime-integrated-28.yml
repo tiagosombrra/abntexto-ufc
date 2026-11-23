@@ -98,14 +98,15 @@ jobs:
             test "$(git rev-parse HEAD)" = "$SOURCE_COMMIT_SHA"
             python3 tests/integration/frontmatter/run-integrated-locale.py --locale ${{ matrix.locale }}
             python3 tests/integration/frontmatter/i18n-b1-family-evidence.py --locale ${{ matrix.locale }}
-            python3 tests/integration/frontmatter/i18n-b1-final-five-evidence.py --locale ${{ matrix.locale }}
-            python3 tests/integration/frontmatter/i18n-b2-family-evidence.py --locale ${{ matrix.locale }}
-            python3 tests/integration/frontmatter/i18n-b2-remaining-summary-evidence.py --locale ${{ matrix.locale }}
             python3 tests/integration/frontmatter/i18n-b3-integrated-list-evidence.py --locale ${{ matrix.locale }}
-            python3 tests/integration/frontmatter/i18n-b4-integrated-backmatter-evidence.py --locale ${{ matrix.locale }}
-            python3 tests/integration/frontmatter/i18n-b4-isolated-public-api-evidence.py --locale ${{ matrix.locale }}
+            python3 tests/integration/frontmatter/i18n-pretextual-command-evidence.py --locale ${{ matrix.locale }}
+            python3 tests/integration/frontmatter/i18n-b2-remaining-summary-evidence.py --locale ${{ matrix.locale }}
+            python3 tests/integration/frontmatter/i18n-b2-family-evidence.py --locale ${{ matrix.locale }}
             python3 tests/integration/frontmatter/i18n-list-environment-evidence.py --locale ${{ matrix.locale }}
             python3 tests/integration/frontmatter/i18n-optional-environment-evidence.py --locale ${{ matrix.locale }}
+            python3 tests/integration/frontmatter/i18n-b1-final-five-evidence.py --locale ${{ matrix.locale }}
+            python3 tests/integration/frontmatter/i18n-b4-integrated-backmatter-evidence.py --locale ${{ matrix.locale }}
+            python3 tests/integration/frontmatter/i18n-b4-isolated-public-api-evidence.py --locale ${{ matrix.locale }}
 
       - name: Retain actual PDF/TeX source-bound outputs
         if: always()
