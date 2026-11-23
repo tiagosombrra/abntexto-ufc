@@ -119,9 +119,21 @@ def download_archives(directory: Path) -> None:
                 metadata["digest"] == "sha256:" + expected_hash and
                 metadata["expired"] is False,
                 "Remote artifact identity/provenance mismatch: " + key)
-        data = github_get(root + "/zip", token)
-        require(digest(data) == expected_hash, "ZIP bytes differ: " + key)
-        (directory / (key + ".zip")).write_bytes(data)
+        # curl strips Authorization on a cross-host artifact redirect, unlike urllib.
+        # Never forward the repository bearer token to signed storage URLs.
+        destination = directory / (key + ".zip")
+        download = subprocess.run([
+            "curl", "--fail", "--location", "--silent", "--show-error",
+            "--retry", "2", "--max-filesize", "35000000",
+            "--connect-timeout", "15", "--max-time", "120",
+            "-H", "Authorization: Bearer " + token,
+            "-H", "Accept: application/vnd.github+json",
+            root + "/zip", "--output", str(destination),
+        ], capture_output=True, text=True)
+        require(download.returncode == 0,
+                "GitHub ZIP download failed: " + key + ": " + download.stderr[:400])
+        require(digest(destination.read_bytes()) == expected_hash,
+                "ZIP bytes differ: " + key)
 
 
 class Artifact:
