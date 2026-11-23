@@ -19,8 +19,7 @@ import urllib.request
 
 from requalify_current_runtime_72 import (
     CLASS_BLOB, GROUP_COUNTS, OPTIONAL, PROOFS,
-    canonical_groups, original_sources_unchanged, positive_pair,
-    require, scoped_row,
+    canonical_groups, git, positive_pair, require, scoped_row,
 )
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -28,6 +27,30 @@ LOCALES = ("pt", "en", "es", "fr")
 AUX = ("dual", "coat")
 EVIDENCE_KEYS = (*LOCALES, *(f"opt-{locale}" for locale in LOCALES), *AUX)
 EXPECTED_IDS = sum(GROUP_COUNTS.values())
+# A squash merge need not retain the producer PR commit in the final ancestry.
+# Pin actual Git blobs, not the ancestry or expiration of producer artifacts.
+IMMUTABLE_API_BLOBS = {
+    "standards/api/i18n-per-identifier-proof-status.json":
+        "4cb998e9210b3cfadfa0ca6d29922fa218f32d74",
+    "standards/api/i18n-v310-runtime-proof-candidate.json":
+        "84f8af1fed88d93464275dc8475c9691e2b31046",
+    "standards/api/i18n-v310-bounded-functional-qualified.json":
+        "f47dce18aa7cfa3ba0056b08df9cc0ddf460af19",
+    "standards/api/public-api.json":
+        "1d32b3ea0ccfd1ff5e73e372a9b0479f94173787",
+    "standards/api/i18n-functional-evidence-crosswalk.json":
+        "614cd1579f92b65a6f632c3642f49f88f955c752",
+}
+
+
+def verify_current_class_scope() -> None:
+    """Require exact reviewed runtime/API bytes even after a protected squash merge."""
+    protected = {"abntexto-ufc.cls": CLASS_BLOB, **IMMUTABLE_API_BLOBS}
+    for path, expected_blob in protected.items():
+        require(git("rev-parse", "HEAD:" + path) == expected_blob and
+                git("hash-object", path) == expected_blob,
+                "Source-bound runtime/API Git blob changed: " + path)
+
 
 
 def sha256(value: bytes) -> str:
@@ -222,7 +245,15 @@ def build(sources: dict[str, CurrentArtifact], run_id: str, sha: str) -> dict:
     }
 
 
-def mutation_tests(report: dict, expected: dict) -> int:
+def verify_report(report: dict, sources: dict[str, CurrentArtifact],
+                  run_id: str, source_sha: str) -> None:
+    expected = build(sources, run_id, source_sha)
+    require(report == expected,
+            "Current-run report changed from authenticated PDF/TeX/JSON bytes")
+
+
+def mutation_tests(report: dict, sources: dict[str, CurrentArtifact],
+                   run_id: str, source_sha: str) -> int:
     original = next(iter(report["entries"]))
     variants = []
     for change in (
@@ -239,8 +270,12 @@ def mutation_tests(report: dict, expected: dict) -> int:
     ):
         candidate = copy.deepcopy(report)
         change(candidate)
-        require(candidate != expected, "Mutation escaped current-run integrity check")
-        variants.append(candidate)
+        try:
+            verify_report(candidate, sources, run_id, source_sha)
+        except ValueError:
+            variants.append(candidate)
+            continue
+        raise ValueError("Mutation bypassed current-run byte-integrity verifier")
     return len(variants)
 
 
@@ -257,13 +292,12 @@ def main() -> None:
     require(source_sha == subprocess.check_output(
         ["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip(),
         "Artifacts are not checked against current source")
-    original_sources_unchanged()
+    verify_current_class_scope()
     sources = artifacts_from_current_run(
         args.inputs, run_id, source_sha, os.environ.get("GH_TOKEN", ""))
     report = build(sources, run_id, source_sha)
-    expected = build(sources, run_id, source_sha)
-    require(report == expected, "Current-run manifest differs from actual bytes")
-    mutations = mutation_tests(report, expected)
+    verify_report(report, sources, run_id, source_sha)
+    mutations = mutation_tests(report, sources, run_id, source_sha)
     report["negative_mutations_rejected"] = mutations
     args.report.parent.mkdir(parents=True, exist_ok=True)
     args.report.write_text(json.dumps(report, indent=2, ensure_ascii=False, sort_keys=True) + "\n",
