@@ -66,7 +66,8 @@ jobs:
 
   verify-final-pdfa:
     # Historical acceptance is source-bound; changed-class PRs use the separate development gate.
-    if: ${{ github.event_name == 'workflow_dispatch' }}
+    # Historical 984-page acceptance is never reused for a manual main dispatch.
+    if: ${{ github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/main' }}
     name: veraPDF 2b / 28 final readable PDFs from this SHA
     needs: [real-pdfs]
     runs-on: ubuntu-24.04
@@ -133,8 +134,9 @@ jobs:
           retention-days: 21
 
   verify-development-pdfa:
-    # Every PR validates its actual candidate PDFs; no historic approval is inherited.
-    if: ${{ github.event_name == 'pull_request' && needs.real-pdfs.result == 'success' }}
+    # PRs and explicit main dispatches verify the current 972-page development corpus.
+    # Neither event inherits the historical 984-page visual acceptance.
+    if: ${{ (github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main')) && needs.real-pdfs.result == 'success' }}
     name: Development PDF/A-2b / 28 PDFs (human review pending)
     needs: [real-pdfs]
     runs-on: ubuntu-24.04

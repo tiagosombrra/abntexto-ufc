@@ -12,3 +12,9 @@ This corpus **does not certify ABNT/UFC conformity**. Anonymous proposals do not
 Exact reproducibility: run `python3 tools/review/build_readable_28.py --locale pt` (or en/es/fr) in a TeX Live 2026 environment with `pdflatex`, `biber`, `makeglossaries`, `makeindex`, Poppler, and the repository's original assets. All outcomes remain `human_visual_approval=PENDING` and `release_authorized=false`.
 
 The review pack shown to the user should contain **only the 28 PDFs**, in four locale directories. Technical CI logs and receipts are not part of that user-facing ZIP.
+
+## Source-bound v3.1.0 rerun from the current main branch
+
+The manually triggered `R5 human-readable complete 28 PDF editorial review` workflow on `main` must validate the **development** corpus: seven profiles in PT/EN/ES/FR, 28 real PDFs and **972 physical pages**. The dependent veraPDF job uses `R81_PDFA_SCOPE=development`, requires the exact workflow `headSha` and checked-out source commit to match the PDF/TeX receipts, enforces the requalified class blob `299293e273dcefb80256eed2e17d2557db6aae52`, and verifies all 28 independent PDF/A-2b reports. A `pull_request` event uses the same development contract. A manual dispatch on a separate pinned historical ref retains the distinct **984-page** historical verifier and must not be treated as certification of the current main branch.
+
+Passing the rerun provides technical evidence **only for the precise source SHA and generated artifact digests**. It does not transfer the historical 984-page visual acceptance, confer institutional/normative approval, authorize publication, or eliminate the need for a bounded human decision on the new PDF bytes. Preserve the original historical artifacts unchanged. The optional HTTPS probe is outside v3.1.0's release scope.
