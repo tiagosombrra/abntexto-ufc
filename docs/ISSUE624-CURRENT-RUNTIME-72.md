@@ -26,7 +26,12 @@ through a SHA-pinned download action with digest mismatch treated as an error.
 It executes tools/ci/requalify_live_runtime_72.py, compares the 72 API records
 to genuine newly generated PDF/TeX/JSON hashes, checks the original immutable
 API maps, and produces artifacts/issue624/current-run-72.json with ten negative
-mutations. No old GitHub Actions artifact ID is a dependency of this CI gate.
+mutations. No old GitHub Actions artifact ID is a dependency of this CI gate. The
+source contract compares the actual class and five original API/ledger Git
+blobs, rather than requiring ancestry of an old PR commit; it therefore
+survives a protected squash merge while still failing closed on changed bytes.
+All ten negative mutations are checked by invoking the same verification
+function used on the real current-run report.
 
 The **archival audit**, in
 .github/workflows/current-runtime-72-requalification.yml, is manual-only
