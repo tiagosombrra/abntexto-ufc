@@ -20,7 +20,7 @@ ENGINES = ("pdflatex", "lualatex")
 INITIAL_PAGES = (1, 2, 3)
 
 
-def latex_source(*, initial: int, cover: bool, control: bool) -> str:
+def latex_source(*, initial: int, cover: bool, control: bool, catalog: bool = False) -> str:
     if control:
         preamble = (r"\documentclass{article}" "\n"
                     r"\usepackage[a4paper,twoside,top=3cm,bottom=2cm,inner=3cm,outer=2cm]{geometry}" "\n")
@@ -30,6 +30,7 @@ def latex_source(*, initial: int, cover: bool, control: bool) -> str:
                     "\\ufcsetup{\n"
                     "  type=doctoral-thesis, print-mode=double-sided,\n"
                     "  coat-of-arms=false,\n"
+                    f"  catalog-card={'true' if catalog else 'false'},\n"
                     f"  initial-page={initial},\n"
                     f"  cover={'true' if cover else 'false'},\n"
                     "  institution={Universidade Federal do Ceara},\n"
@@ -37,7 +38,11 @@ def latex_source(*, initial: int, cover: bool, control: bool) -> str:
                     "  location={Fortaleza}, year={2026}\n"
                     "}\n")
         # The profile selects duplex geometry, but the base class applies it on explicit layout entry.
-        start = "\\begin{document}\n\\twosidelayout\n" + ("\\ufcPrintCover\n" if cover else "") + "\\ufcPretextualBreak\n"
+        start = "\\begin{document}\n\\twosidelayout\n" + ("\\ufcPrintCover\n" if cover else "")
+        if catalog:
+            # Include an uncounted catalog sheet between the title and internal recto.
+            start += "\\ufcPrintTitlePage\n\\ufcPrintCatalogCard{catalog-card}\n"
+        start += "\\ufcPretextualBreak\n
     return (preamble + start
             + "\\noindent \\texttt{" + MARKERS[0] + "}\\par\n"
             + "\\clearpage\n"
@@ -67,10 +72,13 @@ def extract_markers(pdf: Path) -> tuple[list[float], list[int]]:
     return xs, pages
 
 
-def run_case(work: Path, engine: str, initial: int, cover: bool, control: bool) -> dict:
-    name = f"{'control' if control else 'class'}-{engine}-{initial}-{'cover' if cover else 'no-cover'}"
+def run_case(work: Path, engine: str, initial: int, cover: bool, control: bool,
+             catalog: bool = False) -> dict:
+    name = (f"{'control' if control else 'class'}-{engine}-{initial}-"
+            f"{'cover' if cover else 'no-cover'}-{'catalog' if catalog else 'plain'}")
     (work / f"{name}.tex").write_text(
-        latex_source(initial=initial, cover=cover, control=control), encoding="utf-8")
+        latex_source(initial=initial, cover=cover, control=control, catalog=catalog),
+        encoding="utf-8")
     command = [engine, "-interaction=nonstopmode", "-halt-on-error", "-file-line-error",
                f"-jobname={name}", f"{name}.tex"]
     tex_env = dict(os.environ)
@@ -87,9 +95,11 @@ def run_case(work: Path, engine: str, initial: int, cover: bool, control: bool) 
     expected = list(EXPECTED_X_CM)
     matches = [abs(measured-reference) <= TOLERANCE_CM
                for measured, reference in zip(xs, expected)]
-    expected_pages = [2, 3] if cover and not control else [1, 2]
+    offset = (1 if cover and not control else 0) + (2 if catalog else 0)
+    expected_pages = [1 + offset, 2 + offset]
     physical_pages_match = pages == expected_pages
-    return dict(case=name, engine=engine, initial_page=initial, cover=cover, control=control,
+    return dict(case=name, engine=engine, initial_page=initial, cover=cover,
+                catalog_card=catalog, control=control,
                 physical_marker_pages=pages, expected_marker_pages=expected_pages,
                 left_x_cm=xs, expected_x_cm=expected,
                 expected_match=all(matches) and physical_pages_match)
@@ -107,12 +117,27 @@ def main() -> int:
     with tempfile.TemporaryDirectory(prefix="issue598-parity-") as temporary:
         work = Path(temporary)
         for engine in ENGINES:
+            if not args.control_only:
+                # Compile a source-only single-sheet PDF to test the actual included
+                # catalog-card path; do not mock \ufcRegisterUncountedPhysicalPage.
+                card = work / "catalog-card.tex"
+                card.write_text(
+                    "\\documentclass{article}\n\\begin{document}\n"
+                    "CATALOGCARDTEST\n\\end{document}\n", encoding="utf-8")
+                built = subprocess.run(
+                    [engine, "-interaction=nonstopmode", "-halt-on-error",
+                     "-jobname=catalog-card", "catalog-card.tex"],
+                    cwd=work, capture_output=True, text=True, timeout=150)
+                if built.returncode or not (work / "catalog-card.pdf").is_file():
+                    raise RuntimeError("Catalog-card PDF fixture failed:\n"
+                                       + "\n".join(built.stdout.splitlines()[-25:]))
             for initial in (1, 2):
                 results.append(run_case(work, engine, initial, False, True))
             if not args.control_only:
                 for cover in (False, True):
                     for initial in INITIAL_PAGES:
                         results.append(run_case(work, engine, initial, cover, False))
+                        results.append(run_case(work, engine, initial, cover, False, True))
     controls = [x for x in results if x["control"]]
     if any(x["expected_match"] != (x["initial_page"] % 2 == 1) for x in controls):
         raise AssertionError("Control did not discriminate physical from logical parity")
