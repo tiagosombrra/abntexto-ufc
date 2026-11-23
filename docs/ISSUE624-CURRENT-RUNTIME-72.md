@@ -15,22 +15,40 @@ or publication approval.
 - Inventory: 17 setup identifiers, 43 commands, six environments and six
   upstream identifiers, mapped to 13 scoped proof families.
 
-## Executable audit
+## Two distinct executable audits
 
-The workflow .github/workflows/current-runtime-72-requalification.yml invokes
-tools/ci/requalify_current_runtime_72.py with --download and --self-test. This
-produces artifacts/issue624/current-runtime-72.json as a workflow artifact.
-The exact class blob and original evidence-producing commit ancestry must match.
+The **permanent CI gate** is
+.github/workflows/current-runtime-integrated-28.yml. Each run generates the
+seven complete manuscripts in four languages, optional module PDFs in each
+language and both B1 auxiliary suites, on the exact candidate commit. The
+final fresh-source-ledger job downloads **only artifacts from that same run**
+through a SHA-pinned download action with digest mismatch treated as an error.
+It executes tools/ci/requalify_live_runtime_72.py, compares the 72 API records
+to genuine newly generated PDF/TeX/JSON hashes, checks the original immutable
+API maps, and produces artifacts/issue624/current-run-72.json with ten negative
+mutations. No old GitHub Actions artifact ID is a dependency of this CI gate.
 
-The validator authenticates the ten artifact IDs, producer run IDs, GitHub
-digest metadata, source commit, ZIP bytes, safe member paths and CRC. It then
-checks all 72 unique canonical names and evidence-family assignments, requiring
-actual PDF and TeX SHA-256 records in each identifier's appropriate source
-manifest, together with recorded negative controls. For strict-font, an expected
+The **archival audit**, in
+.github/workflows/current-runtime-72-requalification.yml, is manual-only
+(workflow_dispatch), not a permanent status check. Its original archived
+artifact IDs will expire under GitHub's configured retention policy. During
+retention, tools/ci/requalify_current_runtime_72.py can authenticate those
+frozen ZIP bytes and output a bounded historical candidate receipt. Once the
+ZIPs expire this optional recheck is unavailable unless their exact bytes
+have been preserved separately; no new run is allowed to impersonate their
+artifact IDs or original SHA. The archival check is not necessary to run
+future current-class PDF generation and validation.
+
+The archival validator checks frozen ZIP IDs, producer run IDs, GitHub digests,
+source commit, byte hashes, safe paths and CRC, while the permanent validator
+checks same-run artifacts, the source SHA, every actual file's SHA-256 and
+the 72 identifiers in all 13 proof families. Both require negative controls
+and protect the unchanged original API inventory. For strict-font, an expected
 rejection log and source are required, along with an adjacent positive nonstrict
 font PDF. It never fabricates a positive strict-font PDF.
 
-Eight negative mutation tests must reject a dropped identifier, altered PDF
+The archival test rejects eight negative mutations; the fresh-run gate rejects
+at least ten. These include a dropped identifier, altered PDF
 hash, altered artifact ID, altered proof hash, incorrect class blob, fabricated
 release approval, fabricated human promotion and incorrect total.
 
