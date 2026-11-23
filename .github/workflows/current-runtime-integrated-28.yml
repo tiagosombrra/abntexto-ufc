@@ -1,0 +1,117 @@
+name: Current-runtime integrated 28 PDF requalification
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths:
+      - abntexto-ufc.cls
+      - tools/ci/requalify_current_runtime_72.py
+      - tests/integration/frontmatter/**
+      - standards/api/public-api.json
+      - standards/api/i18n-v310-runtime-proof-candidate.json
+      - .github/workflows/current-runtime-integrated-28.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: issue624-current-integrated-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  source-preflight:
+    name: Candidate 72-ID ledger and 28 manuscript source preflight
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.pull_request.head.repo.full_name == github.repository }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    env:
+      GH_TOKEN: ${{ github.token }}
+      SOURCE_COMMIT_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+    steps:
+      - name: Checkout candidate source with complete proof history
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Authenticate independent current-class 72-ID bounded ledger
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$SOURCE_COMMIT_SHA"
+          python3 tools/ci/requalify_current_runtime_72.py \
+            --download --self-test \
+            --archives artifacts/issue624/artifacts \
+            --report artifacts/issue624/current-runtime-72.json
+
+      - name: Run canonical API and integrated source contracts
+        run: |
+          set -euo pipefail
+          python3 tests/integration/frontmatter/i18n-api-inventory.py
+          python3 tests/integration/frontmatter/i18n-evidence-crosswalk.py --report
+          python3 tests/integration/frontmatter/integrated-locale-preflight.py
+          python3 tests/integration/frontmatter/i18n-six-api-output-evidence.py --self-test
+          python3 tests/integration/frontmatter/coat-of-arms-evidence.py --preflight
+          python3 tests/integration/frontmatter/dual-language-evidence.py --preflight
+
+      - name: Preserve bounded current-class source receipts
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: issue624-integrated-preflight-${{ github.run_id }}
+          path: |
+            artifacts/issue624/current-runtime-72.json
+            artifacts/validation/i18n-public-evidence-crosswalk.json
+          retention-days: 30
+          if-no-files-found: warn
+
+  integrated-manuscripts:
+    name: Current-class full manuscript / ${{ matrix.locale }} (7 profiles)
+    needs: source-preflight
+    runs-on: ubuntu-24.04
+    timeout-minutes: 55
+    strategy:
+      fail-fast: false
+      matrix:
+        locale: [pt, en, es, fr]
+    steps:
+      - name: Checkout exact candidate source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+
+      - name: Build 7 joined manuscripts and verify B1/B2/B3/B4 public evidence
+        uses: xu-cheng/texlive-action@22c04326a5d855880f9d39bb955138bf11c6df80 # v3
+        with:
+          texlive_version: 2026
+          os: debian
+          run: |
+            set -eu
+            export DEBIAN_FRONTEND=noninteractive
+            apt-get update -y
+            apt-get install -y --no-install-recommends make poppler-utils qpdf
+            git config --global --add safe.directory "$PWD"
+            export SOURCE_COMMIT_SHA="${{ github.event.pull_request.head.sha || github.sha }}"
+            test "$(git rev-parse HEAD)" = "$SOURCE_COMMIT_SHA"
+            python3 tests/integration/frontmatter/run-integrated-locale.py --locale ${{ matrix.locale }}
+            python3 tests/integration/frontmatter/i18n-b1-family-evidence.py --locale ${{ matrix.locale }}
+            python3 tests/integration/frontmatter/i18n-b1-final-five-evidence.py --locale ${{ matrix.locale }}
+            python3 tests/integration/frontmatter/i18n-b2-family-evidence.py --locale ${{ matrix.locale }}
+            python3 tests/integration/frontmatter/i18n-b2-remaining-summary-evidence.py --locale ${{ matrix.locale }}
+            python3 tests/integration/frontmatter/i18n-b3-integrated-list-evidence.py --locale ${{ matrix.locale }}
+            python3 tests/integration/frontmatter/i18n-b4-integrated-backmatter-evidence.py --locale ${{ matrix.locale }}
+            python3 tests/integration/frontmatter/i18n-b4-isolated-public-api-evidence.py --locale ${{ matrix.locale }}
+            python3 tests/integration/frontmatter/i18n-list-environment-evidence.py --locale ${{ matrix.locale }}
+            python3 tests/integration/frontmatter/i18n-optional-environment-evidence.py --locale ${{ matrix.locale }}
+
+      - name: Retain actual PDF/TeX source-bound outputs
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: issue624-full-integrated-${{ matrix.locale }}-${{ github.run_id }}
+          path: artifacts/integrated-i18n/${{ matrix.locale }}/**
+          retention-days: 30
+          if-no-files-found: warn
