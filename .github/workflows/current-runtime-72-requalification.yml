@@ -1,15 +1,6 @@
-name: Current-runtime 72-ID source-bound bounded requalification
+name: ARCHIVE ONLY - frozen 72-ID artifact receipts (time-limited)
 
 on:
-  pull_request:
-    types: [opened, synchronize, reopened, ready_for_review]
-    paths:
-      - abntexto-ufc.cls
-      - tools/ci/requalify_current_runtime_72.py
-      - standards/api/public-api.json
-      - standards/api/i18n-v310-runtime-proof-candidate.json
-      - standards/api/i18n-functional-evidence-crosswalk.json
-      - .github/workflows/current-runtime-72-requalification.yml
   workflow_dispatch:
 
 permissions:
@@ -22,8 +13,7 @@ concurrency:
 
 jobs:
   candidate-ledger:
-    name: Source-bound 72-ID bounded PDF ledger (human review pending)
-    if: ${{ github.event_name == 'workflow_dispatch' || github.event.pull_request.head.repo.full_name == github.repository }}
+    name: Archived source-bound snapshot (not permanent, may expire)
     runs-on: ubuntu-24.04
     timeout-minutes: 25
     env:
