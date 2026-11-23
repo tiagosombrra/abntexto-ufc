@@ -36,7 +36,8 @@ def latex_source(*, initial: int, cover: bool, control: bool) -> str:
                     "  title={Physical Page Parity}, author={Parity Researcher},\n"
                     "  location={Fortaleza}, year={2026}\n"
                     "}\n")
-        start = "\\begin{document}\n" + ("\\ufcPrintCover\n" if cover else "")
+        # The profile selects duplex geometry, but the base class applies it on explicit layout entry.
+        start = "\\begin{document}\n\\twosidelayout\n" + ("\\ufcPrintCover\n" if cover else "")
     return (preamble + start
             + "\\noindent \\texttt{" + MARKERS[0] + "}\\par\n"
             + "\\clearpage\n"
