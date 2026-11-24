@@ -12,6 +12,7 @@ on:
       - tests/integration/layout/font-config.sh
       - tests/fixtures/**
       - standards/api/public-api.json
+      - standards/api/i18n-coverage-inventory.json
       - standards/api/i18n-v310-runtime-proof-candidate.json
       - standards/api/i18n-functional-evidence-crosswalk.json
       - standards/api/i18n-v310-bounded-functional-qualified.json
