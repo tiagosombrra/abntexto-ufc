@@ -82,7 +82,7 @@ The same class/API blob checks remain mandatory. Unknown class/API bytes
 must fail closed. The new push route cannot be certified until it actually
 runs on main after a separately authorized merge.
 
-## Historical gate reconciliation (not yet authorized or implemented)
+## Historical gate reconciliation (candidate implementation; review pending)
 
 | Existing check | Current-source route | Historical route |
 | --- | --- | --- |
@@ -90,13 +90,22 @@ runs on main after a separately authorized merge.
 | v3.1.0 corrected-runtime 72-ID original archive byte audit | Fresh current-run ledger only after explicit reviewed disposition | Original ten ZIPs and exact historical source, no current certification; expiration must be reported, not waived |
 | R8.1 archived reviewed-PDF independent PDF/A-2b validation | Fresh R5 editorial 28 PDFs/972 pages and veraPDF on the same final SHA; human acceptance is separate | Original reviewer ZIPs, source and PDF/A receipt, ARCHIVE_ONLY |
 
-The three old workflow files remain unchanged in this change. Their failures
-on the new class cannot be treated as passes or silently ignored. Reconcile
-the status contexts and review the replacement before making any trigger or
-scope migration. Keep the exact old sources, validators and archived receipts
-verifiable; never edit them to accept new class bytes. Current Linux full
-integration/release and all other final SHA gates remain required by project
-policy, even if not required by the GitHub ruleset.
+The three old workflows are now proposed as manual-only ARCHIVE ONLY routes
+on the immutable pre-change main commit f0e3617783e6d7bf072d846a0e28b62d7f79b232.
+This commit contains the old class and unchanged archive validators; the
+original proof ancestry is still fetched and checked. Original ZIP expiry
+remains a hard failure, not a reason to reconstruct or substitute bytes.
+The old integrated diagnostic jobs are superseded by the complete current-run
+matrix; their definitions and failed run receipts remain in Git history.
+The live 72-ID gate also triggers on changes to the three archive workflows.
+R5 now runs for relevant stacked PRs and every main push; its development
+PDF/A gate verifies the current 972-page corpus without human acceptance.
+The historical 984-page manual branch route is unchanged. None of these
+changes are yet merged or independently approved. Manual archive dispatches
+and main-push routes must be checked separately after the workflow definitions
+are present on main; current-source PR runs are not evidence of those events.
+Current Linux full integration/release and all other final SHA gates remain
+required by project policy, even if not required by the GitHub ruleset.
 
 ## Remaining gates
 

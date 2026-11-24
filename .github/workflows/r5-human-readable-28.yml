@@ -1,8 +1,10 @@
 name: R5 human-readable complete 28 PDF editorial review
 on:
+  # A protected squash requires fresh editorial PDF/A evidence for its new SHA.
+  push:
+    branches: [main]
   workflow_dispatch:
   pull_request:
-    branches: [main]
     types: [opened, synchronize, reopened, ready_for_review]
     paths:
       - tools/review/generate_readable_28.py
@@ -134,9 +136,9 @@ jobs:
           retention-days: 21
 
   verify-development-pdfa:
-    # PRs and explicit main dispatches verify the current 972-page development corpus.
+    # PRs, main pushes and explicit main dispatches verify the current 972-page development corpus.
     # Neither event inherits the historical 984-page visual acceptance.
-    if: ${{ (github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main')) && needs.real-pdfs.result == 'success' }}
+    if: ${{ (github.event_name == 'pull_request' || github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main')) && needs.real-pdfs.result == 'success' }}
     name: Development PDF/A-2b / 28 PDFs (human review pending)
     needs: [real-pdfs]
     runs-on: ubuntu-24.04
