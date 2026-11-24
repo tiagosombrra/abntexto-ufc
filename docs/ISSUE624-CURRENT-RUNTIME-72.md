@@ -61,6 +61,43 @@ Machine success is a bounded functional candidate finding only. All human and
 normative review fields remain PENDING, formal promotion NOT_AUTHORIZED,
 v3.1.0 UNRELEASED, publication_authorized=false.
 
+## Current matrix and post-merge contract
+
+The live gate also executes the original locale preflights, the six executable
+driver relationships (12 rejected source mutants), and 12 institutional
+fallback PDFs per locale (48 total, 18 negative controls). These are additional
+bounded checks, not extra identifiers in the 72-ID ledger. The source
+preflight preserves the executable-driver report, and locale artifacts
+preserve the fallback PDF, TeX, log and manifest bytes.
+
+The expanded matrix passed all eight jobs in run 45374463506 on
+12c95b462224ae7b0bc4f8b47e7296d6bdb52855. Ledger artifact 14911340728
+has SHA-256 435fe8a3475976fb3315ed8ca89ae883d0c2ada3b3f1c203c4fb6a943bf8285c.
+This is a receipt for that commit only, not the post-merge source.
+
+The current workflow is configured to run on every push to main, as well as
+its existing PR and manual triggers. A protected squash must produce new
+evidence using github.sha, not inherit the pre-merge artifact or receipt.
+The same class/API blob checks remain mandatory. Unknown class/API bytes
+must fail closed. The new push route cannot be certified until it actually
+runs on main after a separately authorized merge.
+
+## Historical gate reconciliation (not yet authorized or implemented)
+
+| Existing check | Current-source route | Historical route |
+| --- | --- | --- |
+| Integrated manuscript four-language matrix | All locale/preflight/auxiliary producers plus fresh 72-ID ledger; verify complete parity before retiring duplicate execution | Preserve old blob-bound ledgers and original receipt |
+| v3.1.0 corrected-runtime 72-ID original archive byte audit | Fresh current-run ledger only after explicit reviewed disposition | Original ten ZIPs and exact historical source, no current certification; expiration must be reported, not waived |
+| R8.1 archived reviewed-PDF independent PDF/A-2b validation | Fresh R5 editorial 28 PDFs/972 pages and veraPDF on the same final SHA; human acceptance is separate | Original reviewer ZIPs, source and PDF/A receipt, ARCHIVE_ONLY |
+
+The three old workflow files remain unchanged in this change. Their failures
+on the new class cannot be treated as passes or silently ignored. Reconcile
+the status contexts and review the replacement before making any trigger or
+scope migration. Keep the exact old sources, validators and archived receipts
+verifiable; never edit them to accept new class bytes. Current Linux full
+integration/release and all other final SHA gates remain required by project
+policy, even if not required by the GitHub ruleset.
+
 ## Remaining gates
 
 - Requalify the integrated manuscript preflight for the current class separately

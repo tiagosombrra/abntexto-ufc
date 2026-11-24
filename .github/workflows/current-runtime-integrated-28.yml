@@ -1,6 +1,10 @@
 name: Current-runtime integrated 28 PDF requalification
 
 on:
+  # A protected squash creates a new source SHA even when runtime bytes agree.
+  # Rebuild evidence for every main commit, including documentation-only merges.
+  push:
+    branches: [main]
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
     paths:
@@ -34,7 +38,7 @@ concurrency:
 jobs:
   source-preflight:
     name: Candidate 72-ID ledger and 28 manuscript source preflight
-    if: ${{ github.event_name == 'workflow_dispatch' || github.event.pull_request.head.repo.full_name == github.repository }}
+    if: ${{ github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository }}
     runs-on: ubuntu-24.04
     timeout-minutes: 25
     env:
