@@ -7,9 +7,11 @@ on:
       - abntexto-ufc.cls
       - tools/ci/requalify_current_runtime_72.py
       - tools/ci/requalify_live_runtime_72.py
-      - tests/integration/frontmatter/**
-      - tests/integration/objects/**
-      - tests/integration/layout/font-config.sh
+      - tests/integration/**
+      - tests/documents/**
+      - tests/run.py
+      - tests/path_resolver.py
+      - tests/integration_suites.py
       - tests/fixtures/**
       - standards/api/public-api.json
       - standards/api/i18n-coverage-inventory.json
@@ -60,6 +62,17 @@ jobs:
           python3 tests/integration/frontmatter/i18n-six-api-output-evidence.py --self-test
           python3 tests/integration/frontmatter/coat-of-arms-evidence.py --preflight
           python3 tests/integration/frontmatter/dual-language-evidence.py --preflight
+          python3 tests/integration/frontmatter/i18n-executable-driver-evidence.py --report
+          python3 tests/integration/frontmatter/institution-display-fallback-evidence.py --preflight
+          python3 tests/integration/frontmatter/i18n-list-environment-evidence.py --preflight
+          python3 tests/integration/frontmatter/i18n-optional-environment-evidence.py --preflight
+          python3 tests/integration/frontmatter/i18n-pretextual-command-evidence.py --preflight
+          python3 tests/integration/frontmatter/i18n-b2-remaining-summary-evidence.py --preflight
+          python3 tests/integration/frontmatter/i18n-b2-family-evidence.py --preflight
+          python3 tests/integration/frontmatter/i18n-b1-family-evidence.py --preflight
+          python3 tests/integration/frontmatter/i18n-b1-auxiliary-pdf-evidence.py --preflight
+          python3 tests/integration/frontmatter/i18n-b1-final-five-evidence.py --preflight
+          python3 tests/integration/frontmatter/i18n-b3-integrated-list-evidence.py --preflight
 
       - name: Preserve bounded current-class source receipts
         if: always()
@@ -68,6 +81,7 @@ jobs:
           name: issue624-integrated-preflight-${{ github.run_id }}
           path: |
             artifacts/validation/i18n-public-evidence-crosswalk.json
+            artifacts/validation/i18n-executable-driver-evidence.json
           retention-days: 30
           if-no-files-found: warn
 
@@ -101,6 +115,7 @@ jobs:
             export SOURCE_COMMIT_SHA="${{ github.event.pull_request.head.sha || github.sha }}"
             test "$(git rev-parse HEAD)" = "$SOURCE_COMMIT_SHA"
             python3 tests/integration/frontmatter/run-integrated-locale.py --locale ${{ matrix.locale }}
+            python3 tests/integration/frontmatter/institution-display-fallback-evidence.py --locale ${{ matrix.locale }}
             python3 tests/integration/frontmatter/i18n-b1-family-evidence.py --locale ${{ matrix.locale }}
             python3 tests/integration/frontmatter/i18n-b3-integrated-list-evidence.py --locale ${{ matrix.locale }}
             python3 tests/integration/frontmatter/i18n-pretextual-command-evidence.py --locale ${{ matrix.locale }}
