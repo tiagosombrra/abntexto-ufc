@@ -28,6 +28,8 @@ on:
       - .github/workflows/integrated-manuscript-locale-matrix.yml
       - .github/workflows/v310-runtime-proof-audit.yml
       - .github/workflows/r81-v310-archived-pdfa.yml
+      - .github/workflows/r81-v310-human-review-request.yml
+      - .github/workflows/r81-controlled-pagination.yml
   workflow_dispatch:
 
 permissions:

@@ -107,6 +107,21 @@ are present on main; current-source PR runs are not evidence of those events.
 Current Linux full integration/release and all other final SHA gates remain
 required by project policy, even if not required by the GitHub ruleset.
 
+## Follow-up audit: review requests and exact main-push validation
+
+The old R8.1 human review request also failed on the new class in run
+45200285088 (source class changed). It is now proposed as a manual-only
+archive audit on the same immutable historical main source. The original
+984-page pagination audit is manual-only within its workflow; the native
+12-PDF pagination diagnostic remains automatic on the exact PR SHA.
+
+R5 now checks eight event/scope cases, accepts a main push only for current
+development evidence with the exact GITHUB_SHA, and retains the existing
+archived event restriction. After all 28 current PDFs pass independent
+PDF/A validation, it generates 972 page records with eight PENDING review
+dimensions and a SHA-bound request. These files are not human approval.
+The new CI result is pending; no previous PASS is transferred to this change.
+
 ## Remaining gates
 
 - Requalify the integrated manuscript preflight for the current class separately
