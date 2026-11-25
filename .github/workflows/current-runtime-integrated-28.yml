@@ -49,6 +49,13 @@ jobs:
     env:
       SOURCE_COMMIT_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
     steps:
+      - name: Require a fresh workflow run for source certification
+        shell: bash
+        run: |
+          if [ "${GITHUB_RUN_ATTEMPT:-}" != "1" ]; then
+            echo "::error::Start a fresh full workflow run for certification; a rerun may retain prior-attempt artifacts."
+            exit 1
+          fi
       - name: Checkout candidate source with complete proof history
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -104,6 +111,13 @@ jobs:
       matrix:
         locale: [pt, en, es, fr]
     steps:
+      - name: Require a fresh workflow run for source certification
+        shell: bash
+        run: |
+          if [ "${GITHUB_RUN_ATTEMPT:-}" != "1" ]; then
+            echo "::error::Start a fresh full workflow run for certification; a rerun may retain prior-attempt artifacts."
+            exit 1
+          fi
       - name: Checkout exact candidate source
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -169,6 +183,13 @@ jobs:
       matrix:
         suite: [dual, coat]
     steps:
+      - name: Require a fresh workflow run for source certification
+        shell: bash
+        run: |
+          if [ "${GITHUB_RUN_ATTEMPT:-}" != "1" ]; then
+            echo "::error::Start a fresh full workflow run for certification; a rerun may retain prior-attempt artifacts."
+            exit 1
+          fi
       - name: Checkout exact candidate source
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -211,6 +232,13 @@ jobs:
       SOURCE_COMMIT_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
       GH_TOKEN: ${{ github.token }}
     steps:
+      - name: Require a fresh workflow run for source certification
+        shell: bash
+        run: |
+          if [ "${GITHUB_RUN_ATTEMPT:-}" != "1" ]; then
+            echo "::error::Start a fresh full workflow run for certification; a rerun may retain prior-attempt artifacts."
+            exit 1
+          fi
       - name: Checkout current candidate and original ancestry
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:

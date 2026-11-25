@@ -32,6 +32,14 @@ jobs:
       matrix:
         locale: [pt, en, es, fr]
     steps:
+      - name: Require a fresh workflow run for source certification
+        if: ${{ github.event_name != 'workflow_dispatch' || github.ref == 'refs/heads/main' }}
+        shell: bash
+        run: |
+          if [ "${GITHUB_RUN_ATTEMPT:-}" != "1" ]; then
+            echo "::error::Start a fresh full workflow run for certification; a rerun may retain prior-attempt artifacts."
+            exit 1
+          fi
       - name: Checkout exactly the pull-request SHA
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -149,6 +157,13 @@ jobs:
       GH_TOKEN: ${{ github.token }}
       SOURCE_COMMIT_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
     steps:
+      - name: Require a fresh workflow run for source certification
+        shell: bash
+        run: |
+          if [ "${GITHUB_RUN_ATTEMPT:-}" != "1" ]; then
+            echo "::error::Start a fresh full workflow run for certification; a rerun may retain prior-attempt artifacts."
+            exit 1
+          fi
       - name: Checkout exact reviewed source
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
