@@ -459,7 +459,9 @@ Cada elemento inicia em página própria e recebe a apresentação de cabeçalho
 
 ### Índice
 
-O índice remissivo é opcional. Para habilitá-lo:
+O índice remissivo é opcional. O título segue o Guia UFC (§ 3.2.3.5): centralizado, em maiúsculas, negrito e tamanho 12. O guia referencia a ABNT NBR 6034:2004, substituída na ABNT pela edição de 2026. A verificação do título segundo o guia não certifica o conteúdo ou a estrutura do índice conforme a edição de 2026.
+
+Para habilitar o índice:
 
 ```tex
 index = imakeidx

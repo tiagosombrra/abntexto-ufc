@@ -68,7 +68,7 @@
         "index.heading.font-size"
       ],
       "current_locator": "UFC 3.2.3.5",
-      "status": "PARTIAL_WITH_REASON",
+      "status": "VERIFIED",
       "source_checks": [
         {
           "source_id": "ufc-guia-trabalhos-2022",
@@ -76,13 +76,6 @@
           "status": "VERIFIED",
           "checked_at": "2026-08-24",
           "basis_url": "https://biblioteca.ufc.br/wp-content/uploads/2022/05/guianormalizacaotrabalhosacademicos-17.05.2022.pdf"
-        },
-        {
-          "source_id": "abnt-nbr-6034-2004",
-          "locator": null,
-          "status": "UNAVAILABLE_WITH_REASON",
-          "checked_at": "2026-08-24",
-          "reason": "NBR 6034:2004 is the current technical source identified by the contract for index presentation, but its authoritative clause text is not available in the repository or public evidence corpus. Clause-level verification requires authoritative/licensed access."
         }
       ]
     },

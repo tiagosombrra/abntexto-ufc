@@ -26,7 +26,9 @@ Forma geral:
 | `cover` | `auto`, `true` ou `false` |
 | `catalog-card` | `true` ou `false` |
 | `coat-of-arms` | `true` ou `false` |
-| `initial-page` | política de página inicial dos trabalhos acadêmicos quando aplicável |
+| `initial-page` | inteiro positivo para a numeração lógica inicial; não muda a posição física do anverso/verso em `double-sided` (v3.1.0 em desenvolvimento) |
+
+Em impressão `double-sided`, `initial-page=2` altera o **número lógico** inicial, mas a primeira folha interna permanece um **anverso físico** (margem interna esquerda de 3 cm), seguida pelo verso (2 cm). A chave não acrescenta ou remove folhas. Se a ficha catalográfica for incluída, `\ufcPrintCatalogCard` registra essa folha física sem contabilizá-la no contador lógico e preserva o espelhamento das margens. Esse comportamento é coberto por testes de PDF real com pdfLaTeX/LuaLaTeX no TeX Live 2026 (issue #598); não representa certificado normativo institucional.
 
 `--page-accounting` é uma **opção do validador CLI/Deep**, não uma chave de `\ufcsetup`. O valor `pdf-first-page` (padrão) trata a página física 1 do PDF como primeiro anverso interno. Para arquivos que incluem uma **capa externa não contada**, use `--print-mode double-sided --page-accounting external-cover-first`; no Web/Lite, escolha a opção equivalente em **“Início da contagem no PDF duplex”**. Esse modo deixa a capa externa fora do teste de margens do miolo, mas mantém o teste A4, e faz a página PDF 2 corresponder ao anverso interno 1. Não desconte uma segunda página para ficha catalográfica: ela ocupa fisicamente o verso no miolo, mesmo quando não numerada. O modo com capa exige PDF com pelo menos duas páginas e impressão dupla; modelos inconsistentes são rejeitados.
 

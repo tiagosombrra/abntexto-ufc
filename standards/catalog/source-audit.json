@@ -318,16 +318,6 @@
       "access": "official-catalog-or-licensed-access"
     },
     {
-      "id": "abnt-nbr-6034-2004",
-      "kind": "technical-standard",
-      "title": "ABNT NBR 6034:2004 — Índice — Apresentação",
-      "publisher": "ABNT",
-      "edition": "2004",
-      "status": "current",
-      "checked_at": "2026-08-22",
-      "access": "official-catalog-or-licensed-access"
-    },
-    {
       "id": "abnt-nbr-12225-2023",
       "kind": "technical-standard",
       "title": "ABNT NBR 12225:2023 — Lombada — Apresentação",
@@ -382,6 +372,24 @@
   ],
   "reviewed_excluded_sources": [
     {
+      "id": "abnt-nbr-6034-2004",
+      "kind": "technical-standard",
+      "title": "ABNT NBR 6034:2004 — Índice — Apresentação",
+      "publisher": "ABNT",
+      "edition": "2004",
+      "status": "superseded",
+      "checked_at": "2026-08-22",
+      "access": "official-catalog-or-licensed-access",
+      "replaced_by": "abnt-nbr-6034-2026",
+      "replacement_runtime_status": "not-validated",
+      "basis_urls": [
+        "https://uninta.edu.br/site/fortaleza/abnt-normas/",
+        "https://www.dinmedia.de/en/standard/abnt-nbr-6034/180777148"
+      ],
+      "supersession_checked_at": "2026-11-25",
+      "notes": "Edição referenciada pelo Guia UFC 2022, § 3.2.3.5. A edição ABNT de 2026 substitui a de 2004; esta evidência não confirma erratas, adoção formal pela UFC ou implementação das regras técnicas de 2026. O guia continua sendo a fonte do formato institucional do título."
+    },
+    {
       "id": "mec-portaria-1224-2013",
       "kind": "external-regulation",
       "title": "Portaria MEC nº 1.224/2013",
@@ -419,7 +427,6 @@
     "abnt-nbr-6028-2021",
     "abnt-nbr-6024-2012",
     "abnt-nbr-6027-2012",
-    "abnt-nbr-6034-2004",
     "abnt-nbr-12225-2023"
   ],
   "reconciled_profile_candidate_sources": {

@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Fail-closed PDF/A-2b certification of 28 final R8.1 PDF artifacts."""
+import csv
 import hashlib
 import json
 import os
@@ -24,6 +25,10 @@ PROFILES = {
     "anonymized-research-project", "scientific-article",
 }
 LOCALES = ("pt", "en", "es", "fr")
+# Only these exact development runtime blobs have an established source-bound
+# PDF comparison; original archived evidence remains tied to its own class.
+BASELINE_DEVELOPMENT_CLASS_BLOB = "299293e273dcefb80256eed2e17d2557db6aae52"
+ISSUE598_DEVELOPMENT_CLASS_BLOB = "4f3b266e8fce9204577565961d35c3066fd59cee"
 
 
 def require(condition, message):
@@ -33,6 +38,31 @@ def require(condition, message):
 
 def sha256(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def development_event_allowed(scope, event, ref):
+    # The archived verifier retains its original PR/main-dispatch boundary.
+    return (event == "pull_request"
+            or (event == "workflow_dispatch" and ref == "refs/heads/main")
+            or (scope == "development" and event == "push"
+                and ref == "refs/heads/main"))
+
+
+def self_test():
+    cases = (
+        ("development", "pull_request", "refs/pull/625/merge", True),
+        ("development", "push", "refs/heads/main", True),
+        ("development", "workflow_dispatch", "refs/heads/main", True),
+        ("development", "push", "refs/heads/feature", False),
+        ("development", "workflow_dispatch", "refs/heads/feature", False),
+        ("development", "schedule", "refs/heads/main", False),
+        ("archived-development", "push", "refs/heads/main", False),
+        ("archived-development", "workflow_dispatch", "refs/heads/main", True),
+    )
+    for scope, event, ref, expected in cases:
+        require(development_event_allowed(scope, event, ref) == expected,
+                "Unexpected PDF/A event route: " + str((scope, event, ref)))
+    print(f"R81-PDFA-EVENT-SELFTEST status=PASS cases={len(cases)}", flush=True)
 
 
 def prepare():
@@ -124,10 +154,12 @@ def prepare():
             ["git", "rev-parse", "HEAD:abntexto-ufc.cls"], text=True).strip()
         event = os.environ.get("GITHUB_EVENT_NAME")
         ref = os.environ.get("GITHUB_REF")
-        # A manual development certification must target main, not an arbitrary ref.
-        require(event == "pull_request"
-                or (event == "workflow_dispatch" and ref == "refs/heads/main"),
-                "Development PDF/A requires a pull request or explicit main dispatch")
+        # Only current development evidence accepts main pushes.
+        require(development_event_allowed(SCOPE, event, ref),
+                "Development PDF/A requires a PR, main push or explicit main dispatch")
+        if event == "push":
+            require(os.environ.get("GITHUB_SHA") == expected_sha,
+                    "Main-push PDF/A requires the exact event source SHA")
         require(manifest["source_class_git_blob"] == class_at_commit,
                 "Development PDF/A source/class provenance mismatch")
         if SCOPE == "development":
@@ -161,8 +193,22 @@ def prepare():
                 require(original_blob == frozen_blob,
                         f"Archived R8.1 original source changed: {producer}")
             manifest["original_pdf_artifact_run_id"] = 43467471975
-        require(class_at_commit == "299293e273dcefb80256eed2e17d2557db6aae52",
-                "Development PDF/A source class changed; requalification required")
+        if SCOPE == "development":
+            # The new candidate must match the exact class proven by the issue 598
+            # duplex parity regression and the 28-PDF comparison, not an arbitrary blob.
+            require(class_at_commit in (
+                BASELINE_DEVELOPMENT_CLASS_BLOB,
+                ISSUE598_DEVELOPMENT_CLASS_BLOB,
+            ), "Development PDF/A source class changed; requalification required")
+            manifest["development_class_evidence"] = (
+                "ISSUE598_R5_DIFFERENTIAL_972_PAGES"
+                if class_at_commit == ISSUE598_DEVELOPMENT_CLASS_BLOB
+                else "BASELINE_R5_972_PAGES"
+            )
+        else:
+            # Preserve the immutable archival verifier's original runtime identity.
+            require(class_at_commit == BASELINE_DEVELOPMENT_CLASS_BLOB,
+                    "Archived R8.1 original class changed; no approval transfer")
         manifest["certification_scope"] = (
             "ARCHIVED_DEVELOPMENT_ORIGINAL_PDF_BYTES_ONLY"
             if SCOPE == "archived-development" else "DEVELOPMENT_UNRELEASED_ONLY"
@@ -179,6 +225,53 @@ def prepare():
     print(f"R81-{label}-PDFA-SOURCE status=PASS pdfs=28 pages={expected_total_pages} "
           + "source_sha=" + expected_sha
           + " human_review=PENDING publication_authorized=false", flush=True)
+
+
+def prepare_pending_review(manifest):
+    # This request is derived only from a successful current-source PDF/A receipt.
+    require(SCOPE == "development"
+            and manifest["status"] == "PASS_DEVELOPMENT_EXTERNAL_PDF_A_2B"
+            and manifest["human_review"] == "PENDING"
+            and manifest["publication_authorized"] is False,
+            "Pending review cannot inherit a historical or failed receipt")
+    dimensions = (
+        "layout", "typography", "pagination", "frontmatter", "language",
+        "backmatter", "normative", "editorial",
+    )
+    rows = []
+    for doc in manifest["documents"]:
+        require(doc["verapdf"]["pdfa_2b_compliant"] is True
+                and sha256(PDFS / doc["filename"]) == doc["pdf_sha256"],
+                "Review PDF differs from validated input")
+        for page in range(1, doc["pages"] + 1):
+            rows.append({
+                "source_commit_sha": manifest["source_commit_sha"],
+                "source_run": manifest["source_run"],
+                "filename": doc["filename"], "pdf_sha256": doc["pdf_sha256"],
+                "locale": doc["locale"], "profile": doc["profile"],
+                "page": page, **dict.fromkeys(dimensions, "PENDING"), "notes": "",
+            })
+    require(len(rows) == 972
+            and len({(row["filename"], row["page"]) for row in rows}) == 972,
+            "Missing or duplicate pending page decisions")
+    csv_path = ROOT / "pending-page-review.csv"
+    with csv_path.open("w", encoding="utf-8", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=list(rows[0]))
+        writer.writeheader()
+        writer.writerows(rows)
+    request = {
+        "source_commit_sha": manifest["source_commit_sha"],
+        "source_run": manifest["source_run"],
+        "source_class_git_blob": manifest["source_class_git_blob"],
+        "pdfa_receipt_sha256": sha256(ROOT / "results.json"),
+        "page_decisions_sha256": sha256(csv_path),
+        "pdf_count": 28, "page_count": len(rows), "dimensions": list(dimensions),
+        "human_review": "PENDING", "publication_authorized": False,
+    }
+    (ROOT / "pending-review-request.json").write_text(
+        json.dumps(request, indent=2) + "\n", "utf-8")
+    print("R81-CURRENT-REVIEW-REQUEST status=PASS pdfs=28 pages=972 "
+          "human_review=PENDING publication_authorized=false", flush=True)
 
 
 def verify():
@@ -282,9 +375,11 @@ def verify():
           + " human_review=PENDING publication_authorized=false",
           flush=True)
     require(compliant_count == 28, "Noncompliant final PDF/A-2b document(s)")
+    if SCOPE == "development":
+        prepare_pending_review(manifest)
 
 
 if __name__ == "__main__":
-    require(len(sys.argv) == 2 and sys.argv[1] in ("prepare", "verify"),
-            "Usage: verify_final_pdfa_28.py prepare|verify")
-    {"prepare": prepare, "verify": verify}[sys.argv[1]]()
+    require(len(sys.argv) == 2 and sys.argv[1] in ("prepare", "verify", "self-test"),
+            "Usage: verify_final_pdfa_28.py prepare|verify|self-test")
+    {"prepare": prepare, "verify": verify, "self-test": self_test}[sys.argv[1]]()

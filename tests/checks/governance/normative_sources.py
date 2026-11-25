@@ -246,7 +246,6 @@ def main() -> None:
         "abnt-nbr-6028-2021",
         "abnt-nbr-6024-2012",
         "abnt-nbr-6027-2012",
-        "abnt-nbr-6034-2004",
         "abnt-nbr-12225-2023",
     }
     if set(audit.get("current_technical_sources", [])) != expected_technical:
@@ -297,6 +296,8 @@ def main() -> None:
         fail("missing current UFC institutional sources: " + ", ".join(missing_ufc))
 
     forbidden_ids = {
+        "abnt-nbr-6034-2004",
+        "abnt-nbr-6034-2026",
         "abnt-nbr-14724-2011",
         "abnt-nbr-10520-2002",
         "abnt-nbr-6023-2018",
@@ -308,6 +309,20 @@ def main() -> None:
     leaked = sorted(forbidden_ids & set(by_id))
     if leaked:
         fail("superseded, revoked or historical sources retained as active entries: " + ", ".join(leaked))
+
+    index_sources = [
+        source for source in audit.get("reviewed_excluded_sources", [])
+        if source.get("id") == "abnt-nbr-6034-2004"
+    ]
+    if len(index_sources) != 1 or any(
+        index_sources[0].get(field) != expected
+        for field, expected in {
+            "status": "superseded",
+            "replaced_by": "abnt-nbr-6034-2026",
+            "replacement_runtime_status": "not-validated",
+        }.items()
+    ):
+        fail("NBR 6034:2004 must be retained only as the superseded reference cited by UFC")
 
     validate_article_source_reconciliation(audit, by_id)
 

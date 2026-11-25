@@ -1,16 +1,7 @@
-name: R8.1 archived reviewed-PDF independent PDF/A-2b validation
+name: R8.1 archived reviewed-PDF independent PDF/A-2b validation (ARCHIVE ONLY)
 on:
-  pull_request:
-    branches: [main]
-    types: [opened, synchronize, reopened, ready_for_review]
-    paths:
-      - abntexto-ufc.cls
-      - tools/review/prepare_v310_r81_human_review.py
-      - tools/review/verify_final_pdfa_28.py
-      - tools/review/generate_readable_28.py
-      - tools/review/build_readable_28.py
-      - docs/R81-V310-HUMAN-REVIEW.md
-      - .github/workflows/r81-v310-archived-pdfa.yml
+  # Archived evidence is not a current-source certification gate.
+  workflow_dispatch:
 permissions:
   contents: read
   actions: read
@@ -20,7 +11,6 @@ concurrency:
 jobs:
   archived-reviewed-pdfs:
     name: Exact archived 972-page reviewer PDF/A-2b audit (not accepted)
-    if: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
     runs-on: ubuntu-24.04
     timeout-minutes: 45
     env:
@@ -29,10 +19,10 @@ jobs:
       SOURCE_COMMIT_SHA: de99db499cbc5bb78097f415fb91e3bb3ca3128a
       R81_ORIGINAL_PROOF_RUN_ID: "43467471975"
     steps:
-      - name: Checkout latest candidate and full source provenance
+      - name: Checkout immutable historical verifier source
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
+          ref: f0e3617783e6d7bf072d846a0e28b62d7f79b232
           fetch-depth: 0
           persist-credentials: false
       - name: Install original-PDF and page-count validators
