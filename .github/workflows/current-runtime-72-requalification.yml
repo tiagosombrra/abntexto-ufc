@@ -1,0 +1,47 @@
+name: ARCHIVE ONLY - frozen 72-ID artifact receipts (time-limited)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: current-runtime-72-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  candidate-ledger:
+    name: Archived source-bound snapshot (not permanent, may expire)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    env:
+      GH_TOKEN: ${{ github.token }}
+      SOURCE_COMMIT_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+    steps:
+      - name: Checkout exact source and original proof ancestry
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Audit immutable original ledgers and all 72 current-runtime receipts
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$SOURCE_COMMIT_SHA"
+          python3 tools/ci/requalify_current_runtime_72.py \
+            --download \
+            --self-test \
+            --archives artifacts/issue624/original-github-artifacts \
+            --report artifacts/issue624/current-runtime-72.json
+
+      - name: Archive candidate-only ledger; never promote human or release acceptance
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: current-runtime-72-bounded-${{ github.run_id }}
+          path: artifacts/issue624/current-runtime-72.json
+          if-no-files-found: warn
+          retention-days: 30

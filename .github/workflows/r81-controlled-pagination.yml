@@ -21,6 +21,7 @@ jobs:
       - name: Checkout exact candidate source
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
           persist-credentials: false
       - name: Compile native longtable controls in twelve real PDFs
         uses: xu-cheng/texlive-action@22c04326a5d855880f9d39bb955138bf11c6df80 # v3
@@ -45,14 +46,18 @@ jobs:
           if-no-files-found: warn
           retention-days: 21
   original-pdfs-audit:
+    # Do not depend on expiring historical artifacts during candidate regression.
+    if: ${{ github.event_name == 'workflow_dispatch' }}
+    name: Original 984-page PDF audit (ARCHIVE ONLY)
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     env:
       GH_TOKEN: ${{ github.token }}
     steps:
-      - name: Checkout current diagnostic script
+      - name: Checkout immutable historical diagnostic script
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          ref: f0e3617783e6d7bf072d846a0e28b62d7f79b232
           persist-credentials: false
       - name: Retrieve exact original 28 R8.1 PDFs from immutable run
         shell: bash

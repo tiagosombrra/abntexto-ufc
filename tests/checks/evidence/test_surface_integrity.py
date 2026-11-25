@@ -44,6 +44,8 @@ PERMANENT_WORKFLOWS = (
     ROOT / ".github/workflows/linux-integration.yml",
     ROOT / ".github/workflows/linux-release-check.yml",
     ROOT / ".github/workflows/issue598-page-parity-diagnostic.yml",
+    ROOT / ".github/workflows/current-runtime-72-requalification.yml",
+    ROOT / ".github/workflows/current-runtime-integrated-28.yml",
     ROOT / ".github/workflows/pages.yml",
 )
 

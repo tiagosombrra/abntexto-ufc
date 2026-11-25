@@ -1,13 +1,7 @@
-name: R8.1 corrected-runtime human PDF review request
+name: R8.1 corrected-runtime human PDF review request (ARCHIVE ONLY)
 on:
-  pull_request:
-    branches: [main]
-    types: [opened, synchronize, reopened, ready_for_review]
-    paths:
-      - abntexto-ufc.cls
-      - tools/review/prepare_v310_r81_human_review.py
-      - .github/workflows/r81-v310-human-review-request.yml
-      - docs/R81-V310-HUMAN-REVIEW.md
+  # Only original historical PDFs are accepted by this verifier.
+  workflow_dispatch:
 permissions:
   contents: read
   actions: read
@@ -17,16 +11,15 @@ concurrency:
 jobs:
   reviewer-packet:
     name: Prepare 28 actual PDF receipts and 972 pending page decisions
-    if: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     env:
       GH_TOKEN: ${{ github.token }}
     steps:
-      - name: Checkout candidate source with original editorial PDF commit
+      - name: Checkout immutable historical verifier source
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
+          ref: f0e3617783e6d7bf072d846a0e28b62d7f79b232
           fetch-depth: 0
           persist-credentials: false
       - name: Install independent PDF structure and page-count verifiers

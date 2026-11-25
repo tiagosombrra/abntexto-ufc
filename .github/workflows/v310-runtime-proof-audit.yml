@@ -1,20 +1,7 @@
-name: v3.1.0 corrected-runtime 72-ID original archive byte audit
+name: v3.1.0 corrected-runtime 72-ID original archive byte audit (ARCHIVE ONLY)
 on:
-  pull_request:
-    branches: [main]
-    types: [opened, synchronize, reopened, ready_for_review]
-    paths:
-      - abntexto-ufc.cls
-      - standards/api/public-api.json
-      - standards/api/i18n-per-identifier-proof-status.json
-      - standards/api/i18n-v310-runtime-proof-candidate.json
-      - standards/api/i18n-v310-bounded-functional-qualified.json
-      - standards/api/i18n-functional-evidence-crosswalk.json
-      - tests/integration/frontmatter/i18n-b4-integrated-backmatter-evidence.py
-      - tests/integration/frontmatter/i18n-b4-isolated-public-api-evidence.py
-      - tests/integration/objects/i18n-b4-inputminted-evidence.py
-      - tools/ci/audit-v310-runtime-candidate.py
-      - .github/workflows/v310-runtime-proof-audit.yml
+  # Archived evidence is not a current-source certification gate.
+  workflow_dispatch:
 permissions:
   contents: read
   actions: read
@@ -24,19 +11,24 @@ concurrency:
 jobs:
   original-proof-archives:
     name: SHA-bound 72-ID corrected-runtime archive audit (candidate only)
-    if: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
     runs-on: ubuntu-24.04
     timeout-minutes: 35
     env:
       GH_TOKEN: ${{ github.token }}
-      SOURCE_COMMIT_SHA: ${{ github.event.pull_request.head.sha }}
+      SOURCE_COMMIT_SHA: f0e3617783e6d7bf072d846a0e28b62d7f79b232
     steps:
-      - name: Checkout exact pull request with commit history
+      - name: Checkout immutable historical verifier source
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
+          ref: f0e3617783e6d7bf072d846a0e28b62d7f79b232
           fetch-depth: 0
           persist-credentials: false
+      - name: Restore immutable original proof history
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin refs/pull/592/head
+          test "$(git rev-parse FETCH_HEAD)" = "af313c17aafe6b1c8cabc97917f40d5c9afa5dcc"
+          git merge-base --is-ancestor "9ab436da5027c4e20c305398bf89356b70bb17ad" FETCH_HEAD
       - name: Verify exact source, class, 72 identifiers and mutation controls
         run: |
           set -euo pipefail
