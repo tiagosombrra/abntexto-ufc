@@ -191,10 +191,10 @@
     "tracking_issue": 489,
     "parent_roadmap_issue": 488,
     "entry_main_sha": "020ed29054445003273130fc96a9ab3261ff0803",
-    "current_change": "development-line-open",
+    "current_change": "release-source-metadata-preparation",
     "candidate_state": "UNRELEASED",
     "publication_authorized": false,
     "maintainer_visual_acceptance": false,
-    "notes": "Separate v3.1.0 development line; frozen GitHub+CTAN v3.0.5 source/tag/assets and acceptance receipts remain authoritative. This candidate is not approved for public release."
+    "notes": "Separate v3.1.0 development line; frozen GitHub+CTAN v3.0.5 source/tag/assets and acceptance receipts remain authoritative. Package-source metadata is prepared separately from release decisions. This candidate is not approved for public release."
   }
 }

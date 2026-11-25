@@ -105,20 +105,33 @@ def main() -> int:
             return fail("v3.1.0 may not inherit past release acceptance")
         if class_version != "3.1.0" or make_version != "3.1.0":
             return fail("v3.1.0 class and Makefile identities must agree")
-        if "3.1.0 — Unreleased" not in CHANGELOG.read_text(encoding="utf-8"):
-            return fail("v3.1.0 must have an Unreleased changelog section")
+        source_step = nxt.get("current_change")
+        if source_step not in ("development-line-open", "release-source-metadata-preparation"):
+            return fail("unknown v3.1.0 candidate source preparation step")
+        prepared = source_step == "release-source-metadata-preparation"
+        changelog = CHANGELOG.read_text(encoding="utf-8")
+        expected_heading = "3.1.0" if prepared else "3.1.0 — Unreleased"
+        if re.findall(r"(?m)^3\.1\.0(?: — .*)?$", changelog) != [expected_heading]:
+            return fail("v3.1.0 changelog heading must match source preparation step")
         readme = CTAN_README.read_text(encoding="utf-8")
         if not re.search(r"(?m)^Version:\s*3\.1\.0\s*$", readme):
-            return fail("v3.1.0 CTAN README must match development version")
-        if re.findall(r"(?m)^Release status:\s*(.+?)\s*$", readme) != ["Unreleased"]:
-            return fail("v3.1.0 CTAN README must declare Unreleased")
+            return fail("v3.1.0 CTAN README must identify candidate version")
+        expected_status = "Prepared for publication" if prepared else "Unreleased"
+        if re.findall(r"(?m)^Release status:\s*(.+?)\s*$", readme) != [expected_status]:
+            return fail("v3.1.0 CTAN README must match source preparation step")
+        if prepared and (
+            re.search(r"(?i)\bunreleased\b|development preview", readme)
+            or "Actual publication and acceptance are recorded separately" not in readme
+        ):
+            return fail("prepared CTAN README must separate package identity from publication")
         manual = CTAN_MANUAL.read_text(encoding="utf-8")
         if r"\newcommand{\version}{3.1.0}" not in manual:
             return fail("CTAN manual must identify v3.1.0")
         if r"\texttt{abntexto-ufc-3.1.0.zip}" not in manual:
-            return fail("CTAN manual must name the future archive, not the v3.0.5 release")
-        if r"\date{Version \version\ --- development preview}" not in manual:
-            return fail("CTAN manual must label the unreleased 3.1.0 document as development preview")
+            return fail("CTAN manual must identify the v3.1.0 archive")
+        expected_date = r"\date{Version \version}" if prepared else r"\date{Version \version\ --- development preview}"
+        if expected_date not in manual or (prepared and "development preview" in manual):
+            return fail("CTAN manual must match source preparation step")
     else:
         allowed_versions = {published_version, str(active_line)}
         if class_version not in allowed_versions or make_version not in allowed_versions:

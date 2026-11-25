@@ -155,13 +155,14 @@ def main() -> int:
             "tracking_issue": 489,
             "parent_roadmap_issue": 488,
             "entry_main_sha": "020ed29054445003273130fc96a9ab3261ff0803",
-            "current_change": "development-line-open",
             "candidate_state": "UNRELEASED",
             "publication_authorized": False,
             "maintainer_visual_acceptance": False,
         }
         if not isinstance(next_candidate, dict):
             return fail("v3.1.0 requires an independent unreleased development receipt")
+        if next_candidate.get("current_change") not in ("development-line-open", "release-source-metadata-preparation"):
+            return fail("unknown v3.1.0 candidate source preparation step")
         for key, value in expected_next.items():
             if next_candidate.get(key) != value:
                 return fail(f"v3.1.0 candidate identity/authorization mismatch: {key}")
