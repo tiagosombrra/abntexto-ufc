@@ -313,6 +313,7 @@ compile_public_project() {
 # Historical tagged/public v3.0.5 artifacts are never modified by this validation.
 python3 - "$work/dist/abntexto-ufc-$version.zip" "$version" <<'PY'
 from __future__ import annotations
+import json
 import re
 import subprocess
 import sys
@@ -336,12 +337,33 @@ with zipfile.ZipFile(zip_path) as zf:
         manual = extract_pdf("abntexto-ufc.pdf")
         example = extract_pdf("abntexto-ufc-example.pdf").upper()
         if version == "3.1.0":
-            if r"\date{Version \version\ --- development preview}" not in manual_tex:
-                raise SystemExit("CTAN PDF regression: development manual source status missing.")
-            if "Version 3.1.0" not in manual or "development preview" not in manual:
+            marker = json.loads(Path("release/v3-release-candidate.json").read_text(encoding="utf-8"))
+            candidate = marker.get("next_development_candidate", {})
+            source_step = candidate.get("current_change")
+            if (candidate.get("version") != version
+                    or candidate.get("candidate_state") != "UNRELEASED"
+                    or candidate.get("publication_authorized") is not False
+                    or candidate.get("maintainer_visual_acceptance") is not False
+                    or source_step not in ("development-line-open", "release-source-metadata-preparation")):
+                raise SystemExit("CTAN PDF regression: unsupported candidate metadata state.")
+            prepared = source_step == "release-source-metadata-preparation"
+            expected_source = (
+                r"\date{Version \version}" if prepared
+                else r"\date{Version \version\ --- development preview}"
+            )
+            readme = zf.read("abntexto-ufc/README.md").decode("utf-8")
+            expected_status = "Prepared for publication" if prepared else "Unreleased"
+            if re.findall(r"(?m)^Release status:\s*(.+?)\s*$", readme) != [expected_status]:
+                raise SystemExit("CTAN PDF regression: packaged README does not match candidate metadata state.")
+            if expected_source not in manual_tex:
+                raise SystemExit("CTAN PDF regression: manual source date does not match candidate metadata state.")
+            preview_rendered = "development preview" in manual.casefold()
+            if "Version 3.1.0" not in manual or preview_rendered == prepared:
                 raise SystemExit("CTAN PDF regression: compiled manual has incorrect version/status.")
+            if prepared and "development preview" in manual_tex.casefold():
+                raise SystemExit("CTAN PDF regression: stale preview text in prepared manual source.")
             if re.search(r"Version 3\.1\.0\s*[—-]\s*unreleased", manual, flags=re.I):
-                raise SystemExit("CTAN PDF regression: stale manual date from published v3.0.5.")
+                raise SystemExit("CTAN PDF regression: stale unreleased status in manual.")
             if not re.search(r"UNIVERSIDADE\s+FEDERAL\s+DO\s+CEARÁ", example):
                 raise SystemExit("CTAN PDF regression: example's institutional word boundaries are absent.")
             if "UNIVERSIDADEFEDERALDOCEARÁ" in example:
