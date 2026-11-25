@@ -111,7 +111,7 @@ The references guide cites superseded **NBR 6023:2018** and is inventoried as **
 | Abstracts/reviews | ABNT NBR 6028:2021 |
 | Progressive section numbering | ABNT NBR 6024:2012 |
 | Table of contents | ABNT NBR 6027:2012 |
-| Index | ABNT NBR 6034:2004 |
+| Index heading (institutional layout only) | UFC guide, § 3.2.3.5. NBR 6034:2004 is the edition cited by the guide; NBR 6034:2026 supersedes it at ABNT and is not assessed by this check. |
 | Spine | ABNT NBR 12225:2023 |
 | Numerical tables | IBGE, Normas de Apresentação Tabular, 3rd ed., 1993 |
 | Catalog card | UFC Joint Instruction No. 2/2026, where applicable |

@@ -192,16 +192,6 @@
       "checked_at": "2026-08-22"
     },
     {
-      "id": "abnt-nbr-6034-2004",
-      "kind": "technical-standard",
-      "title": "ABNT NBR 6034:2004 — Índice — Apresentação",
-      "publisher": "ABNT",
-      "edition": "2004",
-      "url": "https://www.abntcatalogo.com.br/",
-      "status": "current",
-      "checked_at": "2026-08-22"
-    },
-    {
       "id": "abnt-nbr-12225-2023",
       "kind": "technical-standard",
       "title": "ABNT NBR 12225:2023 — Lombada — Apresentação",
@@ -823,9 +813,8 @@
     {
       "id": "index.presentation",
       "category": "backmatter",
-      "requirement": "Índice opcional segue a NBR 6034 vigente e a apresentação institucional UFC.",
+      "requirement": "Quando presente, o título do índice segue a apresentação institucional do Guia UFC. Esta regra não verifica os requisitos técnicos da ABNT NBR 6034:2026.",
       "sources": [
-        "abnt-nbr-6034-2004",
         "ufc-guia-trabalhos-2022"
       ],
       "locator": "UFC 3.2.3.5",

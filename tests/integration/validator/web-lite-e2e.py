@@ -666,6 +666,12 @@ def verify_ui_locales(browser: Browser, positive: Path, negative: Path, profile:
         "fr": "Tableau des vérifications avec défilement horizontal",
     }
     canonical_keys = lambda report: {key: value for key, value in report.items() if key != "generated_at"}
+    index_scope_terms = {
+        "pt-BR": ("Guia UFC", "não certifica"),
+        "en": ("UFC guide", "does not certify"),
+        "es": ("guía de la UFC", "no certifica"),
+        "fr": ("guide de l’UFC", "ne certifie pas"),
+    }
     for locale, (heading, button, counter, lead_privacy, device_privacy, accessible_name, fail_label) in expected.items():
         observed = browser.execute(
             "const control=document.querySelector('#ui-locale');"
@@ -684,6 +690,13 @@ def verify_ui_locales(browser: Browser, positive: Path, negative: Path, profile:
         region_label = browser.execute("return document.querySelector('.table-wrap')?.getAttribute('aria-label');")
         if region_label != region_names[locale]:
             fail(f"locale {locale} accessible scroll region untranslated: {region_label!r}")
+        index_scope = browser.execute("""
+            return {notice: document.querySelector('#norm-index-scope').textContent,
+                    sources: document.querySelector('#norm-sources').textContent};
+        """)
+        required = ("§ 3.2.3.5", "ABNT NBR 6034:2004", "2026", *index_scope_terms[locale])
+        if not all(term in index_scope["notice"] for term in required) or "6034" in index_scope["sources"]:
+            fail(f"locale {locale} conflates UFC heading guidance with active ABNT index sources")
         if observed["locale"] != locale or observed["selected"] != locale:
             fail(f"locale DOM selection mismatch: {observed!r}")
         if observed["heading"] != heading or observed["button"] != button:

@@ -50,6 +50,10 @@ The [ABNT official catalogue search](https://www.abntcatalogo.com.br/pav.aspx) w
 
 **Scope:** this documentation corrects *outdated evidence claims only*. Do not edit the class, machine catalog, generated validator, API, versions, real PDF receipts, v3.0.5 published release, or the `v3.1.0 UNRELEASED` / `publication_authorized=false` lock.
 
+## Follow-up 2026-11-25 — institutional index heading kept separate
+
+The ABNT edition published on 2026-09-08, listed by [UNINTA Fortaleza](https://uninta.edu.br/site/fortaleza/abnt-normas/), states that it replaces the 2004 edition. The older edition remains a reference cited by the UFC guide, not an active ABNT source. For v3.1.0 the existing heading layout is attributed only to [UFC § 3.2.3.5](https://fadir.ufc.br/wp-content/uploads/2022/03/guia-normalizacao-trabalhos-academicos.pdf) (uppercase, bold, centered, 12 pt). No formal UFC adoption of the new edition was identified. This clarification neither changes the class or PDF layout nor certifies content, structure, locators or cross-references against the 2026 edition. The item-specific official catalogue/errata receipt and detailed 2026 migration remain separate work; the earlier snapshot and its unresolved technical evidence are retained above.
+
 ## Severity, dependencies and the next bounded steps
 
 1. **P0: technical-edition/corrigenda verification** for the ten ABNT technical sources via item-specific ABNT catalogue receipts and lawful primary-text access. Prioritise NBR 14724:2024, 6023:2025, 10520:2023 and 15287:2025 because they apply to many document profiles. Do not substitute secondary university guides for publisher authority or overwrite `checked_at` with this exploratory audit date.
