@@ -97,6 +97,19 @@ def main() -> None:
     else:
         fail("review-required rule was exposed as resolved")
 
+    index = next(rule for rule in catalog["rules"] if rule["id"] == "index.presentation")
+    if index["sources"] != ["ufc-guia-trabalhos-2022"] or index["resolution"] != {
+        "scope": "institutional",
+        "status": "resolved",
+        "governing_sources": ["ufc-guia-trabalhos-2022"],
+    } or index["locator"] != "UFC 3.2.3.5":
+        fail("index heading must be governed by UFC alone; edition 6034 is not validated")
+    if index["values"] != {
+        "heading_uppercase": True, "heading_bold": True,
+        "heading_centered": True, "font_pt": 12,
+    }:
+        fail("institutional index heading rendering requirements changed")
+
     print("Normative precedence passed: current technical and institutional authority is enforced.")
 
 

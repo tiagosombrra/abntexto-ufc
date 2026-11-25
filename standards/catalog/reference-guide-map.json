@@ -314,11 +314,11 @@
     },
     {
       "id": "index-presentation",
-      "classification": "normative",
+      "classification": "institutional",
       "source_file": "docs/USER-GUIDE.md",
       "marker": "Índice",
       "source_ids": [
-        "abnt-nbr-6034-2004"
+        "ufc-guia-trabalhos-2022"
       ],
       "rule_ids": [
         "index.heading.case",

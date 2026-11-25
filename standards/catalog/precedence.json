@@ -38,7 +38,6 @@
     "abnt-nbr-6028-2021": "technical-standard",
     "abnt-nbr-6024-2012": "technical-standard",
     "abnt-nbr-6027-2012": "technical-standard",
-    "abnt-nbr-6034-2004": "technical-standard",
     "abnt-nbr-12225-2023": "technical-standard",
     "ibge-tabular-1993": "technical-guidance",
     "capes-portaria-206-2018": "external-regulation"
@@ -306,12 +305,9 @@
       ]
     },
     "index.presentation": {
-      "scope": "technical",
+      "scope": "institutional",
       "status": "resolved",
       "governing_sources": [
-        "abnt-nbr-6034-2004"
-      ],
-      "supporting_sources": [
         "ufc-guia-trabalhos-2022"
       ]
     },
