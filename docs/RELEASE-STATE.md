@@ -34,6 +34,10 @@ Retained original distribution artifact `11670527758`; archive ZIP SHA256 `ed4eb
 
 ## v3.1.0 development — not published
 
+### Current release prerequisite — institutional PDF convergence (2026-11-26)
+
+The maintainer selected [issue #629](https://github.com/tiagosombrra/abntexto-ufc/issues/629) and [UFC-CONFORMANCE-PLAN.md](UFC-CONFORMANCE-PLAN.md) as the priority before the v3.1.0 editorial closeout. Required: three source-bound Word/LaTeX PDF pairs with corresponding content; actual maintained template content updated; ten ABNT standards and institutional guidance reconciled; material differences corrected or explicitly adjudicated; seven-profile/four-language regression; institutional review and explicit final-source maintainer decision. The Word corpus and previous CI receipts are not a release acceptance. The currently published v3.0.5 remains immutable. The machine marker is unchanged, with next_development_candidate UNRELEASED, publication_authorized=false and maintainer_visual_acceptance=false. No tag, release or CTAN submission is authorized. All dated earlier checkpoints below are bounded evidence, not superseding this gate.
+
 The maintainer selected v3.1.0 as the next backward-compatible minor development line (issues #489 and #488). The root release marker retains the complete published v3.0.5 tag/source/asset/CTAN receipts and records separate `next_development_candidate` fields: `UNRELEASED`, `publication_authorized=false`, and `maintainer_visual_acceptance=false`. Current class/Makefile/preview CTAN source identify 3.1.0; `CITATION.cff` still identifies the **latest published** 3.0.5.
 
 First scoped source correction #487 restores word boundaries in default metadata created under `\\ExplSyntaxOn`, and validates PDF output for the new candidate. Draft documentation says `development preview`, never implying CTAN submission/approval. No historical published artifact may be rebuilt or retargeted.

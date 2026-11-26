@@ -38,6 +38,10 @@ Published version tags/releases and their assets must never be rewritten, retarg
 
 ## Active and historical authority
 
+### Current v3.1.0 priority — UFC convergence (#629), 2026-11-26
+
+The maintainer requires the final rendered PDF to converge with the three official UFC Word models and the ten listed ABNT standards before release. Follow [the UFC convergence plan](docs/UFC-CONFORMANCE-PLAN.md) and [issue #629](https://github.com/tiagosombrra/abntexto-ufc/issues/629) before continuing release preparation. The earlier tutorial-content contract below is a historical/current baseline to be explicitly reconciled in UFC-02: changing the **actual maintained template content**, not only test fixtures, is mandatory. Preserve an exact-content private comparison corpus (original text, metadata, images, tables, references and other applicable elements); publish full institutional material only with permission. Never commit licensed standards, proprietary fonts, original third-party Word/PDF binaries or generated PDFs. Do not silently weaken the 15–35-page tutorial gate or public API: review and change the contract together with the actual content and distribution tests where necessary. Preserve existing scoped proofs; no historical approval or green CI implies UFC acceptance. Begin with Portuguese three-model equivalence, then seven profiles/four languages and final exact-source review. v3.1.0 remains UNRELEASED and publication_authorized=false. Do not merge concurrent branches or alter release metadata solely to enact this plan.
+
 Current authority consists of:
 
 - `docs/RELEASE-STATE.md`;
