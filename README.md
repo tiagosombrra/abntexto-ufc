@@ -4,6 +4,8 @@ Classe LaTeX comunitária para trabalhos acadêmicos da Universidade Federal do 
 
 > **Status institucional:** este é um projeto comunitário. Ele não é um template oficial ou homologado pela UFC, salvo manifestação institucional explícita em sentido contrário.
 
+> **Prioridade da v3.1.0:** a convergência normativa e visual com os três modelos Word oficiais da UFC, incluindo o preenchimento dos templates e a comparação dos PDFs finais, está em desenvolvimento. Acompanhe [o plano UFC-01 a UFC-12](docs/UFC-CONFORMANCE-PLAN.md) e [a issue #629](https://github.com/tiagosombrra/abntexto-ufc/issues/629). CI aprovado não significa homologação institucional.
+
 > **Versões:** a última versão publicada é a **v3.0.5**. A **v3.1.0 está em desenvolvimento**, sem tag, Release pública ou publicação CTAN. Os exemplos de internacionalização identificados como v3.1.0 abaixo se referem ao código de desenvolvimento (`main`), não aos ZIPs já publicados. Para uso acadêmico em produção, prefira o ZIP correspondente a uma [Release publicada](https://github.com/tiagosombrra/abntexto-ufc/releases).
 
 ## Acesso rápido

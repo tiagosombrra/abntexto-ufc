@@ -4,6 +4,27 @@ This document is the current durable map for repository-wide maintenance and org
 
 It does not redefine release state. Publication and development-line facts remain owned by `release/v3-release-candidate.json` and `docs/RELEASE-STATE.md`.
 
+## Current priority — UFC convergence (2026-11-26)
+
+[Issue #629](https://github.com/tiagosombrra/abntexto-ufc/issues/629) and [UFC-CONFORMANCE-PLAN.md](UFC-CONFORMANCE-PLAN.md) define the new v3.1.0 blocking roadmap, with issues #489, #488, #359, #555 and #507 cross-linked. The three official Word originals are inventoried and hash-verified; Microsoft Word reference export, clause/errata audit, equivalent content and final PDF comparison are pending. The active roadmap is UFC-01 through UFC-12; older P0.x milestones below remain scoped historical/development evidence. Continue only with bounded work items, resolving concurrent branches before overlapping source changes. No new release or inherited approval.
+
+| Phase | Deliverable | State at initiation |
+|---|---|---|
+| UFC-01 | Baseline, provenance and authority | IN_PROGRESS (three original hashes verified) |
+| UFC-02 | Identical private content and actual maintained template update | PENDING |
+| UFC-03 | Requirements/differences matrix | PENDING |
+| UFC-04 | Academic works | PENDING |
+| UFC-05 | Research projects | PENDING |
+| UFC-06 | Scientific articles | PENDING |
+| UFC-07 | Cross-cutting ABNT/IBGE rules | PENDING |
+| UFC-08 | PDF equivalence and negative controls | PENDING |
+| UFC-09 | Seven-profile regression | PENDING |
+| UFC-10 | Four-language regression | PENDING |
+| UFC-11 | Institutional review and disposition | PENDING |
+| UFC-12 | Exact-source final certification and separate release decision | PENDING |
+
+The prior 15–35 page tutorial/mesh-document content and distribution assumptions are to be reviewed explicitly in UFC-02, not silently retained against the maintainer's new content requirement or weakened without tests.
+
 ## Current v3.1.0 development phases — checkpoint 2026-11-17
 
 The current source of truth for normative/internationalization work is [issue #489](https://github.com/tiagosombrra/abntexto-ufc/issues/489) and the release boundary in [docs/RELEASE-STATE.md](RELEASE-STATE.md). This section supplements the historical repository-structure phase map below; it does **not** rename or re-open those completed taxonomy phases.
